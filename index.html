@@ -1,4 +1,25 @@
-  <!-- Header -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>In Cadence | Veteran Access Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950 pb-12">
+
+  <!-- Header (Centered) -->
   <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-4 py-3">
     <div class="max-w-xl mx-auto flex flex-col items-center justify-center space-y-2">
       
@@ -21,3 +42,329 @@
       
     </div>
   </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-xl mx-auto w-full px-4 pt-5 space-y-5">
+
+    <!-- Mission Context Banner -->
+    <div class="bg-gradient-to-r from-emerald-950/40 via-slate-900/60 to-slate-900/40 border border-emerald-500/20 rounded-xl p-3.5 flex items-start space-x-3">
+      <i data-lucide="crosshair" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Nationwide tactical routing for VA Beneficiary Travel. Automatically resolves your location or ZIP code to any of the 18 regional VISN dispatch networks.
+      </p>
+    </div>
+
+    <!-- ZIP Code Router Module -->
+    <section class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm space-y-3">
+      <div class="flex items-center justify-between">
+        <label for="zipInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+          ZIP Code or Auto-Detect
+        </label>
+        <span id="matchStatus" class="text-[10px] font-mono-code text-slate-500">Live Auto-Lookup</span>
+      </div>
+
+      <div class="flex space-x-2">
+        <div class="relative flex-1">
+          <input 
+            type="text" 
+            id="zipInput" 
+            pattern="[0-9]*" 
+            inputmode="numeric" 
+            maxlength="5" 
+            placeholder="Type 5-digit ZIP..."
+            class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-lg px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 font-mono-code transition outline-none"
+          >
+        </div>
+        <button 
+          id="geoBtn"
+          title="Detect Current Location"
+          class="bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold px-3 py-2.5 rounded-lg text-xs uppercase tracking-wider flex items-center space-x-1.5 transition shrink-0"
+        >
+          <i data-lucide="map-pin" id="geoIcon" class="w-4 h-4 text-emerald-400"></i>
+          <span id="geoBtnLabel" class="hidden sm:inline">Use GPS</span>
+        </button>
+      </div>
+
+      <!-- Live Notification Banner -->
+      <div id="statusAlert" class="hidden text-xs py-2 px-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300"></div>
+
+      <!-- Result Card -->
+      <div id="resultCard" class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+        <div class="flex items-center justify-between">
+          <span id="hubBadge" class="text-[10px] font-mono-code font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            SW Pennsylvania Hub
+          </span>
+          <span id="visnBadge" class="text-[11px] text-slate-400 font-mono-code">VISN 4</span>
+        </div>
+
+        <div>
+          <h2 id="facilityName" class="text-base font-bold text-slate-100 leading-snug">
+            VA Pittsburgh Healthcare System (University Drive / H.J. Heinz)
+          </h2>
+          <p id="facilityAddress" class="text-xs text-slate-400 mt-0.5">
+            Allegheny County & Southwestern PA Regional Hub
+          </p>
+        </div>
+
+        <div class="p-3 rounded-lg bg-slate-950/70 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] uppercase font-mono-code tracking-wider text-slate-400">Direct Travel Coordinator</div>
+            <div id="facilityPhone" class="text-sm font-bold text-emerald-400 font-mono-code mt-0.5">412-822-2000</div>
+          </div>
+          <a 
+            id="callBtn" 
+            href="tel:4128222000" 
+            class="bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3.5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 transition"
+          >
+            <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+            <span>Call Hub</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rapid Dispatch Card -->
+    <section class="bg-emerald-500 rounded-xl p-4 text-slate-950 shadow-md">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[10px] font-black uppercase tracking-widest font-mono-code opacity-90">PRIMARY DIRECT ACTION</span>
+        <i data-lucide="zap" class="w-4 h-4 fill-slate-950"></i>
+      </div>
+      <h3 class="text-lg font-black tracking-tight leading-tight mb-2">Connect Directly to Travel Dispatch</h3>
+      <p class="text-xs font-medium text-slate-900 leading-relaxed mb-3">
+        Direct link to the identified VISN facility travel desk or primary national veteran travel operations.
+      </p>
+      <a 
+        id="mainActionCall" 
+        href="tel:4128222000" 
+        class="w-full bg-slate-950 text-emerald-400 hover:bg-slate-900 active:bg-black font-extrabold py-3 px-4 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transition"
+      >
+        <i data-lucide="phone" class="w-4 h-4"></i>
+        <span id="mainActionLabel">CALL TRAVEL DESK NOW</span>
+      </a>
+    </section>
+
+    <!-- 10-Second Phone Script Module -->
+    <section class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="file-text" class="w-4 h-4 text-emerald-400"></i>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">10-Second Intake Script</h4>
+        </div>
+        <button 
+          id="copyScriptBtn" 
+          class="text-xs text-emerald-400 hover:text-emerald-300 active:text-emerald-500 font-mono-code flex items-center space-x-1 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20"
+        >
+          <i data-lucide="copy" class="w-3 h-3"></i>
+          <span id="copyLabel">Copy</span>
+        </button>
+      </div>
+
+      <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 text-xs text-slate-300 leading-relaxed font-mono-code">
+        "Hello, I am a Veteran with a scheduled clinical appointment today. I am requesting coordinated transportation under VA Beneficiary Travel special mode authority for my appointment. Please confirm authorization and initiate the dispatch."
+      </div>
+      <p class="text-[11px] text-slate-500 italic">
+        Read word-for-word once the Travel Coordinator answers.
+      </p>
+    </section>
+
+    <!-- Verification Checklist Reference -->
+    <section class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2.5">
+      <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Required Readiness Checklist</h4>
+      
+      <div class="flex items-start space-x-2.5 text-xs text-slate-300">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+        <span>Confirmed appointment date, time, and specific clinic at the VAMC.</span>
+      </div>
+      <div class="flex items-start space-x-2.5 text-xs text-slate-300">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+        <span>Active Beneficiary Travel eligibility or service-connected rating on file.</span>
+      </div>
+      <div class="flex items-start space-x-2.5 text-xs text-slate-300">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+        <span>Exact pickup physical address ready for the coordinator.</span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="mt-8 text-center text-slate-600 text-[11px] font-mono-code px-4">
+    IN CADENCE // ZERO-PII ARCHITECTURE // NATIONWIDE ALL-VISN COVERAGE
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    const visnDatabase = {
+      "visn1": { badge: "New England Hub", visn: "VISN 1", name: "VA Boston Healthcare System", desc: "Serving MA, ME, NH, VT, RI, CT", phone: "857-364-4000", cleanPhone: "8573644000" },
+      "visn2": { badge: "NY / NJ Metro Hub", visn: "VISN 2", name: "James J. Peters VAMC (Bronx)", desc: "Serving New York State & Northern New Jersey", phone: "718-584-9000", cleanPhone: "7185849000" },
+      "visn4_pgh": { badge: "SW Pennsylvania Hub", visn: "VISN 4", name: "VA Pittsburgh Healthcare System (University Drive / H.J. Heinz)", desc: "Allegheny County & Southwestern PA Regional Hub", phone: "412-822-2000", cleanPhone: "4128222000" },
+      "visn4_erie": { badge: "NW Pennsylvania Hub", visn: "VISN 4", name: "Erie VA Medical Center", desc: "Northwestern PA & NY border counties", phone: "814-868-8661", cleanPhone: "8148688661" },
+      "visn4_philly": { badge: "SE Pennsylvania Hub", visn: "VISN 4", name: "Corporal Michael J. Crescenz VAMC (Philadelphia)", desc: "Philadelphia, Delaware & Southern NJ", phone: "215-823-5800", cleanPhone: "2158235800" },
+      "visn5": { badge: "Capitol Hub", visn: "VISN 5", name: "Washington DC VA Medical Center", desc: "Serving Washington D.C., Maryland & Northern Virginia", phone: "202-745-8000", cleanPhone: "2027458000" },
+      "visn6": { badge: "Mid-Atlantic Hub", visn: "VISN 6", name: "Fayetteville NC VA Medical Center", desc: "Serving North Carolina, Central/Southern Virginia & Eastern WV", phone: "910-488-2120", cleanPhone: "9104882120" },
+      "visn7": { badge: "Southeast Hub", visn: "VISN 7", name: "Atlanta VA Medical Center", desc: "Serving Georgia, Alabama & South Carolina", phone: "404-321-6111", cleanPhone: "4043216111" },
+      "visn8": { badge: "Sunshine Hub", visn: "VISN 8", name: "James A. Haley Veterans' Hospital (Tampa)", desc: "Serving Florida, South Georgia, Puerto Rico & USVI", phone: "813-972-2000", cleanPhone: "8139722000" },
+      "visn9": { badge: "MidSouth Hub", visn: "VISN 9", name: "Tennessee Valley Healthcare System (Nashville)", desc: "Serving Tennessee, Kentucky & Southern Indiana", phone: "615-327-4751", cleanPhone: "6153274751" },
+      "visn10": { badge: "Midwest Hub (OH/IN/MI)", visn: "VISN 10", name: "Louis Stokes Cleveland VA Medical Center", desc: "Serving Ohio, Indiana & Lower Peninsula Michigan", phone: "216-791-3800", cleanPhone: "2167913800" },
+      "visn12": { badge: "Great Lakes Hub", visn: "VISN 12", name: "Jesse Brown VAMC (Chicago)", desc: "Serving Illinois, Wisconsin & Upper Peninsula Michigan", phone: "312-569-8387", cleanPhone: "3125698387" },
+      "visn15": { badge: "Heartland Hub", visn: "VISN 15", name: "Kansas City VA Medical Center", desc: "Serving Missouri, Kansas & Southern Illinois", phone: "816-861-4700", cleanPhone: "8168614700" },
+      "visn16": { badge: "South Central Hub", visn: "VISN 16", name: "Michael E. DeBakey VAMC (Houston)", desc: "Serving MS, LA, AR, Eastern TX & parts of OK", phone: "713-791-1414", cleanPhone: "7137911414" },
+      "visn17": { badge: "Heart of Texas Hub", visn: "VISN 17", name: "Central Texas Veterans Health Care (Temple/Austin)", desc: "Serving Central, South & West Texas", phone: "254-778-4811", cleanPhone: "2547784811" },
+      "visn19": { badge: "Rocky Mountain Hub", visn: "VISN 19", name: "Rocky Mountain Regional VAMC (Denver)", desc: "Serving Colorado, Montana, Utah, Wyoming, Western KS/NE", phone: "303-399-8020", cleanPhone: "3033998020" },
+      "visn20": { badge: "Northwest Hub", visn: "VISN 20", name: "VA Puget Sound Healthcare System (Seattle)", desc: "Serving Washington, Oregon, Idaho & Alaska", phone: "206-762-1010", cleanPhone: "2067621010" },
+      "visn21": { badge: "Sierra Pacific Hub", visn: "VISN 21", name: "San Francisco VA Health Care System", desc: "Serving Northern California, Nevada, Hawaii & Pacific Islands", phone: "415-221-4810", cleanPhone: "4152214810" },
+      "visn22": { badge: "Desert Pacific Hub", visn: "VISN 22", name: "VA Greater Los Angeles Healthcare System (West LA)", desc: "Serving Southern California, Arizona & Southern Nevada", phone: "310-478-3711", cleanPhone: "3104783711" },
+      "visn23": { badge: "Midwest Hub (Upper)", visn: "VISN 23", name: "Minneapolis VA Health Care System", desc: "Serving Minnesota, Iowa, North Dakota, South Dakota, Nebraska", phone: "612-725-2000", cleanPhone: "6127252000" },
+      "national_fallback": { badge: "National Travel Coordination", visn: "VA National", name: "VA Beneficiary Travel / Health Resource Center", desc: "Centralized Beneficiary Travel & Special Mode Support", phone: "855-574-7292", cleanPhone: "8555747292" }
+    };
+
+    const zipInput = document.getElementById('zipInput');
+    const geoBtn = document.getElementById('geoBtn');
+    const geoBtnLabel = document.getElementById('geoBtnLabel');
+    const matchStatus = document.getElementById('matchStatus');
+    const statusAlert = document.getElementById('statusAlert');
+    const hubBadge = document.getElementById('hubBadge');
+    const visnBadge = document.getElementById('visnBadge');
+    const facilityName = document.getElementById('facilityName');
+    const facilityAddress = document.getElementById('facilityAddress');
+    const facilityPhone = document.getElementById('facilityPhone');
+    const callBtn = document.getElementById('callBtn');
+    const mainActionCall = document.getElementById('mainActionCall');
+    const copyScriptBtn = document.getElementById('copyScriptBtn');
+    const copyLabel = document.getElementById('copyLabel');
+
+    function resolveHub(zip) {
+      if (!zip || zip.length < 3) return null;
+      const p = parseInt(zip.substring(0, 3), 10);
+      
+      if (p >= 10 && p <= 69) return visnDatabase.visn1;
+      if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
+      if (p >= 150 && p <= 156) return visnDatabase.visn4_pgh;
+      if (p >= 164 && p <= 165) return visnDatabase.visn4_erie;
+      if ((p >= 189 && p <= 199) || (p >= 157 && p <= 188)) return visnDatabase.visn4_philly;
+      if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
+      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
+      if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
+      if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
+      if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
+      if (p >= 430 && p <= 499) return visnDatabase.visn10;
+      if ((p >= 530 && p <= 549) || (p >= 600 && p <= 619)) return visnDatabase.visn12;
+      if (p >= 620 && p <= 679) return visnDatabase.visn15;
+      if ((p >= 386 && p <= 397) || (p >= 700 && p <= 729) || (p >= 750 && p <= 759) || (p >= 770 && p <= 777)) return visnDatabase.visn16;
+      if ((p >= 760 && p <= 769) || (p >= 780 && p <= 799)) return visnDatabase.visn17;
+      if ((p >= 590 && p <= 599) || (p >= 800 && p <= 847)) return visnDatabase.visn19;
+      if (p >= 970 && p <= 999) return visnDatabase.visn20;
+      if ((p >= 890 && p <= 898) || (p >= 936 && p <= 969)) return visnDatabase.visn21;
+      if ((p >= 850 && p <= 865) || (p >= 900 && p <= 935)) return visnDatabase.visn22;
+      if ((p >= 500 && p <= 528) || (p >= 550 && p <= 588) || (p >= 680 && p <= 693)) return visnDatabase.visn23;
+
+      return visnDatabase.national_fallback;
+    }
+
+    function updateHubUI(data) {
+      hubBadge.textContent = data.badge;
+      visnBadge.textContent = data.visn;
+      facilityName.textContent = data.name;
+      facilityAddress.textContent = data.desc;
+      facilityPhone.textContent = data.phone;
+      callBtn.href = "tel:" + data.cleanPhone;
+      mainActionCall.href = "tel:" + data.cleanPhone;
+    }
+
+    function showAlert(msg) {
+      statusAlert.textContent = msg;
+      statusAlert.classList.remove('hidden');
+    }
+
+    function hideAlert() {
+      statusAlert.classList.add('hidden');
+    }
+
+    // Instant Autocomplete logic
+    zipInput.addEventListener('input', (e) => {
+      hideAlert();
+      const cleanVal = e.target.value.replace(/\D/g, '');
+      if (cleanVal !== e.target.value) {
+        e.target.value = cleanVal;
+      }
+
+      if (cleanVal.length >= 3) {
+        const match = resolveHub(cleanVal);
+        if (match) {
+          updateHubUI(match);
+          matchStatus.textContent = cleanVal.length === 5 ? "Resolved (Exact)" : "Previewing Region";
+          matchStatus.className = "text-[10px] font-mono-code text-emerald-400";
+        }
+      } else {
+        matchStatus.textContent = "Live Auto-Lookup";
+        matchStatus.className = "text-[10px] font-mono-code text-slate-500";
+      }
+    });
+
+    // Geolocation Resolution
+    geoBtn.addEventListener('click', () => {
+      hideAlert();
+      if (!navigator.geolocation) {
+        showAlert("Geolocation is not supported by your browser.");
+        return;
+      }
+
+      geoBtnLabel.textContent = "Locating...";
+      geoBtn.disabled = true;
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          try {
+            const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+            const data = await res.json();
+            
+            const detectedZip = data.postcode;
+            if (detectedZip) {
+              const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
+              zipInput.value = cleanZip;
+              const match = resolveHub(cleanZip);
+              if (match) {
+                updateHubUI(match);
+                matchStatus.textContent = `Located: ${cleanZip}`;
+                matchStatus.className = "text-[10px] font-mono-code text-emerald-400";
+              }
+            } else {
+              showAlert("Unable to extract ZIP from coordinates. Please enter manually.");
+            }
+          } catch (err) {
+            showAlert("Error connecting to location service. Please enter ZIP.");
+          } finally {
+            geoBtnLabel.textContent = "Use GPS";
+            geoBtn.disabled = false;
+          }
+        },
+        (error) => {
+          let errText = "GPS access denied or unavailable.";
+          if (error.code === 1) errText = "Location permission was denied.";
+          else if (error.code === 2) errText = "Location signal unavailable.";
+          else if (error.code === 3) errText = "Location request timed out.";
+          
+          showAlert(errText);
+          geoBtnLabel.textContent = "Use GPS";
+          geoBtn.disabled = false;
+        },
+        { timeout: 8000, enableHighAccuracy: true }
+      );
+    });
+
+    // Copy script
+    copyScriptBtn.addEventListener('click', () => {
+      const scriptText = `"Hello, I am a Veteran with a scheduled clinical appointment today. I am requesting coordinated transportation under VA Beneficiary Travel special mode authority for my appointment. Please confirm authorization and initiate the dispatch."`;
+      navigator.clipboard.writeText(scriptText).then(() => {
+        copyLabel.textContent = "Copied!";
+        setTimeout(() => {
+          copyLabel.textContent = "Copy";
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>
