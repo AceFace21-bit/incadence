@@ -46,14 +46,6 @@
   <!-- Main Content Container -->
   <main class="flex-1 max-w-xl mx-auto w-full px-4 pt-5 space-y-5">
 
-    <!-- Mission Context Banner -->
-    <div class="bg-gradient-to-r from-emerald-950/40 via-slate-900/60 to-slate-900/40 border border-emerald-500/20 rounded-xl p-3.5 flex items-start space-x-3">
-      <i data-lucide="crosshair" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
-      <p class="text-xs text-slate-300 leading-relaxed">
-        Nationwide tactical routing for VA Beneficiary Travel. Automatically resolves your location or ZIP code to any of the 18 regional VISN dispatch networks.
-      </p>
-    </div>
-
     <!-- ZIP Code Router Module -->
     <section class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
@@ -82,6 +74,35 @@
         >
           <i data-lucide="map-pin" id="geoIcon" class="w-4 h-4 text-emerald-400"></i>
           <span id="geoBtnLabel" class="hidden sm:inline">Use GPS</span>
+        </button>
+      </div>
+
+      <!-- Quick Preset High-Density Veteran Hubs -->
+      <div class="pt-1 flex flex-wrap items-center gap-1.5">
+        <span class="text-[10px] uppercase font-mono-code text-slate-400 tracking-wider mr-1">Top Hubs:</span>
+        <button 
+          type="button" 
+          onclick="fillZip('10996')"
+          class="text-[11px] font-mono-code bg-slate-950 hover:bg-emerald-950/60 active:bg-emerald-900 border border-slate-700/80 hover:border-emerald-500/50 text-slate-300 hover:text-emerald-400 px-2 py-1 rounded transition"
+          title="West Point, NY (Highest Veteran Concentration)"
+        >
+          10996
+        </button>
+        <button 
+          type="button" 
+          onclick="fillZip('76311')"
+          class="text-[11px] font-mono-code bg-slate-950 hover:bg-emerald-950/60 active:bg-emerald-900 border border-slate-700/80 hover:border-emerald-500/50 text-slate-300 hover:text-emerald-400 px-2 py-1 rounded transition"
+          title="Wichita Falls, TX (Sheppard AFB Area)"
+        >
+          76311
+        </button>
+        <button 
+          type="button" 
+          onclick="fillZip('60088')"
+          class="text-[11px] font-mono-code bg-slate-950 hover:bg-emerald-950/60 active:bg-emerald-900 border border-slate-700/80 hover:border-emerald-500/50 text-slate-300 hover:text-emerald-400 px-2 py-1 rounded transition"
+          title="North Chicago, IL (Great Lakes Area)"
+        >
+          60088
         </button>
       </div>
 
@@ -279,6 +300,12 @@
     function hideAlert() {
       statusAlert.classList.add('hidden');
     }
+
+    // Helper to auto-fill preset ZIPs
+    window.fillZip = function(zip) {
+      zipInput.value = zip;
+      zipInput.dispatchEvent(new Event('input'));
+    };
 
     // Instant Autocomplete logic
     zipInput.addEventListener('input', (e) => {
