@@ -153,25 +153,41 @@
             class="bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3.5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 transition"
           >
             <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
-            <span>Call Hub</span>
+            <span id="callBtnText">Call Hub</span>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- National Dispatch Direct Fallback Link -->
-    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3.5 text-center">
-      <p class="text-xs text-slate-400 mb-2">
-        Cannot find your appropriate veterans transportation center?
+    <!-- Upgraded Clean National Dispatch Card -->
+    <section class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm space-y-3">
+      <div class="flex items-center justify-between text-slate-400">
+        <span class="text-xs font-semibold uppercase tracking-wider">Alternative / Nationwide Fallback</span>
+        <span class="text-[10px] font-mono-code text-slate-500">24/7 Operations</span>
+      </div>
+
+      <p class="text-xs text-slate-400 leading-snug">
+        Need help locating your local VTS office or traveling outside your home network?
       </p>
+
       <a 
         href="tel:8555747292" 
-        class="inline-flex items-center justify-center space-x-2 text-xs font-bold font-mono-code uppercase tracking-wider text-emerald-400 hover:text-emerald-300 active:text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 px-3.5 py-2 rounded-lg transition"
+        class="w-full bg-slate-950 hover:bg-slate-900 active:bg-slate-800 text-slate-100 border border-slate-700/80 hover:border-emerald-500/50 py-2.5 px-4 rounded-lg flex items-center justify-between transition group shadow-inner"
       >
-        <i data-lucide="phone-forwarded" class="w-3.5 h-3.5 text-emerald-400"></i>
-        <span>Call National Dispatch (855-574-7292)</span>
+        <div class="flex items-center space-x-2.5">
+          <div class="w-7 h-7 rounded-md bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">
+            <i data-lucide="phone-forwarded" class="w-3.5 h-3.5"></i>
+          </div>
+          <div class="text-left">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-200">Call National Dispatch</div>
+            <div class="text-[10px] font-mono-code text-slate-400">Centralized Travel Help Desk</div>
+          </div>
+        </div>
+        <span class="font-mono-code text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded">
+          855-574-7292
+        </span>
       </a>
-    </div>
+    </section>
 
     <!-- Example of How the Phone Call Will Go -->
     <section class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
@@ -210,8 +226,14 @@
 
   </main>
 
-  <footer class="mt-8 text-center text-slate-600 text-[11px] font-mono-code px-4">
-    IN CADENCE // ZERO-PII ARCHITECTURE // NATIONWIDE ALL-VISN COVERAGE
+  <!-- Footer with Terence Watkins Attribution -->
+  <footer class="mt-8 text-center text-slate-500 text-[10px] sm:text-[11px] font-mono-code px-4 space-y-1">
+    <div class="text-slate-400 font-semibold tracking-wide">
+      DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
+    </div>
+    <div class="text-slate-600">
+      IN CADENCE // ZERO-PII ARCHITECTURE // NATIONWIDE ALL-VISN COVERAGE
+    </div>
   </footer>
 
   <script>
@@ -255,7 +277,7 @@
       "visn21": { badge: "Sierra Pacific Hub", visn: "VISN 21", name: "San Francisco VA Health Care System", desc: "Serving Northern California, Nevada, Hawaii & Pacific Islands", phone: "415-221-4810", cleanPhone: "4152214810", coords: [-122.5052, 37.7820] },
       "visn22": { badge: "Desert Pacific Hub", visn: "VISN 22", name: "VA Greater Los Angeles Healthcare System (West LA)", desc: "Serving Southern California, Arizona & Southern Nevada", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4552, 34.0532] },
       "visn23": { badge: "Midwest Hub (Upper)", visn: "VISN 23", name: "Minneapolis VA Health Care System", desc: "Serving Minnesota, Iowa, North Dakota, South Dakota, Nebraska", phone: "612-725-2000", cleanPhone: "6127252000", coords: [-93.2081, 44.9015] },
-      "national_fallback": { badge: "National Travel Coordination", visn: "VA National", name: "VA Beneficiary Travel / Health Resource Center", desc: "Centralized Beneficiary Travel & Special Mode Support", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
+      "national_fallback": { badge: "National Travel Coordination", visn: "VA National", name: "VA Beneficiary Travel / Health Resource Center", desc: "No Direct Regional Center Detected — Centralized National Dispatch Available", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
     };
 
     const zipInput = document.getElementById('zipInput');
@@ -269,6 +291,7 @@
     const facilityAddress = document.getElementById('facilityAddress');
     const facilityPhone = document.getElementById('facilityPhone');
     const callBtn = document.getElementById('callBtn');
+    const callBtnText = document.getElementById('callBtnText');
     const mapCoordinates = document.getElementById('mapCoordinates');
     const sectorTarget = document.getElementById('sectorTarget');
     const routingStatus = document.getElementById('routingStatus');
@@ -298,6 +321,7 @@
       if ((p >= 850 && p <= 865) || (p >= 900 && p <= 935)) return visnDatabase.visn22;
       if ((p >= 500 && p <= 528) || (p >= 550 && p <= 588) || (p >= 680 && p <= 693)) return visnDatabase.visn23;
 
+      // Automatic National Dispatch fallback if no regional hub matches
       return visnDatabase.national_fallback;
     }
 
@@ -308,12 +332,15 @@
       facilityAddress.textContent = data.desc;
       facilityPhone.textContent = data.phone;
       callBtn.href = "tel:" + data.cleanPhone;
+      
+      const isFallback = (data.visn === "VA National");
+      callBtnText.textContent = isFallback ? "Call Dispatch" : "Call Hub";
 
       sectorTarget.textContent = `${data.visn} // ${data.badge.toUpperCase()}`;
-      routingStatus.textContent = "TACTICAL VECTOR LOCKED";
+      routingStatus.textContent = isFallback ? "NATIONAL DISPATCH ACTIVE" : "TACTICAL VECTOR LOCKED";
 
       if (map && data.coords) {
-        map.flyTo({ center: data.coords, zoom: 11, essential: true });
+        map.flyTo({ center: data.coords, zoom: isFallback ? 5 : 11, essential: true });
         mapMarker.setLngLat(data.coords);
         mapCoordinates.textContent = `${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W`;
       }
@@ -340,8 +367,13 @@
         const match = resolveHub(cleanVal);
         if (match) {
           updateHubUI(match);
-          matchStatus.textContent = cleanVal.length === 5 ? "Resolved (Exact)" : "Previewing Region";
-          matchStatus.className = "text-[10px] font-mono-code text-emerald-400";
+          if (match.visn === "VA National") {
+            matchStatus.textContent = "National Dispatch Fallback";
+            matchStatus.className = "text-[10px] font-mono-code text-amber-400";
+          } else {
+            matchStatus.textContent = cleanVal.length === 5 ? "Resolved (Exact)" : "Previewing Region";
+            matchStatus.className = "text-[10px] font-mono-code text-emerald-400";
+          }
         }
       } else {
         matchStatus.textContent = "Live Auto-Lookup";
