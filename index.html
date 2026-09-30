@@ -45,15 +45,19 @@
     <div class="bg-gradient-to-r from-emerald-950/40 via-slate-900/60 to-slate-900/40 border border-emerald-500/20 rounded-xl p-3.5 flex items-start space-x-3">
       <i data-lucide="crosshair" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
       <p class="text-xs text-slate-300 leading-relaxed">
-        Nationwide tactical routing for VA Beneficiary Travel. Automatically resolves your ZIP code to any of the 18 regional VISN dispatch networks.
+        Nationwide tactical routing for VA Beneficiary Travel. Automatically resolves your location or ZIP code to any of the 18 regional VISN dispatch networks.
       </p>
     </div>
 
     <!-- ZIP Code Router Module -->
     <section class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm space-y-3">
-      <label for="zipInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-400">
-        Enter Any U.S. ZIP Code (All 50 States & Territories)
-      </label>
+      <div class="flex items-center justify-between">
+        <label for="zipInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+          ZIP Code or Auto-Detect
+        </label>
+        <span id="matchStatus" class="text-[10px] font-mono-code text-slate-500">Live Auto-Lookup</span>
+      </div>
+
       <div class="flex space-x-2">
         <div class="relative flex-1">
           <input 
@@ -62,17 +66,23 @@
             pattern="[0-9]*" 
             inputmode="numeric" 
             maxlength="5" 
-            placeholder="e.g. 15120, 90210, 33101, 77030"
+            placeholder="Type 5-digit ZIP..."
             class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-lg px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 font-mono-code transition outline-none"
           >
         </div>
         <button 
-          id="locateBtn"
-          class="bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold px-4 py-2.5 rounded-lg text-xs uppercase tracking-wider flex items-center space-x-1.5 transition shrink-0"
+          id="geoBtn"
+          title="Detect Current Location"
+          class="bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold px-3 py-2.5 rounded-lg text-xs uppercase tracking-wider flex items-center space-x-1.5 transition shrink-0"
         >
-          <i data-lucide="search" class="w-4 h-4"></i>
-          <span>Locate Hub</span>
+          <i data-lucide="map-pin" id="geoIcon" class="w-4 h-4 text-emerald-400"></i>
+          <span id="geoBtnLabel" class="hidden sm:inline">Use GPS</span>
         </button>
+      </div>
+
+      <!-- Live Notification Banner (for Geolocation or Input warnings) -->
+      <div id="statusAlert" class="hidden text-xs py-2 px-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300">
+        <!-- Injected via JS -->
       </div>
 
       <!-- Result Card -->
@@ -181,180 +191,35 @@
   <script>
     lucide.createIcons();
 
-    // Comprehensive National Database of All 18 Active VISNs
     const visnDatabase = {
-      "visn1": {
-        badge: "New England Hub",
-        visn: "VISN 1",
-        name: "VA Boston Healthcare System",
-        desc: "Serving MA, ME, NH, VT, RI, CT",
-        phone: "857-364-4000",
-        cleanPhone: "8573644000"
-      },
-      "visn2": {
-        badge: "NY / NJ Metro Hub",
-        visn: "VISN 2",
-        name: "James J. Peters VAMC (Bronx)",
-        desc: "Serving New York State & Northern New Jersey",
-        phone: "718-584-9000",
-        cleanPhone: "7185849000"
-      },
-      "visn4_pgh": {
-        badge: "SW Pennsylvania Hub",
-        visn: "VISN 4",
-        name: "VA Pittsburgh Healthcare System (University Drive / H.J. Heinz)",
-        desc: "Allegheny County & Southwestern PA Regional Hub",
-        phone: "412-822-2000",
-        cleanPhone: "4128222000"
-      },
-      "visn4_erie": {
-        badge: "NW Pennsylvania Hub",
-        visn: "VISN 4",
-        name: "Erie VA Medical Center",
-        desc: "Northwestern PA & NY border counties",
-        phone: "814-868-8661",
-        cleanPhone: "8148688661"
-      },
-      "visn4_philly": {
-        badge: "SE Pennsylvania Hub",
-        visn: "VISN 4",
-        name: "Corporal Michael J. Crescenz VAMC (Philadelphia)",
-        desc: "Philadelphia, Delaware & Southern NJ",
-        phone: "215-823-5800",
-        cleanPhone: "2158235800"
-      },
-      "visn5": {
-        badge: "Capitol Hub",
-        visn: "VISN 5",
-        name: "Washington DC VA Medical Center",
-        desc: "Serving Washington D.C., Maryland & Northern Virginia",
-        phone: "202-745-8000",
-        cleanPhone: "2027458000"
-      },
-      "visn6": {
-        badge: "Mid-Atlantic Hub",
-        visn: "VISN 6",
-        name: "Fayetteville NC VA Medical Center",
-        desc: "Serving North Carolina, Central/Southern Virginia & Eastern WV",
-        phone: "910-488-2120",
-        cleanPhone: "9104882120"
-      },
-      "visn7": {
-        badge: "Southeast Hub",
-        visn: "VISN 7",
-        name: "Atlanta VA Medical Center",
-        desc: "Serving Georgia, Alabama & South Carolina",
-        phone: "404-321-6111",
-        cleanPhone: "4043216111"
-      },
-      "visn8": {
-        badge: "Sunshine Hub",
-        visn: "VISN 8",
-        name: "James A. Haley Veterans' Hospital (Tampa)",
-        desc: "Serving Florida, South Georgia, Puerto Rico & USVI",
-        phone: "813-972-2000",
-        cleanPhone: "8139722000"
-      },
-      "visn9": {
-        badge: "MidSouth Hub",
-        visn: "VISN 9",
-        name: "Tennessee Valley Healthcare System (Nashville)",
-        desc: "Serving Tennessee, Kentucky & Southern Indiana",
-        phone: "615-327-4751",
-        cleanPhone: "6153274751"
-      },
-      "visn10": {
-        badge: "Midwest Hub (OH/IN/MI)",
-        visn: "VISN 10",
-        name: "Louis Stokes Cleveland VA Medical Center",
-        desc: "Serving Ohio, Indiana & Lower Peninsula Michigan",
-        phone: "216-791-3800",
-        cleanPhone: "2167913800"
-      },
-      "visn12": {
-        badge: "Great Lakes Hub",
-        visn: "VISN 12",
-        name: "Jesse Brown VAMC (Chicago)",
-        desc: "Serving Illinois, Wisconsin & Upper Peninsula Michigan",
-        phone: "312-569-8387",
-        cleanPhone: "3125698387"
-      },
-      "visn15": {
-        badge: "Heartland Hub",
-        visn: "VISN 15",
-        name: "Kansas City VA Medical Center",
-        desc: "Serving Missouri, Kansas & Southern Illinois",
-        phone: "816-861-4700",
-        cleanPhone: "8168614700"
-      },
-      "visn16": {
-        badge: "South Central Hub",
-        visn: "VISN 16",
-        name: "Michael E. DeBakey VAMC (Houston)",
-        desc: "Serving MS, LA, AR, Eastern TX & parts of OK",
-        phone: "713-791-1414",
-        cleanPhone: "7137911414"
-      },
-      "visn17": {
-        badge: "Heart of Texas Hub",
-        visn: "VISN 17",
-        name: "Central Texas Veterans Health Care (Temple/Austin)",
-        desc: "Serving Central, South & West Texas",
-        phone: "254-778-4811",
-        cleanPhone: "2547784811"
-      },
-      "visn19": {
-        badge: "Rocky Mountain Hub",
-        visn: "VISN 19",
-        name: "Rocky Mountain Regional VAMC (Denver)",
-        desc: "Serving Colorado, Montana, Utah, Wyoming, Western KS/NE",
-        phone: "303-399-8020",
-        cleanPhone: "3033998020"
-      },
-      "visn20": {
-        badge: "Northwest Hub",
-        visn: "VISN 20",
-        name: "VA Puget Sound Healthcare System (Seattle)",
-        desc: "Serving Washington, Oregon, Idaho & Alaska",
-        phone: "206-762-1010",
-        cleanPhone: "2067621010"
-      },
-      "visn21": {
-        badge: "Sierra Pacific Hub",
-        visn: "VISN 21",
-        name: "San Francisco VA Health Care System",
-        desc: "Serving Northern California, Nevada, Hawaii & Pacific Islands",
-        phone: "415-221-4810",
-        cleanPhone: "4152214810"
-      },
-      "visn22": {
-        badge: "Desert Pacific Hub",
-        visn: "VISN 22",
-        name: "VA Greater Los Angeles Healthcare System (West LA)",
-        desc: "Serving Southern California, Arizona & Southern Nevada",
-        phone: "310-478-3711",
-        cleanPhone: "3104783711"
-      },
-      "visn23": {
-        badge: "Midwest Hub (Upper)",
-        visn: "VISN 23",
-        name: "Minneapolis VA Health Care System",
-        desc: "Serving Minnesota, Iowa, North Dakota, South Dakota, Nebraska",
-        phone: "612-725-2000",
-        cleanPhone: "6127252000"
-      },
-      "national_fallback": {
-        badge: "National Travel Coordination",
-        visn: "VA National",
-        name: "VA Beneficiary Travel / Health Resource Center",
-        desc: "Centralized Beneficiary Travel & Special Mode Support",
-        phone: "855-574-7292",
-        cleanPhone: "8555747292"
-      }
+      "visn1": { badge: "New England Hub", visn: "VISN 1", name: "VA Boston Healthcare System", desc: "Serving MA, ME, NH, VT, RI, CT", phone: "857-364-4000", cleanPhone: "8573644000" },
+      "visn2": { badge: "NY / NJ Metro Hub", visn: "VISN 2", name: "James J. Peters VAMC (Bronx)", desc: "Serving New York State & Northern New Jersey", phone: "718-584-9000", cleanPhone: "7185849000" },
+      "visn4_pgh": { badge: "SW Pennsylvania Hub", visn: "VISN 4", name: "VA Pittsburgh Healthcare System (University Drive / H.J. Heinz)", desc: "Allegheny County & Southwestern PA Regional Hub", phone: "412-822-2000", cleanPhone: "4128222000" },
+      "visn4_erie": { badge: "NW Pennsylvania Hub", visn: "VISN 4", name: "Erie VA Medical Center", desc: "Northwestern PA & NY border counties", phone: "814-868-8661", cleanPhone: "8148688661" },
+      "visn4_philly": { badge: "SE Pennsylvania Hub", visn: "VISN 4", name: "Corporal Michael J. Crescenz VAMC (Philadelphia)", desc: "Philadelphia, Delaware & Southern NJ", phone: "215-823-5800", cleanPhone: "2158235800" },
+      "visn5": { badge: "Capitol Hub", visn: "VISN 5", name: "Washington DC VA Medical Center", desc: "Serving Washington D.C., Maryland & Northern Virginia", phone: "202-745-8000", cleanPhone: "2027458000" },
+      "visn6": { badge: "Mid-Atlantic Hub", visn: "VISN 6", name: "Fayetteville NC VA Medical Center", desc: "Serving North Carolina, Central/Southern Virginia & Eastern WV", phone: "910-488-2120", cleanPhone: "9104882120" },
+      "visn7": { badge: "Southeast Hub", visn: "VISN 7", name: "Atlanta VA Medical Center", desc: "Serving Georgia, Alabama & South Carolina", phone: "404-321-6111", cleanPhone: "4043216111" },
+      "visn8": { badge: "Sunshine Hub", visn: "VISN 8", name: "James A. Haley Veterans' Hospital (Tampa)", desc: "Serving Florida, South Georgia, Puerto Rico & USVI", phone: "813-972-2000", cleanPhone: "8139722000" },
+      "visn9": { badge: "MidSouth Hub", visn: "VISN 9", name: "Tennessee Valley Healthcare System (Nashville)", desc: "Serving Tennessee, Kentucky & Southern Indiana", phone: "615-327-4751", cleanPhone: "6153274751" },
+      "visn10": { badge: "Midwest Hub (OH/IN/MI)", visn: "VISN 10", name: "Louis Stokes Cleveland VA Medical Center", desc: "Serving Ohio, Indiana & Lower Peninsula Michigan", phone: "216-791-3800", cleanPhone: "2167913800" },
+      "visn12": { badge: "Great Lakes Hub", visn: "VISN 12", name: "Jesse Brown VAMC (Chicago)", desc: "Serving Illinois, Wisconsin & Upper Peninsula Michigan", phone: "312-569-8387", cleanPhone: "3125698387" },
+      "visn15": { badge: "Heartland Hub", visn: "VISN 15", name: "Kansas City VA Medical Center", desc: "Serving Missouri, Kansas & Southern Illinois", phone: "816-861-4700", cleanPhone: "8168614700" },
+      "visn16": { badge: "South Central Hub", visn: "VISN 16", name: "Michael E. DeBakey VAMC (Houston)", desc: "Serving MS, LA, AR, Eastern TX & parts of OK", phone: "713-791-1414", cleanPhone: "7137911414" },
+      "visn17": { badge: "Heart of Texas Hub", visn: "VISN 17", name: "Central Texas Veterans Health Care (Temple/Austin)", desc: "Serving Central, South & West Texas", phone: "254-778-4811", cleanPhone: "2547784811" },
+      "visn19": { badge: "Rocky Mountain Hub", visn: "VISN 19", name: "Rocky Mountain Regional VAMC (Denver)", desc: "Serving Colorado, Montana, Utah, Wyoming, Western KS/NE", phone: "303-399-8020", cleanPhone: "3033998020" },
+      "visn20": { badge: "Northwest Hub", visn: "VISN 20", name: "VA Puget Sound Healthcare System (Seattle)", desc: "Serving Washington, Oregon, Idaho & Alaska", phone: "206-762-1010", cleanPhone: "2067621010" },
+      "visn21": { badge: "Sierra Pacific Hub", visn: "VISN 21", name: "San Francisco VA Health Care System", desc: "Serving Northern California, Nevada, Hawaii & Pacific Islands", phone: "415-221-4810", cleanPhone: "4152214810" },
+      "visn22": { badge: "Desert Pacific Hub", visn: "VISN 22", name: "VA Greater Los Angeles Healthcare System (West LA)", desc: "Serving Southern California, Arizona & Southern Nevada", phone: "310-478-3711", cleanPhone: "3104783711" },
+      "visn23": { badge: "Midwest Hub (Upper)", visn: "VISN 23", name: "Minneapolis VA Health Care System", desc: "Serving Minnesota, Iowa, North Dakota, South Dakota, Nebraska", phone: "612-725-2000", cleanPhone: "6127252000" },
+      "national_fallback": { badge: "National Travel Coordination", visn: "VA National", name: "VA Beneficiary Travel / Health Resource Center", desc: "Centralized Beneficiary Travel & Special Mode Support", phone: "855-574-7292", cleanPhone: "8555747292" }
     };
 
     const zipInput = document.getElementById('zipInput');
-    const locateBtn = document.getElementById('locateBtn');
+    const geoBtn = document.getElementById('geoBtn');
+    const geoBtnLabel = document.getElementById('geoBtnLabel');
+    const matchStatus = document.getElementById('matchStatus');
+    const statusAlert = document.getElementById('statusAlert');
     const hubBadge = document.getElementById('hubBadge');
     const visnBadge = document.getElementById('visnBadge');
     const facilityName = document.getElementById('facilityName');
@@ -366,63 +231,28 @@
     const copyLabel = document.getElementById('copyLabel');
 
     function resolveHub(zip) {
-      if (!zip || zip.length < 3) return visnDatabase.visn4_pgh;
+      if (!zip || zip.length < 3) return null;
       const p = parseInt(zip.substring(0, 3), 10);
       
-      // VISN 1: New England (010 - 069)
       if (p >= 10 && p <= 69) return visnDatabase.visn1;
-
-      // VISN 2: NY & Northern NJ (070-089, 100-149)
       if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
-
-      // VISN 4: PA, DE, South NJ
       if (p >= 150 && p <= 156) return visnDatabase.visn4_pgh;
       if (p >= 164 && p <= 165) return visnDatabase.visn4_erie;
       if ((p >= 189 && p <= 199) || (p >= 157 && p <= 188)) return visnDatabase.visn4_philly;
-
-      // VISN 5: DC, MD, Northern VA, WV Panhandle (200-219, 254, 267)
       if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-
-      // VISN 6: NC, Central/South VA, WV (220-249, 270-289)
       if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
-
-      // VISN 7: GA, AL, SC (290-319, 350-369)
       if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
-
-      // VISN 8: FL, PR, USVI (006-009, 320-349)
       if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
-
-      // VISN 9: TN, KY (370-385, 400-427)
       if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
-
-      // VISN 10: OH, IN, Lower MI (430-499)
       if (p >= 430 && p <= 499) return visnDatabase.visn10;
-
-      // VISN 12: IL, WI, Upper MI (530-549, 600-619)
       if ((p >= 530 && p <= 549) || (p >= 600 && p <= 619)) return visnDatabase.visn12;
-
-      // VISN 15: MO, KS (620-679)
       if (p >= 620 && p <= 679) return visnDatabase.visn15;
-
-      // VISN 16: MS, LA, AR, East TX (386-397, 700-729, 750-759, 770-777)
       if ((p >= 386 && p <= 397) || (p >= 700 && p <= 729) || (p >= 750 && p <= 759) || (p >= 770 && p <= 777)) return visnDatabase.visn16;
-
-      // VISN 17: Central, South & West TX (760-769, 780-799)
       if ((p >= 760 && p <= 769) || (p >= 780 && p <= 799)) return visnDatabase.visn17;
-
-      // VISN 19: CO, MT, UT, WY (590-599, 800-847)
       if ((p >= 590 && p <= 599) || (p >= 800 && p <= 847)) return visnDatabase.visn19;
-
-      // VISN 20: WA, OR, ID, AK (970-999)
       if (p >= 970 && p <= 999) return visnDatabase.visn20;
-
-      // VISN 21: Northern CA, NV, HI (890-898, 936-969)
       if ((p >= 890 && p <= 898) || (p >= 936 && p <= 969)) return visnDatabase.visn21;
-
-      // VISN 22: Southern CA (including 90210), AZ (850-865, 900-935)
       if ((p >= 850 && p <= 865) || (p >= 900 && p <= 935)) return visnDatabase.visn22;
-
-      // VISN 23: MN, IA, ND, SD, NE (500-528, 550-588, 680-693)
       if ((p >= 500 && p <= 528) || (p >= 550 && p <= 588) || (p >= 680 && p <= 693)) return visnDatabase.visn23;
 
       return visnDatabase.national_fallback;
@@ -438,18 +268,93 @@
       mainActionCall.href = "tel:" + data.cleanPhone;
     }
 
-    locateBtn.addEventListener('click', () => {
-      const val = zipInput.value.trim();
-      const match = resolveHub(val);
-      updateHubUI(match);
-    });
+    function showAlert(msg) {
+      statusAlert.textContent = msg;
+      statusAlert.classList.remove('hidden');
+    }
 
-    zipInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        locateBtn.click();
+    function hideAlert() {
+      statusAlert.classList.add('hidden');
+    }
+
+    // Instant Autocomplete logic
+    zipInput.addEventListener('input', (e) => {
+      hideAlert();
+      // Sanitize input to numbers only
+      const cleanVal = e.target.value.replace(/\D/g, '');
+      if (cleanVal !== e.target.value) {
+        e.target.value = cleanVal;
+      }
+
+      if (cleanVal.length >= 3) {
+        const match = resolveHub(cleanVal);
+        if (match) {
+          updateHubUI(match);
+          matchStatus.textContent = cleanVal.length === 5 ? "Resolved (Exact)" : "Previewing Region";
+          matchStatus.className = "text-[10px] font-mono-code text-emerald-400";
+        }
+      } else {
+        matchStatus.textContent = "Live Auto-Lookup";
+        matchStatus.className = "text-[10px] font-mono-code text-slate-500";
       }
     });
 
+    // Geolocation Resolution
+    geoBtn.addEventListener('click', () => {
+      hideAlert();
+      if (!navigator.geolocation) {
+        showAlert("Geolocation is not supported by your browser.");
+        return;
+      }
+
+      geoBtnLabel.textContent = "Locating...";
+      geoBtn.disabled = true;
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          try {
+            // Free zero-auth reverse geocode service
+            const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+            const data = await res.json();
+            
+            const detectedZip = data.postcode;
+            if (detectedZip) {
+              const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
+              zipInput.value = cleanZip;
+              const match = resolveHub(cleanZip);
+              if (match) {
+                updateHubUI(match);
+                matchStatus.textContent = `Located: ${cleanZip}`;
+                matchStatus.className = "text-[10px] font-mono-code text-emerald-400";
+              }
+            } else {
+              showAlert("Unable to extract ZIP from coordinates. Please enter manually.");
+            }
+          } catch (err) {
+            showAlert("Error connecting to location service. Please enter ZIP.");
+          } finally {
+            geoBtnLabel.textContent = "Use GPS";
+            geoBtn.disabled = false;
+          }
+        },
+        (error) => {
+          let errText = "GPS access denied or unavailable.";
+          if (error.code === 1) errText = "Location permission was denied.";
+          else if (error.code === 2) errText = "Location signal unavailable.";
+          else if (error.code === 3) errText = "Location request timed out.";
+          
+          showAlert(errText);
+          geoBtnLabel.textContent = "Use GPS";
+          geoBtn.disabled = false;
+        },
+        { timeout: 8000, enableHighAccuracy: true }
+      );
+    });
+
+    // Copy script
     copyScriptBtn.addEventListener('click', () => {
       const scriptText = `"Hello, I am a Veteran with a scheduled clinical appointment today. I am requesting coordinated transportation under VA Beneficiary Travel special mode authority for my appointment. Please confirm authorization and initiate the dispatch."`;
       navigator.clipboard.writeText(scriptText).then(() => {
