@@ -45,7 +45,7 @@
     <div class="bg-gradient-to-r from-emerald-950/40 via-slate-900/60 to-slate-900/40 border border-emerald-500/20 rounded-xl p-3.5 flex items-start space-x-3">
       <i data-lucide="crosshair" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
       <p class="text-xs text-slate-300 leading-relaxed">
-        Immediate routing tool for VA Beneficiary Travel coordination. Directly targets regional Travel Desks to authorize rides under authorized special transportation.
+        Direct routing tool for VA Beneficiary Travel coordination. Targets regional Travel Desks to authorize rides under special transportation guidelines.
       </p>
     </div>
 
@@ -62,7 +62,7 @@
             pattern="[0-9]*" 
             inputmode="numeric" 
             maxlength="5" 
-            placeholder="e.g. 15120"
+            placeholder="e.g. 15120 or 90210"
             class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-lg px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 font-mono-code transition outline-none"
           >
         </div>
@@ -81,7 +81,7 @@
           <span id="hubBadge" class="text-[10px] font-mono-code font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
             SW Pennsylvania Hub
           </span>
-          <span class="text-[11px] text-slate-400 font-mono-code">VISN 4</span>
+          <span id="visnBadge" class="text-[11px] text-slate-400 font-mono-code">VISN 4</span>
         </div>
 
         <div>
@@ -118,7 +118,7 @@
       </div>
       <h3 class="text-lg font-black tracking-tight leading-tight mb-2">Connect Directly to Travel Dispatch</h3>
       <p class="text-xs font-medium text-slate-900 leading-relaxed mb-3">
-        Skip standard operator queues. Calls the primary regional coordinator directly from your device.
+        Direct link to the identified facility travel desk or primary national veteran travel operations.
       </p>
       <a 
         id="mainActionCall" 
@@ -126,7 +126,7 @@
         class="w-full bg-slate-950 text-emerald-400 hover:bg-slate-900 active:bg-black font-extrabold py-3 px-4 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transition"
       >
         <i data-lucide="phone" class="w-4 h-4"></i>
-        <span>CALL TRAVEL DESK NOW</span>
+        <span id="mainActionLabel">CALL TRAVEL DESK NOW</span>
       </a>
     </section>
 
@@ -179,27 +179,29 @@
   </footer>
 
   <script>
-    // Initialize icons
     lucide.createIcons();
 
-    // Facility Database
+    // Regional Hub Router Map
     const hubs = {
-      "default": {
-        badge: "SW Pennsylvania Hub",
-        visn: "VISN 4",
-        name: "VA Pittsburgh Healthcare System (University Drive / H.J. Heinz)",
-        desc: "Primary Medical Center - Allegheny County, PA",
-        phone: "412-822-2000",
-        cleanPhone: "4128222000"
+      // Greater Los Angeles / Southern California
+      "cal_s": {
+        badge: "Greater Los Angeles Hub",
+        visn: "VISN 22",
+        name: "VA Greater Los Angeles Healthcare System (West LA)",
+        desc: "Wilshire Blvd Campus - Serving Los Angeles County",
+        phone: "310-478-3711",
+        cleanPhone: "3104783711"
       },
+      // Southwest PA (Pittsburgh area)
       "pa_sw": {
         badge: "SW Pennsylvania Hub",
         visn: "VISN 4",
-        name: "VA Pittsburgh Healthcare System",
-        desc: "University Drive Campus & H.J. Heinz Division",
+        name: "VA Pittsburgh Healthcare System (University Drive / H.J. Heinz)",
+        desc: "Allegheny County & Southwestern PA",
         phone: "412-822-2000",
         cleanPhone: "4128222000"
       },
+      // Northwest PA (Erie)
       "pa_nw": {
         badge: "NW Pennsylvania Hub",
         visn: "VISN 4",
@@ -208,6 +210,7 @@
         phone: "814-868-8661",
         cleanPhone: "8148688661"
       },
+      // Central PA (Altoona)
       "pa_central": {
         badge: "Central Pennsylvania Hub",
         visn: "VISN 4",
@@ -215,12 +218,40 @@
         desc: "Central PA Regional Medical Center",
         phone: "814-943-8164",
         cleanPhone: "8149438164"
+      },
+      // Eastern PA (Philadelphia)
+      "pa_east": {
+        badge: "SE Pennsylvania Hub",
+        visn: "VISN 4",
+        name: "Corporal Michael J. Crescenz VAMC (Philadelphia)",
+        desc: "Philadelphia & Delaware Valley Metro",
+        phone: "215-823-5800",
+        cleanPhone: "2158235800"
+      },
+      // North Carolina (Fayetteville / Fort Liberty Area)
+      "nc_fay": {
+        badge: "Sandhills NC Hub",
+        visn: "VISN 6",
+        name: "Fayetteville VA Medical Center",
+        desc: "Cumberland County / Fort Liberty Area",
+        phone: "910-488-2120",
+        cleanPhone: "9104882120"
+      },
+      // Default / General VA Beneficiary Helpline
+      "national_fallback": {
+        badge: "National Travel Coordination",
+        visn: "VA National",
+        name: "VA Beneficiary Travel / Health Resource Center",
+        desc: "Centralized Beneficiary Travel & Special Mode Support",
+        phone: "855-574-7292",
+        cleanPhone: "8555747292"
       }
     };
 
     const zipInput = document.getElementById('zipInput');
     const locateBtn = document.getElementById('locateBtn');
     const hubBadge = document.getElementById('hubBadge');
+    const visnBadge = document.getElementById('visnBadge');
     const facilityName = document.getElementById('facilityName');
     const facilityAddress = document.getElementById('facilityAddress');
     const facilityPhone = document.getElementById('facilityPhone');
@@ -230,18 +261,28 @@
     const copyLabel = document.getElementById('copyLabel');
 
     function resolveHub(zip) {
-      if (!zip || zip.length < 3) return hubs.default;
+      if (!zip || zip.length < 3) return hubs.pa_sw;
       const prefix = parseInt(zip.substring(0, 3), 10);
       
+      // Southern California / LA (900 - 918) - covers 90210
+      if (prefix >= 900 && prefix <= 918) return hubs.cal_s;
+      
+      // PA Regions
       if (prefix >= 150 && prefix <= 156) return hubs.pa_sw;
       if (prefix >= 164 && prefix <= 165) return hubs.pa_nw;
       if (prefix >= 166 && prefix <= 168) return hubs.pa_central;
+      if (prefix >= 190 && prefix <= 192) return hubs.pa_east;
+
+      // North Carolina (Fayetteville area: 283)
+      if (prefix === 283) return hubs.nc_fay;
       
-      return hubs.default;
+      // National Fallback for any other valid ZIP code
+      return hubs.national_fallback;
     }
 
     function updateHubUI(data) {
       hubBadge.textContent = data.badge;
+      visnBadge.textContent = data.visn;
       facilityName.textContent = data.name;
       facilityAddress.textContent = data.desc;
       facilityPhone.textContent = data.phone;
@@ -261,7 +302,6 @@
       }
     });
 
-    // Copy script handler
     copyScriptBtn.addEventListener('click', () => {
       const scriptText = `"Hello, I am a Veteran with a scheduled clinical appointment today. I am requesting coordinated transportation under VA Beneficiary Travel special mode authority for my appointment. Please confirm authorization and initiate the dispatch."`;
       navigator.clipboard.writeText(scriptText).then(() => {
