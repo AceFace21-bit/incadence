@@ -24,7 +24,9 @@
     }
     .mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right {
       transform: scale(0.8);
-      transform-origin: bottom right;
+      transform-origin: bottom left;
+      left: 8px !important;
+      right: auto !important;
     }
     .radar-crosshair {
       position: absolute;
@@ -41,7 +43,6 @@
   <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-4 py-2.5">
     <div class="max-w-xl mx-auto flex items-center justify-between">
       
-      <!-- Logo and Title Group -->
       <div class="flex items-center space-x-2">
         <div class="w-7 h-7 rounded-md bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
           <i data-lucide="shield-check" class="w-4 h-4"></i>
@@ -52,7 +53,6 @@
         </div>
       </div>
 
-      <!-- Zero-PII Badge -->
       <div class="flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-slate-800/80 border border-slate-700/60 text-[9px] font-medium text-slate-300">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
         <span>Zero-PII</span>
@@ -99,7 +99,7 @@
       <div id="statusAlert" class="hidden text-xs py-1.5 px-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300"></div>
     </section>
 
-    <!-- Tactical Map Module with Bullseye Call Button in the Center Eye -->
+    <!-- Tactical Target Box with Bottom-Right Call Button -->
     <section class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm relative">
       <div class="px-3.5 py-2 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/60">
         <div class="flex items-center space-x-2">
@@ -113,20 +113,20 @@
       <div class="relative w-full h-56 bg-slate-950">
         <div id="map" class="w-full h-full"></div>
 
-        <!-- Radar Reticle in center -->
-        <div class="radar-crosshair w-40 h-40 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center">
-          <div class="w-24 h-24 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
+        <!-- Radar Reticle (Dead Center) -->
+        <div class="radar-crosshair w-36 h-36 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center">
+          <div class="w-20 h-20 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
         </div>
 
-        <!-- Center Eye Primary Call Button -->
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+        <!-- Call Transit Hub Button (Anchored Bottom-Right) -->
+        <div class="absolute bottom-3 right-3 pointer-events-none z-10">
           <a 
             id="centerCallBtn" 
             href="tel:4123603620,1" 
-            class="pointer-events-auto shadow-2xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-5 py-3 rounded-xl font-extrabold uppercase tracking-wider flex items-center space-x-2.5 transition transform hover:scale-105 active:scale-95 border-2 border-emerald-300/60"
+            class="pointer-events-auto shadow-2xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-4 py-2.5 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-2 transition transform hover:scale-105 active:scale-95 border border-emerald-300/60"
           >
             <i data-lucide="phone-call" class="w-4 h-4 fill-slate-950"></i>
-            <span id="centerCallText" class="text-sm font-mono-code">CALL TRANSIT HUB</span>
+            <span id="centerCallText" class="text-xs font-mono-code tracking-wide">CALL TRANSIT HUB</span>
           </a>
         </div>
       </div>
@@ -166,7 +166,7 @@
       </div>
     </section>
 
-    <!-- Upgraded Clean National Dispatch Card -->
+    <!-- Fallback Card -->
     <section class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2">
       <div class="flex items-center justify-between text-slate-400">
         <span class="text-[11px] font-semibold uppercase tracking-wider">Alternative / Nationwide Fallback</span>
@@ -232,7 +232,7 @@
 
   </main>
 
-  <!-- Footer with Terence Watkins Attribution -->
+  <!-- Footer Attribution -->
   <footer class="mt-6 text-center text-slate-500 text-[10px] sm:text-[11px] font-mono-code px-4 space-y-1">
     <div class="text-slate-400 font-semibold tracking-wide">
       DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
@@ -245,10 +245,8 @@
   <script>
     lucide.createIcons();
 
-    // Mapbox Token
     mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 
-    // Initialize Map with dark theme
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/dark-v11',
@@ -379,7 +377,6 @@
       statusAlert.classList.add('hidden');
     }
 
-    // Autocomplete Logic
     zipInput.addEventListener('input', (e) => {
       hideAlert();
       const cleanVal = e.target.value.replace(/\D/g, '');
@@ -405,7 +402,6 @@
       }
     });
 
-    // Geolocation Resolution
     geoBtn.addEventListener('click', () => {
       hideAlert();
       if (!navigator.geolocation) {
