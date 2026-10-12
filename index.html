@@ -88,8 +88,15 @@
             inputmode="numeric" 
             maxlength="5" 
             placeholder="5-digit ZIP..."
-            class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 rounded-md px-2.5 py-1.5 text-xs text-slate-100 placeholder-slate-500 font-mono-code transition outline-none"
+            class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 rounded-md pl-2.5 pr-8 py-1.5 text-xs text-slate-100 placeholder-slate-500 font-mono-code transition outline-none"
           >
+          <button 
+            type="button" 
+            id="clearZipBtn" 
+            class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 active:text-white p-0.5"
+          >
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          </button>
         </div>
         <button 
           id="geoBtn"
@@ -255,6 +262,16 @@
     // Split Mapbox token segments to prevent automated scanner block
     mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 
+    const defaultHub = {
+      badge: "SW Pennsylvania Hub",
+      visn: "VISN 4",
+      name: "VA Pittsburgh Healthcare System",
+      desc: "University Drive & H.J. Heinz Divisions",
+      phone: "412-360-3620 (Press 1)",
+      cleanPhone: "4123603620,1",
+      coords: [-79.9600, 40.4444]
+    };
+
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/dark-v11',
@@ -299,6 +316,7 @@
     };
 
     const zipInput = document.getElementById('zipInput');
+    const clearZipBtn = document.getElementById('clearZipBtn');
     const geoBtn = document.getElementById('geoBtn');
     const geoBtnLabel = document.getElementById('geoBtnLabel');
     const matchStatus = document.getElementById('matchStatus');
@@ -323,11 +341,22 @@
     closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
     modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
 
-    // Dismiss number pad if tapping outside input field
+    // Dismiss number pad if tapping outside input field or clear button
     document.addEventListener('touchstart', (e) => {
-      if (document.activeElement === zipInput && e.target !== zipInput) {
+      if (document.activeElement === zipInput && e.target !== zipInput && e.target !== clearZipBtn && !clearZipBtn.contains(e.target)) {
         zipInput.blur();
       }
+    });
+
+    // Clear ZIP input handler
+    clearZipBtn.addEventListener('click', () => {
+      zipInput.value = '';
+      clearZipBtn.classList.add('hidden');
+      hideAlert();
+      matchStatus.textContent = "Live Auto-Lookup";
+      matchStatus.className = "text-[9px] font-mono-code text-slate-500";
+      updateHubUI(defaultHub);
+      zipInput.focus();
     });
 
     // Track lookup metrics to Plausible custom goal
@@ -418,6 +447,12 @@
         e.target.value = cleanVal;
       }
 
+      if (cleanVal.length > 0) {
+        clearZipBtn.classList.remove('hidden');
+      } else {
+        clearZipBtn.classList.add('hidden');
+      }
+
       if (cleanVal.length >= 3) {
         const match = resolveHub(cleanVal);
         if (match) {
@@ -471,6 +506,7 @@
             if (detectedZip) {
               const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
               zipInput.value = cleanZip;
+              clearZipBtn.classList.remove('hidden');
               const match = resolveHub(cleanZip);
               if (match) {
                 updateHubUI(match);
