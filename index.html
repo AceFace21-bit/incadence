@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>In Cadence | Veteran Access Platform</title>
   
-  <!-- Privacy-friendly analytics by Plausible -->
-  <script async src="https://plausible.io/js/pa-CbxfhXwRlo4g7ivZ3AJsn.js"></script>
+  <!-- Privacy-friendly analytics by Plausible with Tagged Events Extension -->
+  <script defer data-domain="aceface21-bit.github.io" src="https://plausible.io/js/script.tagged-events.js"></script>
   <script>
-    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
-    plausible.init()
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};
   </script>
 
   <!-- Tailwind CSS & Lucide Icons -->
@@ -134,7 +133,7 @@
           <a 
             id="centerCallBtn" 
             href="tel:4123603620,1" 
-            class="pointer-events-auto shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-md font-extrabold uppercase tracking-wider flex items-center space-x-1.5 transition transform active:scale-95 border border-emerald-300/60"
+            class="plausible-event-name=Dialer+Click pointer-events-auto shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-md font-extrabold uppercase tracking-wider flex items-center space-x-1.5 transition transform active:scale-95 border border-emerald-300/60"
           >
             <i data-lucide="phone-call" class="w-3.5 h-3.5 fill-slate-950"></i>
             <span id="centerCallText" class="text-[10px] font-mono-code tracking-wide">CALL TRANSIT HUB</span>
@@ -169,7 +168,7 @@
         <a 
           id="callBtn" 
           href="tel:4123603620,1" 
-          class="bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-emerald-500/40 text-emerald-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-wider flex items-center space-x-1 shrink-0"
+          class="plausible-event-name=Dialer+Click bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-emerald-500/40 text-emerald-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-wider flex items-center space-x-1 shrink-0"
         >
           <i data-lucide="phone" class="w-2.5 h-2.5"></i>
           <span>Dial</span>
@@ -181,8 +180,9 @@
     <div class="grid grid-cols-2 gap-1.5 shrink-0">
       <!-- Nationwide Dispatch Dial -->
       <a 
+        id="fallbackCallBtn"
         href="tel:8555747292" 
-        class="bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition"
+        class="plausible-event-name=Dialer+Click bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition"
       >
         <div class="truncate">
           <div class="text-[9px] font-bold uppercase text-slate-200">National Fallback</div>
@@ -272,6 +272,8 @@
       coords: [-79.9600, 40.4444]
     };
 
+    let activeHub = defaultHub;
+
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/dark-v11',
@@ -329,6 +331,7 @@
     const callBtn = document.getElementById('callBtn');
     const centerCallBtn = document.getElementById('centerCallBtn');
     const centerCallText = document.getElementById('centerCallText');
+    const fallbackCallBtn = document.getElementById('fallbackCallBtn');
     const mapCoordinates = document.getElementById('mapCoordinates');
 
     // Modal elements
@@ -359,9 +362,9 @@
       zipInput.focus();
     });
 
-    // Track lookup metrics to Plausible custom goal
+    // Goal 1: Plausible 'Hub Search' Telemetry
     function trackLookup(zip, matchData, method) {
-      if (window.plausible && matchData) {
+      if (typeof window.plausible === 'function' && matchData) {
         window.plausible('Hub Search', {
           props: {
             zip_prefix: zip.substring(0, 3),
@@ -372,6 +375,25 @@
         });
       }
     }
+
+    // Goal 2: Plausible 'Dialer Click' Telemetry
+    function trackDialerClick(buttonType, targetHub) {
+      if (typeof window.plausible === 'function' && targetHub) {
+        window.plausible('Dialer Click', {
+          props: {
+            button: buttonType,
+            visn: targetHub.visn,
+            hub_name: targetHub.name,
+            phone: targetHub.cleanPhone
+          }
+        });
+      }
+    }
+
+    // Attach programmatic click listeners for Dialer Click telemetry
+    centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
+    callBtn.addEventListener('click', () => trackDialerClick('Micro-Card Dial Button', activeHub));
+    fallbackCallBtn.addEventListener('click', () => trackDialerClick('National Fallback Dial Button', visnDatabase.national_fallback));
 
     function resolveHub(zip) {
       if (!zip || zip.length < 3) return null;
@@ -411,6 +433,7 @@
     }
 
     function updateHubUI(data) {
+      activeHub = data;
       hubBadge.textContent = data.badge;
       visnBadge.textContent = data.visn;
       facilityName.textContent = data.name;
