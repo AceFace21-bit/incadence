@@ -4,10 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>In Cadence | Forward March Transit Dispatch</title>
+
+  <!-- Mapbox GL JS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+
   <style>
     :root {
       --bg-dark: #0f172a;
-      --card-bg: #1e293b;
+      --card-bg: rgba(30, 41, 59, 0.92);
       --accent-blue: #2563eb;
       --accent-hover: #1d4ed8;
       --text-main: #f8fafc;
@@ -23,13 +28,35 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    body {
-      background-color: var(--bg-dark);
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      background-color: #020617;
       color: var(--text-main);
-      padding: 16px;
-      display: flex;
-      justify-content: center;
+    }
+
+    /* Fullscreen Satellite Map Background */
+    #map {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+
+    /* Overlay Interface Container */
+    .interface-overlay {
+      position: relative;
+      z-index: 10;
+      width: 100%;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 16px 32px 16px;
+      pointer-events: none; /* Let touches hit the map when not on cards */
     }
 
     .container {
@@ -37,43 +64,48 @@
       max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
+      pointer-events: auto; /* Re-enable taps on the interface cards */
     }
 
     header {
       text-align: center;
-      padding: 12px 0 6px 0;
+      padding: 10px 0 4px 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(51, 65, 85, 0.7);
+      border-radius: 12px;
     }
 
     header h1 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--text-main);
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #38bdf8;
     }
 
     header p {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 2px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
 
     .card {
       background-color: var(--card-bg);
+      backdrop-filter: blur(10px);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
       width: 100%;
-      overflow: hidden;
     }
 
     .card-title {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -84,24 +116,25 @@
       flex-direction: column;
       gap: 10px;
       width: 100%;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     input[type="text"] {
       width: 100%;
-      background-color: #0b1120;
+      background-color: #020617;
       border: 1px solid var(--border-color);
-      color: #fff;
-      font-size: 1.25rem;
+      color: #38bdf8;
+      font-size: 1.3rem;
+      font-weight: 700;
       padding: 12px;
       border-radius: 8px;
       text-align: center;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       outline: none;
     }
 
     input[type="text"]:focus {
-      border-color: var(--accent-blue);
+      border-color: #38bdf8;
     }
 
     button.btn-lookup {
@@ -111,9 +144,11 @@
       border: none;
       padding: 14px;
       border-radius: 8px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 1.05rem;
+      letter-spacing: 0.5px;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
 
     button.btn-lookup:active {
@@ -125,19 +160,26 @@
       border-top: 1px solid var(--border-color);
       padding-top: 14px;
       margin-top: 8px;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .facility-name {
       font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text-main);
+      font-weight: 800;
+      color: #f8fafc;
       margin-bottom: 4px;
     }
 
     .facility-location {
       font-size: 0.85rem;
-      color: var(--text-muted);
+      color: #38bdf8;
       margin-bottom: 14px;
+      font-weight: 600;
     }
 
     .btn-dial {
@@ -153,7 +195,7 @@
       padding: 14px;
       border-radius: 8px;
       text-align: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 14px rgba(34, 197, 94, 0.4);
     }
 
     .btn-dial:active {
@@ -172,9 +214,9 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 10px 0;
+      padding: 8px 0;
       border-bottom: 1px solid #283548;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
 
     .checklist-item:last-child {
@@ -189,7 +231,7 @@
 
     footer {
       text-align: center;
-      padding: 16px 0;
+      padding: 12px 0 6px 0;
       font-size: 0.75rem;
       color: var(--text-muted);
       line-height: 1.5;
@@ -198,175 +240,63 @@
 </head>
 <body>
 
-  <div class="container">
-    <header>
-      <h1>FORWARD MARCH</h1>
-      <p>Beneficiary Travel Direct Dispatch</p>
-    </header>
+  <!-- Fullscreen 3D Map Container -->
+  <div id="map"></div>
 
-    <div class="card">
-      <div class="card-title">📍 Enter Patient ZIP Code</div>
-      <div class="input-group">
-        <input type="text" id="zipInput" placeholder="15201" maxlength="5" inputmode="numeric">
-        <button class="btn-lookup" onclick="lookupTransitDesk()">Find Desk</button>
-      </div>
+  <!-- Foreground App Container -->
+  <div class="interface-overlay">
+    <div class="container">
+      <header>
+        <h1>FORWARD MARCH</h1>
+        <p>Beneficiary Travel Direct Dispatch</p>
+      </header>
 
-      <div id="dispatchResult">
-        <div class="facility-name" id="resFacility">--</div>
-        <div class="facility-location" id="resLocation">--</div>
-        <a href="#" id="resDialLink" class="btn-dial">
-          📞 Call <span id="resPhone">--</span>
-        </a>
-        <div class="dial-instructions" id="resInstructions">
-          Direct automated transfer configured.
+      <!-- Dispatch Lookup Card -->
+      <div class="card">
+        <div class="card-title">📍 Enter Patient ZIP Code</div>
+        <div class="input-group">
+          <input type="text" id="zipInput" placeholder="15201" maxlength="5" inputmode="numeric">
+          <button class="btn-lookup" onclick="lookupTransitDesk()">Launch Direct Routing</button>
+        </div>
+
+        <div id="dispatchResult">
+          <div class="facility-name" id="resFacility">--</div>
+          <div class="facility-location" id="resLocation">--</div>
+          <a href="#" id="resDialLink" class="btn-dial">
+            📞 Call <span id="resPhone">--</span>
+          </a>
+          <div class="dial-instructions" id="resInstructions">
+            Direct automated transfer configured.
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="card-title">📋 Before You Call Checklist</div>
-      <div class="checklist-item">
-        <input type="checkbox" id="chk1">
-        <label for="chk1">Full Legal Name & Last 4 of SSN</label>
+      <!-- Readiness Intake Card -->
+      <div class="card">
+        <div class="card-title">📋 Before You Call Checklist</div>
+        <div class="checklist-item">
+          <input type="checkbox" id="chk1">
+          <label for="chk1">Full Legal Name & Last 4 of SSN</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="chk2">
+          <label for="chk2">Clinic / Appointment Date & Exact Time</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="chk3">
+          <label for="chk3">Specific Pickup Street Address Verified</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="chk4">
+          <label for="chk4">Mobility Needs (Wheelchair / Walker / Escort)</label>
+        </div>
       </div>
-      <div class="checklist-item">
-        <input type="checkbox" id="chk2">
-        <label for="chk2">Clinic / Appointment Date & Exact Time</label>
-      </div>
-      <div class="checklist-item">
-        <input type="checkbox" id="chk3">
-        <label for="chk3">Specific Pickup Street Address Verified</label>
-      </div>
-      <div class="checklist-item">
-        <input type="checkbox" id="chk4">
-        <label for="chk4">Mobility Needs (Wheelchair / Walker / Escort)</label>
-      </div>
-    </div>
 
-    <footer>
-      VISN 4 Direct Network Verification &bull; In Cadence<br>
-      Audited Field Directory &bull; Fast-Track Access
-    </footer>
+      <footer>
+        VISN 4 Direct Network Verification &bull; In Cadence<br>
+        Audited Field Directory &bull; Fast-Track Access
+      </footer>
+    </div>
   </div>
 
-  <script>
-    const VISN4_DIRECTORY = {
-      "VAPHS": {
-        facility: "VA Pittsburgh Healthcare System",
-        location: "University Drive / Heinz",
-        displayNumber: "412-360-3620 (Press 1)",
-        telUri: "tel:4123603620,1",
-        instructions: "System will pause and auto-dial 1 when answered."
-      },
-      "BUTLER": {
-        facility: "Butler VA Health Care System",
-        location: "Butler, PA",
-        displayNumber: "800-362-8262 Ext 2475",
-        telUri: "tel:8003628262,2475",
-        instructions: "System will pause and auto-dial extension 2475."
-      },
-      "ERIE": {
-        facility: "Erie VA Medical Center",
-        location: "Erie, PA",
-        displayNumber: "814-860-2973",
-        telUri: "tel:8148602973",
-        instructions: "Direct line to the Beneficiary Travel desk."
-      },
-      "LEBANON": {
-        facility: "Lebanon VA Medical Center",
-        location: "Lebanon, PA",
-        displayNumber: "717-272-6621 Ext 5767",
-        telUri: "tel:7172726621,5767",
-        instructions: "System will pause and auto-dial extension 5767."
-      },
-      "COATESVILLE": {
-        facility: "Coatesville VA Medical Center",
-        location: "Coatesville, PA",
-        displayNumber: "610-384-7711 Ext 5008",
-        telUri: "tel:6103847711,5008",
-        instructions: "System will pause and auto-dial extension 5008."
-      },
-      "ALTOONA": {
-        facility: "James E. Van Zandt VA Medical Center",
-        location: "Altoona, PA",
-        displayNumber: "814-943-8164 Ext 17383",
-        telUri: "tel:8149438164,17383",
-        instructions: "System will pause and auto-dial extension 17383."
-      },
-      "WILKES_BARRE": {
-        facility: "Wilkes-Barre VA Medical Center",
-        location: "Wilkes-Barre, PA",
-        displayNumber: "570-824-3521 Ext 27135",
-        telUri: "tel:5708243521,27135",
-        instructions: "System will pause and auto-dial extension 27135."
-      },
-      "WILMINGTON": {
-        facility: "Wilmington VA Medical Center",
-        location: "Wilmington, DE & S. Jersey",
-        displayNumber: "302-994-2511 Ext 34797",
-        telUri: "tel:3029942511,34797",
-        instructions: "System will pause and auto-dial extension 34797."
-      },
-      "PHILADELPHIA": {
-        facility: "Corporal Michael J. Crescenz VAMC",
-        location: "Philadelphia, PA",
-        displayNumber: "215-823-5800 Ext 204441",
-        telUri: "tel:2158235800,204441",
-        instructions: "System will pause and auto-dial extension 204441."
-      },
-      "NATIONAL": {
-        facility: "VA National Beneficiary Travel Line",
-        location: "National Help Desk",
-        displayNumber: "855-574-7292",
-        telUri: "tel:8555747292",
-        instructions: "Toll-free national dispatch fallback line."
-      }
-    };
-
-    function lookupTransitDesk() {
-      const input = document.getElementById("zipInput").value.trim();
-      if (input.length < 3) {
-        alert("Please enter a valid 5-digit ZIP code.");
-        return;
-      }
-
-      const prefix = parseInt(input.substring(0, 3), 10);
-      let desk = VISN4_DIRECTORY.NATIONAL;
-
-      if ([150, 151, 152, 153, 154, 156].includes(prefix)) {
-        desk = VISN4_DIRECTORY.VAPHS;
-      } else if ([160, 161, 162, 163].includes(prefix)) {
-        desk = VISN4_DIRECTORY.BUTLER;
-      } else if ([164, 165].includes(prefix)) {
-        desk = VISN4_DIRECTORY.ERIE;
-      } else if ([155, 157, 158, 159, 166, 168].includes(prefix)) {
-        desk = VISN4_DIRECTORY.ALTOONA;
-      } else if ([170, 171, 172, 173, 174, 175, 176, 178, 179].includes(prefix)) {
-        desk = VISN4_DIRECTORY.LEBANON;
-      } else if ([182, 183, 184, 185, 186, 187, 188].includes(prefix)) {
-        desk = VISN4_DIRECTORY.WILKES_BARRE;
-      } else if ([193, 194, 195, 196].includes(prefix)) {
-        desk = VISN4_DIRECTORY.COATESVILLE;
-      } else if ([189, 190, 191, 192].includes(prefix)) {
-        desk = VISN4_DIRECTORY.PHILADELPHIA;
-      } else if ([197, 198, 199, 80, 81, 82, 83, 84].includes(prefix)) {
-        desk = VISN4_DIRECTORY.WILMINGTON;
-      }
-
-      document.getElementById("resFacility").textContent = desk.facility;
-      document.getElementById("resLocation").textContent = desk.location;
-      document.getElementById("resPhone").textContent = desk.displayNumber;
-      document.getElementById("resDialLink").setAttribute("href", desk.telUri);
-      document.getElementById("resInstructions").textContent = desk.instructions;
-
-      document.getElementById("dispatchResult").style.display = "block";
-    }
-
-    document.getElementById("zipInput").addEventListener("keyup", function(event) {
-      if (event.key === "Enter") {
-        lookupTransitDesk();
-      }
-    });
-  </script>
-</body>
-</html>
+  
