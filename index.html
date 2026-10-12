@@ -73,7 +73,7 @@
     <section class="bg-slate-900/90 border border-slate-800 rounded-lg p-2 shrink-0 shadow-sm">
       <div class="flex items-center justify-between mb-1">
         <label for="zipInput" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
-          Postal Code / Auto-GPS
+          Enter your ZIP Code below
         </label>
         <span id="matchStatus" class="text-[9px] font-mono-code text-slate-500">Live Auto-Lookup</span>
       </div>
@@ -193,8 +193,8 @@
 
       <!-- Call Script Trigger Button (Tagged for Goal 3) -->
       <button 
-        id="openScriptBtn"
-        type="button"
+        id="openScriptBtn" 
+        type="button" 
         class="plausible-event-name=Call+Script+Opened bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition text-left"
       >
         <div>
@@ -426,7 +426,7 @@
       if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
 
       if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visn6;
+      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
       if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
       if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
       if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
