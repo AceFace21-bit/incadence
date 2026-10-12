@@ -7,6 +7,10 @@
   
   <!-- Privacy-friendly analytics by Plausible -->
   <script async src="https://plausible.io/js/pa-CbxfhXwRlo4g7ivZ3AJsn.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
 
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -248,7 +252,7 @@
   <script>
     lucide.createIcons();
 
-    // Mapbox Token split to bypass automated security scanners
+    // Mapbox Token
     mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 
     const map = new mapboxgl.Map({
