@@ -191,11 +191,11 @@
         <i data-lucide="phone-forwarded" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1"></i>
       </a>
 
-      <!-- Call Script Trigger Button -->
+      <!-- Call Script Trigger Button (Tagged for Goal 3) -->
       <button 
         id="openScriptBtn"
         type="button"
-        class="bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition text-left"
+        class="plausible-event-name=Call+Script+Opened bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition text-left"
       >
         <div>
           <div class="text-[9px] font-bold uppercase text-slate-200">Call Script</div>
@@ -340,7 +340,19 @@
     const closeScriptBtn = document.getElementById('closeScriptBtn');
     const modalDismissBtn = document.getElementById('modalDismissBtn');
 
-    openScriptBtn.addEventListener('click', () => scriptModal.classList.remove('hidden'));
+    // Goal 3: Plausible 'Call Script Opened' Telemetry
+    openScriptBtn.addEventListener('click', () => {
+      scriptModal.classList.remove('hidden');
+      if (typeof window.plausible === 'function') {
+        window.plausible('Call Script Opened', {
+          props: {
+            current_hub: activeHub ? activeHub.name : 'VA Pittsburgh Healthcare System',
+            visn: activeHub ? activeHub.visn : 'VISN 4'
+          }
+        });
+      }
+    });
+
     closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
     modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
 
@@ -414,7 +426,7 @@
       if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
 
       if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
+      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visn6;
       if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
       if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
       if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
@@ -448,7 +460,7 @@
       centerCallText.textContent = isFallback ? "CALL DISPATCH" : "CALL TRANSIT HUB";
 
       if (map && data.coords) {
-        map.flyTo({ center: data.coords, zoom: isFallback ? 5 : 12, essential: true });
+        map.flyTo({ center: data.coords, zoom: isFallback ? 5 : 12, speed: 1.4, essential: true });
         mapMarker.setLngLat(data.coords);
         mapCoordinates.textContent = `${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W`;
       }
