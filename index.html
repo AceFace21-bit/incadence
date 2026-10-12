@@ -36,6 +36,13 @@
       transform: translate(-50%, -50%);
       pointer-events: none;
     }
+    /* Heavy tactical click recoil */
+    .tactical-pulse-active {
+      transform: scale(0.92) !important;
+      filter: brightness(1.35) !important;
+      box-shadow: 0 0 25px rgba(52, 211, 153, 0.9) !important;
+      transition: all 50ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 h-[100dvh] w-screen overflow-hidden flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-slate-950 select-none">
@@ -122,15 +129,15 @@
           <div class="w-16 h-16 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
         </div>
 
-        <!-- Primary Call Button Anchored to Bottom Right -->
+        <!-- Primary Call Button Anchored to Bottom Right with Pronounced Recoil -->
         <div class="absolute bottom-2 right-2 pointer-events-none z-10">
           <a 
             id="centerCallBtn" 
             href="tel:4123603620,1" 
-            class="pointer-events-auto shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-md font-extrabold uppercase tracking-wider flex items-center space-x-1.5 transition transform active:scale-95 border border-emerald-300/60"
+            class="pointer-events-auto shadow-xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:tactical-pulse-active text-slate-950 px-3.5 py-2 rounded-lg font-black uppercase tracking-wider flex items-center space-x-1.5 transition border-2 border-emerald-300/80"
           >
-            <i data-lucide="phone-call" class="w-3.5 h-3.5 fill-slate-950"></i>
-            <span id="centerCallText" class="text-[10px] font-mono-code tracking-wide">CALL TRANSIT HUB</span>
+            <i data-lucide="phone-call" class="w-4 h-4 fill-slate-950"></i>
+            <span id="centerCallText" class="text-[11px] font-mono-code tracking-wide">CALL TRANSIT HUB</span>
           </a>
         </div>
       </div>
@@ -162,7 +169,7 @@
         <a 
           id="callBtn" 
           href="tel:4123603620,1" 
-          class="bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-emerald-500/40 text-emerald-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-wider flex items-center space-x-1 shrink-0"
+          class="bg-slate-800 hover:bg-slate-700 active:tactical-pulse-active border border-emerald-500/40 text-emerald-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-wider flex items-center space-x-1 shrink-0 transition"
         >
           <i data-lucide="phone" class="w-2.5 h-2.5"></i>
           <span>Dial</span>
@@ -175,7 +182,7 @@
       <a 
         id="fallbackCallBtn"
         href="tel:8555747292" 
-        class="bg-slate-900 border border-slate-800 hover:border-emerald-500/40 active:border-emerald-500 p-2 rounded-lg flex items-center justify-between transition"
+        class="bg-slate-900 border border-slate-800 hover:border-emerald-500/40 active:tactical-pulse-active p-2 rounded-lg flex items-center justify-between transition"
       >
         <div class="truncate">
           <div class="text-[9px] font-bold uppercase text-slate-200">National Fallback</div>
@@ -324,15 +331,23 @@
     closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
     modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
 
-    // Haptic feedback trigger on dialing actions
-    function triggerHaptic() {
+    // Pronounced Tactical Haptic Engine with Staggered Multi-Pulse Pattern
+    function triggerTacticalHaptic(e) {
+      const target = e.currentTarget;
+      
+      // Visual recoil flash
+      target.classList.add('tactical-pulse-active');
+      setTimeout(() => target.classList.remove('tactical-pulse-active'), 180);
+
+      // Heavy staggered vibration: 80ms hit, 40ms pause, 120ms confirmation hit
       if (navigator.vibrate) {
-        navigator.vibrate(40);
+        navigator.vibrate([80, 40, 120]);
       }
     }
-    centerCallBtn.addEventListener('click', triggerHaptic);
-    callBtn.addEventListener('click', triggerHaptic);
-    fallbackCallBtn.addEventListener('click', triggerHaptic);
+
+    centerCallBtn.addEventListener('pointerdown', triggerTacticalHaptic);
+    callBtn.addEventListener('pointerdown', triggerTacticalHaptic);
+    fallbackCallBtn.addEventListener('pointerdown', triggerTacticalHaptic);
 
     function resolveHub(zip) {
       if (!zip || zip.length < 3) return null;
@@ -401,7 +416,6 @@
       statusAlert.classList.add('hidden');
     }
 
-    // Input & Auto-Dismiss Logic
     zipInput.addEventListener('input', (e) => {
       hideAlert();
       const cleanVal = e.target.value.replace(/\D/g, '');
@@ -432,13 +446,11 @@
         matchStatus.className = "text-[9px] font-mono-code text-slate-500";
       }
 
-      // Auto-dismiss iOS keyboard on 5th digit
       if (cleanVal.length === 5) {
         zipInput.blur();
       }
     });
 
-    // Clear ZIP button
     clearZipBtn.addEventListener('click', () => {
       zipInput.value = '';
       clearZipBtn.classList.add('hidden');
@@ -449,7 +461,6 @@
       zipInput.focus();
     });
 
-    // GPS Geolocation
     geoBtn.addEventListener('click', () => {
       hideAlert();
       if (!navigator.geolocation) {
