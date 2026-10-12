@@ -81,8 +81,15 @@
             inputmode="numeric" 
             maxlength="5" 
             placeholder="5-digit ZIP..."
-            class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 rounded-md px-2.5 py-1.5 text-xs text-slate-100 placeholder-slate-500 font-mono-code transition outline-none"
+            class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 rounded-md pl-2.5 pr-8 py-1.5 text-base sm:text-xs text-slate-100 placeholder-slate-500 font-mono-code transition outline-none"
           >
+          <button 
+            id="clearZipBtn" 
+            type="button" 
+            class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1"
+          >
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          </button>
         </div>
         <button 
           id="geoBtn"
@@ -165,10 +172,10 @@
 
     <!-- Streamlined Secondary Actions & Modal Trigger -->
     <div class="grid grid-cols-2 gap-1.5 shrink-0">
-      <!-- Nationwide Dispatch Dial -->
       <a 
+        id="fallbackCallBtn"
         href="tel:8555747292" 
-        class="bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition"
+        class="bg-slate-900 border border-slate-800 hover:border-emerald-500/40 active:border-emerald-500 p-2 rounded-lg flex items-center justify-between transition"
       >
         <div class="truncate">
           <div class="text-[9px] font-bold uppercase text-slate-200">National Fallback</div>
@@ -177,7 +184,6 @@
         <i data-lucide="phone-forwarded" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1"></i>
       </a>
 
-      <!-- Call Script Trigger Button -->
       <button 
         id="openScriptBtn"
         type="button"
@@ -292,6 +298,7 @@
     };
 
     const zipInput = document.getElementById('zipInput');
+    const clearZipBtn = document.getElementById('clearZipBtn');
     const geoBtn = document.getElementById('geoBtn');
     const geoBtnLabel = document.getElementById('geoBtnLabel');
     const matchStatus = document.getElementById('matchStatus');
@@ -304,6 +311,7 @@
     const callBtn = document.getElementById('callBtn');
     const centerCallBtn = document.getElementById('centerCallBtn');
     const centerCallText = document.getElementById('centerCallText');
+    const fallbackCallBtn = document.getElementById('fallbackCallBtn');
     const mapCoordinates = document.getElementById('mapCoordinates');
 
     // Modal elements
@@ -315,6 +323,16 @@
     openScriptBtn.addEventListener('click', () => scriptModal.classList.remove('hidden'));
     closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
     modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
+
+    // Haptic feedback trigger on dialing actions
+    function triggerHaptic() {
+      if (navigator.vibrate) {
+        navigator.vibrate(40);
+      }
+    }
+    centerCallBtn.addEventListener('click', triggerHaptic);
+    callBtn.addEventListener('click', triggerHaptic);
+    fallbackCallBtn.addEventListener('click', triggerHaptic);
 
     function resolveHub(zip) {
       if (!zip || zip.length < 3) return null;
@@ -383,11 +401,18 @@
       statusAlert.classList.add('hidden');
     }
 
+    // Input & Auto-Dismiss Logic
     zipInput.addEventListener('input', (e) => {
       hideAlert();
       const cleanVal = e.target.value.replace(/\D/g, '');
       if (cleanVal !== e.target.value) {
         e.target.value = cleanVal;
+      }
+
+      if (cleanVal.length > 0) {
+        clearZipBtn.classList.remove('hidden');
+      } else {
+        clearZipBtn.classList.add('hidden');
       }
 
       if (cleanVal.length >= 3) {
@@ -406,8 +431,25 @@
         matchStatus.textContent = "Live Auto-Lookup";
         matchStatus.className = "text-[9px] font-mono-code text-slate-500";
       }
+
+      // Auto-dismiss iOS keyboard on 5th digit
+      if (cleanVal.length === 5) {
+        zipInput.blur();
+      }
     });
 
+    // Clear ZIP button
+    clearZipBtn.addEventListener('click', () => {
+      zipInput.value = '';
+      clearZipBtn.classList.add('hidden');
+      matchStatus.textContent = "Live Auto-Lookup";
+      matchStatus.className = "text-[9px] font-mono-code text-slate-500";
+      hideAlert();
+      updateHubUI(visnDatabase.visn4_pgh);
+      zipInput.focus();
+    });
+
+    // GPS Geolocation
     geoBtn.addEventListener('click', () => {
       hideAlert();
       if (!navigator.geolocation) {
@@ -437,6 +479,7 @@
             if (detectedZip) {
               const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
               zipInput.value = cleanZip;
+              clearZipBtn.classList.remove('hidden');
               const match = resolveHub(cleanZip);
               if (match) {
                 updateHubUI(match);
