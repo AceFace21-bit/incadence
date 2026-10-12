@@ -56,7 +56,7 @@
       flex-direction: column;
       align-items: center;
       padding: 16px 16px 32px 16px;
-      pointer-events: none; /* Let touches hit the map when not on cards */
+      pointer-events: none;
     }
 
     .container {
@@ -65,7 +65,7 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      pointer-events: auto; /* Re-enable taps on the interface cards */
+      pointer-events: auto;
     }
 
     header {
@@ -299,4 +299,167 @@
     </div>
   </div>
 
-  
+  <script>
+    // Public Mapbox demo token
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
+
+    // Space / Orbit Start View
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: [-77.5, 40.8],
+      zoom: 3.5,
+      pitch: 0,
+      bearing: 0
+    });
+
+    let currentMarker = null;
+
+    // Audited Directory & GPS Targets
+    const VISN4_DIRECTORY = {
+      "VAPHS": {
+        facility: "VA Pittsburgh Healthcare System",
+        location: "University Drive / Heinz",
+        coordinates: [-79.9598, 40.4445],
+        displayNumber: "412-360-3620 (Press 1)",
+        telUri: "tel:4123603620,1",
+        instructions: "System will pause and auto-dial 1 when answered."
+      },
+      "BUTLER": {
+        facility: "Butler VA Health Care System",
+        location: "Butler, PA",
+        coordinates: [-79.9554, 40.8687],
+        displayNumber: "800-362-8262 Ext 2475",
+        telUri: "tel:8003628262,2475",
+        instructions: "System will pause and auto-dial extension 2475."
+      },
+      "ERIE": {
+        facility: "Erie VA Medical Center",
+        location: "Erie, PA",
+        coordinates: [-80.0526, 42.1065],
+        displayNumber: "814-860-2973",
+        telUri: "tel:8148602973",
+        instructions: "Direct line to the Beneficiary Travel desk."
+      },
+      "LEBANON": {
+        facility: "Lebanon VA Medical Center",
+        location: "Lebanon, PA",
+        coordinates: [-76.4024, 40.3106],
+        displayNumber: "717-272-6621 Ext 5767",
+        telUri: "tel:7172726621,5767",
+        instructions: "System will pause and auto-dial extension 5767."
+      },
+      "COATESVILLE": {
+        facility: "Coatesville VA Medical Center",
+        location: "Coatesville, PA",
+        coordinates: [-75.8078, 40.0039],
+        displayNumber: "610-384-7711 Ext 5008",
+        telUri: "tel:6103847711,5008",
+        instructions: "System will pause and auto-dial extension 5008."
+      },
+      "ALTOONA": {
+        facility: "James E. Van Zandt VA Medical Center",
+        location: "Altoona, PA",
+        coordinates: [-78.3846, 40.4996],
+        displayNumber: "814-943-8164 Ext 17383",
+        telUri: "tel:8149438164,17383",
+        instructions: "System will pause and auto-dial extension 17383."
+      },
+      "WILKES_BARRE": {
+        facility: "Wilkes-Barre VA Medical Center",
+        location: "Wilkes-Barre, PA",
+        coordinates: [-75.8457, 41.2523],
+        displayNumber: "570-824-3521 Ext 27135",
+        telUri: "tel:5708243521,27135",
+        instructions: "System will pause and auto-dial extension 27135."
+      },
+      "WILMINGTON": {
+        facility: "Wilmington VA Medical Center",
+        location: "Wilmington, DE & S. Jersey",
+        coordinates: [-75.6022, 39.7423],
+        displayNumber: "302-994-2511 Ext 34797",
+        telUri: "tel:3029942511,34797",
+        instructions: "System will pause and auto-dial extension 34797."
+      },
+      "PHILADELPHIA": {
+        facility: "Corporal Michael J. Crescenz VAMC",
+        location: "Philadelphia, PA",
+        coordinates: [-75.1979, 39.9482],
+        displayNumber: "215-823-5800 Ext 204441",
+        telUri: "tel:2158235800,204441",
+        instructions: "System will pause and auto-dial extension 204441."
+      },
+      "NATIONAL": {
+        facility: "VA National Beneficiary Travel Line",
+        location: "National Help Desk",
+        coordinates: [-77.0369, 38.9072],
+        displayNumber: "855-574-7292",
+        telUri: "tel:8555747292",
+        instructions: "Toll-free national dispatch fallback line."
+      }
+    };
+
+    function lookupTransitDesk() {
+      const input = document.getElementById("zipInput").value.trim();
+      if (input.length < 3) {
+        alert("Please enter a valid 5-digit ZIP code.");
+        return;
+      }
+
+      const prefix = parseInt(input.substring(0, 3), 10);
+      let desk = VISN4_DIRECTORY.NATIONAL;
+
+      if ([150, 151, 152, 153, 154, 156].includes(prefix)) {
+        desk = VISN4_DIRECTORY.VAPHS;
+      } else if ([160, 161, 162, 163].includes(prefix)) {
+        desk = VISN4_DIRECTORY.BUTLER;
+      } else if ([164, 165].includes(prefix)) {
+        desk = VISN4_DIRECTORY.ERIE;
+      } else if ([155, 157, 158, 159, 166, 168].includes(prefix)) {
+        desk = VISN4_DIRECTORY.ALTOONA;
+      } else if ([170, 171, 172, 173, 174, 175, 176, 178, 179].includes(prefix)) {
+        desk = VISN4_DIRECTORY.LEBANON;
+      } else if ([182, 183, 184, 185, 186, 187, 188].includes(prefix)) {
+        desk = VISN4_DIRECTORY.WILKES_BARRE;
+      } else if ([193, 194, 195, 196].includes(prefix)) {
+        desk = VISN4_DIRECTORY.COATESVILLE;
+      } else if ([189, 190, 191, 192].includes(prefix)) {
+        desk = VISN4_DIRECTORY.PHILADELPHIA;
+      } else if ([197, 198, 199, 80, 81, 82, 83, 84].includes(prefix)) {
+        desk = VISN4_DIRECTORY.WILMINGTON;
+      }
+
+      // Display Information
+      document.getElementById("resFacility").textContent = desk.facility;
+      document.getElementById("resLocation").textContent = desk.location;
+      document.getElementById("resPhone").textContent = desk.displayNumber;
+      document.getElementById("resDialLink").setAttribute("href", desk.telUri);
+      document.getElementById("resInstructions").textContent = desk.instructions;
+      document.getElementById("dispatchResult").style.display = "block";
+
+      // 3D Orbital Fly-In Animation
+      if (currentMarker) currentMarker.remove();
+
+      currentMarker = new mapboxgl.Marker({ color: '#2563eb' })
+        .setLngLat(desk.coordinates)
+        .addTo(map);
+
+      map.flyTo({
+        center: desk.coordinates,
+        zoom: 14.5,
+        pitch: 60,
+        bearing: 30,
+        speed: 1.1,
+        curve: 1.4,
+        essential: true
+      });
+    }
+
+    document.getElementById("zipInput").addEventListener("keyup", function(event) {
+      if (event.key === "Enter") {
+        lookupTransitDesk();
+      }
+    });
+  </script>
+</body>
+</html>
