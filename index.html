@@ -323,6 +323,13 @@
     closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
     modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
 
+    // Dismiss number pad if tapping outside input field
+    document.addEventListener('touchstart', (e) => {
+      if (document.activeElement === zipInput && e.target !== zipInput) {
+        zipInput.blur();
+      }
+    });
+
     // Track lookup metrics to Plausible custom goal
     function trackLookup(zip, matchData, method) {
       if (window.plausible && matchData) {
@@ -423,9 +430,10 @@
             matchStatus.className = "text-[9px] font-mono-code text-emerald-400";
           }
 
-          // Trigger Plausible custom event once full 5-digit postal code is supplied
+          // Trigger Plausible custom event and auto-dismiss keyboard on 5th digit
           if (cleanVal.length === 5) {
             trackLookup(cleanVal, match, 'Manual ZIP');
+            e.target.blur();
           }
         }
       } else {
@@ -469,8 +477,8 @@
                 matchStatus.textContent = `Locked: ${cleanZip}`;
                 matchStatus.className = "text-[9px] font-mono-code text-emerald-400";
                 
-                // Trigger Plausible custom event on verified GPS lookup
                 trackLookup(cleanZip, match, 'GPS');
+                zipInput.blur();
               }
             } else {
               showAlert("Could not extract ZIP. Enter manually.");
