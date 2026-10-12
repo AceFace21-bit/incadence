@@ -14,7 +14,6 @@
       --text-muted: #94a3b8;
       --border-color: #334155;
       --success-green: #22c55e;
-      --gold-star: #eab308;
     }
 
     * {
@@ -35,7 +34,7 @@
 
     .container {
       width: 100%;
-      max-width: 480px;
+      max-width: 440px;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -67,10 +66,12 @@
       border-radius: 12px;
       padding: 18px;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      overflow: hidden;
     }
 
     .card-title {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       margin-bottom: 12px;
       display: flex;
@@ -80,20 +81,22 @@
 
     .input-group {
       display: flex;
-      gap: 8px;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
       margin-bottom: 12px;
     }
 
     input[type="text"] {
-      flex: 1;
+      width: 100%;
       background-color: #0b1120;
       border: 1px solid var(--border-color);
       color: #fff;
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       padding: 12px;
       border-radius: 8px;
       text-align: center;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
       outline: none;
     }
 
@@ -102,13 +105,14 @@
     }
 
     button.btn-lookup {
+      width: 100%;
       background-color: var(--accent-blue);
       color: white;
       border: none;
-      padding: 0 20px;
+      padding: 14px;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 1.05rem;
       cursor: pointer;
     }
 
@@ -120,7 +124,7 @@
       display: none;
       border-top: 1px solid var(--border-color);
       padding-top: 14px;
-      margin-top: 6px;
+      margin-top: 8px;
     }
 
     .facility-name {
@@ -168,7 +172,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 8px 0;
+      padding: 10px 0;
       border-bottom: 1px solid #283548;
       font-size: 0.9rem;
     }
@@ -200,7 +204,6 @@
       <p>Beneficiary Travel Direct Dispatch</p>
     </header>
 
-    <!-- Dispatch Lookup Card -->
     <div class="card">
       <div class="card-title">📍 Enter Patient ZIP Code</div>
       <div class="input-group">
@@ -208,7 +211,6 @@
         <button class="btn-lookup" onclick="lookupTransitDesk()">Find Desk</button>
       </div>
 
-      <!-- Result View -->
       <div id="dispatchResult">
         <div class="facility-name" id="resFacility">--</div>
         <div class="facility-location" id="resLocation">--</div>
@@ -221,7 +223,6 @@
       </div>
     </div>
 
-    <!-- Intake Checklist Card -->
     <div class="card">
       <div class="card-title">📋 Before You Call Checklist</div>
       <div class="checklist-item">
@@ -249,7 +250,6 @@
   </div>
 
   <script>
-    // Master Directory - Verified October 2026
     const VISN4_DIRECTORY = {
       "VAPHS": {
         facility: "VA Pittsburgh Healthcare System",
@@ -333,7 +333,6 @@
       const prefix = parseInt(input.substring(0, 3), 10);
       let desk = VISN4_DIRECTORY.NATIONAL;
 
-      // Regional VISN 4 Mapping Logic
       if ([150, 151, 152, 153, 154, 156].includes(prefix)) {
         desk = VISN4_DIRECTORY.VAPHS;
       } else if ([160, 161, 162, 163].includes(prefix)) {
@@ -354,7 +353,6 @@
         desk = VISN4_DIRECTORY.WILMINGTON;
       }
 
-      // Display the Results
       document.getElementById("resFacility").textContent = desk.facility;
       document.getElementById("resLocation").textContent = desk.location;
       document.getElementById("resPhone").textContent = desk.displayNumber;
@@ -364,7 +362,6 @@
       document.getElementById("dispatchResult").style.display = "block";
     }
 
-    // Trigger lookup when hitting 'Enter' on keyboard
     document.getElementById("zipInput").addEventListener("keyup", function(event) {
       if (event.key === "Enter") {
         lookupTransitDesk();
