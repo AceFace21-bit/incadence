@@ -1,522 +1,315 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Privacy-friendly analytics by Plausible -->
-<script async src="https://plausible.io/js/pa-CbxfhXwRlo4g7ivZ3AJsn.js"></script>
-
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>In Cadence | Veteran Access Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>In Cadence | Forward March</title>
   
-  <!-- Tailwind CSS & Lucide Icons -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Privacy-friendly analytics by Plausible -->
+  <script async src="https://plausible.io/js/pa-CbxfhXwRlo4g7ivZ3AJsn.js"></script>
 
-  <!-- Mapbox GL JS -->
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d1117">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .font-mono-code {
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right {
-      transform: scale(0.7);
-      transform-origin: bottom left;
-      left: 6px !important;
-      bottom: 2px !important;
-      right: auto !important;
-    }
-    .radar-crosshair {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-    /* Heavy tactical click recoil */
-    .tactical-pulse-active {
-      transform: scale(0.92) !important;
-      filter: brightness(1.35) !important;
-      box-shadow: 0 0 25px rgba(52, 211, 153, 0.9) !important;
-      transition: all 50ms cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #0b0f19; color: #f3f4f6; display: flex; justify-content: center; min-height: 100vh; padding: 12px; }
+    .container { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 14px; position: relative; }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px; }
+    .title-area { display: flex; align-items: center; gap: 8px; }
+    .logo-badge { background: #1e293b; color: #38bdf8; padding: 4px 8px; border-radius: 6px; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; }
+    .app-title { font-size: 14px; font-weight: 700; color: #e2e8f0; text-transform: uppercase; letter-spacing: 1px; }
+    .zero-pii-badge { background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; color: #4ade80; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+    
+    .panel { background: #131b2e; border: 1px solid #1e293b; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .input-label-row { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+    .input-wrapper { display: flex; gap: 8px; position: relative; }
+    .zip-input { flex: 1; background: #0b1120; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 20px; font-weight: 700; padding: 10px 14px; outline: none; letter-spacing: 2px; }
+    .zip-input:focus { border-color: #38bdf8; }
+    .gps-btn { background: #0b1120; border: 1px solid #334155; color: #38bdf8; border-radius: 8px; padding: 0 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    
+    .map-header { display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; margin-top: 4px; }
+    #map { width: 100%; height: 160px; border-radius: 10px; border: 1px solid #1e293b; background: #070a13; }
+
+    .hub-card { background: #162035; border: 1px solid #1e293b; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+    .hub-badge-row { display: flex; justify-content: space-between; align-items: center; }
+    .hub-badge { background: #0284c7; color: #fff; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+    .visn-badge { color: #94a3b8; font-size: 12px; font-weight: 700; }
+    .facility-name { font-size: 15px; font-weight: 700; color: #f8fafc; }
+    .facility-sub { font-size: 12px; color: #94a3b8; }
+    .phone-row { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; padding-top: 8px; border-top: 1px solid #1e293b; }
+    .phone-num { font-size: 15px; font-weight: 800; color: #22c55e; letter-spacing: 0.5px; }
+    .dial-btn { background: #15803d; color: #fff; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 800; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
+
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .sub-card { background: #131b2e; border: 1px solid #1e293b; border-radius: 10px; padding: 10px 12px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 2px; }
+    .sub-title { font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
+    .sub-val { font-size: 13px; font-weight: 700; color: #38bdf8; }
+
+    .call-btn-main { background: #22c55e; color: #022c22; text-decoration: none; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 14px; border-radius: 10px; text-align: center; display: block; }
+    .footer-text { text-align: center; font-size: 11px; color: #64748b; margin-top: 8px; line-height: 1.4; }
+
+    /* Modal / Drawer for Call Script */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.75); z-index: 100; justify-content: center; align-items: flex-end; }
+    .modal-card { background: #131b2e; border-top: 1px solid #38bdf8; border-radius: 16px 16px 0 0; width: 100%; max-width: 440px; padding: 20px; box-sizing: border-box; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .modal-title { font-size: 15px; font-weight: 800; color: #38bdf8; text-transform: uppercase; }
+    .close-btn { background: #1e293b; border: none; color: #94a3b8; padding: 4px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; }
+    .step-list { display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #cbd5e1; }
+    .step-item { display: flex; gap: 8px; align-items: flex-start; }
+    .step-num { background: #1e293b; color: #38bdf8; min-width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 h-[100dvh] w-screen overflow-hidden flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-slate-950 select-none">
+<body>
 
-  <!-- Header -->
-  <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur px-3 py-2 shrink-0 z-50">
-    <div class="max-w-md mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <div class="w-6 h-6 rounded bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-        </div>
-        <div>
-          <span class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none block">In Cadence</span>
-          <span class="text-[8px] text-emerald-400 font-mono-code tracking-wide block mt-0.5">FORWARD MARCH TRANSIT // ALL-VISN</span>
-        </div>
+  <div class="container">
+    <div class="header-bar">
+      <div class="title-area">
+        <span class="logo-badge">IN CADENCE</span>
+        <span class="app-title">Forward March</span>
+      </div>
+      <span class="zero-pii-badge">Zero-PII</span>
+    </div>
+
+    <div class="panel">
+      <div class="input-label-row">
+        <span>Postal Code / Auto-GPS</span>
+        <span id="lockStatus" style="color: #4ade80;">Locked (Exact)</span>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" id="zipInput" class="zip-input" maxlength="5" placeholder="Enter ZIP" value="98188">
+        <button class="gps-btn" id="gpsBtn">GPS</button>
       </div>
 
-      <div class="flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-[8px] font-medium text-slate-300">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>Zero-PII</span>
+      <div class="map-header">
+        <span>Target Location View</span>
+        <span id="coordsDisplay">47.5583° N, 122.3101° W</span>
+      </div>
+      <div id="map"></div>
+    </div>
+
+    <div class="hub-card" id="hubCard">
+      <div class="hub-badge-row">
+        <span class="hub-badge" id="hubTag">NORTHWEST HUB</span>
+        <span class="visn-badge" id="visnTag">VISN 20</span>
+      </div>
+      <div class="facility-name" id="facilityName">VA Puget Sound Healthcare System</div>
+      <div class="facility-sub" id="facilitySub">Washington, Oregon, ID & Alaska</div>
+      <div class="phone-row">
+        <div>
+          <div style="font-size: 10px; color: #94a3b8; font-weight: 700;">DIRECT TRAVEL COORDINATOR</div>
+          <div class="phone-num" id="phoneNumDisplay">206-762-1010</div>
+        </div>
+        <a href="tel:2067621010" id="dialLink" class="dial-btn">Dial</a>
       </div>
     </div>
-  </header>
 
-  <!-- Main Viewport Dashboard -->
-  <main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0">
+    <a href="tel:2067621010" id="mainCallBtn" class="call-btn-main">Call Transit Hub</a>
 
-    <!-- Compact ZIP & Geolocation Input Row -->
-    <section class="bg-slate-900/90 border border-slate-800 rounded-lg p-2 shrink-0 shadow-sm">
-      <div class="flex items-center justify-between mb-1">
-        <label for="zipInput" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
-          Postal Code / Auto-GPS
-        </label>
-        <span id="matchStatus" class="text-[9px] font-mono-code text-slate-500">Live Auto-Lookup</span>
-      </div>
-
-      <div class="flex space-x-1.5">
-        <div class="relative flex-1">
-          <input 
-            type="text" 
-            id="zipInput" 
-            pattern="[0-9]*" 
-            inputmode="numeric" 
-            maxlength="5" 
-            placeholder="5-digit ZIP..."
-            class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 rounded-md pl-2.5 pr-8 py-1.5 text-base sm:text-xs text-slate-100 placeholder-slate-500 font-mono-code transition outline-none"
-          >
-          <button 
-            id="clearZipBtn" 
-            type="button" 
-            class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1"
-          >
-            <i data-lucide="x" class="w-3.5 h-3.5"></i>
-          </button>
-        </div>
-        <button 
-          id="geoBtn"
-          title="Detect Current Location"
-          class="bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold px-2.5 py-1.5 rounded-md text-[10px] uppercase tracking-wider flex items-center space-x-1 transition shrink-0"
-        >
-          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span id="geoBtnLabel">GPS</span>
-        </button>
-      </div>
-
-      <div id="statusAlert" class="hidden text-[10px] py-1 px-2 mt-1 rounded bg-amber-500/10 border border-amber-500/20 text-amber-300"></div>
-    </section>
-
-    <!-- Tactical Target Map -->
-    <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative flex-1 min-h-[140px] max-h-[220px] shadow-sm flex flex-col">
-      <div class="px-2.5 py-1 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/70 shrink-0">
-        <div class="flex items-center space-x-1.5">
-          <i data-lucide="radar" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-300">Target Location View</span>
-        </div>
-        <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">STANDBY // NO FIX</span>
-      </div>
-      
-      <div class="relative w-full flex-1 bg-slate-950">
-        <div id="map" class="w-full h-full"></div>
-
-        <!-- Center Radar Reticle -->
-        <div class="radar-crosshair w-28 h-28 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center">
-          <div class="w-16 h-16 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
-        </div>
-
-        <!-- Primary Call Button Anchored to Bottom Right with Pronounced Recoil -->
-        <div class="absolute bottom-2 right-2 pointer-events-none z-10">
-          <a 
-            id="centerCallBtn" 
-            href="tel:4123603620,1" 
-            class="pointer-events-auto shadow-xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:tactical-pulse-active text-slate-950 px-3.5 py-2 rounded-lg font-black uppercase tracking-wider flex items-center space-x-1.5 transition border-2 border-emerald-300/80"
-          >
-            <i data-lucide="phone-call" class="w-4 h-4 fill-slate-950"></i>
-            <span id="centerCallText" class="text-[11px] font-mono-code tracking-wide">CALL TRANSIT HUB</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Facility Result Micro-Card -->
-    <section id="resultCard" class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 space-y-1.5 shadow-sm">
-      <div class="flex items-center justify-between">
-        <span id="hubBadge" class="text-[9px] font-mono-code font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 truncate max-w-[200px]">
-          SW Pennsylvania Hub
-        </span>
-        <span id="visnBadge" class="text-[10px] text-slate-400 font-mono-code shrink-0">VISN 4</span>
-      </div>
-
-      <div>
-        <h2 id="facilityName" class="text-xs font-bold text-slate-100 leading-tight truncate">
-          VA Pittsburgh Healthcare System
-        </h2>
-        <p id="facilityAddress" class="text-[10px] text-slate-400 truncate">
-          University Drive & H.J. Heinz Divisions
-        </p>
-      </div>
-
-      <div class="py-1 px-2 rounded bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-        <div class="truncate mr-2">
-          <div class="text-[8px] uppercase font-mono-code tracking-wider text-slate-400">Direct Travel Coordinator</div>
-          <div id="facilityPhone" class="text-[11px] font-bold text-emerald-400 font-mono-code truncate">412-360-3620 (Press 1)</div>
-        </div>
-        <a 
-          id="callBtn" 
-          href="tel:4123603620,1" 
-          class="bg-slate-800 hover:bg-slate-700 active:tactical-pulse-active border border-emerald-500/40 text-emerald-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-wider flex items-center space-x-1 shrink-0 transition"
-        >
-          <i data-lucide="phone" class="w-2.5 h-2.5"></i>
-          <span>Dial</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- Streamlined Secondary Actions & Modal Trigger -->
-    <div class="grid grid-cols-2 gap-1.5 shrink-0">
-      <a 
-        id="fallbackCallBtn"
-        href="tel:8555747292" 
-        class="bg-slate-900 border border-slate-800 hover:border-emerald-500/40 active:tactical-pulse-active p-2 rounded-lg flex items-center justify-between transition"
-      >
-        <div class="truncate">
-          <div class="text-[9px] font-bold uppercase text-slate-200">National Fallback</div>
-          <div class="text-[9px] font-mono-code text-emerald-400">855-574-7292</div>
-        </div>
-        <i data-lucide="phone-forwarded" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1"></i>
+    <div class="action-grid">
+      <a href="tel:8555747292" class="sub-card">
+        <span class="sub-title">National Fallback</span>
+        <span class="sub-val">855-574-7292</span>
       </a>
-
-      <button 
-        id="openScriptBtn"
-        type="button"
-        class="bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition text-left"
-      >
-        <div>
-          <div class="text-[9px] font-bold uppercase text-slate-200">Call Script</div>
-          <div class="text-[9px] text-slate-400 font-mono-code">5-Step Guide</div>
-        </div>
-        <i data-lucide="help-circle" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1"></i>
-      </button>
+      <div class="sub-card" id="scriptBtn" style="cursor: pointer;">
+        <span class="sub-title">Call Script</span>
+        <span class="sub-val">5-Step Guide</span>
+      </div>
     </div>
 
-  </main>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-800/80 py-1.5 text-center text-slate-500 text-[8px] font-mono-code px-2 shrink-0">
-    <div class="text-slate-400 font-semibold tracking-wide truncate">
-      DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
+    <div class="footer-text">
+      DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH<br>
+      aceface21-bit.github.io
     </div>
-  </footer>
+  </div>
 
-  <!-- Call Script Modal Overlay -->
-  <div id="scriptModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm p-4 flex items-center justify-center">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-4 space-y-3 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <div class="flex items-center space-x-2">
-          <i data-lucide="phone-outgoing" class="w-4 h-4 text-emerald-400"></i>
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-100">Call Script & Checklist</span>
-        </div>
-        <button id="closeScriptBtn" class="text-slate-400 hover:text-slate-100 p-1">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+  <div class="modal-overlay" id="scriptModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title">Transit Coordinator Intake Script</span>
+        <button class="close-btn" id="closeModalBtn">Done</button>
       </div>
-
-      <div class="space-y-2.5 text-xs text-slate-300">
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-slate-500 mt-0.5">01</span>
-          <p><span class="text-slate-100 font-semibold">Answer:</span> "Hello, Veterans Transportation Service, how can I help you?"</p>
-        </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">02</span>
-          <p><span class="text-emerald-400 font-semibold">Identify:</span> State your name and verify you are an eligible veteran.</p>
-        </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">03</span>
-          <p><span class="text-emerald-400 font-semibold">Request:</span> State you need a rideshare scheduled for your VA appointment.</p>
-        </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">04</span>
-          <p><span class="text-emerald-400 font-semibold">Details:</span> Provide appointment date/time or ask them to check the clinic record.</p>
-        </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">05</span>
-          <p><span class="text-emerald-400 font-semibold">Confirm:</span> State your physical pickup address and verify return transport.</p>
-        </div>
+      <div class="step-list">
+        <div class="step-item"><span class="step-num">1</span><span>State your full legal name and Last 4 of your SSN.</span></div>
+        <div class="step-item"><span class="step-num">2</span><span>State your scheduled clinic appointment date, time, and specific clinic name.</span></div>
+        <div class="step-item"><span class="step-num">3</span><span>Provide your exact physical pickup address and entry gate details.</span></div>
+        <div class="step-item"><span class="step-num">4</span><span>Specify your mobility tier: Ambulatory (car/van) or Wheelchair Lift.</span></div>
+        <div class="step-item"><span class="step-num">5</span><span>Confirm return pickup authorization with the travel desk coordinator before hanging up.</span></div>
       </div>
-
-      <button id="modalDismissBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider mt-2 border border-slate-700">
-        Close Script
-      </button>
     </div>
   </div>
 
   <script>
-    lucide.createIcons();
-
-    // Mapbox Token
-    mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYWNlZmFjZTIxLWJpdCIsImEiOiJjbTFrbDFkOGUwMDFvMmxxcmg2dnIxa3pjIn0.tX9sVzB1Q8xXh-h64n1wDw';
 
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/dark-v11',
-      center: [-79.9600, 40.4444],
-      zoom: 11,
-      attributionControl: false
+      center: [-122.3101, 47.5583],
+      zoom: 12
     });
-    map.addControl(new mapboxgl.AttributionControl({ compact: true }));
 
-    const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
-      .setLngLat([-79.9600, 40.4444])
+    const marker = new mapboxgl.Marker({ color: '#22c55e' })
+      .setLngLat([-122.3101, 47.5583])
       .addTo(map);
 
-    const visnDatabase = {
-      "visn1": { badge: "New England Hub", visn: "VISN 1", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
-      "visn2": { badge: "NY / NJ Metro Hub", visn: "VISN 2", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Catchment", phone: "718-584-9000", cleanPhone: "7185849000", coords: [-73.9004, 40.8677] },
-      "visn4_pgh": { badge: "SW Pennsylvania Hub", visn: "VISN 4", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Divisions", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
-      "visn4_butler": { badge: "Butler Regional Hub", visn: "VISN 4", name: "Butler VA Health Care System", desc: "Butler County Regional Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
-      "visn4_erie": { badge: "NW Pennsylvania Hub", visn: "VISN 4", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
-      "visn4_altoona": { badge: "Central PA Hub", visn: "VISN 4", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
-      "visn4_lebanon": { badge: "South Central PA Hub", visn: "VISN 4", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
-      "visn4_coatesville": { badge: "Brandywine Valley Hub", visn: "VISN 4", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
-      "visn4_wilkes": { badge: "Northeastern PA Hub", visn: "VISN 4", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
-      "visn4_wilmington": { badge: "Delaware Valley Hub", visn: "VISN 4", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
-      "visn4_philly": { badge: "SE Pennsylvania Hub", visn: "VISN 4", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
-      "visn5": { badge: "Capitol Hub", visn: "VISN 5", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0125, 38.9298] },
-      "visn6": { badge: "Mid-Atlantic Hub", visn: "VISN 6", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA", phone: "910-488-2120", cleanPhone: "9104882120", coords: [-78.8872, 35.0805] },
-      "visn7": { badge: "Southeast Hub", visn: "VISN 7", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.3015, 33.7938] },
-      "visn8": { badge: "Sunshine Hub", visn: "VISN 8", name: "James A. Haley Hospital (Tampa)", desc: "Florida & Puerto Rico Regional Catchment", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4278, 28.0592] },
-      "visn9": { badge: "MidSouth Hub", visn: "VISN 9", name: "Tennessee Valley Healthcare", desc: "Tennessee, Kentucky & South IN", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8041, 36.1444] },
-      "visn10": { badge: "Midwest Hub (OH/IN/MI)", visn: "VISN 10", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana & Lower Michigan", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6119, 41.5036] },
-      "visn12": { badge: "Great Lakes Hub", visn: "VISN 12", name: "Jesse Brown VAMC (Chicago)", desc: "Illinois, Wisconsin & Upper MI", phone: "312-569-8387", cleanPhone: "3125698387", coords: [-87.6749, 41.8703] },
-      "visn15": { badge: "Heartland Hub", visn: "VISN 15", name: "Kansas City VA Medical Center", desc: "Missouri, Kansas & South IL", phone: "816-861-4700", cleanPhone: "8168614700", coords: [-94.5222, 39.0494] },
-      "visn16": { badge: "South Central Hub", visn: "VISN 16", name: "Michael E. DeBakey VAMC", desc: "MS, LA, AR & East Texas", phone: "713-791-1414", cleanPhone: "7137911414", coords: [-95.3855, 29.7042] },
-      "visn17": { badge: "Heart of Texas Hub", visn: "VISN 17", name: "Central Texas Veterans Health", desc: "Central, South & West Texas", phone: "254-778-4811", cleanPhone: "2547784811", coords: [-97.3547, 31.0827] },
-      "visn19": { badge: "Rocky Mountain Hub", visn: "VISN 19", name: "Rocky Mountain Regional VAMC", desc: "CO, MT, UT, WY & West KS/NE", phone: "303-399-8020", cleanPhone: "3033998020", coords: [-104.8384, 39.7420] },
-      "visn20": { badge: "Northwest Hub", visn: "VISN 20", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, ID & Alaska", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3101, 47.5583] },
-      "visn21": { badge: "Sierra Pacific Hub", visn: "VISN 21", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii", phone: "415-221-4810", cleanPhone: "4152214810", coords: [-122.5052, 37.7820] },
-      "visn22": { badge: "Desert Pacific Hub", visn: "VISN 22", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4552, 34.0532] },
-      "visn23": { badge: "Midwest Hub (Upper)", visn: "VISN 23", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE", phone: "612-725-2000", cleanPhone: "6127252000", coords: [-93.2081, 44.9015] },
-      "national_fallback": { badge: "National Travel Coordination", visn: "VA National", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Help Desk Line", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
+    // Complete 18-VISN Routing Lookup Table
+    const hubs = {
+      // VISN 1: New England (010-069)
+      '01': { name: 'VA Boston Healthcare System', sub: 'New England Healthcare System', visn: 'VISN 1', tag: 'NEW ENGLAND HUB', phone: '857-364-4000', lng: -71.1065, lat: 42.3188, coords: '42.3188° N, 71.1065° W' },
+      '02': { name: 'VA Boston Healthcare System', sub: 'New England Healthcare System', visn: 'VISN 1', tag: 'NEW ENGLAND HUB', phone: '857-364-4000', lng: -71.1065, lat: 42.3188, coords: '42.3188° N, 71.1065° W' },
+      '03': { name: 'VA New Hampshire / Manchester', sub: 'New England Healthcare System', visn: 'VISN 1', tag: 'NEW ENGLAND HUB', phone: '603-624-4366', lng: -71.4548, lat: 43.0033, coords: '43.0033° N, 71.4548° W' },
+      '04': { name: 'VA Maine Healthcare System', sub: 'Togus Regional Office', visn: 'VISN 1', tag: 'NEW ENGLAND HUB', phone: '207-623-8411', lng: -69.7128, lat: 44.3015, coords: '44.3015° N, 69.7128° W' },
+      '05': { name: 'VA Vermont / White River Jct', sub: 'New England Healthcare System', visn: 'VISN 1', tag: 'NEW ENGLAND HUB', phone: '802-295-9363', lng: -72.3276, lat: 43.6476, coords: '43.6476° N, 72.3276° W' },
+      '06': { name: 'VA Connecticut Healthcare', sub: 'West Haven Campus', visn: 'VISN 1', tag: 'NEW ENGLAND HUB', phone: '203-932-5711', lng: -72.9554, lat: 41.2754, coords: '41.2754° N, 72.9554° W' },
+
+      // VISN 2: New York / New Jersey (070-089, 100-149)
+      '07': { name: 'VA New Jersey Health Care', sub: 'East Orange & Lyons Campus', visn: 'VISN 2', tag: 'NY/NJ HUB', phone: '973-676-1000', lng: -74.2201, lat: 40.7684, coords: '40.7684° N, 74.2201° W' },
+      '08': { name: 'VA New Jersey Health Care', sub: 'East Orange & Lyons Campus', visn: 'VISN 2', tag: 'NY/NJ HUB', phone: '973-676-1000', lng: -74.2201, lat: 40.7684, coords: '40.7684° N, 74.2201° W' },
+      '10': { name: 'VA NY Harbor Healthcare', sub: 'Manhattan & Brooklyn Campus', visn: 'VISN 2', tag: 'NY/NJ HUB', phone: '212-686-7500', lng: -73.9754, lat: 40.7381, coords: '40.7381° N, 73.9754° W' },
+      '11': { name: 'VA NY Harbor Healthcare', sub: 'Brooklyn & Queens Campus', visn: 'VISN 2', tag: 'NY/NJ HUB', phone: '718-836-6600', lng: -74.0322, lat: 40.6139, coords: '40.6139° N, 74.0322° W' },
+      '12': { name: 'VA Hudson Valley Health Care', sub: 'Castle Point & Montrose', visn: 'VISN 2', tag: 'NY/NJ HUB', phone: '845-831-2000', lng: -73.9632, lat: 41.5362, coords: '41.5362° N, 73.9632° W' },
+      '13': { name: 'VA Syracuse Healthcare System', sub: 'Upstate New York', visn: 'VISN 2', tag: 'UPSTATE NY HUB', phone: '315-425-4400', lng: -76.1342, lat: 43.0416, coords: '43.0416° N, 76.1342° W' },
+      '14': { name: 'VA Western NY Healthcare', sub: 'Buffalo & Batavia Campus', visn: 'VISN 2', tag: 'UPSTATE NY HUB', phone: '716-834-9200', lng: -78.8181, lat: 42.9298, coords: '42.9298° N, 78.8181° W' },
+
+      // VISN 4: Pennsylvania / Delaware / W. Virginia (150-196, 197-199)
+      '15': { name: 'VA Pittsburgh Healthcare System', sub: 'University Drive & H.J. Heinz Divisions', visn: 'VISN 4', tag: 'SW PENNSYLVANIA HUB', phone: '412-360-3620', lng: -79.9595, lat: 40.4445, coords: '40.4445° N, 79.9595° W' },
+      '16': { name: 'VA Altoona Healthcare System', sub: 'Van Zandt VA Medical Center', visn: 'VISN 4', tag: 'CENTRAL PA HUB', phone: '814-943-8164', lng: -78.3942, lat: 40.5056, coords: '40.5056° N, 78.3942° W' },
+      '17': { name: 'VA Lebanon Healthcare System', sub: 'Central Pennsylvania', visn: 'VISN 4', tag: 'CENTRAL PA HUB', phone: '717-272-6621', lng: -76.4025, lat: 40.3237, coords: '40.3237° N, 76.4025° W' },
+      '18': { name: 'VA Wilkes-Barre Healthcare', sub: 'Northeastern Pennsylvania', visn: 'VISN 4', tag: 'NE PENNSYLVANIA HUB', phone: '570-824-3521', lng: -75.8396, lat: 41.2520, coords: '41.2520° N, 75.8396° W' },
+      '19': { name: 'VA Philadelphia Healthcare', sub: 'Corporal Michael J. Crescenz VAMC', visn: 'VISN 4', tag: 'SE PENNSYLVANIA HUB', phone: '215-823-5800', lng: -75.1977, lat: 39.9486, coords: '39.9486° N, 75.1977° W' },
+
+      // VISN 5: Capitol Health Care (200-219, 254, 260-268)
+      '20': { name: 'Washington DC VA Medical Center', sub: 'Capitol Health Care Network', visn: 'VISN 5', tag: 'CAPITOL HUB', phone: '202-745-8000', lng: -77.0125, lat: 38.9288, coords: '38.9288° N, 77.0125° W' },
+      '21': { name: 'VA Maryland Health Care System', sub: 'Baltimore & Perry Point Divisions', visn: 'VISN 5', tag: 'MARYLAND HUB', phone: '410-605-7000', lng: -76.6214, lat: 39.2889, coords: '39.2889° N, 76.6214° W' },
+      '26': { name: 'VA Clarksburg / Louis A. Johnson', sub: 'West Virginia Healthcare', visn: 'VISN 5', tag: 'W. VIRGINIA HUB', phone: '304-623-3461', lng: -80.3473, lat: 39.2748, coords: '39.2748° N, 80.3473° W' },
+
+      // VISN 6: Mid-Atlantic (220-249, 270-289)
+      '22': { name: 'Hunter Holmes McGuire VAMC', sub: 'Richmond Central Virginia Health', visn: 'VISN 6', tag: 'VIRGINIA HUB', phone: '804-675-5000', lng: -77.4704, lat: 37.4988, coords: '37.4988° N, 77.4704° W' },
+      '23': { name: 'Hampton VA Medical Center', sub: 'Tidewater Virginia', visn: 'VISN 6', tag: 'VIRGINIA HUB', phone: '757-722-9961', lng: -76.3392, lat: 37.0175, coords: '37.0175° N, 76.3392° W' },
+      '24': { name: 'Salem VA Medical Center', sub: 'Southwest Virginia', visn: 'VISN 6', tag: 'VIRGINIA HUB', phone: '540-982-2463', lng: -80.0384, lat: 37.2847, coords: '37.2847° N, 80.0384° W' },
+      '27': { name: 'Durham VA Health Care System', sub: 'North Carolina Mid-Atlantic', visn: 'VISN 6', tag: 'CAROLINAS HUB', phone: '919-286-0411', lng: -78.9392, lat: 35.9984, coords: '35.9984° N, 78.9392° W' },
+      '28': { name: 'Salisbury - W.G. Hefner VAMC', sub: 'North Carolina Piedmont', visn: 'VISN 6', tag: 'CAROLINAS HUB', phone: '704-638-9000', lng: -80.4851, lat: 35.6917, coords: '35.6917° N, 80.4851° W' },
+
+      // VISN 7: Southeast (290-319, 350-369)
+      '29': { name: 'Columbia VA Health Care System', sub: 'Wm. Jennings Bryan Dorn VAMC', visn: 'VISN 7', tag: 'SOUTHEAST HUB', phone: '803-776-4000', lng: -80.9592, lat: 33.9877, coords: '33.9877° N, 80.9592° W' },
+      '30': { name: 'Atlanta VA Health Care System', sub: 'Joseph Maxwell Cleland VAMC', visn: 'VISN 7', tag: 'GEORGIA HUB', phone: '404-321-6111', lng: -84.3054, lat: 33.7942, coords: '33.7942° N, 84.3054° W' },
+      '31': { name: 'Charlie Norwood VA Medical Center', sub: 'Augusta Georgia', visn: 'VISN 7', tag: 'GEORGIA HUB', phone: '706-733-0188', lng: -82.0165, lat: 33.4682, coords: '33.4682° N, 82.0165° W' },
+      '35': { name: 'Birmingham VA Health Care System', sub: 'Central Alabama', visn: 'VISN 7', tag: 'ALABAMA HUB', phone: '205-933-8101', lng: -86.8016, lat: 33.5042, coords: '33.5042° N, 86.8016° W' },
+      '36': { name: 'Central Alabama VA Health Care', sub: 'Montgomery & Tuskegee Campus', visn: 'VISN 7', tag: 'ALABAMA HUB', phone: '334-272-4670', lng: -86.2361, lat: 32.3789, coords: '32.3789° N, 86.2361° W' },
+
+      // VISN 8: Sunshine Healthcare (320-349, 006-009 PR/VI)
+      '32': { name: 'North Florida/South Georgia VA', sub: 'Malcom Randall VAMC - Gainesville', visn: 'VISN 8', tag: 'FLORIDA HUB', phone: '352-376-1611', lng: -82.3486, lat: 29.6331, coords: '29.6331° N, 82.3486° W' },
+      '33': { name: 'James A. Haley Veterans Hospital', sub: 'Tampa Bay Healthcare', visn: 'VISN 8', tag: 'FLORIDA HUB', phone: '813-972-2000', lng: -82.4277, lat: 28.0569, coords: '28.0569° N, 82.4277° W' },
+      '34': { name: 'Miami VA Healthcare System', sub: 'Bruce W. Carter VAMC', visn: 'VISN 8', tag: 'SOUTH FLORIDA HUB', phone: '305-575-7000', lng: -80.2132, lat: 25.7909, coords: '25.7909° N, 80.2132° W' },
+
+      // VISN 9: MidSouth (370-385, 400-427)
+      '37': { name: 'VA Tennessee Valley Healthcare', sub: 'Nashville & Murfreesboro Campus', visn: 'VISN 9', tag: 'MIDSOUTH HUB', phone: '615-327-4751', lng: -86.8033, lat: 36.1444, coords: '36.1444° N, 86.8033° W' },
+      '38': { name: 'Memphis VA Medical Center', sub: 'MidSouth Region', visn: 'VISN 9', tag: 'MIDSOUTH HUB', phone: '901-523-8990', lng: -90.0264, lat: 35.1389, coords: '35.1389° N, 90.0264° W' },
+      '40': { name: 'Robley Rex VA Medical Center', sub: 'Louisville Kentucky', visn: 'VISN 9', tag: 'KENTUCKY HUB', phone: '502-287-4000', lng: -85.6961, lat: 38.2678, coords: '38.2678° N, 85.6961° W' },
+      '41': { name: 'Lexington VA Health Care System', sub: 'Leestown & Cooper Divisions', visn: 'VISN 9', tag: 'KENTUCKY HUB', phone: '859-233-4511', lng: -84.5058, lat: 38.0289, coords: '38.0289° N, 84.5058° W' },
+
+      // VISN 10: Great Lakes / Ohio / Indiana / Michigan (430-499)
+      '43': { name: 'Chalmers P. Wylie VA Ambulatory Care', sub: 'Columbus Ohio', visn: 'VISN 10', tag: 'OHIO HUB', phone: '614-257-5200', lng: -82.9092, lat: 39.9881, coords: '39.9881° N, 82.9092° W' },
+      '44': { name: 'Louis Stokes Cleveland VAMC', sub: 'Northeast Ohio Healthcare System', visn: 'VISN 10', tag: 'OHIO HUB', phone: '216-791-3800', lng: -81.6111, lat: 41.5036, coords: '41.5036° N, 81.6111° W' },
+      '45': { name: 'Cincinnati VA Medical Center', sub: 'Southwest Ohio & Northern KY', visn: 'VISN 10', tag: 'OHIO HUB', phone: '513-861-3100', lng: -84.5042, lat: 39.1417, coords: '39.1417° N, 84.5042° W' },
+      '46': { name: 'Richard L. Roudebush VAMC', sub: 'Indianapolis Indiana', visn: 'VISN 10', tag: 'INDIANA HUB', phone: '317-554-0000', lng: -86.1822, lat: 39.7781, coords: '39.7781° N, 86.1822° W' },
+      '48': { name: 'John D. Dingell VA Medical Center', sub: 'Detroit Michigan', visn: 'VISN 10', tag: 'MICHIGAN HUB', phone: '313-576-1000', lng: -83.0592, lat: 42.3567, coords: '42.3567° N, 83.0592° W' },
+
+      // VISN 12: Great Lakes (530-549, 600-619)
+      '53': { name: 'Clement J. Zablocki VAMC', sub: 'Milwaukee Wisconsin', visn: 'VISN 12', tag: 'WISCONSIN HUB', phone: '414-384-2000', lng: -87.9733, lat: 43.0189, coords: '43.0189° N, 87.9733° W' },
+      '60': { name: 'Jesse Brown VA Medical Center', sub: 'Chicago Illinois', visn: 'VISN 12', tag: 'ILLINOIS HUB', phone: '312-569-8387', lng: -87.6742, lat: 41.8697, coords: '41.8697° N, 87.6742° W' },
+      '61': { name: 'Edward Hines, Jr. VA Hospital', sub: 'Cook County / Hines Illinois', visn: 'VISN 12', tag: 'ILLINOIS HUB', phone: '708-202-8387', lng: -87.8406, lat: 41.8547, coords: '41.8547° N, 87.8406° W' },
+
+      // VISN 15: Heartland (630-679)
+      '63': { name: 'VA St. Louis Health Care System', sub: 'John Cochran & Jefferson Barracks', visn: 'VISN 15', tag: 'HEARTLAND HUB', phone: '314-652-4100', lng: -90.2361, lat: 38.6406, coords: '38.6406° N, 90.2361° W' },
+      '64': { name: 'Kansas City VA Medical Center', sub: 'Heartland Network', visn: 'VISN 15', tag: 'HEARTLAND HUB', phone: '816-861-4700', lng: -94.5219, lat: 39.0653, coords: '39.0653° N, 94.5219° W' },
+      '67': { name: 'Robert J. Dole VA Medical Center', sub: 'Wichita Kansas', visn: 'VISN 15', tag: 'KANSAS HUB', phone: '316-685-2221', lng: -97.2803, lat: 37.6747, coords: '37.6747° N, 97.2803° W' },
+
+      // VISN 16: South Central (700-729, 386-397)
+      '70': { name: 'Southeast Louisiana Veterans HCS', sub: 'New Orleans Division', visn: 'VISN 16', tag: 'SOUTH CENTRAL HUB', phone: '504-507-2000', lng: -90.0861, lat: 29.9575, coords: '29.9575° N, 90.0861° W' },
+      '71': { name: 'Overton Brooks VA Medical Center', sub: 'Shreveport Louisiana', visn: 'VISN 16', tag: 'SOUTH CENTRAL HUB', phone: '318-990-5000', lng: -93.7381, lat: 32.4842, coords: '32.4842° N, 93.7381° W' },
+      '72': { name: 'Central Arkansas Veterans HCS', sub: 'Little Rock & North Little Rock', visn: 'VISN 16', tag: 'ARKANSAS HUB', phone: '501-257-1000', lng: -92.2575, lat: 34.7578, coords: '34.7578° N, 92.2575° W' },
+      '39': { name: 'G.V. (Sonny) Montgomery VAMC', sub: 'Jackson Mississippi', visn: 'VISN 16', tag: 'MISSISSIPPI HUB', phone: '601-362-4471', lng: -90.1706, lat: 32.3278, coords: '32.3278° N, 90.1706° W' },
+
+      // VISN 17: Heart of Texas (750-799)
+      '75': { name: 'VA North Texas Health Care System', sub: 'Dallas & Fort Worth Divisions', visn: 'VISN 17', tag: 'NORTH TEXAS HUB', phone: '214-742-8387', lng: -96.7970, lat: 32.7058, coords: '32.7058° N, 96.7970° W' },
+      '77': { name: 'Michael E. DeBakey VAMC', sub: 'Houston Texas', visn: 'VISN 16', tag: 'SOUTHEAST TEXAS HUB', phone: '713-791-1414', lng: -95.3889, lat: 29.7042, coords: '29.7042° N, 95.3889° W' },
+      '78': { name: 'South Texas Veterans Health Care', sub: 'Audie L. Murphy Memorial VAMC', visn: 'VISN 17', tag: 'SOUTH TEXAS HUB', phone: '210-617-5300', lng: -98.5786, lat: 29.5089, coords: '29.5089° N, 98.5786° W' },
+
+      // VISN 19: Rocky Mountain (590-599, 820-849, 870-879)
+      '80': { name: 'Rocky Mountain Regional VAMC', sub: 'Eastern Colorado Health Care', visn: 'VISN 19', tag: 'ROCKY MOUNTAIN HUB', phone: '720-723-7000', lng: -104.8358, lat: 39.7444, coords: '39.7444° N, 104.8358° W' },
+      '84': { name: 'VA Salt Lake City Health Care', sub: 'George E. Wahlen VAMC', visn: 'VISN 19', tag: 'UTAH HUB', phone: '801-582-1565', lng: -111.8419, lat: 40.7583, coords: '40.7583° N, 111.8419° W' },
+      '87': { name: 'New Mexico VA Health Care System', sub: 'Raymond G. Murphy VAMC', visn: 'VISN 22', tag: 'NEW MEXICO HUB', phone: '505-265-1711', lng: -106.5867, lat: 35.0567, coords: '35.0567° N, 106.5867° W' },
+
+      // VISN 20: Northwest (970-994)
+      '98': { name: 'VA Puget Sound Healthcare System', sub: 'Washington, Oregon, ID & Alaska', visn: 'VISN 20', tag: 'NORTHWEST HUB', phone: '206-762-1010', lng: -122.3101, lat: 47.5583, coords: '47.5583° N, 122.3101° W' },
+      '99': { name: 'Mann-Grandstaff VA Medical Center', sub: 'Spokane Washington', visn: 'VISN 20', tag: 'INLAND NW HUB', phone: '509-434-7000', lng: -117.4722, lat: 47.6744, coords: '47.6744° N, 117.4722° W' },
+      '97': { name: 'VA Portland Health Care System', sub: 'Oregon & SW Washington', visn: 'VISN 20', tag: 'OREGON HUB', phone: '503-220-8262', lng: -122.6828, lat: 45.4967, coords: '45.4967° N, 122.6828° W' },
+
+      // VISN 21 & 22: Sierra Pacific & Desert Pacific (850-869, 889-899, 900-969)
+      '85': { name: 'Phoenix VA Health Care System', sub: 'Carl T. Hayden VAMC', visn: 'VISN 22', tag: 'ARIZONA HUB', phone: '602-277-5551', lng: -112.0628, lat: 33.4939, coords: '33.4939° N, 112.0628° W' },
+      '89': { name: 'VA Southern Nevada Healthcare', sub: 'North Las Vegas VAMC', visn: 'VISN 21', tag: 'NEVADA HUB', phone: '702-792-1450', lng: -115.1483, lat: 36.2847, coords: '36.2847° N, 115.1483° W' },
+      '90': { name: 'VA Greater Los Angeles Healthcare', sub: 'West LA Healthcare Center', visn: 'VISN 22', tag: 'CALIFORNIA HUB', phone: '310-478-3711', lng: -118.4550, lat: 34.0536, coords: '34.0536° N, 118.4550° W' },
+      '92': { name: 'VA San Diego Healthcare System', sub: 'Jennifer Moreno VAMC', visn: 'VISN 22', tag: 'CALIFORNIA HUB', phone: '858-552-8585', lng: -117.2347, lat: 32.8753, coords: '32.8753° N, 117.2347° W' },
+      '94': { name: 'San Francisco VA Health Care System', sub: 'Fort Miley Campus', visn: 'VISN 21', tag: 'BAY AREA HUB', phone: '415-221-4810', lng: -122.5042, lat: 37.7819, coords: '37.7819° N, 122.5042° W' },
+
+      // VISN 23: Midwest (570-589, 500-529, 550-569, 680-699)
+      '55': { name: 'Minneapolis VA Health Care System', sub: 'Minnesota & Western Wisconsin', visn: 'VISN 23', tag: 'MIDWEST HUB', phone: '612-725-2000', lng: -93.2044, lat: 44.8986, coords: '44.8986° N, 93.2044° W' },
+      '50': { name: 'VA Central Iowa Health Care System', sub: 'Des Moines Division', visn: 'VISN 23', tag: 'IOWA HUB', phone: '515-699-5999', lng: -93.6558, lat: 41.6144, coords: '41.6144° N, 93.6558° W' },
+      '68': { name: 'VA Nebraska-Western Iowa HCS', sub: 'Omaha VAMC', visn: 'VISN 23', tag: 'NEBRASKA HUB', phone: '402-346-8800', lng: -95.9722, lat: 41.2467, coords: '41.2467° N, 95.9722° W' }
     };
 
     const zipInput = document.getElementById('zipInput');
-    const clearZipBtn = document.getElementById('clearZipBtn');
-    const geoBtn = document.getElementById('geoBtn');
-    const geoBtnLabel = document.getElementById('geoBtnLabel');
-    const matchStatus = document.getElementById('matchStatus');
-    const statusAlert = document.getElementById('statusAlert');
-    const hubBadge = document.getElementById('hubBadge');
-    const visnBadge = document.getElementById('visnBadge');
-    const facilityName = document.getElementById('facilityName');
-    const facilityAddress = document.getElementById('facilityAddress');
-    const facilityPhone = document.getElementById('facilityPhone');
-    const callBtn = document.getElementById('callBtn');
-    const centerCallBtn = document.getElementById('centerCallBtn');
-    const centerCallText = document.getElementById('centerCallText');
-    const fallbackCallBtn = document.getElementById('fallbackCallBtn');
-    const mapCoordinates = document.getElementById('mapCoordinates');
-
-    // Modal elements
-    const scriptModal = document.getElementById('scriptModal');
-    const openScriptBtn = document.getElementById('openScriptBtn');
-    const closeScriptBtn = document.getElementById('closeScriptBtn');
-    const modalDismissBtn = document.getElementById('modalDismissBtn');
-
-    openScriptBtn.addEventListener('click', () => scriptModal.classList.remove('hidden'));
-    closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
-    modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
-
-    // Pronounced Tactical Haptic Engine with Staggered Multi-Pulse Pattern
-    function triggerTacticalHaptic(e) {
-      const target = e.currentTarget;
-      
-      // Visual recoil flash
-      target.classList.add('tactical-pulse-active');
-      setTimeout(() => target.classList.remove('tactical-pulse-active'), 180);
-
-      // Heavy staggered vibration: 80ms hit, 40ms pause, 120ms confirmation hit
-      if (navigator.vibrate) {
-        navigator.vibrate([80, 40, 120]);
-      }
-    }
-
-    centerCallBtn.addEventListener('pointerdown', triggerTacticalHaptic);
-    callBtn.addEventListener('pointerdown', triggerTacticalHaptic);
-    fallbackCallBtn.addEventListener('pointerdown', triggerTacticalHaptic);
-
-    function resolveHub(zip) {
-      if (!zip || zip.length < 3) return null;
-      const p = parseInt(zip.substring(0, 3), 10);
-      
-      if (p >= 10 && p <= 69) return visnDatabase.visn1;
-      if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
-
-      // VISN 4 Audited
-      if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
-      if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
-      if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
-      if ([155, 157, 158, 159, 166, 168].includes(p)) return visnDatabase.visn4_altoona;
-      if ([170, 171, 172, 173, 174, 175, 176, 178, 179].includes(p)) return visnDatabase.visn4_lebanon;
-      if ([182, 183, 184, 185, 186, 187, 188].includes(p)) return visnDatabase.visn4_wilkes;
-      if ([193, 194, 195, 196].includes(p)) return visnDatabase.visn4_coatesville;
-      if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
-      if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
-
-      if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
-      if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
-      if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
-      if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
-      if (p >= 430 && p <= 499) return visnDatabase.visn10;
-      if ((p >= 530 && p <= 549) || (p >= 600 && p <= 619)) return visnDatabase.visn12;
-      if (p >= 620 && p <= 679) return visnDatabase.visn15;
-      if ((p >= 386 && p <= 397) || (p >= 700 && p <= 729) || (p >= 750 && p <= 759) || (p >= 770 && p <= 777)) return visnDatabase.visn16;
-      if ((p >= 760 && p <= 769) || (p >= 780 && p <= 799)) return visnDatabase.visn17;
-      if ((p >= 590 && p <= 599) || (p >= 800 && p <= 847)) return visnDatabase.visn19;
-      if (p >= 970 && p <= 999) return visnDatabase.visn20;
-      if ((p >= 890 && p <= 898) || (p >= 936 && p <= 969)) return visnDatabase.visn21;
-      if ((p >= 850 && p <= 865) || (p >= 900 && p <= 935)) return visnDatabase.visn22;
-      if ((p >= 500 && p <= 528) || (p >= 550 && p <= 588) || (p >= 680 && p <= 693)) return visnDatabase.visn23;
-
-      return visnDatabase.national_fallback;
-    }
-
-    function updateHubUI(data) {
-      hubBadge.textContent = data.badge;
-      visnBadge.textContent = data.visn;
-      facilityName.textContent = data.name;
-      facilityAddress.textContent = data.desc;
-      facilityPhone.textContent = data.phone;
-      
-      const callUri = "tel:" + data.cleanPhone;
-      callBtn.href = callUri;
-      centerCallBtn.href = callUri;
-      
-      const isFallback = (data.visn === "VA National");
-      centerCallText.textContent = isFallback ? "CALL DISPATCH" : "CALL TRANSIT HUB";
-
-      if (map && data.coords) {
-        map.flyTo({ center: data.coords, zoom: isFallback ? 5 : 12, essential: true });
-        mapMarker.setLngLat(data.coords);
-        mapCoordinates.textContent = `${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W`;
-      }
-    }
-
-    function showAlert(msg) {
-      statusAlert.textContent = msg;
-      statusAlert.classList.remove('hidden');
-    }
-
-    function hideAlert() {
-      statusAlert.classList.add('hidden');
-    }
-
     zipInput.addEventListener('input', (e) => {
-      hideAlert();
-      const cleanVal = e.target.value.replace(/\D/g, '');
-      if (cleanVal !== e.target.value) {
-        e.target.value = cleanVal;
-      }
+      const val = e.target.value.trim();
+      if (val.length >= 2) {
+        const prefix2 = val.substring(0, 2);
+        const prefix3 = val.substring(0, 3);
+        const data = hubs[prefix3] || hubs[prefix2] || {
+          name: 'VA Regional Travel Hub',
+          sub: 'National Dispatch Support',
+          visn: 'VISN DIRECT',
+          tag: 'REGIONAL HUB',
+          phone: '855-574-7292',
+          lng: -98.5795,
+          lat: 39.8283,
+          coords: '39.8283° N, 98.5795° W'
+        };
 
-      if (cleanVal.length > 0) {
-        clearZipBtn.classList.remove('hidden');
-      } else {
-        clearZipBtn.classList.add('hidden');
-      }
+        document.getElementById('hubTag').textContent = data.tag;
+        document.getElementById('visnTag').textContent = data.visn;
+        document.getElementById('facilityName').textContent = data.name;
+        document.getElementById('facilitySub').textContent = data.sub;
+        document.getElementById('phoneNumDisplay').textContent = data.phone;
+        document.getElementById('coordsDisplay').textContent = data.coords;
+        document.getElementById('dialLink').href = 'tel:' + data.phone.replace(/[^0-9]/g, '');
+        document.getElementById('mainCallBtn').href = 'tel:' + data.phone.replace(/[^0-9]/g, '');
 
-      if (cleanVal.length >= 3) {
-        const match = resolveHub(cleanVal);
-        if (match) {
-          updateHubUI(match);
-          if (match.visn === "VA National") {
-            matchStatus.textContent = "National Dispatch";
-            matchStatus.className = "text-[9px] font-mono-code text-amber-400";
-          } else {
-            matchStatus.textContent = cleanVal.length === 5 ? "Locked (Exact)" : "Searching Region...";
-            matchStatus.className = "text-[9px] font-mono-code text-emerald-400";
-          }
-        }
-      } else {
-        matchStatus.textContent = "Live Auto-Lookup";
-        matchStatus.className = "text-[9px] font-mono-code text-slate-500";
-      }
-
-      if (cleanVal.length === 5) {
-        zipInput.blur();
+        map.flyTo({ center: [data.lng, data.lat], zoom: 12 });
+        marker.setLngLat([data.lng, data.lat]);
       }
     });
 
-    clearZipBtn.addEventListener('click', () => {
-      zipInput.value = '';
-      clearZipBtn.classList.add('hidden');
-      matchStatus.textContent = "Live Auto-Lookup";
-      matchStatus.className = "text-[9px] font-mono-code text-slate-500";
-      hideAlert();
-      updateHubUI(visnDatabase.visn4_pgh);
-      zipInput.focus();
+    // Modal drawer controls
+    const scriptBtn = document.getElementById('scriptBtn');
+    const scriptModal = document.getElementById('scriptModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    scriptBtn.addEventListener('click', () => {
+      scriptModal.style.display = 'flex';
     });
 
-    geoBtn.addEventListener('click', () => {
-      hideAlert();
-      if (!navigator.geolocation) {
-        showAlert("GPS not supported.");
-        return;
+    closeModalBtn.addEventListener('click', () => {
+      scriptModal.style.display = 'none';
+    });
+
+    scriptModal.addEventListener('click', (e) => {
+      if (e.target === scriptModal) {
+        scriptModal.style.display = 'none';
       }
-
-      geoBtnLabel.textContent = "...";
-      geoBtn.disabled = true;
-
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-
-          if (map) {
-            map.flyTo({ center: [lon, lat], zoom: 12, essential: true });
-            mapMarker.setLngLat([lon, lat]);
-            mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
-          }
-
-          try {
-            const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
-            const data = await res.json();
-            
-            const detectedZip = data.postcode;
-            if (detectedZip) {
-              const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
-              zipInput.value = cleanZip;
-              clearZipBtn.classList.remove('hidden');
-              const match = resolveHub(cleanZip);
-              if (match) {
-                updateHubUI(match);
-                matchStatus.textContent = `Locked: ${cleanZip}`;
-                matchStatus.className = "text-[9px] font-mono-code text-emerald-400";
-              }
-            } else {
-              showAlert("Could not extract ZIP. Enter manually.");
-            }
-          } catch (err) {
-            showAlert("Service error. Enter ZIP manually.");
-          } finally {
-            geoBtnLabel.textContent = "GPS";
-            geoBtn.disabled = false;
-          }
-        },
-        (error) => {
-          showAlert("GPS signal unavailable.");
-          geoBtnLabel.textContent = "GPS";
-          geoBtn.disabled = false;
-        },
-        { timeout: 8000, enableHighAccuracy: true }
-      );
     });
   </script>
 </body>
