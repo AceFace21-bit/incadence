@@ -1,0 +1,351 @@
+<!-- 
+  Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
+  PATENT PENDING: USPTO Provisional Application No. 64/174,835
+  Project "Eyes" - Zero-Hardware Optical Distance & Monocular Acuity Engine
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Project Eyes | Patent Pending 64/174,835</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #0b0f19;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 14px;
+      width: 100%;
+      max-width: 600px;
+    }
+    .patent-pill {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+    .camera-box {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      aspect-ratio: 4 / 3;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+      background: #000;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+      margin-bottom: 16px;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+    .hud-top {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .hud-bottom {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+    .badge {
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      font-size: 12px;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+    .badge-val {
+      color: #38bdf8;
+      font-size: 15px;
+      font-weight: 800;
+      margin-left: 4px;
+    }
+    .watermark {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.45);
+      background: rgba(0, 0, 0, 0.55);
+      padding: 4px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.4px;
+    }
+    .optotype-card {
+      width: 100%;
+      max-width: 600px;
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      margin-bottom: 16px;
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+    #optotypeChar {
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 900;
+      line-height: 1;
+      margin: 20px 0;
+      transition: font-size 0.1s ease-out;
+      user-select: none;
+    }
+    .controls {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      flex: 1;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+    }
+    footer {
+      margin-top: auto;
+      padding-top: 16px;
+      font-size: 11px;
+      color: #64748b;
+      text-align: center;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <header>
+    <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
+    <h1>Project "Eyes" Calibration Engine</h1>
+  </header>
+
+  <div class="camera-box">
+    <video id="webcam" playsinline></video>
+    <div class="hud-top">
+      <div class="badge">Distance: <span id="distVal" class="badge-val">-- cm</span></div>
+      <div class="badge">Zone: <span id="zoneVal" class="badge-val" style="color: #fbbf24;">Init</span></div>
+    </div>
+    <div class="hud-bottom">
+      <div class="badge">Active Eye: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching...</span></div>
+      <div class="watermark">IP Owner: T. L. Watkins</div>
+    </div>
+  </div>
+
+  <div class="optotype-card">
+    <div class="card-header">
+      <span id="acuityLabel">Target: 20/40 Equivalent</span>
+      <span id="scaleReadout">Dynamic Scale: -- px</span>
+    </div>
+    <div id="optotypeChar" style="font-size: 48px;">E</div>
+    <div style="font-size: 12px; color: #475569; font-weight: 600;" id="promptText">
+      Hold device 35–45 cm from face. Wink or cover one eye to test monocular lock.
+    </div>
+  </div>
+
+  <div class="controls">
+    <button onclick="setLine(20, '20/20')" id="btn20">20/20 Line</button>
+    <button onclick="setLine(40, '20/40')" id="btn40" class="active">20/40 Line</button>
+    <button onclick="setLine(100, '20/100')" id="btn100">20/100 Line</button>
+    <button onclick="nextLetter()">New Letter</button>
+  </div>
+
+  <footer>
+    &copy; 2026 Terrance Lamont Watkins. Protected under USPTO Provisional App. No. 64/174,835.
+  </footer>
+
+  <script>
+    const videoElement = document.getElementById('webcam');
+    const distVal = document.getElementById('distVal');
+    const zoneVal = document.getElementById('zoneVal');
+    const eyeStateVal = document.getElementById('eyeStateVal');
+    const optotypeChar = document.getElementById('optotypeChar');
+    const scaleReadout = document.getElementById('scaleReadout');
+    const acuityLabel = document.getElementById('acuityLabel');
+
+    const AVERAGE_IPD_MM = 63.0;
+    const FOCAL_LENGTH_PIXELS = 580;
+    const LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
+    let currentDenominator = 40; // Default 20/40
+
+    function setLine(denom, label) {
+      currentDenominator = denom;
+      acuityLabel.innerText = `Target: ${label} Equivalent`;
+      document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+      if (denom === 20) document.getElementById('btn20').classList.add('active');
+      if (denom === 40) document.getElementById('btn40').classList.add('active');
+      if (denom === 100) document.getElementById('btn100').classList.add('active');
+      nextLetter();
+    }
+
+    function nextLetter() {
+      const randomChar = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+      optotypeChar.innerText = randomChar;
+    }
+
+    // Calculate vertical/horizontal Eye Aspect Ratio (EAR) to detect wink/cover
+    function getEAR(landmarks, topIdx, bottomIdx, innerIdx, outerIdx) {
+      const top = landmarks[topIdx];
+      const bottom = landmarks[bottomIdx];
+      const inner = landmarks[innerIdx];
+      const outer = landmarks[outerIdx];
+      const vDist = Math.hypot(top.x - bottom.x, top.y - bottom.y);
+      const hDist = Math.hypot(inner.x - outer.x, inner.y - outer.y);
+      return vDist / (hDist || 1);
+    }
+
+    function onResults(results) {
+      if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+        const lm = results.multiFaceLandmarks[0];
+
+        // 1. Distance Calculation via Iris/Eye Centers
+        const leftPupil = lm[468] || lm[33];
+        const rightPupil = lm[473] || lm[263];
+
+        const dx = (leftPupil.x - rightPupil.x) * videoElement.videoWidth;
+        const dy = (leftPupil.y - rightPupil.y) * videoElement.videoHeight;
+        const pupilDistancePx = Math.hypot(dx, dy);
+
+        if (pupilDistancePx > 0) {
+          const distanceMm = (FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / pupilDistancePx;
+          const distanceCm = (distanceMm / 10).toFixed(1);
+          distVal.innerText = `${distanceCm} cm`;
+
+          if (distanceCm >= 35 && distanceCm <= 45) {
+            zoneVal.innerText = "Optimal";
+            zoneVal.style.color = "#4ade80";
+          } else if (distanceCm < 35) {
+            zoneVal.innerText = "Too Close";
+            zoneVal.style.color = "#f87171";
+          } else {
+            zoneVal.innerText = "Too Far";
+            zoneVal.style.color = "#fbbf24";
+          }
+
+          // 2. Dynamic Optotype Sizing based on real-time distance
+          // Standard 20/20 subtends 5 arcminutes (0.0833 deg)
+          const angleRad = (5 * (currentDenominator / 20) / 60) * (Math.PI / 180);
+          const heightMm = 2 * distanceMm * Math.tan(angleRad / 2);
+          // Approximate 3.78 CSS px per mm on standard displays, scaled for visibility
+          const dynamicPx = Math.max(12, Math.min(110, Math.round(heightMm * 6.5)));
+          optotypeChar.style.fontSize = `${dynamicPx}px`;
+          scaleReadout.innerText = `Dynamic Scale: ${dynamicPx}px`;
+        }
+
+        // 3. Monocular Wink / Eye-Cover Verification
+        const rightEyeEAR = getEAR(lm, 159, 145, 133, 33);
+        const leftEyeEAR = getEAR(lm, 386, 374, 362, 263);
+        const CLOSED_THRESHOLD = 0.19;
+
+        if (rightEyeEAR < CLOSED_THRESHOLD && leftEyeEAR >= CLOSED_THRESHOLD) {
+          eyeStateVal.innerText = "Left Eye Only (OD Closed)";
+          eyeStateVal.style.color = "#38bdf8";
+        } else if (leftEyeEAR < CLOSED_THRESHOLD && rightEyeEAR >= CLOSED_THRESHOLD) {
+          eyeStateVal.innerText = "Right Eye Only (OS Closed)";
+          eyeStateVal.style.color = "#38bdf8";
+        } else if (leftEyeEAR < CLOSED_THRESHOLD && rightEyeEAR < CLOSED_THRESHOLD) {
+          eyeStateVal.innerText = "Both Eyes Closed";
+          eyeStateVal.style.color = "#f87171";
+        } else {
+          eyeStateVal.innerText = "Binocular (Both Open)";
+          eyeStateVal.style.color = "#4ade80";
+        }
+      } else {
+        distVal.innerText = "-- cm";
+        zoneVal.innerText = "No Face";
+        zoneVal.style.color = "#94a3b8";
+        eyeStateVal.innerText = "Searching...";
+        eyeStateVal.style.color = "#94a3b8";
+      }
+    }
+
+    const faceMesh = new FaceMesh({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+    });
+
+    faceMesh.setOptions({
+      maxNumFaces: 1,
+      refineLandmarks: true,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+
+    faceMesh.onResults(onResults);
+
+    const camera = new Camera(videoElement, {
+      onFrame: async () => {
+        await faceMesh.send({ image: videoElement });
+      },
+      width: 640,
+      height: 480
+    });
+
+    camera.start();
+  </script>
+</body>
+</html>
