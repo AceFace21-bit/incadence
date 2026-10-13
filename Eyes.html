@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.6 - Windowed Calibration & Clinical Acuity Engine
+  Project "Eyes" v3.7 - Multiple-Choice Optotype Verification Engine
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.6 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.7 | Patent Pending 64/174,835</title>
   <style>
     * { 
       box-sizing: border-box; 
@@ -214,25 +214,26 @@
       background: #1e293b; 
       color: #f8fafc; 
       border: 1px solid #334155;
-      padding: 10px; 
+      padding: 12px; 
       border-radius: 8px; 
-      font-size: 12px; 
+      font-size: 14px; 
       font-weight: 800; 
       cursor: pointer;
-    }
-    button.success { 
-      background: #16a34a; 
-      border-color: #4ade80; 
-      color: #fff; 
-    }
-    button.warn { 
-      background: #dc2626; 
-      border-color: #f87171; 
-      color: #fff; 
     }
     button.primary {
       background: #0284c7;
       border-color: #38bdf8;
+      color: #fff;
+    }
+    button.opt-choice {
+      background: #e2e8f0;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+      font-weight: 900;
+    }
+    button.opt-choice:active {
+      background: #0284c7;
       color: #fff;
     }
     footer { 
@@ -250,7 +251,7 @@
 
   <header>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project Eyes v3.6</h1>
+    <h1>Project Eyes v3.7</h1>
   </header>
 
   <div class="directive-banner" id="directiveBanner">Hold at 35–45 cm</div>
@@ -298,6 +299,7 @@
     </div>
   </div>
 
+  <!-- MULTIPLE CHOICE OPTIONS INSTEAD OF VISIBLE/BLURRY -->
   <div class="controls" id="examControls">
     <button class="primary" id="calibBtn" onclick="lockCalibration()">Lock Calibration & Start</button>
   </div>
@@ -322,16 +324,16 @@
     const acuityLabel = document.getElementById('acuityLabel');
     const examControls = document.getElementById('examControls');
     const directiveBanner = document.getElementById('directiveBanner');
-    const calibBtn = document.getElementById('calibBtn');
 
     const AVERAGE_IPD_MM = 63.0;
     const FOCAL_LENGTH_PIXELS = 580;
-    const LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
+    const MASTER_LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
     const ACUITY_STEPS = [100, 70, 40, 30, 20];
 
     let examStage = 0;
     let stepIndex = 0;
     let currentDenominator = ACUITY_STEPS[0];
+    let currentCorrectChar = 'E';
     let odScore = "20/100";
     let osScore = "20/100";
 
@@ -370,74 +372,94 @@
     function startStage1() {
       examStage = 1;
       updateStageUI();
+      loadNewAcuityRound();
+    }
+
+    function loadNewAcuityRound() {
+      // Pick correct letter
+      currentCorrectChar = MASTER_LETTERS[Math.floor(Math.random() * MASTER_LETTERS.length)];
       optotypeChar.style.fontSize = "48px";
-      optotypeChar.innerText = LETTERS[0];
-      acuityLabel.innerText = `Right Eye (20/${currentDenominator})`;
+      optotypeChar.innerText = currentCorrectChar;
+      acuityLabel.innerText = `${examStage === 1 ? 'Right' : 'Left'} Eye (20/${currentDenominator})`;
+
+      // Generate 3 multiple choice options (1 correct, 2 random distractors)
+      let choices = [currentCorrectChar];
+      while (choices.length < 3) {
+        let randChar = MASTER_LETTERS[Math.floor(Math.random() * MASTER_LETTERS.length)];
+        if (!choices.includes(randChar)) choices.push(randChar);
+      }
+      // Shuffle choices
+      choices.sort(() => Math.random() - 0.5);
+
+      // Render 3 letter buttons underneath
       examControls.innerHTML = `
-        <button class="success" onclick="recordResponse(true)">Visible ✓</button>
-        <button class="warn" onclick="recordResponse(false)">Blurry ✗</button>
+        <button class="opt-choice" onclick="submitAnswer('${choices[0]}')">${choices[0]}</button>
+        <button class="opt-choice" onclick="submitAnswer('${choices[1]}')">${choices[1]}</button>
+        <button class="opt-choice" onclick="submitAnswer('${choices[2]}')">${choices[2]}</button>
       `;
     }
 
-    function nextLetter() {
-      const current = optotypeChar.innerText;
-      let next = current;
-      while (next === current) next = LETTERS[Math.floor(Math.random() * LETTERS.length)];
-      optotypeChar.innerText = next;
-    }
+    function submitAnswer(selectedChar) {
+      const isCorrect = (selectedChar === currentCorrectChar);
 
-    function updateStageUI() {
-      ['st0', 'st1', 'st2', 'st3', 'st4'].forEach((id, idx) => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.className = 'stage-step';
-          if (idx < examStage) el.classList.add('done');
-          if (idx === examStage) el.classList.add('active');
-        }
-      });
-      updateDirectives();
-    }
-
-    function recordResponse(canSee) {
       if (examStage === 1) {
-        if (canSee) {
+        if (isCorrect) {
           odScore = `20/${currentDenominator}`;
           if (stepIndex < ACUITY_STEPS.length - 1) {
-            stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex];
-            acuityLabel.innerText = `Right Eye (20/${currentDenominator})`;
-            nextLetter();
-          } else { startStage2(); }
-        } else { startStage2(); }
+            stepIndex++;
+            currentDenominator = ACUITY_STEPS[stepIndex];
+            loadNewAcuityRound();
+          } else {
+            startStage2();
+          }
+        } else {
+          startStage2();
+        }
       } else if (examStage === 2) {
-        if (canSee) {
+        if (isCorrect) {
           osScore = `20/${currentDenominator}`;
           if (stepIndex < ACUITY_STEPS.length - 1) {
-            stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex];
-            acuityLabel.innerText = `Left Eye (20/${currentDenominator})`;
-            nextLetter();
-          } else { startStage3(); }
-        } else { startStage3(); }
+            stepIndex++;
+            currentDenominator = ACUITY_STEPS[stepIndex];
+            loadNewAcuityRound();
+          } else {
+            startStage3();
+          }
+        } else {
+          startStage3();
+        }
       }
     }
 
     function startStage2() {
-      examStage = 2; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
-      updateStageUI(); acuityLabel.innerText = `Left Eye (20/${currentDenominator})`;
-      nextLetter();
+      examStage = 2;
+      stepIndex = 0;
+      currentDenominator = ACUITY_STEPS[0];
+      updateStageUI();
+      loadNewAcuityRound();
     }
 
     function startStage3() {
-      examStage = 3; currentDenominator = 40; updateStageUI();
-      optotypeChar.style.display = "none"; examControls.style.display = "none";
-      readingBox.style.display = "block"; acuityLabel.innerText = "Reading Intake";
-      wordContainer.innerHTML = ""; wordIndex = 0; tapTimestamps = [performance.now()];
+      examStage = 3;
+      currentDenominator = 40;
+      updateStageUI();
+      optotypeChar.style.display = "none";
+      examControls.style.display = "none";
+      readingBox.style.display = "block";
+      acuityLabel.innerText = "Reading Intake";
+      wordContainer.innerHTML = "";
+      wordIndex = 0;
+      tapTimestamps = [performance.now()];
       PASSAGE_WORDS.forEach((w, idx) => {
         const span = document.createElement('span');
-        span.innerText = w; span.style.padding = "4px 8px"; span.style.borderRadius = "4px";
+        span.innerText = w;
+        span.style.padding = "4px 8px";
+        span.style.borderRadius = "4px";
         span.style.border = idx === 0 ? "2px solid #0284c7" : "1px solid #cbd5e1";
         span.onclick = () => {
           if (idx !== wordIndex) return;
-          tapTimestamps.push(performance.now()); wordIndex++;
+          tapTimestamps.push(performance.now());
+          wordIndex++;
           if (wordIndex >= PASSAGE_WORDS.length) startStage4();
           else {
             Array.from(wordContainer.children).forEach((el, i) => {
@@ -451,8 +473,11 @@
     }
 
     function startStage4() {
-      examStage = 4; updateStageUI(); readingBox.style.display = "none";
-      reportBox.style.display = "block"; acuityLabel.innerText = "Scorecard";
+      examStage = 4;
+      updateStageUI();
+      readingBox.style.display = "none";
+      reportBox.style.display = "block";
+      acuityLabel.innerText = "Scorecard";
       const totalSec = (tapTimestamps[tapTimestamps.length - 1] - tapTimestamps[0]) / 1000;
       const wpm = Math.round((PASSAGE_WORDS.length / Math.max(1, totalSec)) * 60);
       document.getElementById('repOD').innerText = odScore;
@@ -462,10 +487,17 @@
     }
 
     function resetExam() {
-      examStage = 0; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
-      odScore = "20/100"; osScore = "20/100"; lockedDistanceCm = null; stableFramesInGreen = 0;
-      updateStageUI(); reportBox.style.display = "none"; readingBox.style.display = "none";
-      optotypeChar.style.display = "block"; 
+      examStage = 0;
+      stepIndex = 0;
+      currentDenominator = ACUITY_STEPS[0];
+      odScore = "20/100";
+      osScore = "20/100";
+      lockedDistanceCm = null;
+      stableFramesInGreen = 0;
+      updateStageUI();
+      reportBox.style.display = "none";
+      readingBox.style.display = "none";
+      optotypeChar.style.display = "block";
       optotypeChar.style.fontSize = "24px";
       optotypeChar.innerText = "HOLD AT 35–45 CM";
       acuityLabel.innerText = "Step 0: Optical Baseline Calibration";
