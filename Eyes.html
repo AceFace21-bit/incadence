@@ -1,141 +1,151 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.25 - Seated Elbow-Anchor Ergonomic Protocol & Clinical Rx Engine
+  Project "Eyes" v3.27 - Zero-Scroll Single-Viewport & Compact 2x Optotype Box
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.25 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.27 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
+    html, body {
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
       background-color: #0b0f19;
       color: #f8fafc;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-      padding: 12px;
+      justify-content: space-between;
+      padding: 6px 10px;
     }
-    header { text-align: center; margin-bottom: 8px; width: 100%; max-width: 600px; }
-    .patent-pill {
-      display: inline-block;
-      background: rgba(56, 189, 248, 0.14);
-      color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      margin-bottom: 3px;
-      text-transform: uppercase;
-    }
-    h1 { font-size: 16px; font-weight: 800; }
-    
-    .workspace {
+    header {
+      text-align: center;
       width: 100%;
       max-width: 600px;
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 8px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px;
     }
+    .patent-pill {
+      background: rgba(56, 189, 248, 0.14);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    h1 { font-size: 14px; font-weight: 800; }
+    
+    .stage-bar {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      gap: 3px;
+    }
+    .stage-step {
+      flex: 1; text-align: center; padding: 3px 2px; font-size: 8px; font-weight: 800;
+      background: #1e293b; color: #64748b; border-radius: 5px; border: 1px solid #334155;
+    }
+    .stage-step.active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: #38bdf8; }
+    .stage-step.done { background: rgba(74, 222, 128, 0.2); color: #4ade80; border-color: #4ade80; }
+
     .camera-box {
       position: relative;
       width: 100%;
-      aspect-ratio: 16 / 9;
-      border-radius: 12px;
+      max-width: 600px;
+      aspect-ratio: 2.15 / 1;
+      border-radius: 10px;
       overflow: hidden;
       border: 2px solid #1e293b;
       background: #000;
+      flex-shrink: 0;
     }
     video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     .hud-top, .hud-bottom {
-      position: absolute; left: 8px; right: 8px;
+      position: absolute; left: 6px; right: 6px;
       display: flex; justify-content: space-between; pointer-events: none;
     }
-    .hud-top { top: 6px; }
-    .hud-bottom { bottom: 6px; }
+    .hud-top { top: 4px; }
+    .hud-bottom { bottom: 4px; }
     .badge {
       background: rgba(15, 23, 42, 0.9);
-      padding: 4px 8px;
-      border-radius: 6px;
+      padding: 2px 6px;
+      border-radius: 5px;
       border: 1px solid #334155;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
       color: #cbd5e1;
     }
-    .badge-val { color: #38bdf8; font-size: 12px; font-weight: 900; margin-left: 3px; }
+    .badge-val { color: #38bdf8; font-size: 11px; font-weight: 900; margin-left: 2px; }
     
     .roadmap-panel {
       width: 100%;
+      max-width: 600px;
       background: #111827;
       border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 10px 12px;
+      border-radius: 10px;
+      padding: 6px 8px;
+      flex-shrink: 0;
     }
     .roadmap-title {
-      font-size: 10px;
+      font-size: 8px;
       font-weight: 800;
       color: #94a3b8;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-      border-bottom: 1px solid #1f2937;
-      padding-bottom: 4px;
+      letter-spacing: 0.4px;
+      margin-bottom: 3px;
     }
-    .roadmap-steps { display: flex; flex-direction: column; gap: 5px; }
+    .roadmap-steps { display: flex; flex-direction: column; gap: 3px; }
     .roadmap-step {
-      display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700;
-      color: #64748b; padding: 4px 8px; border-radius: 6px; background: #0f172a; border: 1px solid #1e293b;
+      display: flex; align-items: center; gap: 6px; font-size: 9.5px; font-weight: 700;
+      color: #64748b; padding: 2px 6px; border-radius: 4px; background: #0f172a; border: 1px solid #1e293b;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .roadmap-dot {
-      width: 14px; height: 14px; border-radius: 50%; background: #334155;
-      display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; color: #fff;
+      width: 12px; height: 12px; border-radius: 50%; background: #334155;
+      display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 900; color: #fff;
       flex-shrink: 0;
     }
     .roadmap-step.done { color: #4ade80; border-color: rgba(74, 222, 128, 0.3); background: rgba(74, 222, 128, 0.05); }
     .roadmap-step.done .roadmap-dot { background: #16a34a; }
     .roadmap-step.active { color: #facc15; border-color: rgba(250, 204, 21, 0.4); background: rgba(250, 204, 21, 0.08); }
     .roadmap-step.active .roadmap-dot { background: #eab308; }
-
-    .stage-bar {
-      width: 100%; max-width: 600px; display: flex; gap: 3px; margin-bottom: 8px;
-    }
-    .stage-step {
-      flex: 1; text-align: center; padding: 5px 2px; font-size: 8px; font-weight: 800;
-      background: #1e293b; color: #64748b; border-radius: 6px; border: 1px solid #334155;
-    }
-    .stage-step.active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: #38bdf8; }
-    .stage-step.done { background: rgba(74, 222, 128, 0.2); color: #4ade80; border-color: #4ade80; }
     
+    /* COMPACT WHITE BOX: ~2X LARGEST LETTER HEIGHT (80px viewport, 114px total) */
     .optotype-card {
       position: relative;
       width: 100%;
       max-width: 600px;
-      height: 205px;
+      height: 114px;
       background: #ffffff;
       color: #0f172a;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 6px 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      flex-shrink: 0;
     }
     .card-header {
-      width: 100%; display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; color: #64748b;
-      border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; text-transform: uppercase;
+      width: 100%; display: flex; justify-content: space-between; font-size: 9px; font-weight: 800; color: #64748b;
+      border-bottom: 1px solid #e2e8f0; padding-bottom: 3px; text-transform: uppercase;
     }
     .optotype-viewport {
       position: absolute;
-      top: 34px;
-      bottom: 10px;
-      left: 12px;
-      right: 12px;
+      top: 24px;
+      bottom: 6px;
+      left: 8px;
+      right: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -150,16 +160,15 @@
       height: 100%;
       background: linear-gradient(135deg, #0284c7, #0369a1);
       color: #ffffff;
-      border: 3px solid #38bdf8;
-      border-radius: 10px;
+      border: 2px solid #38bdf8;
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 12px;
+      padding: 6px 8px;
       cursor: pointer;
       text-align: center;
-      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
       user-select: none;
     }
     #gatePromptBtn:active {
@@ -170,72 +179,83 @@
       background: rgba(15, 23, 42, 0.45);
       border: 1px solid rgba(186, 230, 253, 0.4);
       color: #fde047;
-      font-size: 10px;
+      font-size: 8.5px;
       font-weight: 900;
-      padding: 4px 8px;
-      border-radius: 6px;
+      padding: 2px 6px;
+      border-radius: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
-      margin-bottom: 6px;
-      line-height: 1.3;
+      margin-bottom: 3px;
     }
     .gate-sub {
-      font-size: 11px;
+      font-size: 9.5px;
       font-weight: 800;
       color: #bae6fd;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .gate-main {
-      font-size: 16px;
+      font-size: 13px;
       font-weight: 900;
-      line-height: 1.2;
+      line-height: 1.15;
       text-transform: uppercase;
     }
 
-    #readingBox { display: none; width: 100%; text-align: center; font-weight: 700; font-size: 14px; }
+    #readingBox { display: none; width: 100%; text-align: center; font-weight: 700; font-size: 12px; }
     #reportBox { display: none; width: 100%; text-align: left; }
-    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
-    .report-item { background: #f1f5f9; padding: 6px 8px; border-radius: 6px; border-left: 3px solid #0284c7; }
-    .report-label { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; }
-    .report-val { font-size: 12px; font-weight: 900; color: #0f172a; }
-    .report-sub { font-size: 10px; font-weight: 800; color: #0284c7; margin-top: 1px; }
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .report-item { background: #f1f5f9; padding: 4px 6px; border-radius: 5px; border-left: 3px solid #0284c7; }
+    .report-label { font-size: 7.5px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .report-val { font-size: 11px; font-weight: 900; color: #0f172a; }
+    .report-sub { font-size: 9px; font-weight: 800; color: #0284c7; }
     
     .controls-wrap {
       width: 100%;
       max-width: 600px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      margin-bottom: 6px;
+      gap: 4px;
+      min-height: 68px;
+      justify-content: center;
+      flex-shrink: 0;
     }
     .dir-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
     }
     button {
       background: #1e293b; color: #f8fafc; border: 1px solid #334155;
-      padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 800; cursor: pointer;
+      padding: 7px 10px; border-radius: 7px; font-size: 11px; font-weight: 800; cursor: pointer;
     }
     button.dir-btn {
-      background: #e2e8f0; color: #0f172a; border: 1px solid #cbd5e1; font-size: 15px; font-weight: 900;
-      padding: 12px 8px;
+      background: #e2e8f0; color: #0f172a; border: 1px solid #cbd5e1; font-size: 12px; font-weight: 900;
+      padding: 8px 4px;
     }
     button.dir-btn:active { background: #0284c7; color: #fff; }
     button.cant-see-btn {
       background: rgba(220, 38, 38, 0.18);
       color: #f87171;
       border: 1px solid rgba(248, 113, 113, 0.45);
-      font-size: 12px;
+      font-size: 10.5px;
       font-weight: 800;
-      padding: 10px;
+      padding: 6px;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
     }
     button.cant-see-btn:active { background: #dc2626; color: #fff; }
-    footer { margin-top: auto; padding-top: 4px; font-size: 8px; color: #64748b; text-align: center; }
+    .bottom-bar {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .reset-btn {
+      padding: 5px 10px;
+      font-size: 10px;
+    }
+    footer { font-size: 8.5px; color: #64748b; text-align: right; white-space: nowrap; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
@@ -243,8 +263,8 @@
 <body>
 
   <header>
+    <h1>Project Eyes v3.27</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project Eyes v3.25</h1>
   </header>
 
   <div class="stage-bar">
@@ -256,42 +276,40 @@
     <div class="stage-step" id="st6">6. Rx</div>
   </div>
 
-  <div class="workspace">
-    <div class="camera-box" id="cameraBox">
-      <video id="webcam" playsinline></video>
-      <div class="hud-top">
-        <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
-        <div class="badge">Zone: <span id="zoneVal" class="badge-val" style="color: #fbbf24;">Init</span></div>
-      </div>
-      <div class="hud-bottom">
-        <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
-        <div class="badge" style="font-size: 8px;">T.L.W.</div>
-      </div>
+  <div class="camera-box" id="cameraBox">
+    <video id="webcam" playsinline></video>
+    <div class="hud-top">
+      <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
+      <div class="badge">Zone: <span id="zoneVal" class="badge-val" style="color: #fbbf24;">Init</span></div>
     </div>
+    <div class="hud-bottom">
+      <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
+      <div class="badge" style="font-size: 8px;">T.L.W.</div>
+    </div>
+  </div>
 
-    <div class="roadmap-panel" id="roadmapPanel">
-      <div class="roadmap-title">Seated Armrest Protocol • 7 Levels Per Eye</div>
-      <div class="roadmap-steps">
-        <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Sit in Chair • Elbows on Armrests • Hold 35–45 cm</div>
-        <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye (Keep Elbows Planted • Cover Right • 7 Levels)</div>
-        <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye (Keep Elbows Planted • Cover Left • 7 Levels)</div>
-        <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Exam (Both Hands on Phone • 7 Levels)</div>
-        <div class="roadmap-step" id="rs5"><div class="roadmap-dot" id="dot5">5</div> Stage 5: Reading Intake (8 Quick Words)</div>
-        <div class="roadmap-step" id="rs6"><div class="roadmap-dot" id="dot6">6</div> Stage 6: Clinical Acuity & Diopter Rx Scorecard</div>
-      </div>
+  <div class="roadmap-panel" id="roadmapPanel">
+    <div class="roadmap-title">Seated Armrest Protocol • Test-to-Failure</div>
+    <div class="roadmap-steps">
+      <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Sit in Chair • Elbows on Arms • Hold 35–45 cm</div>
+      <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye (Cover Right • Shrinks Until 2 Misses)</div>
+      <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye (Cover Left • Shrinks Until 2 Misses)</div>
+      <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular (Both Open • Shrinks Until 2 Misses)</div>
+      <div class="roadmap-step" id="rs5"><div class="roadmap-dot" id="dot5">5</div> Stage 5: Reading Intake (8 Quick Words)</div>
+      <div class="roadmap-step" id="rs6"><div class="roadmap-dot" id="dot6">6</div> Stage 6: 20-Ft Office Equivalent & Diopter Rx Scorecard</div>
     </div>
   </div>
 
   <div class="optotype-card">
     <div class="card-header">
       <span id="acuityLabel">Stage 1: Seated Posture & Calibration</span>
-      <span id="scaleReadout">-- mm</span>
+      <span id="scaleReadout">-- px</span>
     </div>
 
     <div class="optotype-viewport">
       <div id="gatePromptBtn" onclick="handleGateTap()">
         <div class="gate-posture" id="gatePostureText">
-          🪑 SIT IN CHAIR WITH ARMRESTS • PLANT BOTH ELBOWS ON ARMS • HOLD PHONE WITH BOTH HANDS
+          🪑 SIT IN CHAIR • ELBOWS ON ARMS • HOLD WITH BOTH HANDS
         </div>
         <div class="gate-sub" id="gateSubText">Lock Distance at 35–45 cm (Remove Glasses)</div>
         <div class="gate-main" id="gateMainText">TAP TO BEGIN TEST</div>
@@ -300,31 +318,31 @@
       <canvas id="snellenCanvas"></canvas>
 
       <div id="readingBox">
-        <div style="font-size: 9px; color: #0284c7; margin-bottom: 3px; font-weight: 800;">TAP WORDS IN ORDER:</div>
-        <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 6px;"></div>
+        <div style="font-size: 8px; color: #0284c7; margin-bottom: 2px; font-weight: 800;">TAP WORDS IN ORDER:</div>
+        <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 3px; justify-content: center;"></div>
       </div>
 
       <div id="reportBox">
         <div class="report-grid">
           <div class="report-item">
-            <div class="report-label">Left Eye (O.S.)</div>
+            <div class="report-label">Left (O.S.) 20-Ft Eq</div>
             <div class="report-val" id="repOS">--</div>
-            <div class="report-sub" id="rxOS">Est. Rx: -- D</div>
+            <div class="report-sub" id="rxOS">Est: -- D</div>
           </div>
           <div class="report-item">
-            <div class="report-label">Right Eye (O.D.)</div>
+            <div class="report-label">Right (O.D.) 20-Ft Eq</div>
             <div class="report-val" id="repOD">--</div>
-            <div class="report-sub" id="rxOD">Est. Rx: -- D</div>
+            <div class="report-sub" id="rxOD">Est: -- D</div>
           </div>
           <div class="report-item">
             <div class="report-label">Binocular (O.U.)</div>
             <div class="report-val" id="repOU">--</div>
-            <div class="report-sub" id="rxOU">Near Add: -- D</div>
+            <div class="report-sub" id="rxOU">Add: -- D</div>
           </div>
           <div class="report-item">
             <div class="report-label">Reading & Fatigue</div>
             <div class="report-val" id="repWPM">-- WPM</div>
-            <div class="report-sub" id="rxLat">Latency: Optimal</div>
+            <div class="report-sub" id="rxLat">Optimal</div>
           </div>
         </div>
       </div>
@@ -333,11 +351,10 @@
 
   <div class="controls-wrap" id="examControls"></div>
 
-  <div class="controls-wrap">
-    <button onclick="resetExam()">Reset Full Exam</button>
+  <div class="bottom-bar">
+    <button class="reset-btn" onclick="resetExam()">Reset Exam</button>
+    <footer>&copy; 2026 Terrance Lamont Watkins</footer>
   </div>
-
-  <footer>&copy; 2026 Terrance Lamont Watkins</footer>
 
   <script>
     const videoElement = document.getElementById('webcam');
@@ -362,7 +379,7 @@
     const FOCAL_LENGTH_PIXELS = 580;
     const CSS_PX_PER_MM = 6.4;
     const DIRECTIONS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
-    const ACUITY_STEPS = [100, 70, 50, 40, 30, 25, 20];
+    const ACUITY_STEPS = [200, 150, 100, 70, 50, 40, 30, 25, 20, 15, 12, 10, 8, 6, 5];
 
     let examStage = 1;
     let waitingForGateTap = true;
@@ -372,9 +389,9 @@
     let levelHits = 0;
     let levelMisses = 0;
     
-    let osDenom = 200;
-    let odDenom = 200;
-    let ouDenom = 200;
+    let osDenom = 250;
+    let odDenom = 250;
+    let ouDenom = 250;
     let lockedDistanceCm = null;
 
     const PASSAGE_WORDS = ["Clear", "vision", "opens", "every", "door", "for", "young", "minds."];
@@ -389,18 +406,15 @@
     let eyeStateFrameCount = 0;
 
     function convertSnellenToDiopter(denom, isNearAdd) {
-      const lookup = {
-        20:  { sph: "0.00 D (Plano)", add: "+0.00 D (None)" },
-        25:  { sph: "-0.50 D / +0.75 D", add: "+0.75 D" },
-        30:  { sph: "-0.75 D / +1.00 D", add: "+1.00 D" },
-        40:  { sph: "-1.25 D / +1.25 D", add: "+1.25 D" },
-        50:  { sph: "-1.50 D / +1.50 D", add: "+1.50 D" },
-        70:  { sph: "-2.00 D / +1.75 D", add: "+1.75 D" },
-        100: { sph: "-2.50 D / +2.25 D", add: "+2.25 D" },
-        200: { sph: "-3.25 D / +2.75 D", add: "+2.75 D" }
-      };
-      const entry = lookup[denom] || lookup[200];
-      return isNearAdd ? entry.add : entry.sph;
+      if (denom <= 20) return isNearAdd ? "+0.00 D (Plano)" : "0.00 D (Plano)";
+      if (denom <= 25) return isNearAdd ? "+0.50 D" : "-0.50 D / +0.50 D";
+      if (denom <= 30) return isNearAdd ? "+0.75 D" : "-0.75 D / +0.75 D";
+      if (denom <= 40) return isNearAdd ? "+1.25 D" : "-1.25 D / +1.25 D";
+      if (denom <= 50) return isNearAdd ? "+1.50 D" : "-1.50 D / +1.50 D";
+      if (denom <= 70) return isNearAdd ? "+1.75 D" : "-2.00 D / +1.75 D";
+      if (denom <= 100) return isNearAdd ? "+2.25 D" : "-2.50 D / +2.25 D";
+      if (denom <= 150) return isNearAdd ? "+2.50 D" : "-3.00 D / +2.50 D";
+      return isNearAdd ? "+3.00 D" : "-3.50 D / +3.00 D";
     }
 
     function showGatePrompt(postureText, subText, mainText) {
@@ -421,7 +435,7 @@
       gatePromptBtn.style.display = "none";
 
       if (examStage === 1) {
-        if (smoothedDistanceCm !== null && smoothedDistanceCm >= 33 && smoothedDistanceCm <= 47) {
+        if (smoothedDistanceCm !== null && smoothedDistanceCm >= 30 && smoothedDistanceCm <= 50) {
           lockedDistanceCm = smoothedDistanceCm;
         } else {
           lockedDistanceCm = 40.0;
@@ -431,7 +445,7 @@
         acuityLabel.innerText = "Stage 2: Left Eye Setup";
         showGatePrompt(
           "🪑 KEEP BOTH ELBOWS PLANTED ON CHAIR ARMRESTS",
-          "Stage 2 of 6 • Left Eye Exam (7 Levels)",
+          "Stage 2 of 6 • Left Eye Test-to-Failure",
           "TAP ONCE YOUR RIGHT EYE IS COVERED"
         );
       } else if (examStage === 2 || examStage === 3 || examStage === 4) {
@@ -459,9 +473,10 @@
       `;
     }
 
+    // Canvas is 76px tall (~2x the 37px 20/200 largest letter at 40cm)
     function drawTumblingE(direction, distanceCm, denominator) {
       const dpr = window.devicePixelRatio || 3;
-      const canvasSizeCss = 135;
+      const canvasSizeCss = 76;
       snellenCanvas.style.width = `${canvasSizeCss}px`;
       snellenCanvas.style.height = `${canvasSizeCss}px`;
       snellenCanvas.width = Math.round(canvasSizeCss * dpr);
@@ -474,11 +489,12 @@
       const angleRad = (5 * (denominator / 20) / 60) * (Math.PI / 180);
       const heightMm = 2 * distMm * Math.tan(angleRad / 2);
 
-      const sizeCssPx = Math.max(2.2, Math.min(120, heightMm * CSS_PX_PER_MM));
-      const totalDevicePx = Math.max(5, Math.round(sizeCssPx * dpr));
+      const sizeCssPx = Math.min(72, heightMm * CSS_PX_PER_MM);
+      const strokeCssPx = sizeCssPx / 5;
+      const totalDevicePx = sizeCssPx * dpr;
       const unit = totalDevicePx / 5;
 
-      scaleReadout.innerText = `${heightMm.toFixed(2)} mm (${sizeCssPx.toFixed(1)}px)`;
+      scaleReadout.innerText = `Stroke: ${strokeCssPx.toFixed(2)}px | 20/${denominator} Eq`;
 
       ctx.translate(snellenCanvas.width / 2, snellenCanvas.height / 2);
       let angle = 0;
@@ -501,12 +517,12 @@
 
     function updateRoadmapUI() {
       const labels = [
-        "Stage 1: Sit in Chair • Elbows on Armrests • Hold 35–45 cm",
-        "Stage 2: Left Eye (Keep Elbows Planted • Cover Right • 7 Levels)",
-        "Stage 3: Right Eye (Keep Elbows Planted • Cover Left • 7 Levels)",
-        "Stage 4: Binocular Exam (Both Hands on Phone • 7 Levels)",
+        "Stage 1: Sit in Chair • Elbows on Arms • Hold 35–45 cm",
+        "Stage 2: Left Eye (Cover Right • Shrinks Until 2 Misses)",
+        "Stage 3: Right Eye (Cover Left • Shrinks Until 2 Misses)",
+        "Stage 4: Binocular (Both Open • Shrinks Until 2 Misses)",
         "Stage 5: Reading Intake (8 Quick Words)",
-        "Stage 6: Clinical Acuity & Diopter Rx Scorecard"
+        "Stage 6: 20-Ft Office Equivalent & Diopter Rx Scorecard"
       ];
       for (let i = 1; i <= 6; i++) {
         const stepEl = document.getElementById(`rs${i}`);
@@ -533,10 +549,10 @@
       if (examStage === 3) stageName = "Right Eye";
       if (examStage === 4) stageName = "Binocular";
 
-      acuityLabel.innerText = `${stageName} • Level ${stepIndex + 1}/7 (20/${currentDenominator}) • Hits: ${levelHits}/2`;
+      acuityLabel.innerText = `${stageName} • Office Eq: 20/${currentDenominator} • Hits: ${levelHits}/2`;
 
       let roadmapStepId = (examStage === 2) ? "rs2" : (examStage === 3) ? "rs3" : "rs4";
-      document.getElementById(roadmapStepId).innerHTML = `<div class="roadmap-dot" id="dot${examStage}">${examStage}</div> Stage ${examStage}: ${stageName} (Level ${stepIndex + 1} of 7 • 20/${currentDenominator})`;
+      document.getElementById(roadmapStepId).innerHTML = `<div class="roadmap-dot" id="dot${examStage}">${examStage}</div> Stage ${examStage}: ${stageName} (20/${currentDenominator} Eq • Miss: ${levelMisses}/2)`;
 
       const activeDist = lockedDistanceCm || smoothedDistanceCm || 40.0;
       drawTumblingE(currentDirection, activeDist, currentDenominator);
@@ -591,7 +607,7 @@
       acuityLabel.innerText = "Stage 3: Right Eye Setup";
       showGatePrompt(
         "🪑 KEEP ELBOWS ANCHORED ON CHAIR ARMRESTS",
-        "Left Eye Complete • Do Not Move Phone Distance",
+        `Left Eye Locked at 20/${osDenom} Eq • Switch Hands`,
         "TAP ONCE YOUR LEFT EYE IS COVERED"
       );
     }
@@ -601,8 +617,8 @@
       updateStageUI();
       acuityLabel.innerText = "Stage 4: Binocular Setup";
       showGatePrompt(
-        "🪑 HOLD PHONE WITH BOTH HANDS • ELBOWS ON ARMRESTS",
-        "Right Eye Complete • Uncover Both Eyes",
+        "🪑 HOLD PHONE WITH BOTH HANDS • ELBOWS ON ARMS",
+        `Right Eye Locked at 20/${odDenom} Eq • Uncover Both Eyes`,
         "TAP ONCE BOTH EYES ARE OPEN"
       );
     }
@@ -612,8 +628,8 @@
       updateStageUI();
       acuityLabel.innerText = "Stage 5: Reading Intake Setup";
       showGatePrompt(
-        "🪑 KEEP ELBOWS ON ARMRESTS • HOLD PHONE WITH BOTH HANDS",
-        "Binocular Complete • 8 Quick Words",
+        "🪑 KEEP ELBOWS ON ARMRESTS • HOLD WITH BOTH HANDS",
+        `Binocular Locked at 20/${ouDenom} Eq • 8 Quick Words`,
         "TAP TO BEGIN READING INTAKE"
       );
     }
@@ -628,7 +644,7 @@
       PASSAGE_WORDS.forEach((w, idx) => {
         const span = document.createElement('span');
         span.innerText = w;
-        span.style.padding = "4px 8px";
+        span.style.padding = "3px 6px";
         span.style.borderRadius = "4px";
         span.style.border = idx === 0 ? "2px solid #0284c7" : "1px solid #cbd5e1";
         span.onclick = () => {
@@ -652,7 +668,7 @@
       updateStageUI();
       readingBox.style.display = "none";
       reportBox.style.display = "block";
-      acuityLabel.innerText = "Stage 6: Clinical Acuity & Rx Scorecard";
+      acuityLabel.innerText = `Stage 6: 20-Ft Eq (@ ${(lockedDistanceCm || 40).toFixed(1)}cm)`;
 
       const totalSec = (tapTimestamps[tapTimestamps.length - 1] - tapTimestamps[0]) / 1000;
       const wpm = Math.round((PASSAGE_WORDS.length / Math.max(1, totalSec)) * 60);
@@ -663,14 +679,14 @@
         if (gap > maxGapMs) maxGapMs = gap;
       }
 
-      document.getElementById('repOS').innerText = osDenom === 200 ? "< 20/100" : `20/${osDenom}`;
+      document.getElementById('repOS').innerText = osDenom > 200 ? "< 20/200" : `20/${osDenom} (6m Eq)`;
       document.getElementById('rxOS').innerText = `Est: ${convertSnellenToDiopter(osDenom, false)}`;
 
-      document.getElementById('repOD').innerText = odDenom === 200 ? "< 20/100" : `20/${odDenom}`;
+      document.getElementById('repOD').innerText = odDenom > 200 ? "< 20/200" : `20/${odDenom} (6m Eq)`;
       document.getElementById('rxOD').innerText = `Est: ${convertSnellenToDiopter(odDenom, false)}`;
 
-      document.getElementById('repOU').innerText = ouDenom === 200 ? "< 20/100" : `20/${ouDenom}`;
-      document.getElementById('rxOU').innerText = `Near Add: ${convertSnellenToDiopter(ouDenom, true)}`;
+      document.getElementById('repOU').innerText = ouDenom > 200 ? "< 20/200" : `20/${ouDenom} (6m Eq)`;
+      document.getElementById('rxOU').innerText = `Add: ${convertSnellenToDiopter(ouDenom, true)}`;
 
       document.getElementById('repWPM').innerText = `${wpm} WPM`;
       document.getElementById('rxLat').innerText = maxGapMs > 1400 ? "Fatigue: Elevated" : "Fatigue: Optimal";
@@ -682,14 +698,14 @@
       levelHits = 0;
       levelMisses = 0;
       currentDenominator = ACUITY_STEPS[0];
-      osDenom = 200;
-      odDenom = 200;
-      ouDenom = 200;
+      osDenom = 250;
+      odDenom = 250;
+      ouDenom = 250;
       lockedDistanceCm = null;
       updateStageUI();
       acuityLabel.innerText = "Stage 1: Seated Posture & Calibration";
       showGatePrompt(
-        "🪑 SIT IN CHAIR WITH ARMRESTS • PLANT BOTH ELBOWS ON ARMS • HOLD PHONE WITH BOTH HANDS",
+        "🪑 SIT IN CHAIR • ELBOWS ON ARMS • HOLD WITH BOTH HANDS",
         "Lock Distance at 35–45 cm (Remove Glasses)",
         "TAP TO BEGIN TEST"
       );
