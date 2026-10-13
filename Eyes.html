@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.23 - True 5x5 Canvas Tumbling-E Clinical Acuity Engine
+  Project "Eyes" v3.25 - Seated Elbow-Anchor Ergonomic Protocol & Clinical Rx Engine
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.23 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.25 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -97,6 +97,7 @@
     .roadmap-dot {
       width: 14px; height: 14px; border-radius: 50%; background: #334155;
       display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; color: #fff;
+      flex-shrink: 0;
     }
     .roadmap-step.done { color: #4ade80; border-color: rgba(74, 222, 128, 0.3); background: rgba(74, 222, 128, 0.05); }
     .roadmap-step.done .roadmap-dot { background: #16a34a; }
@@ -117,7 +118,7 @@
       position: relative;
       width: 100%;
       max-width: 600px;
-      height: 185px;
+      height: 205px;
       background: #ffffff;
       color: #0f172a;
       border-radius: 12px;
@@ -155,7 +156,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 14px;
+      padding: 12px;
       cursor: pointer;
       text-align: center;
       box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
@@ -165,27 +166,41 @@
       transform: scale(0.98);
       background: #0369a1;
     }
+    .gate-posture {
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid rgba(186, 230, 253, 0.4);
+      color: #fde047;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 4px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
     .gate-sub {
       font-size: 11px;
       font-weight: 800;
       color: #bae6fd;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 6px;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
     }
     .gate-main {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 900;
-      line-height: 1.25;
+      line-height: 1.2;
       text-transform: uppercase;
     }
 
     #readingBox { display: none; width: 100%; text-align: center; font-weight: 700; font-size: 14px; }
     #reportBox { display: none; width: 100%; text-align: left; }
     .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
-    .report-item { background: #f1f5f9; padding: 6px; border-radius: 6px; border-left: 3px solid #0284c7; }
+    .report-item { background: #f1f5f9; padding: 6px 8px; border-radius: 6px; border-left: 3px solid #0284c7; }
     .report-label { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; }
     .report-val { font-size: 12px; font-weight: 900; color: #0f172a; }
+    .report-sub { font-size: 10px; font-weight: 800; color: #0284c7; margin-top: 1px; }
     
     .controls-wrap {
       width: 100%;
@@ -229,7 +244,7 @@
 
   <header>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project Eyes v3.23</h1>
+    <h1>Project Eyes v3.25</h1>
   </header>
 
   <div class="stage-bar">
@@ -238,7 +253,7 @@
     <div class="stage-step" id="st3">3. Right</div>
     <div class="stage-step" id="st4">4. Both</div>
     <div class="stage-step" id="st5">5. Read</div>
-    <div class="stage-step" id="st6">6. Rep</div>
+    <div class="stage-step" id="st6">6. Rx</div>
   </div>
 
   <div class="workspace">
@@ -255,31 +270,33 @@
     </div>
 
     <div class="roadmap-panel" id="roadmapPanel">
-      <div class="roadmap-title">Clinical Exam Roadmap (7 Snellen Levels • 2 Hits Per Level)</div>
+      <div class="roadmap-title">Seated Armrest Protocol • 7 Levels Per Eye</div>
       <div class="roadmap-steps">
-        <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Optical Calibration (Hold 35–45 cm)</div>
-        <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Exam (Cover Right • 7 Levels)</div>
-        <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Exam (Cover Left • 7 Levels)</div>
-        <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Exam (Both Open • 7 Levels)</div>
+        <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Sit in Chair • Elbows on Armrests • Hold 35–45 cm</div>
+        <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye (Keep Elbows Planted • Cover Right • 7 Levels)</div>
+        <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye (Keep Elbows Planted • Cover Left • 7 Levels)</div>
+        <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Exam (Both Hands on Phone • 7 Levels)</div>
         <div class="roadmap-step" id="rs5"><div class="roadmap-dot" id="dot5">5</div> Stage 5: Reading Intake (8 Quick Words)</div>
-        <div class="roadmap-step" id="rs6"><div class="roadmap-dot" id="dot6">6</div> Stage 6: Final Diagnostic Scorecard</div>
+        <div class="roadmap-step" id="rs6"><div class="roadmap-dot" id="dot6">6</div> Stage 6: Clinical Acuity & Diopter Rx Scorecard</div>
       </div>
     </div>
   </div>
 
   <div class="optotype-card">
     <div class="card-header">
-      <span id="acuityLabel">Stage 1: Optical Calibration</span>
+      <span id="acuityLabel">Stage 1: Seated Posture & Calibration</span>
       <span id="scaleReadout">-- mm</span>
     </div>
 
     <div class="optotype-viewport">
       <div id="gatePromptBtn" onclick="handleGateTap()">
-        <div class="gate-sub" id="gateSubText">Hold Phone at 35–45 cm</div>
+        <div class="gate-posture" id="gatePostureText">
+          🪑 SIT IN CHAIR WITH ARMRESTS • PLANT BOTH ELBOWS ON ARMS • HOLD PHONE WITH BOTH HANDS
+        </div>
+        <div class="gate-sub" id="gateSubText">Lock Distance at 35–45 cm (Remove Glasses)</div>
         <div class="gate-main" id="gateMainText">TAP TO BEGIN TEST</div>
       </div>
 
-      <!-- True High-DPI 5x5 Clinical Tumbling-E Canvas -->
       <canvas id="snellenCanvas"></canvas>
 
       <div id="readingBox">
@@ -289,10 +306,26 @@
 
       <div id="reportBox">
         <div class="report-grid">
-          <div class="report-item"><div class="report-label">Left Eye (OS)</div><div class="report-val" id="repOS">&lt; 20/100</div></div>
-          <div class="report-item"><div class="report-label">Right Eye (OD)</div><div class="report-val" id="repOD">&lt; 20/100</div></div>
-          <div class="report-item"><div class="report-label">Binocular (OU)</div><div class="report-val" id="repOU">&lt; 20/100</div></div>
-          <div class="report-item"><div class="report-label">Reading Speed</div><div class="report-val" id="repWPM">-- WPM</div></div>
+          <div class="report-item">
+            <div class="report-label">Left Eye (O.S.)</div>
+            <div class="report-val" id="repOS">--</div>
+            <div class="report-sub" id="rxOS">Est. Rx: -- D</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">Right Eye (O.D.)</div>
+            <div class="report-val" id="repOD">--</div>
+            <div class="report-sub" id="rxOD">Est. Rx: -- D</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">Binocular (O.U.)</div>
+            <div class="report-val" id="repOU">--</div>
+            <div class="report-sub" id="rxOU">Near Add: -- D</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">Reading & Fatigue</div>
+            <div class="report-val" id="repWPM">-- WPM</div>
+            <div class="report-sub" id="rxLat">Latency: Optimal</div>
+          </div>
         </div>
       </div>
     </div>
@@ -315,6 +348,7 @@
     const snellenCanvas = document.getElementById('snellenCanvas');
     const ctx = snellenCanvas.getContext('2d');
     const gatePromptBtn = document.getElementById('gatePromptBtn');
+    const gatePostureText = document.getElementById('gatePostureText');
     const gateSubText = document.getElementById('gateSubText');
     const gateMainText = document.getElementById('gateMainText');
     const readingBox = document.getElementById('readingBox');
@@ -326,10 +360,9 @@
 
     const AVERAGE_IPD_MM = 63.0;
     const FOCAL_LENGTH_PIXELS = 580;
-    // Standard mobile CSS pixel density (~6.0 CSS px per physical millimeter)
-    const CSS_PX_PER_MM = 6.0;
+    const CSS_PX_PER_MM = 6.4;
     const DIRECTIONS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
-    const ACUITY_STEPS = [100, 70, 50, 40, 30, 25, 20]; // 7 true Snellen levels
+    const ACUITY_STEPS = [100, 70, 50, 40, 30, 25, 20];
 
     let examStage = 1;
     let waitingForGateTap = true;
@@ -339,9 +372,9 @@
     let levelHits = 0;
     let levelMisses = 0;
     
-    let osScore = "< 20/100";
-    let odScore = "< 20/100";
-    let ouScore = "< 20/100";
+    let osDenom = 200;
+    let odDenom = 200;
+    let ouDenom = 200;
     let lockedDistanceCm = null;
 
     const PASSAGE_WORDS = ["Clear", "vision", "opens", "every", "door", "for", "young", "minds."];
@@ -355,12 +388,28 @@
     let confirmedEyeState = "Binocular";
     let eyeStateFrameCount = 0;
 
-    function showGatePrompt(subText, mainText) {
+    function convertSnellenToDiopter(denom, isNearAdd) {
+      const lookup = {
+        20:  { sph: "0.00 D (Plano)", add: "+0.00 D (None)" },
+        25:  { sph: "-0.50 D / +0.75 D", add: "+0.75 D" },
+        30:  { sph: "-0.75 D / +1.00 D", add: "+1.00 D" },
+        40:  { sph: "-1.25 D / +1.25 D", add: "+1.25 D" },
+        50:  { sph: "-1.50 D / +1.50 D", add: "+1.50 D" },
+        70:  { sph: "-2.00 D / +1.75 D", add: "+1.75 D" },
+        100: { sph: "-2.50 D / +2.25 D", add: "+2.25 D" },
+        200: { sph: "-3.25 D / +2.75 D", add: "+2.75 D" }
+      };
+      const entry = lookup[denom] || lookup[200];
+      return isNearAdd ? entry.add : entry.sph;
+    }
+
+    function showGatePrompt(postureText, subText, mainText) {
       waitingForGateTap = true;
       snellenCanvas.style.display = "none";
       readingBox.style.display = "none";
       reportBox.style.display = "none";
       examControls.innerHTML = "";
+      gatePostureText.innerText = postureText;
       gateSubText.innerText = subText;
       gateMainText.innerText = mainText;
       gatePromptBtn.style.display = "flex";
@@ -380,7 +429,11 @@
         examStage = 2;
         updateStageUI();
         acuityLabel.innerText = "Stage 2: Left Eye Setup";
-        showGatePrompt("Stage 2 of 6 • Left Eye Exam", "TAP ONCE YOUR RIGHT EYE IS COVERED");
+        showGatePrompt(
+          "🪑 KEEP BOTH ELBOWS PLANTED ON CHAIR ARMRESTS",
+          "Stage 2 of 6 • Left Eye Exam (7 Levels)",
+          "TAP ONCE YOUR RIGHT EYE IS COVERED"
+        );
       } else if (examStage === 2 || examStage === 3 || examStage === 4) {
         snellenCanvas.style.display = "block";
         stepIndex = 0;
@@ -406,26 +459,23 @@
       `;
     }
 
-    // Draws an exact 5x5 clinical grid Tumbling E with true 1-arcminute stroke gaps
     function drawTumblingE(direction, distanceCm, denominator) {
-      const dpr = window.devicePixelRatio || 2;
-      const canvasSizeCss = 130;
+      const dpr = window.devicePixelRatio || 3;
+      const canvasSizeCss = 135;
       snellenCanvas.style.width = `${canvasSizeCss}px`;
       snellenCanvas.style.height = `${canvasSizeCss}px`;
-      snellenCanvas.width = canvasSizeCss * dpr;
-      snellenCanvas.height = canvasSizeCss * dpr;
+      snellenCanvas.width = Math.round(canvasSizeCss * dpr);
+      snellenCanvas.height = Math.round(canvasSizeCss * dpr);
 
       ctx.save();
       ctx.clearRect(0, 0, snellenCanvas.width, snellenCanvas.height);
 
-      // True clinical Snellen formula: 5 arcminutes at 20/20
       const distMm = distanceCm * 10;
       const angleRad = (5 * (denominator / 20) / 60) * (Math.PI / 180);
       const heightMm = 2 * distMm * Math.tan(angleRad / 2);
 
-      // Convert physical mm to exact screen pixels (no 12px fake floor!)
-      const sizeCssPx = Math.max(2.5, Math.min(115, heightMm * CSS_PX_PER_MM));
-      const totalDevicePx = sizeCssPx * dpr;
+      const sizeCssPx = Math.max(2.2, Math.min(120, heightMm * CSS_PX_PER_MM));
+      const totalDevicePx = Math.max(5, Math.round(sizeCssPx * dpr));
       const unit = totalDevicePx / 5;
 
       scaleReadout.innerText = `${heightMm.toFixed(2)} mm (${sizeCssPx.toFixed(1)}px)`;
@@ -441,13 +491,9 @@
       const startX = -totalDevicePx / 2;
       const startY = -totalDevicePx / 2;
 
-      // Spine (left vertical bar of E)
       ctx.fillRect(startX, startY, unit, totalDevicePx);
-      // Top bar
       ctx.fillRect(startX, startY, totalDevicePx, unit);
-      // Middle bar
       ctx.fillRect(startX, startY + 2 * unit, totalDevicePx, unit);
-      // Bottom bar
       ctx.fillRect(startX, startY + 4 * unit, totalDevicePx, unit);
 
       ctx.restore();
@@ -455,12 +501,12 @@
 
     function updateRoadmapUI() {
       const labels = [
-        "Stage 1: Optical Calibration (Hold 35–45 cm)",
-        "Stage 2: Left Eye Exam (Cover Right • 7 Levels)",
-        "Stage 3: Right Eye Exam (Cover Left • 7 Levels)",
-        "Stage 4: Binocular Exam (Both Open • 7 Levels)",
+        "Stage 1: Sit in Chair • Elbows on Armrests • Hold 35–45 cm",
+        "Stage 2: Left Eye (Keep Elbows Planted • Cover Right • 7 Levels)",
+        "Stage 3: Right Eye (Keep Elbows Planted • Cover Left • 7 Levels)",
+        "Stage 4: Binocular Exam (Both Hands on Phone • 7 Levels)",
         "Stage 5: Reading Intake (8 Quick Words)",
-        "Stage 6: Final Diagnostic Scorecard"
+        "Stage 6: Clinical Acuity & Diopter Rx Scorecard"
       ];
       for (let i = 1; i <= 6; i++) {
         const stepEl = document.getElementById(`rs${i}`);
@@ -506,11 +552,10 @@
 
       if (isCorrect) {
         levelHits++;
-        // Require 2 correct hits at this Snellen size to earn the score and shrink down
         if (levelHits >= 2) {
-          if (examStage === 2) osScore = `20/${currentDenominator}`;
-          if (examStage === 3) odScore = `20/${currentDenominator}`;
-          if (examStage === 4) ouScore = `20/${currentDenominator}`;
+          if (examStage === 2) osDenom = currentDenominator;
+          if (examStage === 3) odDenom = currentDenominator;
+          if (examStage === 4) ouDenom = currentDenominator;
 
           if (stepIndex < ACUITY_STEPS.length - 1) {
             stepIndex++;
@@ -526,7 +571,6 @@
         }
       } else {
         levelMisses++;
-        // 2 misses at this Snellen size = eye reached its limit
         if (levelMisses >= 2) {
           finishCurrentEyeStage();
         } else {
@@ -545,21 +589,33 @@
       examStage = 3;
       updateStageUI();
       acuityLabel.innerText = "Stage 3: Right Eye Setup";
-      showGatePrompt("Left Eye Complete • Switch Hands", "TAP ONCE YOUR LEFT EYE IS COVERED");
+      showGatePrompt(
+        "🪑 KEEP ELBOWS ANCHORED ON CHAIR ARMRESTS",
+        "Left Eye Complete • Do Not Move Phone Distance",
+        "TAP ONCE YOUR LEFT EYE IS COVERED"
+      );
     }
 
     function queueStage4Gate() {
       examStage = 4;
       updateStageUI();
       acuityLabel.innerText = "Stage 4: Binocular Setup";
-      showGatePrompt("Right Eye Complete • Uncover Both Eyes", "TAP ONCE BOTH EYES ARE OPEN");
+      showGatePrompt(
+        "🪑 HOLD PHONE WITH BOTH HANDS • ELBOWS ON ARMRESTS",
+        "Right Eye Complete • Uncover Both Eyes",
+        "TAP ONCE BOTH EYES ARE OPEN"
+      );
     }
 
     function queueStage5Gate() {
       examStage = 5;
       updateStageUI();
       acuityLabel.innerText = "Stage 5: Reading Intake Setup";
-      showGatePrompt("Binocular Complete • 8 Quick Words", "TAP TO BEGIN READING INTAKE");
+      showGatePrompt(
+        "🪑 KEEP ELBOWS ON ARMRESTS • HOLD PHONE WITH BOTH HANDS",
+        "Binocular Complete • 8 Quick Words",
+        "TAP TO BEGIN READING INTAKE"
+      );
     }
 
     function launchReadingWords() {
@@ -596,13 +652,28 @@
       updateStageUI();
       readingBox.style.display = "none";
       reportBox.style.display = "block";
-      acuityLabel.innerText = "Stage 6: Official Diagnostic Scorecard";
+      acuityLabel.innerText = "Stage 6: Clinical Acuity & Rx Scorecard";
+
       const totalSec = (tapTimestamps[tapTimestamps.length - 1] - tapTimestamps[0]) / 1000;
       const wpm = Math.round((PASSAGE_WORDS.length / Math.max(1, totalSec)) * 60);
-      document.getElementById('repOS').innerText = osScore;
-      document.getElementById('repOD').innerText = odScore;
-      document.getElementById('repOU').innerText = ouScore;
+
+      let maxGapMs = 0;
+      for (let i = 1; i < tapTimestamps.length; i++) {
+        const gap = tapTimestamps[i] - tapTimestamps[i - 1];
+        if (gap > maxGapMs) maxGapMs = gap;
+      }
+
+      document.getElementById('repOS').innerText = osDenom === 200 ? "< 20/100" : `20/${osDenom}`;
+      document.getElementById('rxOS').innerText = `Est: ${convertSnellenToDiopter(osDenom, false)}`;
+
+      document.getElementById('repOD').innerText = odDenom === 200 ? "< 20/100" : `20/${odDenom}`;
+      document.getElementById('rxOD').innerText = `Est: ${convertSnellenToDiopter(odDenom, false)}`;
+
+      document.getElementById('repOU').innerText = ouDenom === 200 ? "< 20/100" : `20/${ouDenom}`;
+      document.getElementById('rxOU').innerText = `Near Add: ${convertSnellenToDiopter(ouDenom, true)}`;
+
       document.getElementById('repWPM').innerText = `${wpm} WPM`;
+      document.getElementById('rxLat').innerText = maxGapMs > 1400 ? "Fatigue: Elevated" : "Fatigue: Optimal";
     }
 
     function resetExam() {
@@ -611,13 +682,17 @@
       levelHits = 0;
       levelMisses = 0;
       currentDenominator = ACUITY_STEPS[0];
-      osScore = "< 20/100";
-      odScore = "< 20/100";
-      ouScore = "< 20/100";
+      osDenom = 200;
+      odDenom = 200;
+      ouDenom = 200;
       lockedDistanceCm = null;
       updateStageUI();
-      acuityLabel.innerText = "Stage 1: Optical Calibration";
-      showGatePrompt("Hold Phone at 35–45 cm", "TAP TO BEGIN TEST");
+      acuityLabel.innerText = "Stage 1: Seated Posture & Calibration";
+      showGatePrompt(
+        "🪑 SIT IN CHAIR WITH ARMRESTS • PLANT BOTH ELBOWS ON ARMS • HOLD PHONE WITH BOTH HANDS",
+        "Lock Distance at 35–45 cm (Remove Glasses)",
+        "TAP TO BEGIN TEST"
+      );
     }
 
     function updateStageUI() {
