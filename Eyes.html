@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.5 - Step 0 Calibration & Dynamic Acuity Engine
+  Project "Eyes" v3.6 - Windowed Calibration & Clinical Acuity Engine
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.5 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.6 | Patent Pending 64/174,835</title>
   <style>
     * { 
       box-sizing: border-box; 
@@ -250,10 +250,10 @@
 
   <header>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project Eyes v3.5</h1>
+    <h1>Project Eyes v3.6</h1>
   </header>
 
-  <div class="directive-banner" id="directiveBanner">Calibrate Distance</div>
+  <div class="directive-banner" id="directiveBanner">Hold at 35–45 cm</div>
 
   <div class="stage-bar">
     <div class="stage-step active" id="st0">0. Calibrate</div>
@@ -281,7 +281,7 @@
       <span id="scaleReadout">-- px</span>
     </div>
 
-    <div id="optotypeChar" style="font-size: 28px; font-weight: 800; color: #0284c7;">HOLD AT 40 CM</div>
+    <div id="optotypeChar" style="font-size: 24px; font-weight: 800; color: #0284c7;">HOLD AT 35–45 CM</div>
 
     <div id="readingBox">
       <div style="font-size: 9px; color: #0284c7; margin-bottom: 3px; font-weight: 800;">TAP WORDS IN ORDER:</div>
@@ -329,7 +329,7 @@
     const LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
     const ACUITY_STEPS = [100, 70, 40, 30, 20];
 
-    let examStage = 0; // Stage 0 is Calibration
+    let examStage = 0;
     let stepIndex = 0;
     let currentDenominator = ACUITY_STEPS[0];
     let odScore = "20/100";
@@ -351,7 +351,7 @@
     let eyeStateFrameCount = 0;
 
     function updateDirectives() {
-      if (examStage === 0) directiveBanner.innerText = "Calibrate Distance";
+      if (examStage === 0) directiveBanner.innerText = "Hold at 35–45 cm";
       else if (examStage === 1) directiveBanner.innerText = "Cover Left Eye";
       else if (examStage === 2) directiveBanner.innerText = "Cover Right Eye";
       else if (examStage === 3) directiveBanner.innerText = "Tap Words in Order";
@@ -466,8 +466,8 @@
       odScore = "20/100"; osScore = "20/100"; lockedDistanceCm = null; stableFramesInGreen = 0;
       updateStageUI(); reportBox.style.display = "none"; readingBox.style.display = "none";
       optotypeChar.style.display = "block"; 
-      optotypeChar.style.fontSize = "28px";
-      optotypeChar.innerText = "HOLD AT 40 CM";
+      optotypeChar.style.fontSize = "24px";
+      optotypeChar.innerText = "HOLD AT 35–45 CM";
       acuityLabel.innerText = "Step 0: Optical Baseline Calibration";
       examControls.innerHTML = `<button class="primary" id="calibBtn" onclick="lockCalibration()">Lock Calibration & Start</button>`;
       examControls.style.display = "flex";
