@@ -1,6 +1,585 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
+  Project "Eyes" v3.17 - Color-Coded Live Progress & Explicit Directives
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Project Eyes v3.17 | Patent Pending 64/174,835</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #0b0f19;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 12px;
+    }
+    header { text-align: center; margin-bottom: 6px; width: 100%; max-width: 600px; }
+    .patent-pill {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.14);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+    }
+    h1 { font-size: 16px; font-weight: 800; }
+    .directive-banner {
+      width: 100%;
+      max-width: 600px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      color: #38bdf8;
+      border: 2px solid #38bdf8;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.25);
+    }
+    .workspace {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .camera-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #1e293b;
+      background: #000;
+      transition: border-color 0.25s ease;
+    }
+    video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    .hud-top, .hud-bottom {
+      position: absolute; left: 8px; right: 8px;
+      display: flex; justify-content: space-between; pointer-events: none;
+    }
+    .hud-top { top: 6px; }
+    .hud-bottom { bottom: 6px; }
+    .badge {
+      background: rgba(15, 23, 42, 0.9);
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      font-size: 10px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+    .badge-val { color: #38bdf8; font-size: 12px; font-weight: 900; margin-left: 3px; }
+    
+    /* WORKFLOW ROADMAP TRACKER (Green = Done, Yellow = Active, Gray = Upcoming) */
+    .roadmap-panel {
+      width: 100%;
+      background: #111827;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .roadmap-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #1f2937;
+      padding-bottom: 4px;
+    }
+    .roadmap-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .roadmap-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      transition: all 0.2s ease;
+    }
+    .roadmap-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 900;
+      color: #fff;
+    }
+    /* STATES */
+    .roadmap-step.done {
+      color: #4ade80;
+      border-color: rgba(74, 222, 128, 0.3);
+      background: rgba(74, 222, 128, 0.05);
+    }
+    .roadmap-step.done .roadmap-dot {
+      background: #16a34a;
+    }
+    .roadmap-step.active {
+      color: #facc15;
+      border-color: rgba(250, 204, 21, 0.4);
+      background: rgba(250, 204, 21, 0.08);
+    }
+    .roadmap-step.active .roadmap-dot {
+      background: #eab308;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .stage-bar {
+      width: 100%; max-width: 600px; display: flex; gap: 3px; margin-bottom: 8px;
+    }
+    .stage-step {
+      flex: 1; text-align: center; padding: 5px 2px; font-size: 8px; font-weight: 800;
+      background: #1e293b; color: #64748b; border-radius: 6px; border: 1px solid #334155;
+    }
+    .stage-step.active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: #38bdf8; }
+    .stage-step.done { background: rgba(74, 222, 128, 0.2); color: #4ade80; border-color: #4ade80; }
+    
+    .optotype-card {
+      width: 100%; max-width: 600px; background: #ffffff; color: #0f172a;
+      border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 8px;
+      min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+    }
+    .card-header {
+      width: 100%; display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; color: #64748b;
+      border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; text-transform: uppercase;
+    }
+    #optotypeChar { font-family: monospace; font-weight: 900; line-height: 1; margin: 8px 0; }
+    #readingBox { display: none; margin: 8px 0; font-weight: 700; font-size: 14px; max-width: 90%; }
+    #reportBox { display: none; width: 100%; text-align: left; }
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+    .report-item { background: #f1f5f9; padding: 6px; border-radius: 6px; border-left: 3px solid #0284c7; }
+    .report-label { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .report-val { font-size: 12px; font-weight: 900; color: #0f172a; }
+    
+    .controls { width: 100%; max-width: 600px; display: flex; gap: 6px; margin-bottom: 6px; }
+    button {
+      flex: 1; background: #1e293b; color: #f8fafc; border: 1px solid #334155;
+      padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 800; cursor: pointer;
+    }
+    button.primary { background: #0284c7; border-color: #38bdf8; color: #fff; }
+    button.opt-choice {
+      background: #e2e8f0; color: #0f172a; border: 1px solid #cbd5e1; font-size: 16px; font-weight: 900;
+    }
+    button.opt-choice:active { background: #0284c7; color: #fff; }
+    footer { margin-top: auto; padding-top: 4px; font-size: 8px; color: #64748b; text-align: center; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <header>
+    <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
+    <h1>Project Eyes v3.17</h1>
+  </header>
+
+  <div class="directive-banner" id="directiveBanner">HOLD AT 35–45 CM — TAP START CALIBRATION</div>
+
+  <div class="stage-bar">
+    <div class="stage-step active" id="st1">1. Cal</div>
+    <div class="stage-step" id="st2">2. Left</div>
+    <div class="stage-step" id="st3">3. Right</div>
+    <div class="stage-step" id="st4">4. Both</div>
+    <div class="stage-step" id="st5">5. Read</div>
+    <div class="stage-step" id="st6">6. Rep</div>
+  </div>
+
+  <div class="workspace">
+    <div class="camera-box" id="cameraBox">
+      <video id="webcam" playsinline></video>
+      <div class="hud-top">
+        <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
+        <div class="badge">Zone: <span id="zoneVal" class="badge-val" style="color: #fbbf24;">Init</span></div>
+      </div>
+      <div class="hud-bottom">
+        <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
+        <div class="badge" style="font-size: 8px;">T.L.W.</div>
+      </div>
+    </div>
+
+    <!-- COLOR-CODED ROADMAP TRACKER: Green = Done, Yellow = Active, Gray = Upcoming -->
+    <div class="roadmap-panel" id="roadmapPanel">
+      <div class="roadmap-title">Exam Workflow Roadmap</div>
+      <div class="roadmap-steps">
+        <div class="roadmap-step active" id="rs1">
+          <div class="roadmap-dot" id="dot1">1</div> Stage 1: Optical Calibration (Hold 35–45 cm)
+        </div>
+        <div class="roadmap-step" id="rs2">
+          <div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Exam (Cover Right Eye)
+        </div>
+        <div class="roadmap-step" id="rs3">
+          <div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Exam (Cover Left Eye)
+        </div>
+        <div class="roadmap-step" id="rs4">
+          <div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Exam (Both Eyes Open)
+        </div>
+        <div class="roadmap-step" id="rs5">
+          <div class="roadmap-dot" id="dot5">5</div> Stage 5: Behavioral Reading Intake
+        </div>
+        <div class="roadmap-step" id="rs6">
+          <div class="roadmap-dot" id="dot6">6</div> Stage 6: Final Diagnostic Scorecard
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="optotype-card">
+    <div class="card-header">
+      <span id="acuityLabel">Stage 1: Optical Calibration</span>
+      <span id="scaleReadout">-- px</span>
+    </div>
+
+    <div id="optotypeChar" style="font-size: 22px; font-weight: 800; color: #0284c7;">READY FOR CALIBRATION</div>
+
+    <div id="readingBox">
+      <div style="font-size: 9px; color: #0284c7; margin-bottom: 3px; font-weight: 800;">TAP WORDS IN ORDER:</div>
+      <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;"></div>
+    </div>
+
+    <div id="reportBox">
+      <div class="report-grid">
+        <div class="report-item"><div class="report-label">Left Eye (OS)</div><div class="report-val" id="repOS">&lt; 20/100</div></div>
+        <div class="report-item"><div class="report-label">Right Eye (OD)</div><div class="report-val" id="repOD">&lt; 20/100</div></div>
+        <div class="report-item"><div class="report-label">Binocular (OU)</div><div class="report-val" id="repOU">&lt; 20/100</div></div>
+        <div class="report-item"><div class="report-label">Reading Speed</div><div class="report-val" id="repWPM">-- WPM</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls" id="examControls">
+    <button class="primary" id="calibBtn" onclick="lockCalibration()">Start Calibration Test</button>
+  </div>
+
+  <div class="controls">
+    <button onclick="resetExam()">Reset</button>
+  </div>
+
+  <footer>&copy; 2026 Terrance Lamont Watkins</footer>
+
+  <script>
+    const videoElement = document.getElementById('webcam');
+    const cameraBox = document.getElementById('cameraBox');
+    const distVal = document.getElementById('distVal');
+    const zoneVal = document.getElementById('zoneVal');
+    const eyeStateVal = document.getElementById('eyeStateVal');
+    const optotypeChar = document.getElementById('optotypeChar');
+    const readingBox = document.getElementById('readingBox');
+    const wordContainer = document.getElementById('wordContainer');
+    const reportBox = document.getElementById('reportBox');
+    const scaleReadout = document.getElementById('scaleReadout');
+    const acuityLabel = document.getElementById('acuityLabel');
+    const examControls = document.getElementById('examControls');
+    const directiveBanner = document.getElementById('directiveBanner');
+    const roadmapPanel = document.getElementById('roadmapPanel');
+
+    const AVERAGE_IPD_MM = 63.0;
+    const FOCAL_LENGTH_PIXELS = 580;
+    const MASTER_LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
+    const ACUITY_STEPS = [100, 70, 40, 30, 20];
+
+    let examStage = 1;
+    let stepIndex = 0;
+    let currentDenominator = ACUITY_STEPS[0];
+    let currentCorrectChar = 'E';
+    
+    let osScore = "< 20/100";
+    let odScore = "< 20/100";
+    let ouScore = "< 20/100";
+    let consecutiveMisses = 0;
+    let lockedDistanceCm = null;
+
+    const PASSAGE_WORDS = ["Clear", "vision", "opens", "every", "door", "for", "young", "minds."];
+    let wordIndex = 0;
+    let tapTimestamps = [];
+
+    let smoothedDistanceCm = null;
+    let stableFramesInGreen = 0;
+    let currentZoneState = "INIT";
+
+    let smoothedLeftEAR = 0.30;
+    let smoothedRightEAR = 0.30;
+    let pendingEyeState = "Binocular";
+    let confirmedEyeState = "Binocular";
+    let eyeStateFrameCount = 0;
+
+    function updateDirectivesAndRoadmap() {
+      // Update Banner Text
+      if (examStage === 1) directiveBanner.innerText = "HOLD AT 35–45 CM — TAP START CALIBRATION";
+      else if (examStage === 2) directiveBanner.innerText = "COVER RIGHT EYE — LEFT EYE EXAM";
+      else if (examStage === 3) directiveBanner.innerText = "COVER LEFT EYE — RIGHT EYE EXAM";
+      else if (examStage === 4) directiveBanner.innerText = "BOTH EYES OPEN — BINOCULAR EXAM";
+      else if (examStage === 5) directiveBanner.innerText = "TAP WORDS IN ORDER — READING INTAKE";
+      else directiveBanner.innerText = "EXAM COMPLETE — REVIEW SCORECARD";
+
+      // Update Roadmap Classes (Green = Done, Yellow = Active, Gray = Upcoming)
+      for (let i = 1; i <= 6; i++) {
+        const stepEl = document.getElementById(`rs${i}`);
+        const dotEl = document.getElementById(`dot${i}`);
+        stepEl.className = "roadmap-step";
+        dotEl.innerText = i;
+
+        if (i < examStage) {
+          stepEl.classList.add('done');
+          dotEl.innerText = "✓";
+        } else if (i === examStage) {
+          stepEl.classList.add('active');
+        }
+      }
+    }
+
+    function lockCalibration() {
+      if (smoothedDistanceCm !== null && smoothedDistanceCm >= 33 && smoothedDistanceCm <= 47) {
+        lockedDistanceCm = smoothedDistanceCm;
+      } else {
+        lockedDistanceCm = 40.0;
+      }
+      directiveBanner.innerText = "CALIBRATION COMPLETE — STARTING LEFT EYE EXAM";
+      optotypeChar.innerText = "CALIBRATION LOCKED ✓";
+      setTimeout(startStage2, 1200);
+    }
+
+    function startStage2() {
+      examStage = 2;
+      stepIndex = 0;
+      currentDenominator = ACUITY_STEPS[0];
+      consecutiveMisses = 0;
+      updateStageUI();
+      loadNewAcuityRound();
+    }
+
+    function loadNewAcuityRound() {
+      currentCorrectChar = MASTER_LETTERS[Math.floor(Math.random() * MASTER_LETTERS.length)];
+      optotypeChar.style.fontSize = "48px";
+      optotypeChar.innerText = currentCorrectChar;
+      
+      let stageName = "Left Eye";
+      if (examStage === 3) stageName = "Right Eye";
+      if (examStage === 4) stageName = "Binocular (Both Eyes)";
+      acuityLabel.innerText = `${stageName} (20/${currentDenominator})`;
+
+      let choices = [currentCorrectChar];
+      while (choices.length < 3) {
+        let randChar = MASTER_LETTERS[Math.floor(Math.random() * MASTER_LETTERS.length)];
+        if (!choices.includes(randChar)) choices.push(randChar);
+      }
+      choices.sort(() => Math.random() - 0.5);
+
+      examControls.innerHTML = `
+        <button class="opt-choice" onclick="submitAnswer('${choices[0]}')">${choices[0]}</button>
+        <button class="opt-choice" onclick="submitAnswer('${choices[1]}')">${choices[1]}</button>
+        <button class="opt-choice" onclick="submitAnswer('${choices[2]}')">${choices[2]}</button>
+      `;
+    }
+
+    function submitAnswer(selectedChar) {
+      const isCorrect = (selectedChar === currentCorrectChar);
+
+      if (examStage === 2) { // Stage 2: Left Eye
+        if (isCorrect) {
+          consecutiveMisses = 0;
+          osScore = `20/${currentDenominator}`;
+          if (stepIndex < ACUITY_STEPS.length - 1) { stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex]; loadNewAcuityRound(); }
+          else { directiveBanner.innerText = "LEFT EYE COMPLETE — STARTING RIGHT EYE EXAM"; setTimeout(startStage3, 1200); }
+        } else {
+          consecutiveMisses++;
+          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) { directiveBanner.innerText = "LEFT EYE COMPLETE — STARTING RIGHT EYE EXAM"; setTimeout(startStage3, 1200); }
+          else { loadNewAcuityRound(); }
+        }
+      } else if (examStage === 3) { // Stage 3: Right Eye
+        if (isCorrect) {
+          consecutiveMisses = 0;
+          odScore = `20/${currentDenominator}`;
+          if (stepIndex < ACUITY_STEPS.length - 1) { stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex]; loadNewAcuityRound(); }
+          else { directiveBanner.innerText = "RIGHT EYE COMPLETE — STARTING BINOCULAR EXAM"; setTimeout(startStage4, 1200); }
+        } else {
+          consecutiveMisses++;
+          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) { directiveBanner.innerText = "RIGHT EYE COMPLETE — STARTING BINOCULAR EXAM"; setTimeout(startStage4, 1200); }
+          else { loadNewAcuityRound(); }
+        }
+      } else if (examStage === 4) { // Stage 4: Binocular
+        if (isCorrect) {
+          consecutiveMisses = 0;
+          ouScore = `20/${currentDenominator}`;
+          if (stepIndex < ACUITY_STEPS.length - 1) { stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex]; loadNewAcuityRound(); }
+          else { directiveBanner.innerText = "BINOCULAR COMPLETE — STARTING READING INTAKE"; setTimeout(startStage5, 1200); }
+        } else {
+          consecutiveMisses++;
+          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) { directiveBanner.innerText = "BINOCULAR COMPLETE — STARTING READING INTAKE"; setTimeout(startStage5, 1200); }
+          else { loadNewAcuityRound(); }
+        }
+      }
+    }
+
+    function startStage3() {
+      examStage = 3; stepIndex = 0; currentDenominator = ACUITY_STEPS[0]; consecutiveMisses = 0;
+      updateStageUI(); loadNewAcuityRound();
+    }
+
+    function startStage4() {
+      examStage = 4; stepIndex = 0; currentDenominator = ACUITY_STEPS[0]; consecutiveMisses = 0;
+      updateStageUI(); loadNewAcuityRound();
+    }
+
+    function startStage5() {
+      examStage = 5; currentDenominator = 40; updateStageUI();
+      optotypeChar.style.display = "none"; examControls.style.display = "none";
+      readingBox.style.display = "block"; acuityLabel.innerText = "Reading Intake";
+      wordContainer.innerHTML = ""; wordIndex = 0; tapTimestamps = [performance.now()];
+      PASSAGE_WORDS.forEach((w, idx) => {
+        const span = document.createElement('span');
+        span.innerText = w; span.style.padding = "4px 8px"; span.style.borderRadius = "4px";
+        span.style.border = idx === 0 ? "2px solid #0284c7" : "1px solid #cbd5e1";
+        span.onclick = () => {
+          if (idx !== wordIndex) return;
+          tapTimestamps.push(performance.now()); wordIndex++;
+          if (wordIndex >= PASSAGE_WORDS.length) startStage6();
+          else {
+            Array.from(wordContainer.children).forEach((el, i) => {
+              el.style.border = i === wordIndex ? "2px solid #0284c7" : "1px solid #cbd5e1";
+              el.style.background = i < wordIndex ? "#dcfce7" : "#f8fafc";
+            });
+          }
+        };
+        wordContainer.appendChild(span);
+      });
+    }
+
+    function startStage6() {
+      examStage = 6; updateStageUI(); readingBox.style.display = "none";
+      reportBox.style.display = "block"; acuityLabel.innerText = "Scorecard";
+      const totalSec = (tapTimestamps[tapTimestamps.length - 1] - tapTimestamps[0]) / 1000;
+      const wpm = Math.round((PASSAGE_WORDS.length / Math.max(1, totalSec)) * 60);
+      document.getElementById('repOS').innerText = osScore;
+      document.getElementById('repOD').innerText = odScore;
+      document.getElementById('repOU').innerText = ouScore;
+      document.getElementById('repWPM').innerText = `${wpm} WPM`;
+    }
+
+    function resetExam() {
+      examStage = 1; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
+      osScore = "< 20/100"; odScore = "< 20/100"; ouScore = "< 20/100"; consecutiveMisses = 0;
+      lockedDistanceCm = null; stableFramesInGreen = 0;
+      updateStageUI();
+      reportBox.style.display = "none"; readingBox.style.display = "none";
+      optotypeChar.style.display = "block"; optotypeChar.style.fontSize = "22px"; optotypeChar.innerText = "READY FOR CALIBRATION";
+      acuityLabel.innerText = "Stage 1: Optical Calibration";
+      examControls.innerHTML = `<button class="primary" id="calibBtn" onclick="lockCalibration()">Start Calibration Test</button>`;
+      examControls.style.display = "flex";
+    }
+
+    function updateStageUI() {
+      ['st1', 'st2', 'st3', 'st4', 'st5', 'st6'].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.className = 'stage-step';
+          if (idx + 1 < examStage) el.classList.add('done');
+          if (idx + 1 === examStage) el.classList.add('active');
+        }
+      });
+      updateDirectivesAndRoadmap();
+    }
+
+    function getEAR(l, top, bot, inr, out) {
+      return Math.hypot(l[top].x - l[bot].x, l[top].y - l[bot].y) / Math.hypot(l[inr].x - l[out].x, l[inr].y - l[out].y);
+    }
+
+    function onResults(results) {
+      if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+        const lm = results.multiFaceLandmarks[0];
+        const rEAR = getEAR(lm, 159, 145, 133, 33);
+        const lEAR = getEAR(lm, 386, 374, 362, 263);
+
+        smoothedRightEAR = 0.3 * rEAR + 0.7 * smoothedRightEAR;
+        smoothedLeftEAR = 0.3 * lEAR + 0.7 * smoothedLeftEAR;
+
+        let dState = "Binocular";
+        if (smoothedRightEAR < 0.2 && smoothedLeftEAR >= 0.2) dState = "Left Covered";
+        else if (smoothedLeftEAR < 0.2 && smoothedRightEAR >= 0.2) dState = "Right Covered";
+
+        if (dState === pendingEyeState) {
+          if (++eyeStateFrameCount >= 4) confirmedEyeState = dState;
+        } else { pendingEyeState = dState; eyeStateFrameCount = 1; }
+
+        const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
+        const pPx = Math.hypot((lp.x - rp.x) * videoElement.videoWidth, (lp.y - rp.y) * videoElement.videoHeight);
+
+        if (pPx > 0) {
+          const rCm = ((FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / pPx) / 10;
+          const blocked = (examStage > 1 && lockedDistanceCm !== null) || confirmedEyeState !== "Binocular" || Math.abs(rCm - (smoothedDistanceCm || rCm)) > 2.2;
+
+          if (!blocked) {
+            smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.12 * rCm) + (0.88 * smoothedDistanceCm);
+          } else {
+            smoothedDistanceCm = lockedDistanceCm !== null ? lockedDistanceCm : (smoothedDistanceCm || 38.5);
+          }
+        }
+
+        if (smoothedDistanceCm !== null) {
+          distVal.innerText = `${smoothedDistanceCm.toFixed(1)} cm`;
+          if (smoothedDistanceCm >= 35 && smoothedDistanceCm <= 45) {
+            zoneVal.innerText = "Optimal"; zoneVal.style.color = "#4ade80"; cameraBox.style.borderColor = "#4ade80";
+          } else if (smoothedDistanceCm < 35) {
+            zoneVal.innerText = "Too Close"; zoneVal.style.color = "#f87171"; cameraBox.style.borderColor = "#f87171";
+          } else {
+            zoneVal.innerText = "Too Far"; zoneVal.style.color = "#fbbf24"; cameraBox.style.borderColor = "#fbbf24";
+          }
+          if (examStage > 1) {
+            const px = Math.round((Math.max(12, Math.min(110, (smoothedDistanceCm * 10) * 2 * Math.tan((5 * (currentDenominator / 20) / 60) * (Math.PI / 180) / 2) * 6.5))) / 2) * 2;
+            optotypeChar.style.fontSize = `${px}px`;
+            scaleReadout.innerText = `${px}px`;
+          }
+        }
+        eyeStateVal.innerText = confirmedEyeState;
+      }
+    }
+
+    const faceMesh = new FaceMesh({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}` });
+    faceMesh.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+    faceMesh.onResults(onResults);
+    const camera = new Camera(videoElement, { onFrame: async () => { await faceMesh.send({ image: videoElement }); }, width: 640, height: 480 });
+    camera.start();
+  </script>
+</body>
+</html>
+<!-- 
+  Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
+  PATENT PENDING: USPTO Provisional Application No. 64/174,835
   Project "Eyes" v3.16 - Explicit Exam Prompts & Clinical Engine
 -->
 <!DOCTYPE html>
