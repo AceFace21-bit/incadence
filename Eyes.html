@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.21 - Explicit 7-Step Progress Tracking Engine
+  Project "Eyes" v3.22 - In-Card Interactive Gate Prompts & 2-Miss Clinical Engine
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.21 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.22 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -117,7 +117,7 @@
       position: relative;
       width: 100%;
       max-width: 600px;
-      height: 180px;
+      height: 190px;
       background: #ffffff;
       color: #0f172a;
       border-radius: 12px;
@@ -142,12 +142,50 @@
       overflow: hidden;
     }
     #optotypeChar {
+      display: none;
       font-family: "Courier New", Courier, monospace;
       font-weight: 900;
       line-height: 1;
       text-align: center;
       user-select: none;
     }
+    /* INTERACTIVE STAGE GATE PROMPT INSIDE THE TEST BOX */
+    #gatePromptBtn {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #ffffff;
+      border: 3px solid #38bdf8;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
+      user-select: none;
+    }
+    #gatePromptBtn:active {
+      transform: scale(0.98);
+      background: #0369a1;
+    }
+    .gate-sub {
+      font-size: 11px;
+      font-weight: 800;
+      color: #bae6fd;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+    .gate-main {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+
     #readingBox { display: none; width: 100%; text-align: center; font-weight: 700; font-size: 14px; }
     #reportBox { display: none; width: 100%; text-align: left; }
     .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
@@ -155,12 +193,11 @@
     .report-label { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; }
     .report-val { font-size: 12px; font-weight: 900; color: #0f172a; }
     
-    .controls { width: 100%; max-width: 600px; display: flex; gap: 6px; margin-bottom: 6px; }
+    .controls { width: 100%; max-width: 600px; display: flex; gap: 6px; margin-bottom: 6px; min-height: 46px; }
     button {
       flex: 1; background: #1e293b; color: #f8fafc; border: 1px solid #334155;
       padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 800; cursor: pointer;
     }
-    button.primary { background: #0284c7; border-color: #38bdf8; color: #fff; }
     button.opt-choice {
       background: #e2e8f0; color: #0f172a; border: 1px solid #cbd5e1; font-size: 16px; font-weight: 900;
     }
@@ -174,7 +211,7 @@
 
   <header>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project Eyes v3.21</h1>
+    <h1>Project Eyes v3.22</h1>
   </header>
 
   <div class="stage-bar">
@@ -199,20 +236,20 @@
       </div>
     </div>
 
-    <!-- EXPLICIT 7-STEP PROGRESS TRACKING -->
     <div class="roadmap-panel" id="roadmapPanel">
       <div class="roadmap-title">Exam Workflow Roadmap (7 Steps Per Eye Test)</div>
       <div class="roadmap-steps">
         <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Optical Calibration (Hold 35–45 cm)</div>
-        <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Exam (Cover Right • Step 1 of 7)</div>
-        <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Exam (Cover Left • Step 1 of 7)</div>
-        <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Exam (Both Open • Step 1 of 7)</div>
+        <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Exam (Cover Right • 7 Steps)</div>
+        <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Exam (Cover Left • 7 Steps)</div>
+        <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Exam (Both Open • 7 Steps)</div>
         <div class="roadmap-step" id="rs5"><div class="roadmap-dot" id="dot5">5</div> Stage 5: Reading Intake (8 Quick Words)</div>
         <div class="roadmap-step" id="rs6"><div class="roadmap-dot" id="dot6">6</div> Stage 6: Final Diagnostic Scorecard</div>
       </div>
     </div>
   </div>
 
+  <!-- TEST BOX WITH IN-CARD TAP GATE PROMPTS -->
   <div class="optotype-card">
     <div class="card-header">
       <span id="acuityLabel">Stage 1: Optical Calibration</span>
@@ -220,11 +257,22 @@
     </div>
 
     <div class="optotype-viewport">
-      <div id="optotypeChar">READY FOR CALIBRATION</div>
+      <!-- Big Tap Gate Prompt right where the user is looking -->
+      <div id="gatePromptBtn" onclick="handleGateTap()">
+        <div class="gate-sub" id="gateSubText">Hold Phone at 35–45 cm</div>
+        <div class="gate-main" id="gateMainText">TAP TO BEGIN TEST</div>
+      </div>
+
+      <!-- Snellen Letter -->
+      <div id="optotypeChar">E</div>
+
+      <!-- Behavioral Reading Box -->
       <div id="readingBox">
         <div style="font-size: 9px; color: #0284c7; margin-bottom: 3px; font-weight: 800;">TAP WORDS IN ORDER:</div>
         <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 6px;"></div>
       </div>
+
+      <!-- Final Scorecard -->
       <div id="reportBox">
         <div class="report-grid">
           <div class="report-item"><div class="report-label">Left Eye (OS)</div><div class="report-val" id="repOS">&lt; 20/100</div></div>
@@ -236,12 +284,10 @@
     </div>
   </div>
 
-  <div class="controls" id="examControls">
-    <button class="primary" id="calibBtn" onclick="lockCalibration()">Start Calibration Test</button>
-  </div>
+  <div class="controls" id="examControls"></div>
 
   <div class="controls">
-    <button onclick="resetExam()">Reset</button>
+    <button onclick="resetExam()">Reset Full Exam</button>
   </div>
 
   <footer>&copy; 2026 Terrance Lamont Watkins</footer>
@@ -253,23 +299,27 @@
     const zoneVal = document.getElementById('zoneVal');
     const eyeStateVal = document.getElementById('eyeStateVal');
     const optotypeChar = document.getElementById('optotypeChar');
+    const gatePromptBtn = document.getElementById('gatePromptBtn');
+    const gateSubText = document.getElementById('gateSubText');
+    const gateMainText = document.getElementById('gateMainText');
     const readingBox = document.getElementById('readingBox');
     const wordContainer = document.getElementById('wordContainer');
     const reportBox = document.getElementById('reportBox');
     const scaleReadout = document.getElementById('scaleReadout');
     const acuityLabel = document.getElementById('acuityLabel');
     const examControls = document.getElementById('examControls');
-    const roadmapPanel = document.getElementById('roadmapPanel');
 
     const AVERAGE_IPD_MM = 63.0;
     const FOCAL_LENGTH_PIXELS = 580;
     const MASTER_LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
-    const ACUITY_STEPS = [100, 70, 50, 40, 30, 25, 20]; // Exactly 7 Snellen levels
+    const ACUITY_STEPS = [100, 70, 50, 40, 30, 25, 20]; // 7 Snellen levels
 
     let examStage = 1;
+    let waitingForGateTap = true;
     let stepIndex = 0;
     let currentDenominator = ACUITY_STEPS[0];
     let currentCorrectChar = 'E';
+    let consecutiveMisses = 0;
     
     let osScore = "< 20/100";
     let odScore = "< 20/100";
@@ -281,62 +331,89 @@
     let tapTimestamps = [];
 
     let smoothedDistanceCm = null;
-    let stableFramesInGreen = 0;
-    let currentZoneState = "INIT";
-
     let smoothedLeftEAR = 0.30;
     let smoothedRightEAR = 0.30;
     let pendingEyeState = "Binocular";
     let confirmedEyeState = "Binocular";
     let eyeStateFrameCount = 0;
 
+    function showGatePrompt(subText, mainText) {
+      waitingForGateTap = true;
+      optotypeChar.style.display = "none";
+      readingBox.style.display = "none";
+      reportBox.style.display = "none";
+      examControls.innerHTML = "";
+      gateSubText.innerText = subText;
+      gateMainText.innerText = mainText;
+      gatePromptBtn.style.display = "flex";
+    }
+
+    function handleGateTap() {
+      if (!waitingForGateTap) return;
+      waitingForGateTap = false;
+      gatePromptBtn.style.display = "none";
+
+      if (examStage === 1) {
+        if (smoothedDistanceCm !== null && smoothedDistanceCm >= 33 && smoothedDistanceCm <= 47) {
+          lockedDistanceCm = smoothedDistanceCm;
+        } else {
+          lockedDistanceCm = 40.0;
+        }
+        // Move to Stage 2 Gate: Prompt user to cover Right Eye
+        examStage = 2;
+        updateStageUI();
+        acuityLabel.innerText = "Stage 2: Left Eye Setup";
+        showGatePrompt("Stage 2 of 6 • Left Eye Exam", "TAP ONCE YOUR RIGHT EYE IS COVERED");
+      } else if (examStage === 2 || examStage === 3 || examStage === 4) {
+        optotypeChar.style.display = "block";
+        stepIndex = 0;
+        consecutiveMisses = 0;
+        currentDenominator = ACUITY_STEPS[0];
+        loadNewAcuityRound();
+      } else if (examStage === 5) {
+        launchReadingWords();
+      }
+    }
+
     function updateRoadmapUI() {
+      const labels = [
+        "Stage 1: Optical Calibration (Hold 35–45 cm)",
+        "Stage 2: Left Eye Exam (Cover Right • 7 Steps)",
+        "Stage 3: Right Eye Exam (Cover Left • 7 Steps)",
+        "Stage 4: Binocular Exam (Both Open • 7 Steps)",
+        "Stage 5: Reading Intake (8 Quick Words)",
+        "Stage 6: Final Diagnostic Scorecard"
+      ];
       for (let i = 1; i <= 6; i++) {
         const stepEl = document.getElementById(`rs${i}`);
-        const dotEl = document.getElementById(`dot${i}`);
         stepEl.className = "roadmap-step";
-        dotEl.innerText = i;
-
         if (i < examStage) {
           stepEl.classList.add('done');
-          dotEl.innerText = "✓";
+          stepEl.innerHTML = `<div class="roadmap-dot" id="dot${i}">✓</div> ${labels[i - 1]}`;
         } else if (i === examStage) {
           stepEl.classList.add('active');
+          stepEl.innerHTML = `<div class="roadmap-dot" id="dot${i}">${i}</div> ${labels[i - 1]}`;
+        } else {
+          stepEl.innerHTML = `<div class="roadmap-dot" id="dot${i}">${i}</div> ${labels[i - 1]}`;
         }
       }
     }
 
-    function lockCalibration() {
-      if (smoothedDistanceCm !== null && smoothedDistanceCm >= 33 && smoothedDistanceCm <= 47) {
-        lockedDistanceCm = smoothedDistanceCm;
-      } else {
-        lockedDistanceCm = 40.0;
-      }
-      optotypeChar.innerText = "LOCKED ✓";
-      setTimeout(startStage2, 800);
-    }
-
-    function startStage2() {
-      examStage = 2;
-      stepIndex = 0;
-      currentDenominator = ACUITY_STEPS[0];
-      updateStageUI();
-      loadNewAcuityRound();
-    }
-
     function loadNewAcuityRound() {
-      currentCorrectChar = MASTER_LETTERS[Math.floor(Math.random() * MASTER_LETTERS.length)];
+      let prevChar = currentCorrectChar;
+      while (currentCorrectChar === prevChar) {
+        currentCorrectChar = MASTER_LETTERS[Math.floor(Math.random() * MASTER_LETTERS.length)];
+      }
       optotypeChar.innerText = currentCorrectChar;
       
       let stageName = "Left Eye";
       if (examStage === 3) stageName = "Right Eye";
       if (examStage === 4) stageName = "Binocular (Both Eyes)";
       
-      // Explicitly tell them which of 7 numbers they are on
-      acuityLabel.innerText = `${stageName} — Level ${stepIndex + 1} of 7 (20/${currentDenominator})`;
+      acuityLabel.innerText = `${stageName} — Step ${stepIndex + 1} of 7 (20/${currentDenominator})`;
 
       let roadmapStepId = (examStage === 2) ? "rs2" : (examStage === 3) ? "rs3" : "rs4";
-      document.getElementById(roadmapStepId).innerHTML = `<div class="roadmap-dot" id="dot${examStage}">⏳</div> Stage ${examStage}: ${stageName} (Step ${stepIndex + 1} of 7)`;
+      document.getElementById(roadmapStepId).innerHTML = `<div class="roadmap-dot" id="dot${examStage}">${examStage}</div> Stage ${examStage}: ${stageName} (Step ${stepIndex + 1} of 7)`;
 
       let choices = [currentCorrectChar];
       while (choices.length < 3) {
@@ -355,55 +432,104 @@
     function submitAnswer(selectedChar) {
       const isCorrect = (selectedChar === currentCorrectChar);
 
-      if (examStage === 2) {
+      if (examStage === 2) { // Left Eye
         if (isCorrect) {
+          consecutiveMisses = 0;
           osScore = `20/${currentDenominator}`;
-          if (stepIndex < ACUITY_STEPS.length - 1) { stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex]; loadNewAcuityRound(); }
-          else { setTimeout(startStage3, 600); }
+          if (stepIndex < ACUITY_STEPS.length - 1) {
+            stepIndex++;
+            currentDenominator = ACUITY_STEPS[stepIndex];
+            loadNewAcuityRound();
+          } else {
+            queueStage3Gate();
+          }
         } else {
-          setTimeout(startStage3, 600);
+          consecutiveMisses++;
+          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) {
+            queueStage3Gate();
+          } else {
+            loadNewAcuityRound();
+          }
         }
-      } else if (examStage === 3) {
+      } else if (examStage === 3) { // Right Eye
         if (isCorrect) {
+          consecutiveMisses = 0;
           odScore = `20/${currentDenominator}`;
-          if (stepIndex < ACUITY_STEPS.length - 1) { stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex]; loadNewAcuityRound(); }
-          else { setTimeout(startStage4, 600); }
+          if (stepIndex < ACUITY_STEPS.length - 1) {
+            stepIndex++;
+            currentDenominator = ACUITY_STEPS[stepIndex];
+            loadNewAcuityRound();
+          } else {
+            queueStage4Gate();
+          }
         } else {
-          setTimeout(startStage4, 600);
+          consecutiveMisses++;
+          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) {
+            queueStage4Gate();
+          } else {
+            loadNewAcuityRound();
+          }
         }
-      } else if (examStage === 4) {
+      } else if (examStage === 4) { // Binocular
         if (isCorrect) {
+          consecutiveMisses = 0;
           ouScore = `20/${currentDenominator}`;
-          if (stepIndex < ACUITY_STEPS.length - 1) { stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex]; loadNewAcuityRound(); }
-          else { setTimeout(startStage5, 600); }
+          if (stepIndex < ACUITY_STEPS.length - 1) {
+            stepIndex++;
+            currentDenominator = ACUITY_STEPS[stepIndex];
+            loadNewAcuityRound();
+          } else {
+            queueStage5Gate();
+          }
         } else {
-          setTimeout(startStage5, 600);
+          consecutiveMisses++;
+          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) {
+            queueStage5Gate();
+          } else {
+            loadNewAcuityRound();
+          }
         }
       }
     }
 
-    function startStage3() {
-      examStage = 3; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
-      updateStageUI(); loadNewAcuityRound();
+    function queueStage3Gate() {
+      examStage = 3;
+      updateStageUI();
+      acuityLabel.innerText = "Stage 3: Right Eye Setup";
+      showGatePrompt("Left Eye Complete • Switch Hands", "TAP ONCE YOUR LEFT EYE IS COVERED");
     }
 
-    function startStage4() {
-      examStage = 4; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
-      updateStageUI(); loadNewAcuityRound();
+    function queueStage4Gate() {
+      examStage = 4;
+      updateStageUI();
+      acuityLabel.innerText = "Stage 4: Binocular Setup";
+      showGatePrompt("Right Eye Complete • Uncover Both Eyes", "TAP ONCE BOTH EYES ARE OPEN");
     }
 
-    function startStage5() {
-      examStage = 5; currentDenominator = 40; updateStageUI();
-      optotypeChar.style.display = "none"; examControls.style.display = "none";
-      readingBox.style.display = "block"; acuityLabel.innerText = "Reading Intake";
-      wordContainer.innerHTML = ""; wordIndex = 0; tapTimestamps = [performance.now()];
+    function queueStage5Gate() {
+      examStage = 5;
+      updateStageUI();
+      acuityLabel.innerText = "Stage 5: Reading Intake Setup";
+      showGatePrompt("Binocular Complete • 8 Quick Words", "TAP TO BEGIN READING INTAKE");
+    }
+
+    function launchReadingWords() {
+      currentDenominator = 40;
+      readingBox.style.display = "block";
+      acuityLabel.innerText = "Stage 5: Behavioral Reading Intake";
+      wordContainer.innerHTML = "";
+      wordIndex = 0;
+      tapTimestamps = [performance.now()];
       PASSAGE_WORDS.forEach((w, idx) => {
         const span = document.createElement('span');
-        span.innerText = w; span.style.padding = "4px 8px"; span.style.borderRadius = "4px";
+        span.innerText = w;
+        span.style.padding = "4px 8px";
+        span.style.borderRadius = "4px";
         span.style.border = idx === 0 ? "2px solid #0284c7" : "1px solid #cbd5e1";
         span.onclick = () => {
           if (idx !== wordIndex) return;
-          tapTimestamps.push(performance.now()); wordIndex++;
+          tapTimestamps.push(performance.now());
+          wordIndex++;
           if (wordIndex >= PASSAGE_WORDS.length) startStage6();
           else {
             Array.from(wordContainer.children).forEach((el, i) => {
@@ -417,8 +543,11 @@
     }
 
     function startStage6() {
-      examStage = 6; updateStageUI(); readingBox.style.display = "none";
-      reportBox.style.display = "block"; acuityLabel.innerText = "Scorecard";
+      examStage = 6;
+      updateStageUI();
+      readingBox.style.display = "none";
+      reportBox.style.display = "block";
+      acuityLabel.innerText = "Stage 6: Official Diagnostic Scorecard";
       const totalSec = (tapTimestamps[tapTimestamps.length - 1] - tapTimestamps[0]) / 1000;
       const wpm = Math.round((PASSAGE_WORDS.length / Math.max(1, totalSec)) * 60);
       document.getElementById('repOS').innerText = osScore;
@@ -428,15 +557,17 @@
     }
 
     function resetExam() {
-      examStage = 1; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
-      osScore = "< 20/100"; odScore = "< 20/100"; ouScore = "< 20/100";
-      lockedDistanceCm = null; stableFramesInGreen = 0;
+      examStage = 1;
+      stepIndex = 0;
+      consecutiveMisses = 0;
+      currentDenominator = ACUITY_STEPS[0];
+      osScore = "< 20/100";
+      odScore = "< 20/100";
+      ouScore = "< 20/100";
+      lockedDistanceCm = null;
       updateStageUI();
-      reportBox.style.display = "none"; readingBox.style.display = "none";
-      optotypeChar.style.display = "block"; optotypeChar.style.fontSize = "22px"; optotypeChar.innerText = "READY FOR CALIBRATION";
       acuityLabel.innerText = "Stage 1: Optical Calibration";
-      examControls.innerHTML = `<button class="primary" id="calibBtn" onclick="lockCalibration()">Start Calibration Test</button>`;
-      examControls.style.display = "flex";
+      showGatePrompt("Hold Phone at 35–45 cm", "TAP TO BEGIN TEST");
     }
 
     function updateStageUI() {
@@ -495,7 +626,7 @@
           } else {
             zoneVal.innerText = "Too Far"; zoneVal.style.color = "#fbbf24"; cameraBox.style.borderColor = "#fbbf24";
           }
-          if (examStage > 1) {
+          if (examStage > 1 && !waitingForGateTap) {
             const activeDist = lockedDistanceCm || smoothedDistanceCm;
             const angleRad = (5 * (currentDenominator / 20) / 60) * (Math.PI / 180);
             const heightMm = 2 * (activeDist * 10) * Math.tan(angleRad / 2);
