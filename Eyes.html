@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.0 - Hand-Compensated Optical Lock & Clinical Acuity Engine
+  Project "Eyes" v3.1 - Monocular Single-Eye Triangulation & Hand-Spike Filter
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.0 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.1 | Patent Pending 64/174,835</title>
   <style>
     * {
       box-sizing: border-box;
@@ -271,7 +271,7 @@
 
   <header>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project "Eyes" Clinical Engine v3.0</h1>
+    <h1>Project "Eyes" Clinical Engine v3.1</h1>
   </header>
 
   <div class="stage-bar">
@@ -286,7 +286,7 @@
     <div class="hud-top">
       <div class="badge">
         Dist: <span id="distVal" class="badge-val">-- cm</span>
-        <span id="anchorTag" class="lock-tag">ANCHOR LOCKED</span>
+        <span id="anchorTag" class="lock-tag">HAND SHIELD ON</span>
       </div>
       <div class="badge">Zone: <span id="zoneVal" class="badge-val" style="color: #fbbf24;">Init</span></div>
     </div>
@@ -302,10 +302,8 @@
       <span id="scaleReadout">Scale: -- px</span>
     </div>
 
-    <!-- Single Letter Optotype View -->
     <div id="optotypeChar" style="font-size: 56px;">E</div>
 
-    <!-- Behavioral Reading Passage View -->
     <div id="readingBox">
       <div style="font-size: 11px; color: #0284c7; margin-bottom: 6px; font-weight: 800;">
         TAP EACH WORD AS YOU READ IT CLEARLY:
@@ -313,7 +311,6 @@
       <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;"></div>
     </div>
 
-    <!-- Final Clinical Report Card View -->
     <div id="reportBox">
       <div style="font-size: 12px; font-weight: 800; color: #0284c7; text-transform: uppercase;">
         Official Diagnostic Summary • Patent 64/174,835
@@ -339,18 +336,18 @@
     </div>
 
     <div style="font-size: 12px; color: #475569; font-weight: 700;" id="promptText">
-      Hold at 35–45 cm. Cover your LEFT eye with your hand to test RIGHT eye.
+      Hold at 35–45 cm to lock zone, then cover LEFT eye.
     </div>
   </div>
 
-  <!-- Exam Action Controls -->
   <div class="controls" id="examControls">
     <button class="success" onclick="recordResponse(true)">Clearly Visible ✓</button>
     <button class="warn" onclick="recordResponse(false)">Blurry / Can't Read ✗</button>
   </div>
 
   <div class="controls">
-    <button onclick="resetExam()">Restart Full Exam</button>
+    <button id="lockBtn" class="primary" onclick="toggleManualLock()">Lock Distance Now</button>
+    <button onclick="resetExam()">Restart Exam</button>
   </div>
 
   <footer>
@@ -372,28 +369,28 @@
     const acuityLabel = document.getElementById('acuityLabel');
     const promptText = document.getElementById('promptText');
     const examControls = document.getElementById('examControls');
+    const lockBtn = document.getElementById('lockBtn');
 
     const AVERAGE_IPD_MM = 63.0;
     const FOCAL_LENGTH_PIXELS = 580;
     const LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
     const ACUITY_STEPS = [100, 70, 40, 30, 20];
 
-    // Exam State Machine
-    let examStage = 1; // 1 = OD, 2 = OS, 3 = Reading, 4 = Report
+    let examStage = 1;
     let stepIndex = 0;
     let currentDenominator = ACUITY_STEPS[0];
     let odScore = "20/100";
     let osScore = "20/100";
 
-    // Behavioral Reading State
     const PASSAGE_WORDS = ["Clear", "vision", "opens", "every", "door", "for", "young", "minds", "around", "the", "world."];
     let wordIndex = 0;
     let tapTimestamps = [];
 
-    // Distance & Hand-Compensation State
+    // Distance & Hand-Shield State
     let smoothedDistanceCm = null;
-    let lastCleanBinocularCm = 38.0; // Anchor distance before hand occlusion
-    const SMOOTHING_FACTOR = 0.15;
+    let lockedDistanceCm = null;
+    let manualLockActive = false;
+    let stableFramesInGreen = 0;
     let currentZoneState = "INIT";
 
     // Eye Cover Debounce State
@@ -402,7 +399,21 @@
     let pendingEyeState = "BINOCULAR";
     let confirmedEyeState = "BINOCULAR";
     let eyeStateFrameCount = 0;
-    const DEBOUNCE_FRAMES = 5;
+    const DEBOUNCE_FRAMES = 4;
+
+    function toggleManualLock() {
+      manualLockActive = !manualLockActive;
+      if (manualLockActive) {
+        lockedDistanceCm = (smoothedDistanceCm >= 35 && smoothedDistanceCm <= 45) ? smoothedDistanceCm : 38.5;
+        lockBtn.innerText = "Unlock Distance";
+        lockBtn.style.background = "#16a34a";
+      } else {
+        lockedDistanceCm = null;
+        stableFramesInGreen = 0;
+        lockBtn.innerText = "Lock Distance Now";
+        lockBtn.style.background = "#0284c7";
+      }
+    }
 
     function nextLetter() {
       const current = optotypeChar.innerText;
@@ -515,7 +526,6 @@
       acuityLabel.innerText = "Stage 4: Diagnostic Complete";
       promptText.innerText = "Clinical Acuity & Behavioral Latency Report Ready.";
 
-      // Calculate Reading WPM and Micro-Hesitation Latency
       const totalTimeSec = (tapTimestamps[tapTimestamps.length - 1] - tapTimestamps[0]) / 1000;
       const wpm = Math.round((PASSAGE_WORDS.length / Math.max(1, totalTimeSec)) * 60);
 
@@ -537,13 +547,18 @@
       currentDenominator = ACUITY_STEPS[0];
       odScore = "20/100";
       osScore = "20/100";
+      manualLockActive = false;
+      lockedDistanceCm = null;
+      stableFramesInGreen = 0;
+      lockBtn.innerText = "Lock Distance Now";
+      lockBtn.style.background = "#0284c7";
       updateStageUI();
       reportBox.style.display = "none";
       readingBox.style.display = "none";
       optotypeChar.style.display = "block";
       examControls.style.display = "flex";
       acuityLabel.innerText = `Stage 1: Right Eye (20/${currentDenominator})`;
-      promptText.innerText = "Hold at 35–45 cm. Cover your LEFT eye with your hand to test RIGHT eye.";
+      promptText.innerText = "Hold at 35–45 cm to lock zone, then cover LEFT eye.";
       nextLetter();
     }
 
@@ -561,14 +576,14 @@
       if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
         const lm = results.multiFaceLandmarks[0];
 
-        // 1. Check Monocular Eye Cover State First
+        // 1. Check Eye Cover State
         const rawRightEAR = getEAR(lm, 159, 145, 133, 33);
         const rawLeftEAR = getEAR(lm, 386, 374, 362, 263);
 
         smoothedRightEAR = (0.3 * rawRightEAR) + (0.7 * smoothedRightEAR);
         smoothedLeftEAR = (0.3 * rawLeftEAR) + (0.7 * smoothedLeftEAR);
 
-        const CLOSED_THRESHOLD = 0.19;
+        const CLOSED_THRESHOLD = 0.20;
         let detectedState = "BINOCULAR";
 
         if (smoothedRightEAR < CLOSED_THRESHOLD && smoothedLeftEAR >= CLOSED_THRESHOLD) {
@@ -589,39 +604,55 @@
           eyeStateFrameCount = 1;
         }
 
-        // 2. Hand-Compensated Distance Calculation
+        // 2. Calculate Raw Distance + Check for Hand Velocity Spike
         const leftPupil = lm[468] || lm[33];
         const rightPupil = lm[473] || lm[263];
         const dx = (leftPupil.x - rightPupil.x) * videoElement.videoWidth;
         const dy = (leftPupil.y - rightPupil.y) * videoElement.videoHeight;
         const pupilDistancePx = Math.hypot(dx, dy);
 
-        // If hand covers one eye, lock onto the last clean binocular distance
-        // so hand thickness doesn't corrupt the triangulation math!
-        const isHandOccluding = (confirmedEyeState !== "BINOCULAR" || detectedState !== "BINOCULAR");
-
-        if (pupilDistancePx > 0 && !isHandOccluding) {
+        if (pupilDistancePx > 0) {
           const rawDistanceMm = (FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / pupilDistancePx;
           const rawDistanceCm = rawDistanceMm / 10;
 
-          if (smoothedDistanceCm === null) {
-            smoothedDistanceCm = rawDistanceCm;
+          // Detect if a hand suddenly entered the frame (sudden spike > 2.2 cm in 1 frame or eye asymmetry)
+          const earDiff = Math.abs(rawLeftEAR - rawRightEAR);
+          const velocitySpike = smoothedDistanceCm !== null && Math.abs(rawDistanceCm - smoothedDistanceCm) > 2.2;
+          const handInterference = manualLockActive || lockedDistanceCm !== null || confirmedEyeState !== "BINOCULAR" || earDiff > 0.06 || velocitySpike;
+
+          if (!handInterference) {
+            if (smoothedDistanceCm === null) {
+              smoothedDistanceCm = rawDistanceCm;
+            } else {
+              smoothedDistanceCm = (0.12 * rawDistanceCm) + (0.88 * smoothedDistanceCm);
+            }
+
+            // Auto-Lock once the user holds inside the 35-45cm Green Zone for ~1 second (20 frames)
+            if (smoothedDistanceCm >= 35.0 && smoothedDistanceCm <= 45.0) {
+              stableFramesInGreen++;
+              if (stableFramesInGreen >= 20 && (examStage === 1 || examStage === 2)) {
+                lockedDistanceCm = smoothedDistanceCm;
+                lockBtn.innerText = "Unlock Distance";
+                lockBtn.style.background = "#16a34a";
+              }
+            } else {
+              stableFramesInGreen = 0;
+            }
+            anchorTag.style.display = "none";
           } else {
-            smoothedDistanceCm = (SMOOTHING_FACTOR * rawDistanceCm) + ((1 - SMOOTHING_FACTOR) * smoothedDistanceCm);
+            // Freeze distance so hand never kicks user out of the green zone
+            if (lockedDistanceCm !== null) {
+              smoothedDistanceCm = lockedDistanceCm;
+            } else if (smoothedDistanceCm === null) {
+              smoothedDistanceCm = 38.5;
+            }
+            anchorTag.style.display = "inline-block";
           }
-          // Save clean binocular distance as anchor
-          lastCleanBinocularCm = smoothedDistanceCm;
-          anchorTag.style.display = "none";
-        } else if (isHandOccluding) {
-          // Freeze distance at clean binocular anchor while hand is up
-          smoothedDistanceCm = lastCleanBinocularCm;
-          anchorTag.style.display = "inline-block";
         }
 
         if (smoothedDistanceCm !== null) {
           distVal.innerText = `${smoothedDistanceCm.toFixed(1)} cm`;
 
-          // Sticky Hysteresis Zone
           if (currentZoneState === "OPTIMAL") {
             if (smoothedDistanceCm < 33.0) currentZoneState = "TOO_CLOSE";
             else if (smoothedDistanceCm > 47.0) currentZoneState = "TOO_FAR";
@@ -648,7 +679,6 @@
             optotypeChar.style.filter = "none";
           }
 
-          // Dynamic Optotype Sizing
           const smoothedMm = smoothedDistanceCm * 10;
           const angleRad = (5 * (currentDenominator / 20) / 60) * (Math.PI / 180);
           const heightMm = 2 * smoothedMm * Math.tan(angleRad / 2);
@@ -658,7 +688,6 @@
           scaleReadout.innerText = `Scale: ${stabilizedPx}px`;
         }
 
-        // Update Eye State Badge
         if (confirmedEyeState === "LEFT_ONLY") {
           eyeStateVal.innerText = "Left Eye (OD Covered)";
           eyeStateVal.style.color = "#38bdf8";
@@ -672,801 +701,6 @@
           eyeStateVal.innerText = "Binocular (Open)";
           eyeStateVal.style.color = "#4ade80";
         }
-      } else {
-        distVal.innerText = "-- cm";
-        zoneVal.innerText = "No Face";
-        zoneVal.style.color = "#94a3b8";
-        cameraBox.style.borderColor = "#1e293b";
-        eyeStateVal.innerText = "Searching...";
-        eyeStateVal.style.color = "#94a3b8";
-        anchorTag.style.display = "none";
-      }
-    }
-
-    const faceMesh = new FaceMesh({
-      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
-    });
-
-    faceMesh.setOptions({
-      maxNumFaces: 1,
-      refineLandmarks: true,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5
-    });
-
-    faceMesh.onResults(onResults);
-
-    const camera = new Camera(videoElement, {
-      onFrame: async () => {
-        await faceMesh.send({ image: videoElement });
-      },
-      width: 640,
-      height: 480
-    });
-
-    camera.start();
-  </script>
-</body>
-</html>
-<!-- 
-  Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
-  PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" - Stabilized Optical Distance & Monocular Acuity Engine (v2.0)
--->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v2.0 | Patent Pending 64/174,835</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      background-color: #0b0f19;
-      color: #f8fafc;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 16px;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 14px;
-      width: 100%;
-      max-width: 600px;
-    }
-    .patent-pill {
-      display: inline-block;
-      background: rgba(56, 189, 248, 0.12);
-      color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-    h1 {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-    }
-    .camera-box {
-      position: relative;
-      width: 100%;
-      max-width: 600px;
-      aspect-ratio: 4 / 3;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 2px solid #1e293b;
-      background: #000;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-      margin-bottom: 16px;
-      transition: border-color 0.25s ease;
-    }
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scaleX(-1);
-    }
-    .hud-top {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      right: 12px;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      pointer-events: none;
-    }
-    .hud-bottom {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
-      right: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      pointer-events: none;
-    }
-    .badge {
-      background: rgba(15, 23, 42, 0.88);
-      backdrop-filter: blur(8px);
-      padding: 7px 12px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-      font-size: 12px;
-      font-weight: 600;
-      color: #cbd5e1;
-    }
-    .badge-val {
-      color: #38bdf8;
-      font-size: 15px;
-      font-weight: 800;
-      margin-left: 4px;
-    }
-    .watermark {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.45);
-      background: rgba(0, 0, 0, 0.55);
-      padding: 4px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.4px;
-    }
-    .optotype-card {
-      width: 100%;
-      max-width: 600px;
-      background: #ffffff;
-      color: #0f172a;
-      border-radius: 14px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-      margin-bottom: 16px;
-      min-height: 175px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .card-header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: 700;
-      color: #64748b;
-      text-transform: uppercase;
-      border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 8px;
-    }
-    #optotypeChar {
-      font-family: "Courier New", Courier, monospace;
-      font-weight: 900;
-      line-height: 1;
-      margin: 20px 0;
-      transition: font-size 0.15s ease-out, filter 0.2s ease;
-      user-select: none;
-    }
-    .controls {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      gap: 10px;
-    }
-    button {
-      flex: 1;
-      background: #1e293b;
-      color: #f8fafc;
-      border: 1px solid #334155;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    button.active {
-      background: #0284c7;
-      border-color: #38bdf8;
-    }
-    footer {
-      margin-top: auto;
-      padding-top: 16px;
-      font-size: 11px;
-      color: #64748b;
-      text-align: center;
-    }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
-</head>
-<body>
-
-  <header>
-    <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project "Eyes" Stabilized v2.0</h1>
-  </header>
-
-  <div class="camera-box" id="cameraBox">
-    <video id="webcam" playsinline></video>
-    <div class="hud-top">
-      <div class="badge">Distance: <span id="distVal" class="badge-val">-- cm</span></div>
-      <div class="badge">Zone: <span id="zoneVal" class="badge-val" style="color: #fbbf24;">Init</span></div>
-    </div>
-    <div class="hud-bottom">
-      <div class="badge">Active Eye: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching...</span></div>
-      <div class="watermark">IP Owner: T. L. Watkins</div>
-    </div>
-  </div>
-
-  <div class="optotype-card">
-    <div class="card-header">
-      <span id="acuityLabel">Target: 20/40 Equivalent</span>
-      <span id="scaleReadout">Dynamic Scale: -- px</span>
-    </div>
-    <div id="optotypeChar" style="font-size: 48px;">E</div>
-    <div style="font-size: 12px; color: #475569; font-weight: 600;" id="promptText">
-      Hold device 35–45 cm from face. Cover one eye to test monocular lock.
-    </div>
-  </div>
-
-  <div class="controls">
-    <button onclick="setLine(20, '20/20')" id="btn20">20/20 Line</button>
-    <button onclick="setLine(40, '20/40')" id="btn40" class="active">20/40 Line</button>
-    <button onclick="setLine(100, '20/100')" id="btn100">20/100 Line</button>
-    <button onclick="nextLetter()">New Letter</button>
-  </div>
-
-  <footer>
-    &copy; 2026 Terrance Lamont Watkins. Protected under USPTO Provisional App. No. 64/174,835.
-  </footer>
-
-  <script>
-    const videoElement = document.getElementById('webcam');
-    const cameraBox = document.getElementById('cameraBox');
-    const distVal = document.getElementById('distVal');
-    const zoneVal = document.getElementById('zoneVal');
-    const eyeStateVal = document.getElementById('eyeStateVal');
-    const optotypeChar = document.getElementById('optotypeChar');
-    const scaleReadout = document.getElementById('scaleReadout');
-    const acuityLabel = document.getElementById('acuityLabel');
-    const promptText = document.getElementById('promptText');
-
-    const AVERAGE_IPD_MM = 63.0;
-    const FOCAL_LENGTH_PIXELS = 580;
-    const LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
-    let currentDenominator = 40;
-
-    // STABILIZER 1: Exponential Moving Average (EMA) state for distance
-    let smoothedDistanceCm = null;
-    const SMOOTHING_FACTOR = 0.15; // 15% new frame, 85% history
-
-    // STABILIZER 2: Hysteresis state for Sticky Green Zone
-    let currentZoneState = "INIT"; // "OPTIMAL", "TOO_CLOSE", "TOO_FAR"
-
-    // STABILIZER 3: Frame Debounce for Monocular Eye Lock
-    let smoothedLeftEAR = 0.30;
-    let smoothedRightEAR = 0.30;
-    let pendingEyeState = "BINOCULAR";
-    let confirmedEyeState = "BINOCULAR";
-    let eyeStateFrameCount = 0;
-    const DEBOUNCE_FRAMES = 6; // Must hold for 6 consecutive frames (~0.2 sec)
-
-    function setLine(denom, label) {
-      currentDenominator = denom;
-      acuityLabel.innerText = `Target: ${label} Equivalent`;
-      document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
-      if (denom === 20) document.getElementById('btn20').classList.add('active');
-      if (denom === 40) document.getElementById('btn40').classList.add('active');
-      if (denom === 100) document.getElementById('btn100').classList.add('active');
-      nextLetter();
-    }
-
-    function nextLetter() {
-      const randomChar = LETTERS[Math.floor(Math.random() * LETTERS.length)];
-      optotypeChar.innerText = randomChar;
-    }
-
-    function getEAR(landmarks, topIdx, bottomIdx, innerIdx, outerIdx) {
-      const top = landmarks[topIdx];
-      const bottom = landmarks[bottomIdx];
-      const inner = landmarks[innerIdx];
-      const outer = landmarks[outerIdx];
-      const vDist = Math.hypot(top.x - bottom.x, top.y - bottom.y);
-      const hDist = Math.hypot(inner.x - outer.x, inner.y - outer.y);
-      return vDist / (hDist || 1);
-    }
-
-    function onResults(results) {
-      if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
-        const lm = results.multiFaceLandmarks[0];
-
-        const leftPupil = lm[468] || lm[33];
-        const rightPupil = lm[473] || lm[263];
-
-        const dx = (leftPupil.x - rightPupil.x) * videoElement.videoWidth;
-        const dy = (leftPupil.y - rightPupil.y) * videoElement.videoHeight;
-        const pupilDistancePx = Math.hypot(dx, dy);
-
-        if (pupilDistancePx > 0) {
-          const rawDistanceMm = (FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / pupilDistancePx;
-          const rawDistanceCm = rawDistanceMm / 10;
-
-          // Apply EMA Shock Absorber
-          if (smoothedDistanceCm === null) {
-            smoothedDistanceCm = rawDistanceCm;
-          } else {
-            smoothedDistanceCm = (SMOOTHING_FACTOR * rawDistanceCm) + ((1 - SMOOTHING_FACTOR) * smoothedDistanceCm);
-          }
-
-          const displayCm = smoothedDistanceCm.toFixed(1);
-          distVal.innerText = `${displayCm} cm`;
-
-          // Apply Sticky Hysteresis Zone Logic
-          if (currentZoneState === "OPTIMAL") {
-            // Once inside green zone, give extra cushion (33.0 to 47.0 cm) before breaking lock
-            if (smoothedDistanceCm < 33.0) {
-              currentZoneState = "TOO_CLOSE";
-            } else if (smoothedDistanceCm > 47.0) {
-              currentZoneState = "TOO_FAR";
-            }
-          } else {
-            // Must enter 35.0 to 45.0 cm to trigger Optimal lock
-            if (smoothedDistanceCm >= 35.0 && smoothedDistanceCm <= 45.0) {
-              currentZoneState = "OPTIMAL";
-            } else if (smoothedDistanceCm < 35.0) {
-              currentZoneState = "TOO_CLOSE";
-            } else {
-              currentZoneState = "TOO_FAR";
-            }
-          }
-
-          // Update UI based on stabilized zone
-          if (currentZoneState === "OPTIMAL") {
-            zoneVal.innerText = "Optimal Lock";
-            zoneVal.style.color = "#4ade80";
-            cameraBox.style.borderColor = "#4ade80";
-            optotypeChar.style.filter = "none";
-            promptText.innerText = "Distance locked! Cover one eye to test monocular vision.";
-          } else if (currentZoneState === "TOO_CLOSE") {
-            zoneVal.innerText = "Too Close";
-            zoneVal.style.color = "#f87171";
-            cameraBox.style.borderColor = "#f87171";
-            // Anti-cheat blur if closer than 22 cm
-            if (smoothedDistanceCm < 22.0) {
-              optotypeChar.style.filter = "blur(8px)";
-              promptText.innerText = "TOO CLOSE — Pull phone back to 35 cm.";
-            } else {
-              optotypeChar.style.filter = "none";
-              promptText.innerText = "Move phone slightly further back (35–45 cm).";
-            }
-          } else {
-            zoneVal.innerText = "Too Far";
-            zoneVal.style.color = "#fbbf24";
-            cameraBox.style.borderColor = "#fbbf24";
-            optotypeChar.style.filter = "none";
-            promptText.innerText = "Bring phone slightly closer (35–45 cm).";
-          }
-
-          // Dynamic Optotype Sizing using smoothed distance (locks size to nearest 2px to stop jitter)
-          const smoothedMm = smoothedDistanceCm * 10;
-          const angleRad = (5 * (currentDenominator / 20) / 60) * (Math.PI / 180);
-          const heightMm = 2 * smoothedMm * Math.tan(angleRad / 2);
-          const rawPx = Math.max(12, Math.min(110, heightMm * 6.5));
-          const stabilizedPx = Math.round(rawPx / 2) * 2;
-          optotypeChar.style.fontSize = `${stabilizedPx}px`;
-          scaleReadout.innerText = `Dynamic Scale: ${stabilizedPx}px`;
-        }
-
-        // Smooth & Debounce Monocular Wink/Cover Detection
-        const rawRightEAR = getEAR(lm, 159, 145, 133, 33);
-        const rawLeftEAR = getEAR(lm, 386, 374, 362, 263);
-
-        smoothedRightEAR = (0.3 * rawRightEAR) + (0.7 * smoothedRightEAR);
-        smoothedLeftEAR = (0.3 * rawLeftEAR) + (0.7 * smoothedLeftEAR);
-
-        const CLOSED_THRESHOLD = 0.19;
-        let detectedState = "BINOCULAR";
-
-        if (smoothedRightEAR < CLOSED_THRESHOLD && smoothedLeftEAR >= CLOSED_THRESHOLD) {
-          detectedState = "LEFT_ONLY";
-        } else if (smoothedLeftEAR < CLOSED_THRESHOLD && smoothedRightEAR >= CLOSED_THRESHOLD) {
-          detectedState = "RIGHT_ONLY";
-        } else if (smoothedLeftEAR < CLOSED_THRESHOLD && smoothedRightEAR < CLOSED_THRESHOLD) {
-          detectedState = "BOTH_CLOSED";
-        }
-
-        if (detectedState === pendingEyeState) {
-          eyeStateFrameCount++;
-          if (eyeStateFrameCount >= DEBOUNCE_FRAMES) {
-            confirmedEyeState = detectedState;
-          }
-        } else {
-          pendingEyeState = detectedState;
-          eyeStateFrameCount = 1;
-        }
-
-        if (confirmedEyeState === "LEFT_ONLY") {
-          eyeStateVal.innerText = "Left Eye Only (OD Covered)";
-          eyeStateVal.style.color = "#38bdf8";
-        } else if (confirmedEyeState === "RIGHT_ONLY") {
-          eyeStateVal.innerText = "Right Eye Only (OS Covered)";
-          eyeStateVal.style.color = "#38bdf8";
-        } else if (confirmedEyeState === "BOTH_CLOSED") {
-          eyeStateVal.innerText = "Both Eyes Closed";
-          eyeStateVal.style.color = "#f87171";
-        } else {
-          eyeStateVal.innerText = "Binocular (Both Open)";
-          eyeStateVal.style.color = "#4ade80";
-        }
-
-      } else {
-        distVal.innerText = "-- cm";
-        zoneVal.innerText = "No Face";
-        zoneVal.style.color = "#94a3b8";
-        cameraBox.style.borderColor = "#1e293b";
-        eyeStateVal.innerText = "Searching...";
-        eyeStateVal.style.color = "#94a3b8";
-      }
-    }
-
-    const faceMesh = new FaceMesh({
-      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
-    });
-
-    faceMesh.setOptions({
-      maxNumFaces: 1,
-      refineLandmarks: true,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5
-    });
-
-    faceMesh.onResults(onResults);
-
-    const camera = new Camera(videoElement, {
-      onFrame: async () => {
-        await faceMesh.send({ image: videoElement });
-      },
-      width: 640,
-      height: 480
-    });
-
-    camera.start();
-  </script>
-</body>
-</html>
-<!-- 
-  Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
-  PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" - Zero-Hardware Optical Distance & Monocular Acuity Engine
--->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes | Patent Pending 64/174,835</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      background-color: #0b0f19;
-      color: #f8fafc;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 16px;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 14px;
-      width: 100%;
-      max-width: 600px;
-    }
-    .patent-pill {
-      display: inline-block;
-      background: rgba(56, 189, 248, 0.12);
-      color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-    h1 {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-    }
-    .camera-box {
-      position: relative;
-      width: 100%;
-      max-width: 600px;
-      aspect-ratio: 4 / 3;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid #1e293b;
-      background: #000;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-      margin-bottom: 16px;
-    }
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scaleX(-1);
-    }
-    .hud-top {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      right: 12px;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      pointer-events: none;
-    }
-    .hud-bottom {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
-      right: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      pointer-events: none;
-    }
-    .badge {
-      background: rgba(15, 23, 42, 0.88);
-      backdrop-filter: blur(8px);
-      padding: 7px 12px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-      font-size: 12px;
-      font-weight: 600;
-      color: #cbd5e1;
-    }
-    .badge-val {
-      color: #38bdf8;
-      font-size: 15px;
-      font-weight: 800;
-      margin-left: 4px;
-    }
-    .watermark {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.45);
-      background: rgba(0, 0, 0, 0.55);
-      padding: 4px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.4px;
-    }
-    .optotype-card {
-      width: 100%;
-      max-width: 600px;
-      background: #ffffff;
-      color: #0f172a;
-      border-radius: 14px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-      margin-bottom: 16px;
-      min-height: 170px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .card-header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: 700;
-      color: #64748b;
-      text-transform: uppercase;
-      border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 8px;
-    }
-    #optotypeChar {
-      font-family: "Courier New", Courier, monospace;
-      font-weight: 900;
-      line-height: 1;
-      margin: 20px 0;
-      transition: font-size 0.1s ease-out;
-      user-select: none;
-    }
-    .controls {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      gap: 10px;
-    }
-    button {
-      flex: 1;
-      background: #1e293b;
-      color: #f8fafc;
-      border: 1px solid #334155;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    button.active {
-      background: #0284c7;
-      border-color: #38bdf8;
-    }
-    footer {
-      margin-top: auto;
-      padding-top: 16px;
-      font-size: 11px;
-      color: #64748b;
-      text-align: center;
-    }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
-</head>
-<body>
-
-  <header>
-    <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project "Eyes" Calibration Engine</h1>
-  </header>
-
-  <div class="camera-box">
-    <video id="webcam" playsinline></video>
-    <div class="hud-top">
-      <div class="badge">Distance: <span id="distVal" class="badge-val">-- cm</span></div>
-      <div class="badge">Zone: <span id="zoneVal" class="badge-val" style="color: #fbbf24;">Init</span></div>
-    </div>
-    <div class="hud-bottom">
-      <div class="badge">Active Eye: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching...</span></div>
-      <div class="watermark">IP Owner: T. L. Watkins</div>
-    </div>
-  </div>
-
-  <div class="optotype-card">
-    <div class="card-header">
-      <span id="acuityLabel">Target: 20/40 Equivalent</span>
-      <span id="scaleReadout">Dynamic Scale: -- px</span>
-    </div>
-    <div id="optotypeChar" style="font-size: 48px;">E</div>
-    <div style="font-size: 12px; color: #475569; font-weight: 600;" id="promptText">
-      Hold device 35–45 cm from face. Wink or cover one eye to test monocular lock.
-    </div>
-  </div>
-
-  <div class="controls">
-    <button onclick="setLine(20, '20/20')" id="btn20">20/20 Line</button>
-    <button onclick="setLine(40, '20/40')" id="btn40" class="active">20/40 Line</button>
-    <button onclick="setLine(100, '20/100')" id="btn100">20/100 Line</button>
-    <button onclick="nextLetter()">New Letter</button>
-  </div>
-
-  <footer>
-    &copy; 2026 Terrance Lamont Watkins. Protected under USPTO Provisional App. No. 64/174,835.
-  </footer>
-
-  <script>
-    const videoElement = document.getElementById('webcam');
-    const distVal = document.getElementById('distVal');
-    const zoneVal = document.getElementById('zoneVal');
-    const eyeStateVal = document.getElementById('eyeStateVal');
-    const optotypeChar = document.getElementById('optotypeChar');
-    const scaleReadout = document.getElementById('scaleReadout');
-    const acuityLabel = document.getElementById('acuityLabel');
-
-    const AVERAGE_IPD_MM = 63.0;
-    const FOCAL_LENGTH_PIXELS = 580;
-    const LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
-    let currentDenominator = 40; // Default 20/40
-
-    function setLine(denom, label) {
-      currentDenominator = denom;
-      acuityLabel.innerText = `Target: ${label} Equivalent`;
-      document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
-      if (denom === 20) document.getElementById('btn20').classList.add('active');
-      if (denom === 40) document.getElementById('btn40').classList.add('active');
-      if (denom === 100) document.getElementById('btn100').classList.add('active');
-      nextLetter();
-    }
-
-    function nextLetter() {
-      const randomChar = LETTERS[Math.floor(Math.random() * LETTERS.length)];
-      optotypeChar.innerText = randomChar;
-    }
-
-    // Calculate vertical/horizontal Eye Aspect Ratio (EAR) to detect wink/cover
-    function getEAR(landmarks, topIdx, bottomIdx, innerIdx, outerIdx) {
-      const top = landmarks[topIdx];
-      const bottom = landmarks[bottomIdx];
-      const inner = landmarks[innerIdx];
-      const outer = landmarks[outerIdx];
-      const vDist = Math.hypot(top.x - bottom.x, top.y - bottom.y);
-      const hDist = Math.hypot(inner.x - outer.x, inner.y - outer.y);
-      return vDist / (hDist || 1);
-    }
-
-    function onResults(results) {
-      if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
-        const lm = results.multiFaceLandmarks[0];
-
-        // 1. Distance Calculation via Iris/Eye Centers
-        const leftPupil = lm[468] || lm[33];
-        const rightPupil = lm[473] || lm[263];
-
-        const dx = (leftPupil.x - rightPupil.x) * videoElement.videoWidth;
-        const dy = (leftPupil.y - rightPupil.y) * videoElement.videoHeight;
-        const pupilDistancePx = Math.hypot(dx, dy);
-
-        if (pupilDistancePx > 0) {
-          const distanceMm = (FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / pupilDistancePx;
-          const distanceCm = (distanceMm / 10).toFixed(1);
-          distVal.innerText = `${distanceCm} cm`;
-
-          if (distanceCm >= 35 && distanceCm <= 45) {
-            zoneVal.innerText = "Optimal";
-            zoneVal.style.color = "#4ade80";
-          } else if (distanceCm < 35) {
-            zoneVal.innerText = "Too Close";
-            zoneVal.style.color = "#f87171";
-          } else {
-            zoneVal.innerText = "Too Far";
-            zoneVal.style.color = "#fbbf24";
-          }
-
-          // 2. Dynamic Optotype Sizing based on real-time distance
-          // Standard 20/20 subtends 5 arcminutes (0.0833 deg)
-          const angleRad = (5 * (currentDenominator / 20) / 60) * (Math.PI / 180);
-          const heightMm = 2 * distanceMm * Math.tan(angleRad / 2);
-          // Approximate 3.78 CSS px per mm on standard displays, scaled for visibility
-          const dynamicPx = Math.max(12, Math.min(110, Math.round(heightMm * 6.5)));
-          optotypeChar.style.fontSize = `${dynamicPx}px`;
-          scaleReadout.innerText = `Dynamic Scale: ${dynamicPx}px`;
-        }
-
-        // 3. Monocular Wink / Eye-Cover Verification
-        const rightEyeEAR = getEAR(lm, 159, 145, 133, 33);
-        const leftEyeEAR = getEAR(lm, 386, 374, 362, 263);
-        const CLOSED_THRESHOLD = 0.19;
-
-        if (rightEyeEAR < CLOSED_THRESHOLD && leftEyeEAR >= CLOSED_THRESHOLD) {
-          eyeStateVal.innerText = "Left Eye Only (OD Closed)";
-          eyeStateVal.style.color = "#38bdf8";
-        } else if (leftEyeEAR < CLOSED_THRESHOLD && rightEyeEAR >= CLOSED_THRESHOLD) {
-          eyeStateVal.innerText = "Right Eye Only (OS Closed)";
-          eyeStateVal.style.color = "#38bdf8";
-        } else if (leftEyeEAR < CLOSED_THRESHOLD && rightEyeEAR < CLOSED_THRESHOLD) {
-          eyeStateVal.innerText = "Both Eyes Closed";
-          eyeStateVal.style.color = "#f87171";
-        } else {
-          eyeStateVal.innerText = "Binocular (Both Open)";
-          eyeStateVal.style.color = "#4ade80";
-        }
-      } else {
-        distVal.innerText = "-- cm";
-        zoneVal.innerText = "No Face";
-        zoneVal.style.color = "#94a3b8";
-        eyeStateVal.innerText = "Searching...";
-        eyeStateVal.style.color = "#94a3b8";
       }
     }
 
