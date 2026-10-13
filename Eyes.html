@@ -1,14 +1,17 @@
+Here is what changed in v3.31 after seeing your live screen share:
+ * Full Uncropped Camera Feed (object-fit: contain): In your video, object-fit: cover was zooming the camera in by almost 200% to fill the wide strip, which cropped out the top of your head and left only your beard and chin visible between the HUD badges. Setting the video to object-fit: contain shows 100% of the vertical camera sensor from forehead to chin—zero cropping, zero zooming.
+ * Live Eye-Targeting Crosshair Overlay (#camOverlay): Added a subtle green/cyan optical targeting reticle right over your eyes in the camera preview so you can visually verify that the engine is locked directly onto your pupils.
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.30 - Dynamic Eye-Horizon Auto-Pan Camera & Thumb-Zone Engine
+  Project "Eyes" v3.31 - Uncropped Full-Sensor Camera & Pupil Reticle Engine
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.30 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.31 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -65,30 +68,42 @@
       position: relative;
       width: 100%;
       max-width: 600px;
-      aspect-ratio: 2.2 / 1;
+      height: 132px;
       border-radius: 10px;
       overflow: hidden;
       border: 2px solid #1e293b;
-      background: #000;
+      background: #050811;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
     }
-    /* FIX: Default to top 22% of sensor (where eyes are) + auto-pan via JS */
+    /* UNCROPPED FULL SENSOR VIEW: Shows entire head from forehead to chin */
     video {
-      width: 100%;
       height: 100%;
-      object-fit: cover;
-      object-position: 50% 22%;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
       transform: scaleX(-1);
-      transition: object-position 0.12s ease-out;
+    }
+    #camOverlay {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) scaleX(-1);
+      height: 100%;
+      width: auto;
+      pointer-events: none;
     }
     .hud-top, .hud-bottom {
       position: absolute; left: 6px; right: 6px;
       display: flex; justify-content: space-between; pointer-events: none;
+      z-index: 2;
     }
     .hud-top { top: 4px; }
     .hud-bottom { bottom: 4px; }
     .badge {
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.88);
       padding: 2px 6px;
       border-radius: 5px;
       border: 1px solid #334155;
@@ -313,7 +328,7 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.30</h1>
+    <h1>Project Eyes v3.31</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -328,6 +343,7 @@
 
   <div class="camera-box" id="cameraBox">
     <video id="webcam" playsinline></video>
+    <canvas id="camOverlay"></canvas>
     <div class="hud-top">
       <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
       <div class="badge">Zone: <span id="zoneVal" class="badge-val" style="color: #fbbf24;">Init</span></div>
@@ -339,7 +355,7 @@
   </div>
 
   <div class="roadmap-panel" id="roadmapPanel">
-    <div class="roadmap-title">Seated Armrest Protocol • Auto-Eye-Lock Camera</div>
+    <div class="roadmap-title">Seated Armrest Protocol • Full-Frame Pupil Lock</div>
     <div class="roadmap-steps">
       <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Sit in Chair • Elbows on Arms • Hold 35–45 cm</div>
       <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye (Cover Right • Controls Shift LEFT)</div>
@@ -408,6 +424,8 @@
 
   <script>
     const videoElement = document.getElementById('webcam');
+    const camOverlay = document.getElementById('camOverlay');
+    const overlayCtx = camOverlay.getContext('2d');
     const cameraBox = document.getElementById('cameraBox');
     const distVal = document.getElementById('distVal');
     const zoneVal = document.getElementById('zoneVal');
@@ -449,7 +467,6 @@
     let tapTimestamps = [];
 
     let smoothedDistanceCm = null;
-    let smoothedEyeYPercent = 22; // Tracks vertical eye position to keep eyes centered in camera strip
     let smoothedLeftEAR = 0.30;
     let smoothedRightEAR = 0.30;
     let pendingEyeState = "Binocular";
@@ -796,6 +813,12 @@
     }
 
     function onResults(results) {
+      if (videoElement.videoWidth && camOverlay.width !== videoElement.videoWidth) {
+        camOverlay.width = videoElement.videoWidth;
+        camOverlay.height = videoElement.videoHeight;
+      }
+      overlayCtx.clearRect(0, 0, camOverlay.width, camOverlay.height);
+
       if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
         const lm = results.multiFaceLandmarks[0];
         const rEAR = getEAR(lm, 159, 145, 133, 33);
@@ -814,11 +837,17 @@
 
         const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
 
-        // AUTO-EYE-HORIZON PAN: Keep the camera crop locked vertically on the user's eyes instead of chin!
-        const rawEyeYPercent = ((lp.y + rp.y) / 2) * 100;
-        const clampedEyeY = Math.max(5, Math.min(85, rawEyeYPercent - 6));
-        smoothedEyeYPercent = (0.2 * clampedEyeY) + (0.8 * smoothedEyeYPercent);
-        videoElement.style.objectPosition = `50% ${smoothedEyeYPercent.toFixed(1)}%`;
+        // Draw Live Optical Reticle directly over the user's pupils
+        const lx = lp.x * camOverlay.width, ly = lp.y * camOverlay.height;
+        const rx = rp.x * camOverlay.width, ry = rp.y * camOverlay.height;
+        overlayCtx.strokeStyle = "#4ade80";
+        overlayCtx.lineWidth = 2;
+        overlayCtx.beginPath();
+        overlayCtx.arc(lx, ly, 12, 0, Math.PI * 2);
+        overlayCtx.arc(rx, ry, 12, 0, Math.PI * 2);
+        overlayCtx.moveTo(lx, ly);
+        overlayCtx.lineTo(rx, ry);
+        overlayCtx.stroke();
 
         const pPx = Math.hypot((lp.x - rp.x) * videoElement.videoWidth, (lp.y - rp.y) * videoElement.videoHeight);
 
@@ -859,3 +888,4 @@
   </script>
 </body>
 </html>
+
