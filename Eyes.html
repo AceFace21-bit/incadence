@@ -1,20 +1,16 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.7 - Multiple-Choice Optotype Verification Engine
+  Project "Eyes" v3.10 - Neutral Clinical Stopping Engine
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.7 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.10 | Patent Pending 64/174,835</title>
   <style>
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background-color: #0b0f19;
       color: #f8fafc;
@@ -25,12 +21,7 @@
       min-height: 100vh;
       padding: 12px;
     }
-    header { 
-      text-align: center; 
-      margin-bottom: 6px; 
-      width: 100%; 
-      max-width: 600px; 
-    }
+    header { text-align: center; margin-bottom: 6px; width: 100%; max-width: 600px; }
     .patent-pill {
       display: inline-block;
       background: rgba(56, 189, 248, 0.14);
@@ -44,10 +35,7 @@
       margin-bottom: 3px;
       text-transform: uppercase;
     }
-    h1 { 
-      font-size: 16px; 
-      font-weight: 800; 
-    }
+    h1 { font-size: 16px; font-weight: 800; }
     .directive-banner {
       width: 100%;
       max-width: 600px;
@@ -76,19 +64,10 @@
       margin-bottom: 8px;
       transition: border-color 0.25s ease;
     }
-    video { 
-      width: 100%; 
-      height: 100%; 
-      object-fit: cover; 
-      transform: scaleX(-1); 
-    }
+    video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     .hud-top, .hud-bottom {
-      position: absolute; 
-      left: 8px; 
-      right: 8px;
-      display: flex; 
-      justify-content: space-between; 
-      pointer-events: none;
+      position: absolute; left: 8px; right: 8px;
+      display: flex; justify-content: space-between; pointer-events: none;
     }
     .hud-top { top: 6px; }
     .hud-bottom { bottom: 6px; }
@@ -101,148 +80,43 @@
       font-weight: 700;
       color: #cbd5e1;
     }
-    .badge-val { 
-      color: #38bdf8; 
-      font-size: 12px; 
-      font-weight: 900; 
-      margin-left: 3px; 
-    }
+    .badge-val { color: #38bdf8; font-size: 12px; font-weight: 900; margin-left: 3px; }
     .stage-bar {
-      width: 100%; 
-      max-width: 600px; 
-      display: flex; 
-      gap: 4px; 
-      margin-bottom: 8px;
+      width: 100%; max-width: 600px; display: flex; gap: 4px; margin-bottom: 8px;
     }
     .stage-step {
-      flex: 1; 
-      text-align: center; 
-      padding: 5px 2px; 
-      font-size: 9px; 
-      font-weight: 800;
-      background: #1e293b; 
-      color: #64748b; 
-      border-radius: 6px; 
-      border: 1px solid #334155;
+      flex: 1; text-align: center; padding: 5px 2px; font-size: 9px; font-weight: 800;
+      background: #1e293b; color: #64748b; border-radius: 6px; border: 1px solid #334155;
     }
-    .stage-step.active { 
-      background: rgba(56, 189, 248, 0.2); 
-      color: #38bdf8; 
-      border-color: #38bdf8; 
-    }
-    .stage-step.done { 
-      background: rgba(74, 222, 128, 0.2); 
-      color: #4ade80; 
-      border-color: #4ade80; 
-    }
+    .stage-step.active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: #38bdf8; }
+    .stage-step.done { background: rgba(74, 222, 128, 0.2); color: #4ade80; border-color: #4ade80; }
     .optotype-card {
-      width: 100%; 
-      max-width: 600px; 
-      background: #ffffff; 
-      color: #0f172a;
-      border-radius: 12px; 
-      padding: 12px; 
-      text-align: center; 
-      margin-bottom: 8px;
-      min-height: 140px; 
-      display: flex; 
-      flex-direction: column; 
-      justify-content: space-between; 
-      align-items: center;
+      width: 100%; max-width: 600px; background: #ffffff; color: #0f172a;
+      border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 8px;
+      min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;
     }
     .card-header {
-      width: 100%; 
-      display: flex; 
-      justify-content: space-between; 
-      font-size: 10px; 
-      font-weight: 800; 
-      color: #64748b;
-      border-bottom: 1px solid #e2e8f0; 
-      padding-bottom: 4px; 
-      text-transform: uppercase;
+      width: 100%; display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; color: #64748b;
+      border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; text-transform: uppercase;
     }
-    #optotypeChar { 
-      font-family: monospace; 
-      font-weight: 900; 
-      line-height: 1; 
-      margin: 8px 0; 
-    }
-    #readingBox { 
-      display: none; 
-      margin: 8px 0; 
-      font-weight: 700; 
-      font-size: 14px; 
-      max-width: 90%; 
-    }
-    #reportBox { 
-      display: none; 
-      width: 100%; 
-      text-align: left; 
-    }
-    .report-grid { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 6px; 
-      margin-top: 4px; 
-    }
-    .report-item { 
-      background: #f1f5f9; 
-      padding: 6px; 
-      border-radius: 6px; 
-      border-left: 3px solid #0284c7; 
-    }
-    .report-label { 
-      font-size: 8px; 
-      font-weight: 700; 
-      color: #64748b; 
-      text-transform: uppercase; 
-    }
-    .report-val { 
-      font-size: 13px; 
-      font-weight: 900; 
-      color: #0f172a; 
-    }
-    .controls { 
-      width: 100%; 
-      max-width: 600px; 
-      display: flex; 
-      gap: 6px; 
-      margin-bottom: 6px; 
-    }
+    #optotypeChar { font-family: monospace; font-weight: 900; line-height: 1; margin: 8px 0; }
+    #readingBox { display: none; margin: 8px 0; font-weight: 700; font-size: 14px; max-width: 90%; }
+    #reportBox { display: none; width: 100%; text-align: left; }
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+    .report-item { background: #f1f5f9; padding: 6px; border-radius: 6px; border-left: 3px solid #0284c7; }
+    .report-label { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .report-val { font-size: 13px; font-weight: 900; color: #0f172a; }
+    .controls { width: 100%; max-width: 600px; display: flex; gap: 6px; margin-bottom: 6px; }
     button {
-      flex: 1; 
-      background: #1e293b; 
-      color: #f8fafc; 
-      border: 1px solid #334155;
-      padding: 12px; 
-      border-radius: 8px; 
-      font-size: 14px; 
-      font-weight: 800; 
-      cursor: pointer;
+      flex: 1; background: #1e293b; color: #f8fafc; border: 1px solid #334155;
+      padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 800; cursor: pointer;
     }
-    button.primary {
-      background: #0284c7;
-      border-color: #38bdf8;
-      color: #fff;
-    }
+    button.primary { background: #0284c7; border-color: #38bdf8; color: #fff; }
     button.opt-choice {
-      background: #e2e8f0;
-      color: #0f172a;
-      border: 1px solid #cbd5e1;
-      font-size: 16px;
-      font-weight: 900;
+      background: #e2e8f0; color: #0f172a; border: 1px solid #cbd5e1; font-size: 16px; font-weight: 900;
     }
-    button.opt-choice:active {
-      background: #0284c7;
-      color: #fff;
-    }
-    footer { 
-      margin-top: auto; 
-      padding-top: 4px; 
-      font-size: 8px; 
-      color: #64748b; 
-      text-align: center; 
-    }
+    button.opt-choice:active { background: #0284c7; color: #fff; }
+    footer { margin-top: auto; padding-top: 4px; font-size: 8px; color: #64748b; text-align: center; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
@@ -251,7 +125,7 @@
 
   <header>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project Eyes v3.7</h1>
+    <h1>Project Eyes v3.10</h1>
   </header>
 
   <div class="directive-banner" id="directiveBanner">Hold at 35–45 cm</div>
@@ -291,15 +165,14 @@
 
     <div id="reportBox">
       <div class="report-grid">
-        <div class="report-item"><div class="report-label">Right Eye</div><div class="report-val" id="repOD">20/20</div></div>
-        <div class="report-item"><div class="report-label">Left Eye</div><div class="report-val" id="repOS">20/20</div></div>
+        <div class="report-item"><div class="report-label">Right Eye</div><div class="report-val" id="repOD">20/100</div></div>
+        <div class="report-item"><div class="report-label">Left Eye</div><div class="report-val" id="repOS">20/100</div></div>
         <div class="report-item"><div class="report-label">Speed</div><div class="report-val" id="repWPM">-- WPM</div></div>
         <div class="report-item"><div class="report-label">Fatigue</div><div class="report-val" id="repFatigue">Low</div></div>
       </div>
     </div>
   </div>
 
-  <!-- MULTIPLE CHOICE OPTIONS INSTEAD OF VISIBLE/BLURRY -->
   <div class="controls" id="examControls">
     <button class="primary" id="calibBtn" onclick="lockCalibration()">Lock Calibration & Start</button>
   </div>
@@ -334,8 +207,10 @@
     let stepIndex = 0;
     let currentDenominator = ACUITY_STEPS[0];
     let currentCorrectChar = 'E';
-    let odScore = "20/100";
-    let osScore = "20/100";
+    
+    let odScore = "< 20/100";
+    let osScore = "< 20/100";
+    let consecutiveMisses = 0;
 
     const PASSAGE_WORDS = ["Clear", "vision", "opens", "every", "door", "for", "young", "minds."];
     let wordIndex = 0;
@@ -371,27 +246,26 @@
 
     function startStage1() {
       examStage = 1;
+      stepIndex = 0;
+      currentDenominator = ACUITY_STEPS[0];
+      consecutiveMisses = 0;
       updateStageUI();
       loadNewAcuityRound();
     }
 
     function loadNewAcuityRound() {
-      // Pick correct letter
       currentCorrectChar = MASTER_LETTERS[Math.floor(Math.random() * MASTER_LETTERS.length)];
       optotypeChar.style.fontSize = "48px";
       optotypeChar.innerText = currentCorrectChar;
       acuityLabel.innerText = `${examStage === 1 ? 'Right' : 'Left'} Eye (20/${currentDenominator})`;
 
-      // Generate 3 multiple choice options (1 correct, 2 random distractors)
       let choices = [currentCorrectChar];
       while (choices.length < 3) {
         let randChar = MASTER_LETTERS[Math.floor(Math.random() * MASTER_LETTERS.length)];
         if (!choices.includes(randChar)) choices.push(randChar);
       }
-      // Shuffle choices
       choices.sort(() => Math.random() - 0.5);
 
-      // Render 3 letter buttons underneath
       examControls.innerHTML = `
         <button class="opt-choice" onclick="submitAnswer('${choices[0]}')">${choices[0]}</button>
         <button class="opt-choice" onclick="submitAnswer('${choices[1]}')">${choices[1]}</button>
@@ -404,29 +278,45 @@
 
       if (examStage === 1) {
         if (isCorrect) {
+          consecutiveMisses = 0;
           odScore = `20/${currentDenominator}`;
           if (stepIndex < ACUITY_STEPS.length - 1) {
             stepIndex++;
             currentDenominator = ACUITY_STEPS[stepIndex];
             loadNewAcuityRound();
           } else {
-            startStage2();
+            directiveBanner.innerText = "Right Eye Test Complete";
+            setTimeout(startStage2, 1200);
           }
         } else {
-          startStage2();
+          consecutiveMisses++;
+          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) {
+            directiveBanner.innerText = "Right Eye Test Complete";
+            setTimeout(startStage2, 1200);
+          } else {
+            loadNewAcuityRound();
+          }
         }
       } else if (examStage === 2) {
         if (isCorrect) {
+          consecutiveMisses = 0;
           osScore = `20/${currentDenominator}`;
           if (stepIndex < ACUITY_STEPS.length - 1) {
             stepIndex++;
             currentDenominator = ACUITY_STEPS[stepIndex];
             loadNewAcuityRound();
           } else {
-            startStage3();
+            directiveBanner.innerText = "Left Eye Test Complete";
+            setTimeout(startStage3, 1200);
           }
         } else {
-          startStage3();
+          consecutiveMisses++;
+          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) {
+            directiveBanner.innerText = "Left Eye Test Complete";
+            setTimeout(startStage3, 1200);
+          } else {
+            loadNewAcuityRound();
+          }
         }
       }
     }
@@ -435,6 +325,7 @@
       examStage = 2;
       stepIndex = 0;
       currentDenominator = ACUITY_STEPS[0];
+      consecutiveMisses = 0;
       updateStageUI();
       loadNewAcuityRound();
     }
@@ -490,8 +381,9 @@
       examStage = 0;
       stepIndex = 0;
       currentDenominator = ACUITY_STEPS[0];
-      odScore = "20/100";
-      osScore = "20/100";
+      odScore = "< 20/100";
+      osScore = "< 20/100";
+      consecutiveMisses = 0;
       lockedDistanceCm = null;
       stableFramesInGreen = 0;
       updateStageUI();
