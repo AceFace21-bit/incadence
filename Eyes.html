@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.10 - Neutral Clinical Stopping Engine
+  Project "Eyes" v3.13 - Live Checklist & Explicit Calibration Feedback
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.10 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.13 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -52,16 +52,22 @@
       letter-spacing: 0.5px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     }
+    .workspace {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
     .camera-box {
       position: relative;
       width: 100%;
-      max-width: 600px;
       aspect-ratio: 16 / 9;
       border-radius: 12px;
       overflow: hidden;
       border: 2px solid #1e293b;
       background: #000;
-      margin-bottom: 8px;
       transition: border-color 0.25s ease;
     }
     video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
@@ -81,6 +87,61 @@
       color: #cbd5e1;
     }
     .badge-val { color: #38bdf8; font-size: 12px; font-weight: 900; margin-left: 3px; }
+    
+    .checklist-panel {
+      width: 100%;
+      background: #111827;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .checklist-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #1f2937;
+      padding-bottom: 4px;
+    }
+    .checklist-items {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      transition: color 0.2s ease;
+    }
+    .check-box {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 2px solid #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 900;
+      color: transparent;
+      background: #1e293b;
+      transition: all 0.2s ease;
+    }
+    .check-item.complete {
+      color: #4ade80;
+    }
+    .check-item.complete .check-box {
+      background: #16a34a;
+      border-color: #4ade80;
+      color: #fff;
+    }
+
     .stage-bar {
       width: 100%; max-width: 600px; display: flex; gap: 4px; margin-bottom: 8px;
     }
@@ -90,6 +151,7 @@
     }
     .stage-step.active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: #38bdf8; }
     .stage-step.done { background: rgba(74, 222, 128, 0.2); color: #4ade80; border-color: #4ade80; }
+    
     .optotype-card {
       width: 100%; max-width: 600px; background: #ffffff; color: #0f172a;
       border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 8px;
@@ -106,6 +168,7 @@
     .report-item { background: #f1f5f9; padding: 6px; border-radius: 6px; border-left: 3px solid #0284c7; }
     .report-label { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; }
     .report-val { font-size: 13px; font-weight: 900; color: #0f172a; }
+    
     .controls { width: 100%; max-width: 600px; display: flex; gap: 6px; margin-bottom: 6px; }
     button {
       flex: 1; background: #1e293b; color: #f8fafc; border: 1px solid #334155;
@@ -125,10 +188,10 @@
 
   <header>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project Eyes v3.10</h1>
+    <h1>Project Eyes v3.13</h1>
   </header>
 
-  <div class="directive-banner" id="directiveBanner">Hold at 35–45 cm</div>
+  <div class="directive-banner" id="directiveBanner">Tap Start Calibration Test</div>
 
   <div class="stage-bar">
     <div class="stage-step active" id="st0">0. Calibrate</div>
@@ -138,15 +201,32 @@
     <div class="stage-step" id="st4">4. Report</div>
   </div>
 
-  <div class="camera-box" id="cameraBox">
-    <video id="webcam" playsinline></video>
-    <div class="hud-top">
-      <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
-      <div class="badge">Zone: <span id="zoneVal" class="badge-val" style="color: #fbbf24;">Init</span></div>
+  <div class="workspace">
+    <div class="camera-box" id="cameraBox">
+      <video id="webcam" playsinline></video>
+      <div class="hud-top">
+        <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
+        <div class="badge">Zone: <span id="zoneVal" class="badge-val" style="color: #fbbf24;">Init</span></div>
+      </div>
+      <div class="hud-bottom">
+        <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
+        <div class="badge" style="font-size: 8px;">T.L.W.</div>
+      </div>
     </div>
-    <div class="hud-bottom">
-      <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
-      <div class="badge" style="font-size: 8px;">T.L.W.</div>
+
+    <div class="checklist-panel" id="checklistPanel">
+      <div class="checklist-title">Exam Checklist</div>
+      <div class="checklist-items">
+        <div class="check-item" id="chkFace">
+          <div class="check-box" id="boxFace">✓</div> Face Detected in Frame
+        </div>
+        <div class="check-item" id="chkZone">
+          <div class="check-box" id="boxZone">✓</div> Hold at 35–45 cm Green Zone
+        </div>
+        <div class="check-item" id="chkCalib">
+          <div class="check-box" id="boxCalib">✓</div> Baseline Distance Locked
+        </div>
+      </div>
     </div>
   </div>
 
@@ -156,7 +236,7 @@
       <span id="scaleReadout">-- px</span>
     </div>
 
-    <div id="optotypeChar" style="font-size: 24px; font-weight: 800; color: #0284c7;">HOLD AT 35–45 CM</div>
+    <div id="optotypeChar" style="font-size: 22px; font-weight: 800; color: #0284c7;">READY FOR CALIBRATION</div>
 
     <div id="readingBox">
       <div style="font-size: 9px; color: #0284c7; margin-bottom: 3px; font-weight: 800;">TAP WORDS IN ORDER:</div>
@@ -165,8 +245,8 @@
 
     <div id="reportBox">
       <div class="report-grid">
-        <div class="report-item"><div class="report-label">Right Eye</div><div class="report-val" id="repOD">20/100</div></div>
-        <div class="report-item"><div class="report-label">Left Eye</div><div class="report-val" id="repOS">20/100</div></div>
+        <div class="report-item"><div class="report-label">Right Eye</div><div class="report-val" id="repOD">&lt; 20/100</div></div>
+        <div class="report-item"><div class="report-label">Left Eye</div><div class="report-val" id="repOS">&lt; 20/100</div></div>
         <div class="report-item"><div class="report-label">Speed</div><div class="report-val" id="repWPM">-- WPM</div></div>
         <div class="report-item"><div class="report-label">Fatigue</div><div class="report-val" id="repFatigue">Low</div></div>
       </div>
@@ -174,7 +254,7 @@
   </div>
 
   <div class="controls" id="examControls">
-    <button class="primary" id="calibBtn" onclick="lockCalibration()">Lock Calibration & Start</button>
+    <button class="primary" id="calibBtn" onclick="lockCalibration()">Start Calibration Test</button>
   </div>
 
   <div class="controls">
@@ -198,6 +278,11 @@
     const examControls = document.getElementById('examControls');
     const directiveBanner = document.getElementById('directiveBanner');
 
+    const chkFace = document.getElementById('chkFace');
+    const chkZone = document.getElementById('chkZone');
+    const chkCalib = document.getElementById('chkCalib');
+    const checklistPanel = document.getElementById('checklistPanel');
+
     const AVERAGE_IPD_MM = 63.0;
     const FOCAL_LENGTH_PIXELS = 580;
     const MASTER_LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
@@ -211,6 +296,7 @@
     let odScore = "< 20/100";
     let osScore = "< 20/100";
     let consecutiveMisses = 0;
+    let calibrationLocked = false;
 
     const PASSAGE_WORDS = ["Clear", "vision", "opens", "every", "door", "for", "young", "minds."];
     let wordIndex = 0;
@@ -228,7 +314,7 @@
     let eyeStateFrameCount = 0;
 
     function updateDirectives() {
-      if (examStage === 0) directiveBanner.innerText = "Hold at 35–45 cm";
+      if (examStage === 0) directiveBanner.innerText = "Hold at 35–45 cm & Start";
       else if (examStage === 1) directiveBanner.innerText = "Cover Left Eye";
       else if (examStage === 2) directiveBanner.innerText = "Cover Right Eye";
       else if (examStage === 3) directiveBanner.innerText = "Tap Words in Order";
@@ -241,7 +327,14 @@
       } else {
         lockedDistanceCm = 40.0;
       }
-      startStage1();
+      calibrationLocked = true;
+      chkCalib.classList.add('complete');
+      
+      // Explicit feedback requested by user
+      directiveBanner.innerText = "Calibration test is complete, now starting your exam.";
+      optotypeChar.innerText = "CALIBRATION LOCKED ✓";
+
+      setTimeout(startStage1, 1500);
     }
 
     function startStage1() {
@@ -249,6 +342,7 @@
       stepIndex = 0;
       currentDenominator = ACUITY_STEPS[0];
       consecutiveMisses = 0;
+      checklistPanel.style.display = "none";
       updateStageUI();
       loadNewAcuityRound();
     }
@@ -386,14 +480,19 @@
       consecutiveMisses = 0;
       lockedDistanceCm = null;
       stableFramesInGreen = 0;
+      calibrationLocked = false;
+      chkFace.classList.remove('complete');
+      chkZone.classList.remove('complete');
+      chkCalib.classList.remove('complete');
+      checklistPanel.style.display = "block";
       updateStageUI();
       reportBox.style.display = "none";
       readingBox.style.display = "none";
       optotypeChar.style.display = "block";
-      optotypeChar.style.fontSize = "24px";
-      optotypeChar.innerText = "HOLD AT 35–45 CM";
+      optotypeChar.style.fontSize = "22px";
+      optotypeChar.innerText = "READY FOR CALIBRATION";
       acuityLabel.innerText = "Step 0: Optical Baseline Calibration";
-      examControls.innerHTML = `<button class="primary" id="calibBtn" onclick="lockCalibration()">Lock Calibration & Start</button>`;
+      examControls.innerHTML = `<button class="primary" id="calibBtn" onclick="lockCalibration()">Start Calibration Test</button>`;
       examControls.style.display = "flex";
     }
 
@@ -404,6 +503,9 @@
     function onResults(results) {
       if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
         const lm = results.multiFaceLandmarks[0];
+        
+        chkFace.classList.add('complete');
+
         const rEAR = getEAR(lm, 159, 145, 133, 33);
         const lEAR = getEAR(lm, 386, 374, 362, 263);
 
@@ -435,11 +537,16 @@
         if (smoothedDistanceCm !== null) {
           distVal.innerText = `${smoothedDistanceCm.toFixed(1)} cm`;
           if (smoothedDistanceCm >= 35 && smoothedDistanceCm <= 45) {
-            zoneVal.innerText = "Optimal"; zoneVal.style.color = "#4ade80"; cameraBox.style.borderColor = "#4ade80";
+            zoneVal.innerText = "Optimal"; 
+            zoneVal.style.color = "#4ade80"; 
+            cameraBox.style.borderColor = "#4ade80";
+            chkZone.classList.add('complete');
           } else if (smoothedDistanceCm < 35) {
             zoneVal.innerText = "Too Close"; zoneVal.style.color = "#f87171"; cameraBox.style.borderColor = "#f87171";
+            chkZone.classList.remove('complete');
           } else {
             zoneVal.innerText = "Too Far"; zoneVal.style.color = "#fbbf24"; cameraBox.style.borderColor = "#fbbf24";
+            chkZone.classList.remove('complete');
           }
           if (examStage > 0) {
             const px = Math.round((Math.max(12, Math.min(110, (smoothedDistanceCm * 10) * 2 * Math.tan((5 * (currentDenominator / 20) / 60) * (Math.PI / 180) / 2) * 6.5))) / 2) * 2;
@@ -448,6 +555,9 @@
           }
         }
         eyeStateVal.innerText = confirmedEyeState;
+      } else {
+        chkFace.classList.remove('complete');
+        chkZone.classList.remove('complete');
       }
     }
 
