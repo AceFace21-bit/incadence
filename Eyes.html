@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.4 - Complete Full-Page Clinical Acuity Engine
+  Project "Eyes" v3.5 - Step 0 Calibration & Dynamic Acuity Engine
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.4 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.5 | Patent Pending 64/174,835</title>
   <style>
     * { 
       box-sizing: border-box; 
@@ -48,7 +48,6 @@
       font-size: 16px; 
       font-weight: 800; 
     }
-    /* Directive Banner: Blends in and stands out */
     .directive-banner {
       width: 100%;
       max-width: 600px;
@@ -231,6 +230,11 @@
       border-color: #f87171; 
       color: #fff; 
     }
+    button.primary {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #fff;
+    }
     footer { 
       margin-top: auto; 
       padding-top: 4px; 
@@ -246,13 +250,14 @@
 
   <header>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project Eyes v3.4</h1>
+    <h1>Project Eyes v3.5</h1>
   </header>
 
-  <div class="directive-banner" id="directiveBanner">Cover Left Eye</div>
+  <div class="directive-banner" id="directiveBanner">Calibrate Distance</div>
 
   <div class="stage-bar">
-    <div class="stage-step active" id="st1">1. Right Eye</div>
+    <div class="stage-step active" id="st0">0. Calibrate</div>
+    <div class="stage-step" id="st1">1. Right Eye</div>
     <div class="stage-step" id="st2">2. Left Eye</div>
     <div class="stage-step" id="st3">3. Reading</div>
     <div class="stage-step" id="st4">4. Report</div>
@@ -272,11 +277,11 @@
 
   <div class="optotype-card">
     <div class="card-header">
-      <span id="acuityLabel">Right Eye (20/100)</span>
+      <span id="acuityLabel">Step 0: Optical Baseline Calibration</span>
       <span id="scaleReadout">-- px</span>
     </div>
 
-    <div id="optotypeChar" style="font-size: 48px;">E</div>
+    <div id="optotypeChar" style="font-size: 28px; font-weight: 800; color: #0284c7;">HOLD AT 40 CM</div>
 
     <div id="readingBox">
       <div style="font-size: 9px; color: #0284c7; margin-bottom: 3px; font-weight: 800;">TAP WORDS IN ORDER:</div>
@@ -294,8 +299,7 @@
   </div>
 
   <div class="controls" id="examControls">
-    <button class="success" onclick="recordResponse(true)">Visible ✓</button>
-    <button class="warn" onclick="recordResponse(false)">Blurry ✗</button>
+    <button class="primary" id="calibBtn" onclick="lockCalibration()">Lock Calibration & Start</button>
   </div>
 
   <div class="controls">
@@ -318,13 +322,14 @@
     const acuityLabel = document.getElementById('acuityLabel');
     const examControls = document.getElementById('examControls');
     const directiveBanner = document.getElementById('directiveBanner');
+    const calibBtn = document.getElementById('calibBtn');
 
     const AVERAGE_IPD_MM = 63.0;
     const FOCAL_LENGTH_PIXELS = 580;
     const LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
     const ACUITY_STEPS = [100, 70, 40, 30, 20];
 
-    let examStage = 1;
+    let examStage = 0; // Stage 0 is Calibration
     let stepIndex = 0;
     let currentDenominator = ACUITY_STEPS[0];
     let odScore = "20/100";
@@ -346,10 +351,32 @@
     let eyeStateFrameCount = 0;
 
     function updateDirectives() {
-      if (examStage === 1) directiveBanner.innerText = "Cover Left Eye";
+      if (examStage === 0) directiveBanner.innerText = "Calibrate Distance";
+      else if (examStage === 1) directiveBanner.innerText = "Cover Left Eye";
       else if (examStage === 2) directiveBanner.innerText = "Cover Right Eye";
       else if (examStage === 3) directiveBanner.innerText = "Tap Words in Order";
       else directiveBanner.innerText = "Exam Complete";
+    }
+
+    function lockCalibration() {
+      if (smoothedDistanceCm !== null && smoothedDistanceCm >= 33 && smoothedDistanceCm <= 47) {
+        lockedDistanceCm = smoothedDistanceCm;
+      } else {
+        lockedDistanceCm = 40.0;
+      }
+      startStage1();
+    }
+
+    function startStage1() {
+      examStage = 1;
+      updateStageUI();
+      optotypeChar.style.fontSize = "48px";
+      optotypeChar.innerText = LETTERS[0];
+      acuityLabel.innerText = `Right Eye (20/${currentDenominator})`;
+      examControls.innerHTML = `
+        <button class="success" onclick="recordResponse(true)">Visible ✓</button>
+        <button class="warn" onclick="recordResponse(false)">Blurry ✗</button>
+      `;
     }
 
     function nextLetter() {
@@ -360,11 +387,13 @@
     }
 
     function updateStageUI() {
-      ['st1', 'st2', 'st3', 'st4'].forEach((id, idx) => {
+      ['st0', 'st1', 'st2', 'st3', 'st4'].forEach((id, idx) => {
         const el = document.getElementById(id);
-        el.className = 'stage-step';
-        if (idx + 1 < examStage) el.classList.add('done');
-        if (idx + 1 === examStage) el.classList.add('active');
+        if (el) {
+          el.className = 'stage-step';
+          if (idx < examStage) el.classList.add('done');
+          if (idx === examStage) el.classList.add('active');
+        }
       });
       updateDirectives();
     }
@@ -433,11 +462,15 @@
     }
 
     function resetExam() {
-      examStage = 1; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
+      examStage = 0; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
       odScore = "20/100"; osScore = "20/100"; lockedDistanceCm = null; stableFramesInGreen = 0;
       updateStageUI(); reportBox.style.display = "none"; readingBox.style.display = "none";
-      optotypeChar.style.display = "block"; examControls.style.display = "flex";
-      acuityLabel.innerText = `Right Eye (20/${currentDenominator})`; nextLetter();
+      optotypeChar.style.display = "block"; 
+      optotypeChar.style.fontSize = "28px";
+      optotypeChar.innerText = "HOLD AT 40 CM";
+      acuityLabel.innerText = "Step 0: Optical Baseline Calibration";
+      examControls.innerHTML = `<button class="primary" id="calibBtn" onclick="lockCalibration()">Lock Calibration & Start</button>`;
+      examControls.style.display = "flex";
     }
 
     function getEAR(l, top, bot, inr, out) {
@@ -466,13 +499,10 @@
 
         if (pPx > 0) {
           const rCm = ((FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / pPx) / 10;
-          const blocked = lockedDistanceCm !== null || confirmedEyeState !== "Binocular" || Math.abs(rCm - (smoothedDistanceCm || rCm)) > 2.2;
+          const blocked = (examStage > 0 && lockedDistanceCm !== null) || confirmedEyeState !== "Binocular" || Math.abs(rCm - (smoothedDistanceCm || rCm)) > 2.2;
 
           if (!blocked) {
             smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.12 * rCm) + (0.88 * smoothedDistanceCm);
-            if (smoothedDistanceCm >= 35 && smoothedDistanceCm <= 45 && ++stableFramesInGreen >= 15 && lockedDistanceCm === null) {
-              lockedDistanceCm = smoothedDistanceCm;
-            }
           } else {
             smoothedDistanceCm = lockedDistanceCm !== null ? lockedDistanceCm : (smoothedDistanceCm || 38.5);
           }
@@ -487,9 +517,11 @@
           } else {
             zoneVal.innerText = "Too Far"; zoneVal.style.color = "#fbbf24"; cameraBox.style.borderColor = "#fbbf24";
           }
-          const px = Math.round((Math.max(12, Math.min(110, (smoothedDistanceCm * 10) * 2 * Math.tan((5 * (currentDenominator / 20) / 60) * (Math.PI / 180) / 2) * 6.5))) / 2) * 2;
-          optotypeChar.style.fontSize = `${px}px`;
-          scaleReadout.innerText = `${px}px`;
+          if (examStage > 0) {
+            const px = Math.round((Math.max(12, Math.min(110, (smoothedDistanceCm * 10) * 2 * Math.tan((5 * (currentDenominator / 20) / 60) * (Math.PI / 180) / 2) * 6.5))) / 2) * 2;
+            optotypeChar.style.fontSize = `${px}px`;
+            scaleReadout.innerText = `${px}px`;
+          }
         }
         eyeStateVal.innerText = confirmedEyeState;
       }
