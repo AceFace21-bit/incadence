@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.18 - Clean Camera-First Clinical UI
+  Project "Eyes" v3.21 - Explicit 7-Step Progress Tracking Engine
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.18 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.21 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -53,7 +53,6 @@
       overflow: hidden;
       border: 2px solid #1e293b;
       background: #000;
-      transition: border-color 0.25s ease;
     }
     video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     .hud-top, .hud-bottom {
@@ -73,7 +72,6 @@
     }
     .badge-val { color: #38bdf8; font-size: 12px; font-weight: 900; margin-left: 3px; }
     
-    /* CLEAN WORKFLOW ROADMAP TRACKER (Green = Done, Yellow = Active, Gray = Upcoming) */
     .roadmap-panel {
       width: 100%;
       background: #111827;
@@ -91,48 +89,18 @@
       border-bottom: 1px solid #1f2937;
       padding-bottom: 4px;
     }
-    .roadmap-steps {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+    .roadmap-steps { display: flex; flex-direction: column; gap: 5px; }
     .roadmap-step {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #64748b;
-      padding: 4px 8px;
-      border-radius: 6px;
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      transition: all 0.2s ease;
+      display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700;
+      color: #64748b; padding: 4px 8px; border-radius: 6px; background: #0f172a; border: 1px solid #1e293b;
     }
     .roadmap-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #334155;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 8px;
-      font-weight: 900;
-      color: #fff;
+      width: 14px; height: 14px; border-radius: 50%; background: #334155;
+      display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; color: #fff;
     }
-    .roadmap-step.done {
-      color: #4ade80;
-      border-color: rgba(74, 222, 128, 0.3);
-      background: rgba(74, 222, 128, 0.05);
-    }
+    .roadmap-step.done { color: #4ade80; border-color: rgba(74, 222, 128, 0.3); background: rgba(74, 222, 128, 0.05); }
     .roadmap-step.done .roadmap-dot { background: #16a34a; }
-    
-    .roadmap-step.active {
-      color: #facc15;
-      border-color: rgba(250, 204, 21, 0.4);
-      background: rgba(250, 204, 21, 0.08);
-    }
+    .roadmap-step.active { color: #facc15; border-color: rgba(250, 204, 21, 0.4); background: rgba(250, 204, 21, 0.08); }
     .roadmap-step.active .roadmap-dot { background: #eab308; }
 
     .stage-bar {
@@ -146,16 +114,41 @@
     .stage-step.done { background: rgba(74, 222, 128, 0.2); color: #4ade80; border-color: #4ade80; }
     
     .optotype-card {
-      width: 100%; max-width: 600px; background: #ffffff; color: #0f172a;
-      border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 8px;
-      min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: 180px;
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     .card-header {
       width: 100%; display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; color: #64748b;
       border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; text-transform: uppercase;
     }
-    #optotypeChar { font-family: monospace; font-weight: 900; line-height: 1; margin: 8px 0; }
-    #readingBox { display: none; margin: 8px 0; font-weight: 700; font-size: 14px; max-width: 90%; }
+    .optotype-viewport {
+      position: absolute;
+      top: 36px;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    #optotypeChar {
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+      user-select: none;
+    }
+    #readingBox { display: none; width: 100%; text-align: center; font-weight: 700; font-size: 14px; }
     #reportBox { display: none; width: 100%; text-align: left; }
     .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
     .report-item { background: #f1f5f9; padding: 6px; border-radius: 6px; border-left: 3px solid #0284c7; }
@@ -181,7 +174,7 @@
 
   <header>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
-    <h1>Project Eyes v3.18</h1>
+    <h1>Project Eyes v3.21</h1>
   </header>
 
   <div class="stage-bar">
@@ -194,7 +187,6 @@
   </div>
 
   <div class="workspace">
-    <!-- CAMERA FIRST: Clean view of face immediately -->
     <div class="camera-box" id="cameraBox">
       <video id="webcam" playsinline></video>
       <div class="hud-top">
@@ -207,28 +199,16 @@
       </div>
     </div>
 
-    <!-- WORKFLOW ROADMAP TRACKER (Green = Done, Yellow = Active, Gray = Upcoming) -->
+    <!-- EXPLICIT 7-STEP PROGRESS TRACKING -->
     <div class="roadmap-panel" id="roadmapPanel">
-      <div class="roadmap-title">Exam Workflow Roadmap</div>
+      <div class="roadmap-title">Exam Workflow Roadmap (7 Steps Per Eye Test)</div>
       <div class="roadmap-steps">
-        <div class="roadmap-step active" id="rs1">
-          <div class="roadmap-dot" id="dot1">1</div> Stage 1: Optical Calibration (Hold 35–45 cm)
-        </div>
-        <div class="roadmap-step" id="rs2">
-          <div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Exam (Cover Right Eye)
-        </div>
-        <div class="roadmap-step" id="rs3">
-          <div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Exam (Cover Left Eye)
-        </div>
-        <div class="roadmap-step" id="rs4">
-          <div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Exam (Both Eyes Open)
-        </div>
-        <div class="roadmap-step" id="rs5">
-          <div class="roadmap-dot" id="dot5">5</div> Stage 5: Behavioral Reading Intake
-        </div>
-        <div class="roadmap-step" id="rs6">
-          <div class="roadmap-dot" id="dot6">6</div> Stage 6: Final Diagnostic Scorecard
-        </div>
+        <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Optical Calibration (Hold 35–45 cm)</div>
+        <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Exam (Cover Right • Step 1 of 7)</div>
+        <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Exam (Cover Left • Step 1 of 7)</div>
+        <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Exam (Both Open • Step 1 of 7)</div>
+        <div class="roadmap-step" id="rs5"><div class="roadmap-dot" id="dot5">5</div> Stage 5: Reading Intake (8 Quick Words)</div>
+        <div class="roadmap-step" id="rs6"><div class="roadmap-dot" id="dot6">6</div> Stage 6: Final Diagnostic Scorecard</div>
       </div>
     </div>
   </div>
@@ -239,19 +219,19 @@
       <span id="scaleReadout">-- px</span>
     </div>
 
-    <div id="optotypeChar" style="font-size: 22px; font-weight: 800; color: #0284c7;">READY FOR CALIBRATION</div>
-
-    <div id="readingBox">
-      <div style="font-size: 9px; color: #0284c7; margin-bottom: 3px; font-weight: 800;">TAP WORDS IN ORDER:</div>
-      <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;"></div>
-    </div>
-
-    <div id="reportBox">
-      <div class="report-grid">
-        <div class="report-item"><div class="report-label">Left Eye (OS)</div><div class="report-val" id="repOS">&lt; 20/100</div></div>
-        <div class="report-item"><div class="report-label">Right Eye (OD)</div><div class="report-val" id="repOD">&lt; 20/100</div></div>
-        <div class="report-item"><div class="report-label">Binocular (OU)</div><div class="report-val" id="repOU">&lt; 20/100</div></div>
-        <div class="report-item"><div class="report-label">Reading Speed</div><div class="report-val" id="repWPM">-- WPM</div></div>
+    <div class="optotype-viewport">
+      <div id="optotypeChar">READY FOR CALIBRATION</div>
+      <div id="readingBox">
+        <div style="font-size: 9px; color: #0284c7; margin-bottom: 3px; font-weight: 800;">TAP WORDS IN ORDER:</div>
+        <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 6px;"></div>
+      </div>
+      <div id="reportBox">
+        <div class="report-grid">
+          <div class="report-item"><div class="report-label">Left Eye (OS)</div><div class="report-val" id="repOS">&lt; 20/100</div></div>
+          <div class="report-item"><div class="report-label">Right Eye (OD)</div><div class="report-val" id="repOD">&lt; 20/100</div></div>
+          <div class="report-item"><div class="report-label">Binocular (OU)</div><div class="report-val" id="repOU">&lt; 20/100</div></div>
+          <div class="report-item"><div class="report-label">Reading Speed</div><div class="report-val" id="repWPM">-- WPM</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -284,7 +264,7 @@
     const AVERAGE_IPD_MM = 63.0;
     const FOCAL_LENGTH_PIXELS = 580;
     const MASTER_LETTERS = ['E', 'F', 'P', 'T', 'O', 'Z', 'L', 'D', 'C'];
-    const ACUITY_STEPS = [100, 70, 40, 30, 20];
+    const ACUITY_STEPS = [100, 70, 50, 40, 30, 25, 20]; // Exactly 7 Snellen levels
 
     let examStage = 1;
     let stepIndex = 0;
@@ -294,7 +274,6 @@
     let osScore = "< 20/100";
     let odScore = "< 20/100";
     let ouScore = "< 20/100";
-    let consecutiveMisses = 0;
     let lockedDistanceCm = null;
 
     const PASSAGE_WORDS = ["Clear", "vision", "opens", "every", "door", "for", "young", "minds."];
@@ -333,28 +312,31 @@
       } else {
         lockedDistanceCm = 40.0;
       }
-      optotypeChar.innerText = "CALIBRATION LOCKED ✓";
-      setTimeout(startStage2, 1000);
+      optotypeChar.innerText = "LOCKED ✓";
+      setTimeout(startStage2, 800);
     }
 
     function startStage2() {
       examStage = 2;
       stepIndex = 0;
       currentDenominator = ACUITY_STEPS[0];
-      consecutiveMisses = 0;
       updateStageUI();
       loadNewAcuityRound();
     }
 
     function loadNewAcuityRound() {
       currentCorrectChar = MASTER_LETTERS[Math.floor(Math.random() * MASTER_LETTERS.length)];
-      optotypeChar.style.fontSize = "48px";
       optotypeChar.innerText = currentCorrectChar;
       
       let stageName = "Left Eye";
       if (examStage === 3) stageName = "Right Eye";
       if (examStage === 4) stageName = "Binocular (Both Eyes)";
-      acuityLabel.innerText = `${stageName} (20/${currentDenominator})`;
+      
+      // Explicitly tell them which of 7 numbers they are on
+      acuityLabel.innerText = `${stageName} — Level ${stepIndex + 1} of 7 (20/${currentDenominator})`;
+
+      let roadmapStepId = (examStage === 2) ? "rs2" : (examStage === 3) ? "rs3" : "rs4";
+      document.getElementById(roadmapStepId).innerHTML = `<div class="roadmap-dot" id="dot${examStage}">⏳</div> Stage ${examStage}: ${stageName} (Step ${stepIndex + 1} of 7)`;
 
       let choices = [currentCorrectChar];
       while (choices.length < 3) {
@@ -373,49 +355,40 @@
     function submitAnswer(selectedChar) {
       const isCorrect = (selectedChar === currentCorrectChar);
 
-      if (examStage === 2) { // Stage 2: Left Eye
+      if (examStage === 2) {
         if (isCorrect) {
-          consecutiveMisses = 0;
           osScore = `20/${currentDenominator}`;
           if (stepIndex < ACUITY_STEPS.length - 1) { stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex]; loadNewAcuityRound(); }
-          else { setTimeout(startStage3, 800); }
+          else { setTimeout(startStage3, 600); }
         } else {
-          consecutiveMisses++;
-          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) { setTimeout(startStage3, 800); }
-          else { loadNewAcuityRound(); }
+          setTimeout(startStage3, 600);
         }
-      } else if (examStage === 3) { // Stage 3: Right Eye
+      } else if (examStage === 3) {
         if (isCorrect) {
-          consecutiveMisses = 0;
           odScore = `20/${currentDenominator}`;
           if (stepIndex < ACUITY_STEPS.length - 1) { stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex]; loadNewAcuityRound(); }
-          else { setTimeout(startStage4, 800); }
+          else { setTimeout(startStage4, 600); }
         } else {
-          consecutiveMisses++;
-          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) { setTimeout(startStage4, 800); }
-          else { loadNewAcuityRound(); }
+          setTimeout(startStage4, 600);
         }
-      } else if (examStage === 4) { // Stage 4: Binocular
+      } else if (examStage === 4) {
         if (isCorrect) {
-          consecutiveMisses = 0;
           ouScore = `20/${currentDenominator}`;
           if (stepIndex < ACUITY_STEPS.length - 1) { stepIndex++; currentDenominator = ACUITY_STEPS[stepIndex]; loadNewAcuityRound(); }
-          else { setTimeout(startStage5, 800); }
+          else { setTimeout(startStage5, 600); }
         } else {
-          consecutiveMisses++;
-          if (consecutiveMisses >= 2 || stepIndex >= ACUITY_STEPS.length - 1) { setTimeout(startStage5, 800); }
-          else { loadNewAcuityRound(); }
+          setTimeout(startStage5, 600);
         }
       }
     }
 
     function startStage3() {
-      examStage = 3; stepIndex = 0; currentDenominator = ACUITY_STEPS[0]; consecutiveMisses = 0;
+      examStage = 3; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
       updateStageUI(); loadNewAcuityRound();
     }
 
     function startStage4() {
-      examStage = 4; stepIndex = 0; currentDenominator = ACUITY_STEPS[0]; consecutiveMisses = 0;
+      examStage = 4; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
       updateStageUI(); loadNewAcuityRound();
     }
 
@@ -456,7 +429,7 @@
 
     function resetExam() {
       examStage = 1; stepIndex = 0; currentDenominator = ACUITY_STEPS[0];
-      osScore = "< 20/100"; odScore = "< 20/100"; ouScore = "< 20/100"; consecutiveMisses = 0;
+      osScore = "< 20/100"; odScore = "< 20/100"; ouScore = "< 20/100";
       lockedDistanceCm = null; stableFramesInGreen = 0;
       updateStageUI();
       reportBox.style.display = "none"; readingBox.style.display = "none";
@@ -523,7 +496,10 @@
             zoneVal.innerText = "Too Far"; zoneVal.style.color = "#fbbf24"; cameraBox.style.borderColor = "#fbbf24";
           }
           if (examStage > 1) {
-            const px = Math.round((Math.max(12, Math.min(110, (smoothedDistanceCm * 10) * 2 * Math.tan((5 * (currentDenominator / 20) / 60) * (Math.PI / 180) / 2) * 6.5))) / 2) * 2;
+            const activeDist = lockedDistanceCm || smoothedDistanceCm;
+            const angleRad = (5 * (currentDenominator / 20) / 60) * (Math.PI / 180);
+            const heightMm = 2 * (activeDist * 10) * Math.tan(angleRad / 2);
+            const px = Math.round(Math.max(12, Math.min(140, heightMm * 6.5)));
             optotypeChar.style.fontSize = `${px}px`;
             scaleReadout.innerText = `${px}px`;
           }
@@ -535,7 +511,11 @@
     const faceMesh = new FaceMesh({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}` });
     faceMesh.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
     faceMesh.onResults(onResults);
-    const camera = new Camera(videoElement, { onFrame: async () => { await faceMesh.send({ image: videoElement }); }, width: 640, height: 480 });
+    const camera = new Camera(videoElement, {
+      onFrame: async () => { await faceMesh.send({ image: videoElement }); },
+      width: 640,
+      height: 480
+    });
     camera.start();
   </script>
 </body>
