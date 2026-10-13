@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.27 - Zero-Scroll Single-Viewport & Compact 2x Optotype Box
+  Project "Eyes" v3.29 - Dynamic Thumb-Zone Control Shifting (Left / Right / Center)
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.27 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.29 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -65,7 +65,7 @@
       position: relative;
       width: 100%;
       max-width: 600px;
-      aspect-ratio: 2.15 / 1;
+      aspect-ratio: 2.35 / 1;
       border-radius: 10px;
       overflow: hidden;
       border: 2px solid #1e293b;
@@ -96,7 +96,7 @@
       background: #111827;
       border: 1px solid #334155;
       border-radius: 10px;
-      padding: 6px 8px;
+      padding: 5px 8px;
       flex-shrink: 0;
     }
     .roadmap-title {
@@ -107,14 +107,14 @@
       letter-spacing: 0.4px;
       margin-bottom: 3px;
     }
-    .roadmap-steps { display: flex; flex-direction: column; gap: 3px; }
+    .roadmap-steps { display: flex; flex-direction: column; gap: 2px; }
     .roadmap-step {
-      display: flex; align-items: center; gap: 6px; font-size: 9.5px; font-weight: 700;
+      display: flex; align-items: center; gap: 6px; font-size: 9px; font-weight: 700;
       color: #64748b; padding: 2px 6px; border-radius: 4px; background: #0f172a; border: 1px solid #1e293b;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .roadmap-dot {
-      width: 12px; height: 12px; border-radius: 50%; background: #334155;
+      width: 11px; height: 11px; border-radius: 50%; background: #334155;
       display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 900; color: #fff;
       flex-shrink: 0;
     }
@@ -123,27 +123,27 @@
     .roadmap-step.active { color: #facc15; border-color: rgba(250, 204, 21, 0.4); background: rgba(250, 204, 21, 0.08); }
     .roadmap-step.active .roadmap-dot { background: #eab308; }
     
-    /* COMPACT WHITE BOX: ~2X LARGEST LETTER HEIGHT (80px viewport, 114px total) */
+    /* COMPACT WHITE BOX: ~2X LARGEST LETTER HEIGHT */
     .optotype-card {
       position: relative;
       width: 100%;
       max-width: 600px;
-      height: 114px;
+      height: 108px;
       background: #ffffff;
       color: #0f172a;
       border-radius: 10px;
-      padding: 6px 10px;
+      padding: 5px 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       flex-shrink: 0;
     }
     .card-header {
       width: 100%; display: flex; justify-content: space-between; font-size: 9px; font-weight: 800; color: #64748b;
-      border-bottom: 1px solid #e2e8f0; padding-bottom: 3px; text-transform: uppercase;
+      border-bottom: 1px solid #e2e8f0; padding-bottom: 2px; text-transform: uppercase;
     }
     .optotype-viewport {
       position: absolute;
-      top: 24px;
-      bottom: 6px;
+      top: 22px;
+      bottom: 5px;
       left: 8px;
       right: 8px;
       display: flex;
@@ -166,7 +166,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 6px 8px;
+      padding: 4px 8px;
       cursor: pointer;
       text-align: center;
       user-select: none;
@@ -179,22 +179,22 @@
       background: rgba(15, 23, 42, 0.45);
       border: 1px solid rgba(186, 230, 253, 0.4);
       color: #fde047;
-      font-size: 8.5px;
+      font-size: 8px;
       font-weight: 900;
       padding: 2px 6px;
       border-radius: 4px;
       text-transform: uppercase;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
     .gate-sub {
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 800;
       color: #bae6fd;
       text-transform: uppercase;
       margin-bottom: 2px;
     }
     .gate-main {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 900;
       line-height: 1.15;
       text-transform: uppercase;
@@ -203,43 +203,90 @@
     #readingBox { display: none; width: 100%; text-align: center; font-weight: 700; font-size: 12px; }
     #reportBox { display: none; width: 100%; text-align: left; }
     .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-    .report-item { background: #f1f5f9; padding: 4px 6px; border-radius: 5px; border-left: 3px solid #0284c7; }
-    .report-label { font-size: 7.5px; font-weight: 700; color: #64748b; text-transform: uppercase; }
-    .report-val { font-size: 11px; font-weight: 900; color: #0f172a; }
-    .report-sub { font-size: 9px; font-weight: 800; color: #0284c7; }
+    .report-item { background: #f1f5f9; padding: 3px 6px; border-radius: 5px; border-left: 3px solid #0284c7; }
+    .report-label { font-size: 7px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .report-val { font-size: 10.5px; font-weight: 900; color: #0f172a; }
+    .report-sub { font-size: 8.5px; font-weight: 800; color: #0284c7; }
     
+    /* DYNAMIC THUMB-ZONE SHIFTING CONTROL DECK (LEFT / RIGHT / CENTER) */
     .controls-wrap {
       width: 100%;
       max-width: 600px;
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-      min-height: 68px;
+      align-items: center;
       justify-content: center;
+      gap: 8px;
+      height: 126px;
+      padding: 0 2px;
       flex-shrink: 0;
+      transition: all 0.25s ease;
     }
+    /* Stage 2 (Right Eye Covered -> Left Hand Free -> Shift Controls Left) */
+    .controls-wrap.align-left {
+      justify-content: flex-start;
+      flex-direction: row;
+    }
+    /* Stage 3 (Left Eye Covered -> Right Hand Free -> Shift Controls Right, 2x2 Pad on Outside Right) */
+    .controls-wrap.align-right {
+      justify-content: flex-end;
+      flex-direction: row-reverse;
+    }
+    /* Stage 4 (Binocular -> Both Hands Free -> Center Controls) */
+    .controls-wrap.align-center {
+      justify-content: center;
+      flex-direction: row;
+    }
+
     .dir-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 4px;
+      grid-template-columns: 60px 60px;
+      grid-template-rows: 60px 60px;
+      gap: 6px;
     }
     button {
       background: #1e293b; color: #f8fafc; border: 1px solid #334155;
-      padding: 7px 10px; border-radius: 7px; font-size: 11px; font-weight: 800; cursor: pointer;
+      padding: 7px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;
     }
     button.dir-btn {
-      background: #e2e8f0; color: #0f172a; border: 1px solid #cbd5e1; font-size: 12px; font-weight: 900;
-      padding: 8px 4px;
+      width: 60px;
+      height: 60px;
+      aspect-ratio: 1 / 1;
+      background: #e2e8f0;
+      color: #0f172a;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 2px;
+      line-height: 1.1;
+      user-select: none;
     }
-    button.dir-btn:active { background: #0284c7; color: #fff; }
+    .dir-arrow {
+      font-size: 18px;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    button.dir-btn:active { background: #0284c7; color: #fff; border-color: #38bdf8; }
     button.cant-see-btn {
+      height: 126px;
+      width: 88px;
       background: rgba(220, 38, 38, 0.18);
       color: #f87171;
       border: 1px solid rgba(248, 113, 113, 0.45);
-      font-size: 10.5px;
-      font-weight: 800;
+      border-radius: 10px;
+      font-size: 9.5px;
+      font-weight: 900;
       padding: 6px;
       text-transform: uppercase;
+      line-height: 1.25;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
     button.cant-see-btn:active { background: #dc2626; color: #fff; }
     .bottom-bar {
@@ -252,8 +299,8 @@
       flex-shrink: 0;
     }
     .reset-btn {
-      padding: 5px 10px;
-      font-size: 10px;
+      padding: 4px 10px;
+      font-size: 9.5px;
     }
     footer { font-size: 8.5px; color: #64748b; text-align: right; white-space: nowrap; }
   </style>
@@ -263,7 +310,7 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.27</h1>
+    <h1>Project Eyes v3.29</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -289,12 +336,12 @@
   </div>
 
   <div class="roadmap-panel" id="roadmapPanel">
-    <div class="roadmap-title">Seated Armrest Protocol • Test-to-Failure</div>
+    <div class="roadmap-title">Seated Armrest Protocol • Dynamic Thumb-Zone Controls</div>
     <div class="roadmap-steps">
       <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Sit in Chair • Elbows on Arms • Hold 35–45 cm</div>
-      <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye (Cover Right • Shrinks Until 2 Misses)</div>
-      <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye (Cover Left • Shrinks Until 2 Misses)</div>
-      <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular (Both Open • Shrinks Until 2 Misses)</div>
+      <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye (Cover Right • Controls Shift LEFT)</div>
+      <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye (Cover Left • Controls Shift RIGHT)</div>
+      <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular (Both Open • Controls CENTERED)</div>
       <div class="roadmap-step" id="rs5"><div class="roadmap-dot" id="dot5">5</div> Stage 5: Reading Intake (8 Quick Words)</div>
       <div class="roadmap-step" id="rs6"><div class="roadmap-dot" id="dot6">6</div> Stage 6: 20-Ft Office Equivalent & Diopter Rx Scorecard</div>
     </div>
@@ -349,7 +396,7 @@
     </div>
   </div>
 
-  <div class="controls-wrap" id="examControls"></div>
+  <div class="controls-wrap align-center" id="examControls"></div>
 
   <div class="bottom-bar">
     <button class="reset-btn" onclick="resetExam()">Reset Exam</button>
@@ -444,8 +491,8 @@
         updateStageUI();
         acuityLabel.innerText = "Stage 2: Left Eye Setup";
         showGatePrompt(
-          "🪑 KEEP BOTH ELBOWS PLANTED ON CHAIR ARMRESTS",
-          "Stage 2 of 6 • Left Eye Test-to-Failure",
+          "🪑 COVER RIGHT EYE WITH RIGHT HAND • TAP WITH LEFT HAND",
+          "Stage 2 of 6 • Controls Shift to Left Side",
           "TAP ONCE YOUR RIGHT EYE IS COVERED"
         );
       } else if (examStage === 2 || examStage === 3 || examStage === 4) {
@@ -461,22 +508,42 @@
       }
     }
 
+    // Dynamic Thumb-Zone Positioning + 2x2 Square Grid (Top-Left=UP, Top-Right=RIGHT, Bottom-Left=LEFT, Bottom-Right=DOWN)
     function renderDirectionButtons() {
+      examControls.className = "controls-wrap";
+      if (examStage === 2) {
+        // Right eye covered by right hand -> Left hand holds phone & taps on LEFT side
+        examControls.classList.add("align-left");
+      } else if (examStage === 3) {
+        // Left eye covered by left hand -> Right hand holds phone & taps on RIGHT side
+        examControls.classList.add("align-right");
+      } else {
+        // Binocular (Both eyes open) -> Controls centered
+        examControls.classList.add("align-center");
+      }
+
       examControls.innerHTML = `
         <div class="dir-grid">
-          <button class="dir-btn" onclick="submitAnswer('UP')">⬆️ UP</button>
-          <button class="dir-btn" onclick="submitAnswer('DOWN')">⬇️ DOWN</button>
-          <button class="dir-btn" onclick="submitAnswer('LEFT')">⬅️ LEFT</button>
-          <button class="dir-btn" onclick="submitAnswer('RIGHT')">➡️ RIGHT</button>
+          <button class="dir-btn" onclick="submitAnswer('UP')">
+            <span class="dir-arrow">⬆️</span>UP
+          </button>
+          <button class="dir-btn" onclick="submitAnswer('RIGHT')">
+            <span class="dir-arrow">➡️</span>RIGHT
+          </button>
+          <button class="dir-btn" onclick="submitAnswer('LEFT')">
+            <span class="dir-arrow">⬅️</span>LEFT
+          </button>
+          <button class="dir-btn" onclick="submitAnswer('DOWN')">
+            <span class="dir-arrow">⬇️</span>DOWN
+          </button>
         </div>
-        <button class="cant-see-btn" onclick="submitAnswer('CANT_SEE')">Too Blurry / Can't See</button>
+        <button class="cant-see-btn" onclick="submitAnswer('CANT_SEE')">Too Blurry<br>Can't See</button>
       `;
     }
 
-    // Canvas is 76px tall (~2x the 37px 20/200 largest letter at 40cm)
     function drawTumblingE(direction, distanceCm, denominator) {
       const dpr = window.devicePixelRatio || 3;
-      const canvasSizeCss = 76;
+      const canvasSizeCss = 74;
       snellenCanvas.style.width = `${canvasSizeCss}px`;
       snellenCanvas.style.height = `${canvasSizeCss}px`;
       snellenCanvas.width = Math.round(canvasSizeCss * dpr);
@@ -489,7 +556,7 @@
       const angleRad = (5 * (denominator / 20) / 60) * (Math.PI / 180);
       const heightMm = 2 * distMm * Math.tan(angleRad / 2);
 
-      const sizeCssPx = Math.min(72, heightMm * CSS_PX_PER_MM);
+      const sizeCssPx = Math.min(70, heightMm * CSS_PX_PER_MM);
       const strokeCssPx = sizeCssPx / 5;
       const totalDevicePx = sizeCssPx * dpr;
       const unit = totalDevicePx / 5;
@@ -518,9 +585,9 @@
     function updateRoadmapUI() {
       const labels = [
         "Stage 1: Sit in Chair • Elbows on Arms • Hold 35–45 cm",
-        "Stage 2: Left Eye (Cover Right • Shrinks Until 2 Misses)",
-        "Stage 3: Right Eye (Cover Left • Shrinks Until 2 Misses)",
-        "Stage 4: Binocular (Both Open • Shrinks Until 2 Misses)",
+        "Stage 2: Left Eye (Cover Right • Controls Shift LEFT)",
+        "Stage 3: Right Eye (Cover Left • Controls Shift RIGHT)",
+        "Stage 4: Binocular (Both Open • Controls CENTERED)",
         "Stage 5: Reading Intake (8 Quick Words)",
         "Stage 6: 20-Ft Office Equivalent & Diopter Rx Scorecard"
       ];
@@ -606,8 +673,8 @@
       updateStageUI();
       acuityLabel.innerText = "Stage 3: Right Eye Setup";
       showGatePrompt(
-        "🪑 KEEP ELBOWS ANCHORED ON CHAIR ARMRESTS",
-        `Left Eye Locked at 20/${osDenom} Eq • Switch Hands`,
+        "🪑 COVER LEFT EYE WITH LEFT HAND • TAP WITH RIGHT HAND",
+        `Left Eye Locked at 20/${osDenom} Eq • Controls Shift Right`,
         "TAP ONCE YOUR LEFT EYE IS COVERED"
       );
     }
@@ -617,7 +684,7 @@
       updateStageUI();
       acuityLabel.innerText = "Stage 4: Binocular Setup";
       showGatePrompt(
-        "🪑 HOLD PHONE WITH BOTH HANDS • ELBOWS ON ARMS",
+        "🪑 HOLD PHONE WITH BOTH HANDS • CONTROLS CENTERED",
         `Right Eye Locked at 20/${odDenom} Eq • Uncover Both Eyes`,
         "TAP ONCE BOTH EYES ARE OPEN"
       );
@@ -702,6 +769,7 @@
       odDenom = 250;
       ouDenom = 250;
       lockedDistanceCm = null;
+      examControls.className = "controls-wrap align-center";
       updateStageUI();
       acuityLabel.innerText = "Stage 1: Seated Posture & Calibration";
       showGatePrompt(
