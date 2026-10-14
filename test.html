@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  PROJECT EYES v3.55 - HUD COLLISION FIX + STEP 6 DECK UPGRADE
+  PROJECT EYES v3.56 - TRUE ASTIGMATISM GRID VERIFIER (NO FALSE POSITIVES)
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.55 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.56 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -415,6 +415,36 @@
       padding: 6px 8px;
       line-height: 1.2;
     }
+    .astig-deck {
+      width: 100%;
+      display: flex;
+      gap: 6px;
+      height: 122px;
+    }
+    .astig-btn-even {
+      flex: 1.25;
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: #ffffff;
+      border: 2px solid #4ade80;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      padding: 6px;
+      line-height: 1.2;
+    }
+    .astig-btn-axis {
+      flex: 1;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 2px solid #38bdf8;
+      border-radius: 10px;
+      font-size: 9.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      padding: 6px;
+      line-height: 1.2;
+    }
     .finish-deck {
       width: 100%;
       height: 110px;
@@ -458,7 +488,7 @@
     footer { font-size: 8.5px; color: #64748b; text-align: right; white-space: nowrap; }
   </style>
 
-  <!-- ISOLATED TOP-LEVEL PIN UNLOCK SCRIPT (CAN NEVER BE BLOCKED BY MEDIA-PIPE LOADING) -->
+  <!-- ISOLATED TOP-LEVEL PIN UNLOCK SCRIPT -->
   <script>
     window.checkVaultPin = function() {
       var box = document.getElementById('vaultPinInput');
@@ -486,7 +516,7 @@
   <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">✅ Project Eyes v3.55</div>
+      <div class="vault-title">✅ Project Eyes v3.56</div>
       <div class="vault-sub">USPTO Patent Pending • 64/174,835</div>
       <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 12px; font-weight: 600;">
         Enter 4-Digit Access PIN:
@@ -501,7 +531,7 @@
   </div>
 
   <header>
-    <h1>Project Eyes v3.55</h1>
+    <h1>Project Eyes v3.56</h1>
     <div class="patent-pill" id="hwBadgePill">Patent Pending • 64/174,835</div>
   </header>
 
@@ -635,6 +665,7 @@
     let _osD = 250, _odD = 250, _ouD = 250;
     let _bCm = null, _lCm = null, _nK = 2800.0, _lNPx = 60.0;
     let _osHM = 0, _osVM = 0, _odHM = 0, _odVM = 0;
+    let _osAstig = 'NONE', _odAstig = 'NONE';
     let _wI = 0, _tS = [], _sCm = null;
     let _sLE = 0.30, _sRE = 0.30, _cES = "Binocular";
 
@@ -665,14 +696,16 @@
         `<div class="coach-line">3. ${l3}</div>`;
     }
 
-    function _0xCalc(a, b, c, h, v) {
+    function _0xCalc(a, b, c, h, v, astigPick) {
       let cv = 0.0, ct = "";
-      const ad = Math.abs(h - v);
-      if (ad >= 1 && (h + v) >= 1) {
-        cv = ad >= 2 ? -0.75 : -0.50;
-        const ax = h > v ? "180°/15°" : "90°";
-        ct = ` • CYL ${cv.toFixed(2)} (${ax})`;
+      if (astigPick === 'VERT') {
+        cv = (v - h >= 2) ? -0.75 : -0.50;
+        ct = ` • CYL ${cv.toFixed(2)} (90°)`;
+      } else if (astigPick === 'HORIZ') {
+        cv = (h - v >= 2) ? -0.75 : -0.50;
+        ct = ` • CYL ${cv.toFixed(2)} (180°)`;
       }
+
       if (c !== null && c < 64) {
         const aB = Math.round((-(100 / c)) * 4) / 4;
         const bD = Math.min(a, b);
@@ -860,6 +893,67 @@
       _sCx.restore();
     }
 
+    function _dAstigGrid() {
+      const dpr = window.devicePixelRatio || 3;
+      const cW = 190, cH = 74;
+      _sCv.style.width = `${cW}px`;
+      _sCv.style.height = `${cH}px`;
+      _sCv.width = Math.round(cW * dpr);
+      _sCv.height = Math.round(cH * dpr);
+      _sCx.save();
+      _sCx.clearRect(0, 0, _sCv.width, _sCv.height);
+      _sCx.fillStyle = "#0f172a";
+      const barW = Math.max(2, Math.round(2.4 * dpr));
+      const gap = Math.round(7.5 * dpr);
+      const padY = Math.round(10 * dpr);
+      const boxS = Math.round(54 * dpr);
+
+      // Left block: 5 Vertical Bars (|||)
+      const startVX = Math.round(22 * dpr);
+      for (let i = 0; i < 5; i++) {
+        _sCx.fillRect(startVX + i * gap, padY, barW, boxS);
+      }
+
+      // Right block: 5 Horizontal Bars (===)
+      const startHX = Math.round(118 * dpr);
+      for (let i = 0; i < 5; i++) {
+        _sCx.fillRect(startHX, padY + i * gap, boxS, barW);
+      }
+      _sCx.restore();
+    }
+
+    function _promptAstigCheck(eyeStage) {
+      const eyeName = eyeStage === 2 ? "Left Eye (O.S.)" : "Right Eye (O.D.)";
+      _sCv.style.display = "block";
+      _dAstigGrid();
+      _aLb.innerText = `${eyeName} • 1-Tap Astigmatism Check`;
+      _sRd.innerText = "Compare Stripes";
+      _setC(
+        `📋 ${eyeName.toUpperCase()}: DO BOTH LINE SETS LOOK EVEN?`,
+        "ASTIGMATISM CHECK",
+        "Look at the <span class='coach-highlight'>VERTICAL (|||)</span> and <span class='coach-highlight'>HORIZONTAL (===)</span> stripes in the white card.",
+        "If both sets look equally black/blurry, tap the <span class='coach-highlight'>GREEN BUTTON (NO ASTIGMATISM)</span>.",
+        "Only tap <span class='coach-highlight'>VERTICAL</span> or <span class='coach-highlight'>HORIZONTAL</span> if one side looks distinctly darker/sharper!"
+      );
+      _exC.className = "controls-wrap align-center";
+      _exC.innerHTML =
+        `<div class="astig-deck">` +
+        `<button class="astig-btn-even" onclick="window._0xSetAstig('NONE')">✅ BOTH LOOK EQUAL<br>(NO ASTIGMATISM)</button>` +
+        `<button class="astig-btn-axis" onclick="window._0xSetAstig('VERT')">↕️ VERTICAL (|||)<br>DARKER / SHARPER</button>` +
+        `<button class="astig-btn-axis" onclick="window._0xSetAstig('HORIZ')">↔️ HORIZONTAL (===)<br>DARKER / SHARPER</button>` +
+        `</div>`;
+    }
+
+    window._0xSetAstig = function(choice) {
+      if (_st === 2) {
+        _osAstig = choice;
+        _advanceAfterMonocular(2);
+      } else if (_st === 3) {
+        _odAstig = choice;
+        _advanceAfterMonocular(3);
+      }
+    };
+
     function _lNAR() {
       _cDir = _DIRS[Math.floor(Math.random() * _DIRS.length)];
       const sN = _st === 3 ? "Right Eye" : _st === 4 ? "Binocular" : "Left Eye";
@@ -896,8 +990,16 @@
     };
 
     function _fCES() {
+      if (_st === 2 || _st === 3) {
+        _promptAstigCheck(_st);
+      } else if (_st === 4) {
+        _advanceAfterMonocular(4);
+      }
+    }
+
+    function _advanceAfterMonocular(completedStage) {
       const dT = (_lCm || 45).toFixed(1);
-      if (_st === 2) {
+      if (completedStage === 2) {
         _st = 3; _uSUI();
         _aLb.innerText = "Step 3: Cover Left Eye (Stay in Chair)";
         _sRd.innerText = `L Line: 20/${_osD}`;
@@ -913,7 +1015,7 @@
           `Left Eye Read 20/${_osD} • Tap With Right Hand`,
           "👉 TAP HERE ONCE LEFT EYE IS COVERED 👈"
         );
-      } else if (_st === 3) {
+      } else if (completedStage === 3) {
         _st = 4; _uSUI();
         _aLb.innerText = "Step 4: Uncover Both Eyes";
         _sRd.innerText = `R Line: 20/${_odD}`;
@@ -929,7 +1031,7 @@
           `L: 20/${_osD} | R: 20/${_odD} • Target: ${dT} cm`,
           "👉 TAP HERE ONCE BOTH EYES ARE OPEN 👈"
         );
-      } else if (_st === 4) {
+      } else if (completedStage === 4) {
         _st = 5; _uSUI();
         _aLb.innerText = "Step 5: Quick 8-Word Reading Check";
         _sRd.innerText = `O.U. 20/${_ouD}`;
@@ -995,7 +1097,7 @@
         "FINISHED",
         "<span class='coach-highlight'>TAKE A SCREENSHOT</span> of this screen and send it to Terence with your real Rx!",
         "<span class='coach-highlight'>Left Eye (O.S.) & Right Eye (O.D.)</span> prescriptions are shown in the white box below.",
-        "Tap <span class='coach-highlight'>Run New Exam</span> below anytime to test again."
+        "Tap <span class='coach-highlight'>Run New Eye Exam</span> below anytime to test again."
       );
       const tSec = (_tS[_tS.length - 1] - _tS[0]) / 1000;
       const wpm = Math.round((_WORDS.length / Math.max(1, tSec)) * 60);
@@ -1004,8 +1106,8 @@
         const g = _tS[i] - _tS[i - 1];
         if (g > mG) mG = g;
       }
-      const osM = _0xCalc(_osD, _odD, _bCm, _osHM, _osVM);
-      const odM = _0xCalc(_odD, _osD, _bCm, _odHM, _odVM);
+      const osM = _0xCalc(_osD, _odD, _bCm, _osHM, _osVM, _osAstig);
+      const odM = _0xCalc(_odD, _osD, _bCm, _odHM, _odVM, _odAstig);
       document.getElementById('repOS').innerText = `${osM.snellen20Ft} (20-Ft Eq)`;
       document.getElementById('rxOS').innerText = osM.diopterStr;
       document.getElementById('repOD').innerText = `${odM.snellen20Ft} (20-Ft Eq)`;
@@ -1027,6 +1129,7 @@
       _st = 1; _inB = false; _sI = 0; _bStepIdx = 1; _lH = 0; _lM = 0; _cD = _STEPS[0];
       _osD = 250; _odD = 250; _ouD = 250; _bCm = null; _lCm = null;
       _osHM = 0; _osVM = 0; _odHM = 0; _odVM = 0;
+      _osAstig = 'NONE'; _odAstig = 'NONE';
       _exC.className = "controls-wrap align-center";
       _uSUI();
       _aLb.innerText = "Step 1: Stationary Stand & Blur Finder";
