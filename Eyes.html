@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.37 - On-Screen Step-by-Step Coach + Independent Monocular Rx
+  Project "Eyes" v3.39 - Bidirectional Pull-In/Push-Out Focus Edge + Spherical Equivalent Rx Split
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.37 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.39 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -157,7 +157,7 @@
       gap: 3px;
     }
     .coach-line {
-      font-size: 10.5px;
+      font-size: 10.2px;
       font-weight: 800;
       color: #f8fafc;
       line-height: 1.25;
@@ -335,7 +335,7 @@
     }
     button.cant-see-btn:active { background: #dc2626; color: #fff; }
 
-    /* MONOCULAR BLUR-HORIZON CALIBRATION BUTTONS */
+    /* MONOCULAR FOCUS-EDGE CALIBRATION BUTTONS */
     .horizon-deck {
       width: 100%;
       display: flex;
@@ -349,11 +349,11 @@
       color: #0f172a;
       border: 2px solid #fde047;
       border-radius: 10px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 900;
       text-transform: uppercase;
       padding: 6px 10px;
-      line-height: 1.2;
+      line-height: 1.22;
     }
     .horizon-btn-clear {
       flex: 0.8;
@@ -388,7 +388,7 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.37</h1>
+    <h1>Project Eyes v3.39</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -425,8 +425,8 @@
     </div>
     <div class="coach-list" id="coachList">
       <div class="coach-line">1. <span class="coach-highlight">TAKE OFF GLASSES/CONTACTS</span> and sit comfortably.</div>
-      <div class="coach-line">2. Hold phone with <span class="coach-highlight">BOTH HANDS</span> (~14 inches away) so the dot is on the crosshair.</div>
-      <div class="coach-line">3. Tap the big <span class="coach-highlight">BLUE BUTTON</span> below to start.</div>
+      <div class="coach-line">2. Hold phone with <span class="coach-highlight">BOTH HANDS</span> (~15 inches / 38 cm away) with dot on crosshair.</div>
+      <div class="coach-line">3. Tap the big <span class="coach-highlight">BLUE BUTTON</span> below to lock your face scale.</div>
     </div>
   </div>
 
@@ -441,7 +441,7 @@
         <div class="gate-posture" id="gatePostureText">
           🎯 STEP 1: LINE UP DOT ON CROSSHAIR (35–45 CM)
         </div>
-        <div class="gate-sub" id="gateSubText">Hold Phone With Both Hands • Remove Glasses</div>
+        <div class="gate-sub" id="gateSubText">Hold Phone With Both Hands • Keep Both Eyes Uncovered</div>
         <div class="gate-main" id="gateMainText">👉 TAP HERE TO LOCK & START 👈</div>
       </div>
 
@@ -465,9 +465,9 @@
             <div class="report-sub" id="rxOD">SPH: --</div>
           </div>
           <div class="report-item">
-            <div class="report-label">Blur Distance (L / R)</div>
+            <div class="report-label">Focus Edge (L / R)</div>
             <div class="report-val" id="repOU">--</div>
-            <div class="report-sub" id="rxOU">O.S. / O.D. Blur</div>
+            <div class="report-sub" id="rxOU">O.S. / O.D. Edge</div>
           </div>
           <div class="report-item">
             <div class="report-label">Reading & Fatigue</div>
@@ -533,6 +533,11 @@
     let osBlurCm = null;
     let odBlurCm = null;
 
+    // Hand-Proof Monocular Distance Calibration Ratios (Locked in Stage 1 when both eyes are open)
+    let calibratedNoseHeightMm = 48.0;
+    let calibratedLeftEyeWidthMm = 28.5;
+    let calibratedRightEyeWidthMm = 28.5;
+
     let osHorizMiss = 0, osVertMiss = 0;
     let odHorizMiss = 0, odVertMiss = 0;
 
@@ -557,20 +562,26 @@
       `;
     }
 
+    // Universal Optical Physics: Spherical Equivalent (SE = -100/cm) de-coupled into Sphere (SPH) and Cylinder (CYL)
     function computeUniversalEyeRx(nearDenom, eyeBlurCm, horizMisses, vertMisses) {
+      let cylVal = 0.0;
       let cylTag = "";
       const axisDiff = Math.abs(horizMisses - vertMisses);
       if (axisDiff >= 1 && (horizMisses + vertMisses) >= 1) {
-        const estCyl = axisDiff >= 2 ? "-0.75" : "-0.50";
+        cylVal = axisDiff >= 2 ? -0.75 : -0.50;
         const estAxis = horizMisses > vertMisses ? "180°/15°" : "90°";
-        cylTag = ` • CYL ${estCyl} (${estAxis})`;
+        cylTag = ` • CYL ${cylVal.toFixed(2)} (${estAxis})`;
       }
 
       if (eyeBlurCm !== null && eyeBlurCm < 65) {
-        const rawMyopiaD = -(100 / eyeBlurCm);
-        const quarterStepD = Math.round(rawMyopiaD * 4) / 4;
+        // Focus edge captures Spherical Equivalent (SE = SPH + 0.5 * CYL)
+        const sphericalEquivalentD = -(100 / eyeBlurCm);
+        // De-couple true Sphere (SPH = SE - 0.5 * CYL) so astigmatism doesn't over-inflate Sphere!
+        const rawSphereD = sphericalEquivalentD - (0.5 * cylVal);
+        const quarterStepSph = Math.round(rawSphereD * 4) / 4;
+
         let wallDenom = 20;
-        const absD = Math.abs(quarterStepD);
+        const absD = Math.abs(quarterStepSph);
         if (absD >= 3.00) wallDenom = 250;
         else if (absD >= 2.50) wallDenom = 200;
         else if (absD >= 2.00) wallDenom = 150;
@@ -580,12 +591,9 @@
         else if (absD >= 0.75) wallDenom = 40;
         else if (absD >= 0.50) wallDenom = 30;
 
-        if (nearDenom > 30) {
-          wallDenom = Math.max(wallDenom, nearDenom);
-        }
         return {
           snellen20Ft: wallDenom > 200 ? "< 20/200" : `20/${wallDenom}`,
-          diopterStr: `SPH ${quarterStepD.toFixed(2)} D${cylTag}`
+          diopterStr: `SPH ${quarterStepSph.toFixed(2)} D${cylTag}`
         };
       }
 
@@ -630,12 +638,12 @@
           "📋 STEP 2A: GET READY FOR LEFT EYE",
           "HOLD IN LEFT HAND",
           "Hold the phone in your <span class='coach-highlight'>LEFT HAND</span>.",
-          "Cup your <span class='coach-highlight'>RIGHT HAND over your RIGHT EYE</span> (don't press on your eyelid).",
+          "Cup your <span class='coach-highlight'>RIGHT HAND over your RIGHT EYE</span> (keep your nose uncovered!).",
           "Tap the big <span class='coach-highlight'>BLUE BUTTON</span> below with your LEFT thumb."
         );
         showGatePrompt(
           "🤚 HOLD PHONE IN LEFT HAND • COVER RIGHT EYE",
-          "We Are Testing Your LEFT EYE Only",
+          "Keep Your Nose Uncovered So Camera Can Track Distance",
           "👉 TAP HERE ONCE RIGHT EYE IS COVERED 👈"
         );
       } else if (examStage === 2) {
@@ -652,24 +660,24 @@
     function startMonocularBlurCheck(eyeLabel) {
       inBlurHorizonCheck = true;
       snellenCanvas.style.display = "block";
-      acuityLabel.innerText = `${eyeLabel}: Push Back Until "E" Blurs`;
-      drawTumblingE('RIGHT', 42, 25);
+      acuityLabel.innerText = `${eyeLabel}: Move In or Out to Find Focus Edge`;
+      drawTumblingE('RIGHT', 40, 25);
 
       if (examStage === 2) {
         setCoachInstructions(
-          "📋 STEP 2A: FIND LEFT EYE BLUR DISTANCE",
-          "PUSH PHONE BACK SLOWLY",
-          "Keep your <span class='coach-highlight'>RIGHT EYE COVERED</span>. Start at ~35 cm so the 'E' below is clear.",
-          "<span class='coach-highlight'>SLOWLY push the phone back</span> away from your face (watch cm climb).",
-          "The <span class='coach-highlight'>EXACT SECOND the 'E' starts blurring</span>, tap the big <span class='coach-highlight'>YELLOW BUTTON</span>!"
+          "📋 STEP 2A: FIND LEFT EYE FOCUS EDGE (PULL IN OR PUSH OUT)",
+          "KEEP RIGHT EYE COVERED",
+          "If the 'E' below is <span class='coach-highlight'>BLURRY right now</span>, <span class='coach-highlight'>PULL PHONE CLOSER</span> until you first see the 'E' clearly!",
+          "If the 'E' is <span class='coach-highlight'>CLEAR right now</span>, <span class='coach-highlight'>PUSH PHONE BACK</span> until it starts blurring!",
+          "Tap the <span class='coach-highlight'>YELLOW BUTTON</span> right at that exact distance!"
         );
       } else {
         setCoachInstructions(
-          "📋 STEP 3A: FIND RIGHT EYE BLUR DISTANCE",
-          "PUSH PHONE BACK SLOWLY",
-          "Keep your <span class='coach-highlight'>LEFT EYE COVERED</span>. Start at ~35 cm so the 'E' below is clear.",
-          "<span class='coach-highlight'>SLOWLY push the phone back</span> away from your face (watch cm climb).",
-          "The <span class='coach-highlight'>EXACT SECOND the 'E' starts blurring</span>, tap the big <span class='coach-highlight'>YELLOW BUTTON</span>!"
+          "📋 STEP 3A: FIND RIGHT EYE FOCUS EDGE (PULL IN OR PUSH OUT)",
+          "KEEP LEFT EYE COVERED",
+          "If the 'E' below is <span class='coach-highlight'>BLURRY right now</span>, <span class='coach-highlight'>PULL PHONE CLOSER</span> until you first see the 'E' clearly!",
+          "If the 'E' is <span class='coach-highlight'>CLEAR right now</span>, <span class='coach-highlight'>PUSH PHONE BACK</span> until it starts blurring!",
+          "Tap the <span class='coach-highlight'>YELLOW BUTTON</span> right at that exact distance!"
         );
       }
 
@@ -677,7 +685,7 @@
       examControls.innerHTML = `
         <div class="horizon-deck">
           <button class="horizon-btn-blur" onclick="lockMonocularBlur(true)">
-            👀 TAP HERE THE SECOND THE "E" TURNS BLURRY<br>IN YOUR ${eyeLabel} (Distance: <span id="liveBlurBtnCm">-- cm</span>)
+            👀 PULL CLOSER (IF BLURRY) OR PUSH BACK (IF CLEAR)<br>TAP AT YOUR ${eyeLabel} FOCUS EDGE (<span id="liveBlurBtnCm">-- cm</span>)
           </button>
           <button class="horizon-btn-clear" onclick="lockMonocularBlur(false)">
             Only tap here if still 100% sharp at full arm's reach (60+ cm)
@@ -688,8 +696,8 @@
 
     function lockMonocularBlur(didBlur) {
       inBlurHorizonCheck = false;
-      const liveCm = smoothedDistanceCm || 44.0;
-      const capturedCm = didBlur ? Math.max(25.0, Math.min(62.0, liveCm)) : null;
+      const liveCm = smoothedDistanceCm || 40.0;
+      const capturedCm = didBlur ? Math.max(20.0, Math.min(62.0, liveCm)) : null;
 
       if (examStage === 2) {
         osBlurCm = capturedCm;
@@ -706,11 +714,16 @@
       levelMisses = 0;
       currentDenominator = ACUITY_STEPS[0];
 
+      // Automatically test each eye at its own clear focus distance (just inside its focus edge)
+      let clearTestCm = 38;
+      if (examStage === 2 && osBlurCm !== null) clearTestCm = Math.max(22, Math.round(osBlurCm - 3));
+      if (examStage === 3 && odBlurCm !== null) clearTestCm = Math.max(22, Math.round(odBlurCm - 3));
+
       if (examStage === 2) {
         setCoachInstructions(
           "📋 STEP 2B: LEFT EYE DIRECTION TEST",
           "LEFT THUMB CONTROLS",
-          "Keep your <span class='coach-highlight'>RIGHT EYE COVERED</span> • Bring phone back in to ~38 cm (clear zone).",
+          `Keep <span class='coach-highlight'>RIGHT EYE COVERED</span> • Hold phone in your clear spot (~${clearTestCm} cm).`,
           "Look at the black <span class='coach-highlight'>'E'</span> in the white box below.",
           "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> with your LEFT thumb to match the 'E'."
         );
@@ -718,7 +731,7 @@
         setCoachInstructions(
           "📋 STEP 3B: RIGHT EYE DIRECTION TEST",
           "RIGHT THUMB CONTROLS",
-          "Keep your <span class='coach-highlight'>LEFT EYE COVERED</span> • Bring phone back in to ~38 cm (clear zone).",
+          `Keep <span class='coach-highlight'>LEFT EYE COVERED</span> • Hold phone in your clear spot (~${clearTestCm} cm).`,
           "Look at the black <span class='coach-highlight'>'E'</span> in the white box below.",
           "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> with your RIGHT thumb to match the 'E'."
         );
@@ -726,7 +739,7 @@
         setCoachInstructions(
           "📋 STEP 4: BOTH EYES OPEN DIRECTION TEST",
           "BOTH HANDS",
-          "<span class='coach-highlight'>UNCOVER BOTH EYES</span> and hold the phone with both hands at ~38 cm.",
+          "<span class='coach-highlight'>UNCOVER BOTH EYES</span> and hold the phone where you see it clearly.",
           "Keep the green dot on the crosshair.",
           "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> to match the 'E' as it shrinks."
         );
@@ -817,7 +830,10 @@
 
       acuityLabel.innerText = `${stageName} • Line: 20/${currentDenominator} • Hits: ${levelHits}/3`;
 
-      const activeDist = lockedDistanceCm || smoothedDistanceCm || 38.0;
+      let activeDist = lockedDistanceCm || smoothedDistanceCm || 38.0;
+      if (examStage === 2 && osBlurCm !== null) activeDist = Math.max(22.0, osBlurCm - 2.0);
+      if (examStage === 3 && odBlurCm !== null) activeDist = Math.max(22.0, odBlurCm - 2.0);
+
       snellenCanvas.style.opacity = "0.15";
       setTimeout(() => {
         drawTumblingE(currentDirection, activeDist, currentDenominator);
@@ -879,17 +895,17 @@
       examStage = 3;
       updateStageUI();
       acuityLabel.innerText = "Step 3: Switch Hands & Cover Left Eye";
-      scaleReadout.innerText = osBlurCm ? `L Blur: ${osBlurCm.toFixed(0)}cm` : `L Near 20/${osDenom}`;
+      scaleReadout.innerText = osBlurCm ? `L Edge: ${osBlurCm.toFixed(0)}cm` : `L Near 20/${osDenom}`;
       setCoachInstructions(
         "📋 STEP 3A: SWITCH HANDS FOR RIGHT EYE",
         "HOLD IN RIGHT HAND",
         "Switch! Hold the phone in your <span class='coach-highlight'>RIGHT HAND</span>.",
-        "Cup your <span class='coach-highlight'>LEFT HAND over your LEFT EYE</span>.",
+        "Cup your <span class='coach-highlight'>LEFT HAND over your LEFT EYE</span> (keep your nose uncovered!).",
         "Tap the big <span class='coach-highlight'>BLUE BUTTON</span> below with your RIGHT thumb."
       );
       showGatePrompt(
         "🤚 HOLD PHONE IN RIGHT HAND • COVER LEFT EYE",
-        "Now We Are Testing Your RIGHT EYE Only",
+        "Keep Your Nose Uncovered So Camera Can Track Distance",
         "👉 TAP HERE ONCE LEFT EYE IS COVERED 👈"
       );
     }
@@ -898,12 +914,12 @@
       examStage = 4;
       updateStageUI();
       acuityLabel.innerText = "Step 4: Uncover Both Eyes";
-      scaleReadout.innerText = odBlurCm ? `R Blur: ${odBlurCm.toFixed(0)}cm` : `R Near 20/${odDenom}`;
+      scaleReadout.innerText = odBlurCm ? `R Edge: ${odBlurCm.toFixed(0)}cm` : `R Near 20/${odDenom}`;
       setCoachInstructions(
         "📋 STEP 4: BOTH EYES OPEN",
         "BOTH HANDS",
         "<span class='coach-highlight'>UNCOVER BOTH EYES</span> and hold phone with BOTH hands.",
-        "Keep the green dot centered on the crosshair (~38 cm).",
+        "Keep the green dot centered on the crosshair.",
         "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below to test both eyes together."
       );
       showGatePrompt(
@@ -921,7 +937,7 @@
       setCoachInstructions(
         "📋 STEP 5: TAP 8 WORDS IN ORDER",
         "READING SPEED",
-        "Keep holding the phone with <span class='coach-highlight'>BOTH HANDS</span> at ~38 cm.",
+        "Keep holding the phone with <span class='coach-highlight'>BOTH HANDS</span> at a comfortable clear distance.",
         "8 words will appear in the white box below.",
         "Read and <span class='coach-highlight'>tap each word in order</span> from first to last."
       );
@@ -1007,7 +1023,7 @@
       document.getElementById('repOU').innerText = `Near: 20/${ouDenom}`;
       const osBlurTxt = osBlurCm ? `${osBlurCm.toFixed(0)}cm` : `60+cm`;
       const odBlurTxt = odBlurCm ? `${odBlurCm.toFixed(0)}cm` : `60+cm`;
-      document.getElementById('rxOU').innerText = `Blur: L ${osBlurTxt} | R ${odBlurTxt}`;
+      document.getElementById('rxOU').innerText = `Edge: L ${osBlurTxt} | R ${odBlurTxt}`;
 
       document.getElementById('repWPM').innerText = `${wpm} WPM`;
       document.getElementById('rxLat').innerText = maxGapMs > 1400 ? "Fatigue: Elevated" : "Fatigue: Optimal";
@@ -1036,12 +1052,12 @@
         "📋 EXACTLY WHAT TO DO RIGHT NOW (STEP 1 OF 6)",
         "BOTH EYES OPEN",
         "<span class='coach-highlight'>TAKE OFF GLASSES/CONTACTS</span> and sit comfortably.",
-        "Hold phone with <span class='coach-highlight'>BOTH HANDS</span> (~14 inches away) so the dot is on the crosshair.",
-        "Tap the big <span class='coach-highlight'>BLUE BUTTON</span> below to start."
+        "Hold phone with <span class='coach-highlight'>BOTH HANDS</span> (~15 inches / 38 cm away) with dot on crosshair.",
+        "Tap the big <span class='coach-highlight'>BLUE BUTTON</span> below to lock your face scale."
       );
       showGatePrompt(
         "🎯 STEP 1: LINE UP DOT ON CROSSHAIR (35–45 CM)",
-        "Hold Phone With Both Hands • Remove Glasses",
+        "Hold Phone With Both Hands • Keep Both Eyes Uncovered",
         "👉 TAP HERE TO LOCK & START 👈"
       );
     }
@@ -1135,6 +1151,8 @@
       if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
         const lm = results.multiFaceLandmarks[0];
         const noseBridge = lm[168] || lm[1];
+        const vw = videoElement.videoWidth || 480;
+        const vh = videoElement.videoHeight || 640;
 
         drawSyncedHudOverlay(noseBridge);
 
@@ -1156,17 +1174,53 @@
         }
 
         const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
-        const pPx = Math.hypot((lp.x - rp.x) * videoElement.videoWidth, (lp.y - rp.y) * videoElement.videoHeight);
+        const ipdPx = Math.hypot((lp.x - rp.x) * vw, (lp.y - rp.y) * vh);
 
-        if (pPx > 0) {
-          const rCm = ((FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / pPx) / 10;
-          const allowLiveTracking = (examStage === 1 || inBlurHorizonCheck);
+        const noseTop = lm[168], noseBot = lm[2];
+        const nosePx = (noseTop && noseBot) ? Math.hypot((noseTop.x - noseBot.x) * vw, (noseTop.y - noseBot.y) * vh) : 0;
 
-          if (allowLiveTracking) {
-            smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.28 * rCm) + (0.72 * smoothedDistanceCm);
-          } else if (lockedDistanceCm !== null) {
-            smoothedDistanceCm = lockedDistanceCm;
+        const leftEyeWidthPx = Math.hypot((lm[362].x - lm[263].x) * vw, (lm[362].y - lm[263].y) * vh);
+        const rightEyeWidthPx = Math.hypot((lm[133].x - lm[33].x) * vw, (lm[133].y - lm[33].y) * vh);
+
+        if (examStage === 1 && ipdPx > 0) {
+          const rCm = ((FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / ipdPx) / 10;
+          smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.28 * rCm) + (0.72 * smoothedDistanceCm);
+
+          if (nosePx > 10) {
+            const rawNoseMm = AVERAGE_IPD_MM * (nosePx / ipdPx);
+            calibratedNoseHeightMm = 0.2 * rawNoseMm + 0.8 * calibratedNoseHeightMm;
           }
+          if (leftEyeWidthPx > 5) {
+            const rawLEyeMm = AVERAGE_IPD_MM * (leftEyeWidthPx / ipdPx);
+            calibratedLeftEyeWidthMm = 0.2 * rawLEyeMm + 0.8 * calibratedLeftEyeWidthMm;
+          }
+          if (rightEyeWidthPx > 5) {
+            const rawREyeMm = AVERAGE_IPD_MM * (rightEyeWidthPx / ipdPx);
+            calibratedRightEyeWidthMm = 0.2 * rawREyeMm + 0.8 * calibratedRightEyeWidthMm;
+          }
+        } else if (inBlurHorizonCheck) {
+          let estCmNose = (nosePx > 8) ? (((FOCAL_LENGTH_PIXELS * calibratedNoseHeightMm) / nosePx) / 10) : null;
+          let estCmEye = null;
+          if (examStage === 2 && leftEyeWidthPx > 4) {
+            estCmEye = ((FOCAL_LENGTH_PIXELS * calibratedLeftEyeWidthMm) / leftEyeWidthPx) / 10;
+          } else if (examStage === 3 && rightEyeWidthPx > 4) {
+            estCmEye = ((FOCAL_LENGTH_PIXELS * calibratedRightEyeWidthMm) / rightEyeWidthPx) / 10;
+          }
+
+          let combinedMonocularCm = null;
+          if (estCmNose !== null && estCmEye !== null) {
+            combinedMonocularCm = (0.65 * estCmNose) + (0.35 * estCmEye);
+          } else {
+            combinedMonocularCm = estCmNose || estCmEye;
+          }
+
+          if (combinedMonocularCm !== null && combinedMonocularCm >= 20 && combinedMonocularCm <= 75) {
+            smoothedDistanceCm = smoothedDistanceCm === null
+              ? combinedMonocularCm
+              : (0.25 * combinedMonocularCm) + (0.75 * smoothedDistanceCm);
+          }
+        } else if (lockedDistanceCm !== null) {
+          smoothedDistanceCm = lockedDistanceCm;
         }
 
         if (smoothedDistanceCm !== null) {
@@ -1179,7 +1233,9 @@
           if (smoothedDistanceCm >= 35 && smoothedDistanceCm <= 45) {
             zoneVal.innerText = "Optimal"; zoneVal.style.color = "#4ade80"; cameraBox.style.borderColor = "#4ade80";
           } else if (smoothedDistanceCm < 35) {
-            zoneVal.innerText = "Too Close"; zoneVal.style.color = "#f87171"; cameraBox.style.borderColor = "#f87171";
+            zoneVal.innerText = inBlurHorizonCheck ? "Pull-In Zone" : "Too Close";
+            zoneVal.style.color = inBlurHorizonCheck ? "#38bdf8" : "#f87171";
+            cameraBox.style.borderColor = inBlurHorizonCheck ? "#38bdf8" : "#f87171";
           } else {
             zoneVal.innerText = inBlurHorizonCheck ? "Push-Back Zone" : "Too Far";
             zoneVal.style.color = "#fbbf24";
