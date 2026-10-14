@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  PROJECT EYES v3.49 - ENCRYPTED VAULT BUILD
+  PROJECT EYES v3.50 - ENCRYPTED VAULT BUILD
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.49 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.50 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -421,12 +421,12 @@
   <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">🔒 Project Eyes v3.49</div>
+      <div class="vault-title">🔒 Project Eyes v3.50</div>
       <div class="vault-sub">USPTO Patent Pending • 64/174,835</div>
       <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 12px; font-weight: 600;">
         Enter Family &amp; Founder Access PIN:
       </div>
-      <input type="password" id="vaultPinInput" class="vault-input" maxlength="4" inputmode="numeric" placeholder="••••" />
+      <input type="password" id="vaultPinInput" class="vault-input" maxlength="4" inputmode="numeric" placeholder="••••" oninput="if(this.value.length===4)_0xAuth()" />
       <button class="vault-btn" onclick="_0xAuth()">Unlock Encrypted Vault</button>
       <div class="vault-err" id="vaultErrMsg"></div>
       <div style="font-size: 8px; color: #64748b; margin-top: 12px;">
@@ -436,7 +436,7 @@
   </div>
 
   <header>
-    <h1>Project Eyes v3.49</h1>
+    <h1>Project Eyes v3.50</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -563,7 +563,6 @@
       _vfC.height = _cBx.clientHeight || 148;
     });
 
-    // Optical constants derived dynamically at unlock time from the PIN key
     let _K1 = 0, _K2 = 0, _K3 = 3.78;
     const _DIRS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
     const _STEPS = [200, 150, 100, 70, 50, 40, 30, 25, 20, 15];
@@ -587,7 +586,7 @@
 
     function _0xAuth() {
       const p = document.getElementById('vaultPinInput').value.trim();
-      if (_0xHash(p) === 2088996227) {
+      if (_0xHash(p) === 2088298489) {
         _K1 = (+p - 1919);
         _K2 = (+p - 1402);
         document.getElementById('pinVaultOverlay').style.display = "none";
