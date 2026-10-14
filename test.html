@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Watkins. All Rights Reserved.
   Terrance Watkins • Patent Pending 64/174,835
-  PROJECT EYES v3.61 - FULL INVENTOR BRANDING + OFFICIAL PRINTABLE RX ENGINE
+  PROJECT EYES v3.62 - CLEAN UI + CENTERED TOP BADGE + PRINTABLE RX ENGINE
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.61 | Terrance Watkins • Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.62 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -30,13 +30,9 @@
       border: 2px solid #38bdf8; border-radius: 14px; padding: 22px 18px;
       box-shadow: 0 12px 32px rgba(0,0,0,0.75);
     }
-    .vault-title { font-size: 17px; font-weight: 900; color: #f8fafc; margin-bottom: 3px; }
-    .vault-inventor {
-      font-size: 11px; font-weight: 900; color: #fde047;
-      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px;
-    }
+    .vault-title { font-size: 17px; font-weight: 900; color: #f8fafc; margin-bottom: 6px; }
     .vault-sub {
-      font-size: 9.5px; font-weight: 800; color: #38bdf8;
+      font-size: 10px; font-weight: 800; color: #38bdf8;
       text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px;
     }
     .vault-input {
@@ -53,16 +49,13 @@
     .vault-err { color: #f87171; font-size: 10.5px; font-weight: 800; margin-top: 8px; min-height: 15px; }
     header {
       text-align: center; width: 100%; max-width: 600px;
-      display: flex; align-items: center; justify-content: space-between; padding: 1px 4px;
+      display: flex; align-items: center; justify-content: center; padding: 2px 4px;
     }
-    .brand-title-wrap { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
-    .inventor-sub-tag { font-size: 8px; font-weight: 900; color: #fde047; text-transform: uppercase; letter-spacing: 0.4px; }
     .patent-pill {
       background: rgba(56, 189, 248, 0.14); color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.4); font-size: 7.5px; font-weight: 900;
-      letter-spacing: 0.4px; padding: 3px 7px; border-radius: 999px; text-transform: uppercase;
+      border: 1px solid rgba(56, 189, 248, 0.4); font-size: 9px; font-weight: 900;
+      letter-spacing: 0.5px; padding: 4px 12px; border-radius: 999px; text-transform: uppercase;
     }
-    h1 { font-size: 13px; font-weight: 900; color: #f8fafc; }
     .stage-bar { width: 100%; max-width: 600px; display: flex; gap: 4px; flex-shrink: 0; }
     .stage-step {
       flex: 1; text-align: center; padding: 6px 2px; font-size: 10px; font-weight: 900;
@@ -147,17 +140,12 @@
     .gate-main { font-size: 15px; font-weight: 900; line-height: 1.25; text-transform: uppercase; color: #ffffff; letter-spacing: 0.3px; }
     #readingBox { display: none; width: 100%; text-align: center; font-weight: 800; font-size: 13px; }
     #reportBox { display: none; width: 100%; text-align: left; }
-    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
-    .report-item { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; border-left: 3px solid #0284c7; }
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .report-item { background: #f1f5f9; padding: 3px 6px; border-radius: 4px; border-left: 3px solid #0284c7; }
     .report-label { font-size: 6.5px; font-weight: 800; color: #64748b; text-transform: uppercase; }
-    .report-val { font-size: 9px; font-weight: 900; color: #0f172a; line-height: 1.1; }
-    .report-sub { font-size: 7.4px; font-weight: 800; color: #0284c7; line-height: 1.15; }
-    .report-cl { font-size: 7.4px; font-weight: 900; color: #0f766e; line-height: 1.15; }
-    .telehealth-shield {
-      margin-top: 2px; font-size: 6.2px; font-weight: 900; color: #0f172a;
-      text-align: center; background: #fde047; padding: 1.5px 4px;
-      border-radius: 3px; text-transform: uppercase; letter-spacing: 0.2px;
-    }
+    .report-val { font-size: 9.5px; font-weight: 900; color: #0f172a; line-height: 1.15; }
+    .report-sub { font-size: 7.5px; font-weight: 800; color: #0284c7; line-height: 1.15; }
+    .report-cl { font-size: 7.5px; font-weight: 900; color: #0f766e; line-height: 1.15; }
     .controls-wrap {
       width: 100%; max-width: 600px; display: flex; align-items: center;
       justify-content: center; gap: 10px; height: 122px; padding: 0 4px;
@@ -213,9 +201,9 @@
     }
     .print-rx-btn {
       width: 100%; height: 106px; background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
-      color: #fde047; border: 2.5px solid #fde047; border-radius: 12px;
+      color: #ffffff; border: 2.5px solid #38bdf8; border-radius: 12px;
       font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.4px;
-      line-height: 1.35; box-shadow: 0 6px 18px rgba(253, 224, 71, 0.25);
+      line-height: 1.35; box-shadow: 0 6px 18px rgba(56, 189, 248, 0.25);
       display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
     }
     .print-rx-btn:active { transform: scale(0.98); background: #0369a1; }
@@ -224,7 +212,7 @@
       justify-content: space-between; gap: 8px; flex-shrink: 0;
     }
     .reset-btn { padding: 4px 10px; font-size: 9.5px; }
-    footer { font-size: 8.5px; font-weight: 800; color: #fde047; text-align: right; white-space: nowrap; }
+    footer { font-size: 8.5px; font-weight: 800; color: #94a3b8; text-align: right; white-space: nowrap; }
     #printableRxSheet { display: none; }
 
     @media print {
@@ -302,22 +290,17 @@
   <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">✅ Project Eyes v3.61</div>
-      <div class="vault-inventor">Terrance Watkins</div>
-      <div class="vault-sub">Patent Pending 64/174,835</div>
+      <div class="vault-title">✅ Project Eyes v3.62</div>
+      <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
       <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 12px; font-weight: 600;">Enter 4-Digit Access PIN:</div>
       <input type="tel" id="vaultPinInput" class="vault-input" maxlength="4" placeholder="••••" oninput="window.checkVaultPin()" onkeyup="window.checkVaultPin()" />
       <button class="vault-btn" type="button" onclick="window.checkVaultPin()">Unlock &amp; Start Camera</button>
       <div class="vault-err" id="vaultErrMsg"></div>
-      <div style="font-size: 8.5px; color: #fde047; margin-top: 12px; font-weight: 800;">Terrance Watkins • Patent Pending 64/174,835</div>
     </div>
   </div>
 
+  <!-- CENTERED BLUE PATENT PILL HEADER -->
   <header>
-    <div class="brand-title-wrap">
-      <h1>Project Eyes v3.61</h1>
-      <span class="inventor-sub-tag">Terrance Watkins</span>
-    </div>
     <div class="patent-pill" id="hwBadgePill">Terrance Watkins • Patent Pending 64/174,835</div>
   </header>
 
@@ -330,6 +313,7 @@
     <div class="stage-step" id="st6">6. Rx Score</div>
   </div>
 
+  <!-- BOX 1 UNDER THE 6 STEPS: CAMERA BOX (NO NAME) -->
   <div class="camera-box" id="cameraBox">
     <video id="webcam" autoplay playsinline muted></video>
     <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
@@ -340,14 +324,15 @@
     <div class="center-guide-pill" id="centerGuidePill">CENTER DOT ON CROSSHAIR</div>
     <div class="hud-bottom">
       <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
-      <div class="badge" id="devTypeBadge" style="font-size: 8.5px;">Terrance Watkins</div>
+      <div class="badge" id="devTypeBadge" style="font-size: 8.5px;">Auto Cal</div>
     </div>
   </div>
 
+  <!-- BOX 2 UNDER CAMERA BOX: COACH PANEL (NO NAME) -->
   <div class="coach-panel" id="coachPanel">
     <div class="coach-header">
       <span id="coachTitle">⚡ STEP 1 OF 6: GLASSES &amp; CONTACTS RX SETUP</span>
-      <span id="coachBadge" class="coach-badge-pill">TERRANCE WATKINS</span>
+      <span id="coachBadge" class="coach-badge-pill">STEP 1</span>
     </div>
     <div class="coach-list" id="coachList">
       <div class="coach-line">1. Put in <span class="coach-highlight">STAND</span> &amp; remove glasses to measure <span class="coach-highlight">LEFT &amp; RIGHT EYE</span>.</div>
@@ -356,9 +341,10 @@
     </div>
   </div>
 
+  <!-- BOX 3 UNDER COACH PANEL: OPTOTYPE & RESULTS CARD (NO NAME) -->
   <div class="optotype-card">
     <div class="card-header">
-      <span id="acuityLabel">Terrance Watkins • Patent Pending 64/174,835</span>
+      <span id="acuityLabel">Step 1: Glasses &amp; Contacts Rx Calibration</span>
       <span id="scaleReadout">Ready</span>
     </div>
     <div class="optotype-viewport">
@@ -395,7 +381,6 @@
             <div class="report-sub" id="rxLat">Optimal</div>
           </div>
         </div>
-        <div class="telehealth-shield">🛡️ TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
       </div>
     </div>
   </div>
@@ -407,13 +392,13 @@
     <footer>Terrance Watkins • Patent Pending 64/174,835</footer>
   </div>
 
-  <!-- OFFICIAL PRINTABLE PRESCRIPTION DOCUMENT -->
+  <!-- OFFICIAL PRINTABLE PRESCRIPTION DOCUMENT (WITH YOUR NAME & PATENT PENDING) -->
   <div id="printableRxSheet">
     <div class="prx-header">
       <div>
         <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
         <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.61</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.62</div>
       </div>
       <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
@@ -504,7 +489,7 @@
     const _DIRS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
     const _STEPS = [200, 150, 100, 70, 50, 40, 30, 25, 20, 15];
     const _BLUR_STEPS = [35, 30, 25, 20, 15];
-    const _WORDS = ["Army", "veteran", "Terrance", "Watkins", "built", "this", "vision", "engine."];
+    const _WORDS = ["Clear", "focus", "locks", "sharp", "optical", "vision", "ranges", "fast."];
 
     let _st = 1, _wG = true, _inB = false, _sI = 0, _bStepIdx = 1;
     let _cD = _STEPS[0], _cDir = 'RIGHT', _lH = 0, _lM = 0;
@@ -521,9 +506,9 @@
       _isTab = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) || minDim >= 700 || maxDim >= 1000;
       _K1 = 63.0;
       if (_isTab) {
-        _K2 = 510; _K3 = 3.12; _dBg.innerText = "💻 iPad • Terrance Watkins";
+        _K2 = 510; _K3 = 3.12; _dBg.innerText = "💻 iPad Cal";
       } else {
-        _K2 = 580; _K3 = 3.78; _dBg.innerText = "📱 iPhone • Terrance Watkins";
+        _K2 = 580; _K3 = 3.78; _dBg.innerText = "📱 iPhone Cal";
       }
     }
 
@@ -583,10 +568,10 @@
       _wG = false; _gBt.style.display = "none";
       if (_st === 1) {
         _inB = true; _bStepIdx = 1; _sCv.style.display = "block";
-        _aLb.innerText = "Terrance Watkins • Patent Pending 64/174,835";
+        _aLb.innerText = "Step 1: Find Blur Point";
         _dTE('RIGHT', _sCm || 44, _BLUR_STEPS[_bStepIdx]);
         _setC(
-          "⚡ STEP 1: CALIBRATE GLASSES & CONTACTS BLUR", "TERRANCE WATKINS",
+          "⚡ STEP 1: CALIBRATE GLASSES & CONTACTS BLUR", "BLUR CHECK",
           "If 'E' is sharp: Tap <span class='coach-highlight'>BLUE BUTTON</span> to shrink it.",
           "Or <span class='coach-highlight'>LEAN BACK</span> slowly until the 'E' blurs.",
           "Tap <span class='coach-highlight'>YELLOW BUTTON</span> the moment 'E' blurs to set Base Rx!"
@@ -606,7 +591,7 @@
         const curDen = _BLUR_STEPS[_bStepIdx];
         _cDir = _DIRS[Math.floor(Math.random() * _DIRS.length)];
         _dTE(_cDir, _sCm || 44.0, curDen);
-        _aLb.innerText = `20/${curDen} • Terrance Watkins • Patent Pending 64/174,835`;
+        _aLb.innerText = `Step 1: Shrunk to 20/${curDen}`;
       } else {
         window._0xLockB();
       }
@@ -621,7 +606,7 @@
       if (_lNPx > 10) _nK = _lCm * _lNPx;
       _st = 2; _uSUI();
       const tS = `${_lCm.toFixed(1)} cm`;
-      _aLb.innerText = "Terrance Watkins • Patent Pending 64/174,835";
+      _aLb.innerText = "Step 2: Left Eye Calibration";
       _sRd.innerText = `Target: ${tS}`;
       _setC(
         "⚡ STEP 2: MEASURE LEFT EYE (GLASSES & CONTACTS)", "LEFT EYE RX",
@@ -684,8 +669,8 @@
 
     function _lNAR() {
       _cDir = _DIRS[Math.floor(Math.random() * _DIRS.length)];
-      const sN = _st === 3 ? "Right" : _st === 4 ? "Both" : "Left";
-      _aLb.innerText = `${sN} 20/${_cD} (${_lH}/3) • Terrance Watkins • Pat. Pend. 64/174,835`;
+      const sN = _st === 3 ? "Right Eye" : _st === 4 ? "Binocular" : "Left Eye";
+      _aLb.innerText = `${sN} • Line: 20/${_cD} • Hits: ${_lH}/3`;
       _sCv.style.opacity = "0.15";
       setTimeout(() => { _dTE(_cDir, _lCm || 45.0, _cD); _sCv.style.opacity = "1"; }, 65);
     }
@@ -711,21 +696,21 @@
     function _fCES() {
       const dT = (_lCm || 45).toFixed(1);
       if (_st === 2) {
-        _st = 3; _uSUI(); _aLb.innerText = "Terrance Watkins • Patent Pending 64/174,835"; _sRd.innerText = `L Line: 20/${_osD}`;
+        _st = 3; _uSUI(); _aLb.innerText = "Step 3: Right Eye Calibration"; _sRd.innerText = `L Line: 20/${_osD}`;
         _setC("⚡ STEP 3: MEASURE RIGHT EYE (GLASSES & CONTACTS)", "RIGHT EYE RX",
           "Stay at <span class='coach-highlight'>Target: " + dT + " cm</span> to measure <span class='coach-highlight'>RIGHT EYE</span>.",
           "Cover <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand.",
           "Tap <span class='coach-highlight'>BLUE BUTTON</span> with your RIGHT hand!");
         _sGP("👉 TAP HERE ONCE YOUR LEFT EYE IS COVERED WITH YOUR HAND 👈");
       } else if (_st === 3) {
-        _st = 4; _uSUI(); _aLb.innerText = "Terrance Watkins • Patent Pending 64/174,835"; _sRd.innerText = `R Line: 20/${_odD}`;
+        _st = 4; _uSUI(); _aLb.innerText = "Step 4: Uncover Both Eyes"; _sRd.innerText = `R Line: 20/${_odD}`;
         _setC("⚡ STEP 4: UNCOVER BOTH EYES (BALANCE CHECK)", "BOTH EYES OPEN",
           "<span class='coach-highlight'>OPEN BOTH EYES</span> at Target: " + dT + " cm.",
           "Balancing <span class='coach-highlight'>LEFT & RIGHT EYE</span> Glasses + Contacts Rx.",
           "Tap <span class='coach-highlight'>BLUE BUTTON</span> to test both eyes together!");
         _sGP("👉 TAP HERE ONCE BOTH EYES ARE UNCOVERED 👈");
       } else if (_st === 4) {
-        _st = 5; _uSUI(); _aLb.innerText = "Terrance Watkins • Patent Pending 64/174,835"; _sRd.innerText = `O.U. 20/${_ouD}`;
+        _st = 5; _uSUI(); _aLb.innerText = "Step 5: Reading Check"; _sRd.innerText = `O.U. 20/${_ouD}`;
         _setC("⚡ STEP 5: 8-WORD READING TEST", "TAP IN ORDER",
           "Keep <span class='coach-highlight'>BOTH EYES OPEN</span> in your chair.",
           "8 words will appear in the white box below.",
@@ -736,7 +721,7 @@
 
     function _lRW() {
       _sCv.style.display = "none"; _exC.innerHTML = ""; _exC.className = "controls-wrap align-center";
-      _rBx.style.display = "block"; _aLb.innerText = "Terrance Watkins • Patent Pending 64/174,835";
+      _rBx.style.display = "block"; _aLb.innerText = "Step 5: Tap Words In Order";
       _sRd.innerText = `0 / ${_WORDS.length} Words`; _wCt.innerHTML = ""; _wI = 0; _tS = [performance.now()];
       _WORDS.forEach((w, idx) => {
         const sp = document.createElement('span');
@@ -759,7 +744,7 @@
 
     function _sS6() {
       _st = 6; _uSUI(); _rBx.style.display = "none"; _rpB.style.display = "block";
-      _aLb.innerText = "Terrance Watkins • Patent Pending 64/174,835"; _sRd.innerText = "Complete";
+      _aLb.innerText = "Step 6: Final Glasses & Contacts Rx"; _sRd.innerText = "Complete";
       const tSec = (_tS[_tS.length - 1] - _tS[0]) / 1000;
       const wpm = Math.round((_WORDS.length / Math.max(1, tSec)) * 60);
       let mG = 0;
@@ -768,10 +753,10 @@
       const odM = _0xCalc(_odD, _osD, _bCm, _odHM, _odVM);
       const fatStr = mG > 1400 ? "Fatigue: Elevated" : "Fatigue: Optimal";
 
-      _setC("✅ STEP 6: RX BY TERRANCE WATKINS READY!", "PATENT PENDING",
+      _setC("✅ STEP 6: GLASSES & CONTACTS RX READY!", "FINAL RX",
         `👓 <span class='coach-highlight'>GLASSES RX</span>: Left ${osM.shortGlasses} | Right ${odM.shortGlasses}`,
         `💧 <span class='coach-highlight'>CONTACTS RX</span>: Left ${osM.shortContacts} | Right ${odM.shortContacts}`,
-        "Tap <span class='coach-highlight'>PRINT OFFICIAL RX</span> below to print with your name on it!");
+        "Tap <span class='coach-highlight'>PRINT OFFICIAL RX</span> below to print your prescription!");
 
       document.getElementById('repOS').innerText = `${osM.snellen20Ft} (20-Ft Eq)`;
       document.getElementById('rxOS').innerText = osM.glassesStr;
@@ -810,9 +795,9 @@
       _osD = 250; _odD = 250; _ouD = 250; _bCm = null; _lCm = null;
       _osHM = 0; _osVM = 0; _odHM = 0; _odVM = 0;
       _exC.className = "controls-wrap align-center"; _uSUI();
-      _aLb.innerText = "Terrance Watkins • Patent Pending 64/174,835";
+      _aLb.innerText = "Step 1: Glasses & Contacts Rx Calibration";
       _sRd.innerText = "Ready"; _tLb.innerText = "Target:"; _zVl.innerText = "35–55 cm"; _zVl.style.color = "#fbbf24";
-      _setC("⚡ STEP 1 OF 6: GLASSES & CONTACTS RX SETUP", "TERRANCE WATKINS",
+      _setC("⚡ STEP 1 OF 6: GLASSES & CONTACTS RX SETUP", "STEP 1",
         "Put in <span class='coach-highlight'>STAND</span> & remove glasses to measure <span class='coach-highlight'>LEFT & RIGHT EYE</span>.",
         "Center <span class='coach-highlight'>GREEN DOT</span> to calibrate <span class='coach-highlight'>GLASSES & CONTACTS RX</span>.",
         "Tap the <span class='coach-highlight'>BIG BLUE BUTTON</span> below to lock chair distance!");
