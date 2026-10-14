@@ -1,0 +1,1324 @@
+<!-- 
+  Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
+  PATENT PENDING: USPTO Provisional Application No. 64/174,835
+  CONFIDENTIAL & PROPRIETARY - UNAUTHORIZED REPRODUCTION PROHIBITED
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Project Eyes v3.46 | Patent Pending 64/174,835</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: #0b0f19;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+    }
+
+    /* FOUNDER PIN VAULT OVERLAY */
+    #pinVaultOverlay {
+      position: fixed;
+      inset: 0;
+      background: #070a12;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .vault-card {
+      width: 100%;
+      max-width: 340px;
+      background: #111827;
+      border: 2px solid #38bdf8;
+      border-radius: 14px;
+      padding: 20px 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.7);
+    }
+    .vault-title { font-size: 16px; font-weight: 900; color: #f8fafc; margin-bottom: 4px; }
+    .vault-sub { font-size: 9.5px; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; }
+    .vault-input {
+      width: 100%;
+      background: #0b0f19;
+      border: 2px solid #334155;
+      color: #fde047;
+      font-size: 22px;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    .vault-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fff;
+      border: 1px solid #38bdf8;
+      padding: 12px;
+      font-size: 12px;
+      font-weight: 900;
+      border-radius: 8px;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .vault-err {
+      color: #f87171;
+      font-size: 10px;
+      font-weight: 800;
+      margin-top: 8px;
+      min-height: 14px;
+    }
+
+    header {
+      text-align: center;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px;
+    }
+    .patent-pill {
+      background: rgba(56, 189, 248, 0.14);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    h1 { font-size: 14px; font-weight: 800; }
+    
+    .stage-bar {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      gap: 3px;
+    }
+    .stage-step {
+      flex: 1; text-align: center; padding: 3px 2px; font-size: 8px; font-weight: 800;
+      background: #1e293b; color: #64748b; border-radius: 5px; border: 1px solid #334155;
+    }
+    .stage-step.active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: #38bdf8; }
+    .stage-step.done { background: rgba(74, 222, 128, 0.2); color: #4ade80; border-color: #4ade80; }
+
+    .camera-box {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: 148px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #1e293b;
+      background: #000;
+      flex-shrink: 0;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+    #webcam {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0.01;
+      pointer-events: none;
+      z-index: 1;
+    }
+    #viewfinderCanvas {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+
+    .center-guide-pill {
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(250, 204, 21, 0.6);
+      color: #fde047;
+      font-size: 7.5px;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 4;
+      white-space: nowrap;
+    }
+    .center-guide-pill.locked {
+      border-color: rgba(74, 222, 128, 0.8);
+      color: #4ade80;
+    }
+
+    .hud-top, .hud-bottom {
+      position: absolute; left: 6px; right: 6px;
+      display: flex; justify-content: space-between; pointer-events: none;
+      z-index: 4;
+    }
+    .hud-top { top: 4px; }
+    .hud-bottom { bottom: 4px; }
+    .badge {
+      background: rgba(15, 23, 42, 0.92);
+      padding: 2px 6px;
+      border-radius: 5px;
+      border: 1px solid #334155;
+      font-size: 9px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+    .badge-val { color: #38bdf8; font-size: 11px; font-weight: 900; margin-left: 2px; }
+    
+    .coach-panel {
+      width: 100%;
+      max-width: 600px;
+      background: #111827;
+      border: 2px solid #38bdf8;
+      border-radius: 10px;
+      padding: 6px 10px;
+      flex-shrink: 0;
+    }
+    .coach-header {
+      font-size: 9px;
+      font-weight: 900;
+      color: #fde047;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .coach-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .coach-line {
+      font-size: 10.2px;
+      font-weight: 800;
+      color: #f8fafc;
+      line-height: 1.25;
+      background: #0f172a;
+      padding: 3px 6px;
+      border-radius: 5px;
+      border-left: 3px solid #38bdf8;
+    }
+    .coach-highlight {
+      color: #fde047;
+      font-weight: 900;
+    }
+    
+    .optotype-card {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: 112px;
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 10px;
+      padding: 5px 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+    .card-header {
+      width: 100%; display: flex; justify-content: space-between; font-size: 9px; font-weight: 800; color: #64748b;
+      border-bottom: 1px solid #e2e8f0; padding-bottom: 2px; text-transform: uppercase;
+    }
+    .optotype-viewport {
+      position: absolute;
+      top: 22px;
+      bottom: 5px;
+      left: 8px;
+      right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    #snellenCanvas {
+      display: none;
+      transition: opacity 0.06s ease;
+    }
+    #gatePromptBtn {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #ffffff;
+      border: 2px solid #38bdf8;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 8px;
+      cursor: pointer;
+      text-align: center;
+      user-select: none;
+    }
+    #gatePromptBtn:active {
+      transform: scale(0.98);
+      background: #0369a1;
+    }
+    .gate-posture {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(253, 224, 71, 0.6);
+      color: #fde047;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .gate-sub {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #e0f2fe;
+      margin-bottom: 3px;
+    }
+    .gate-main {
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.15;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    #readingBox { display: none; width: 100%; text-align: center; font-weight: 700; font-size: 12px; }
+    #reportBox { display: none; width: 100%; text-align: left; }
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .report-item { background: #f1f5f9; padding: 3px 6px; border-radius: 5px; border-left: 3px solid #0284c7; }
+    .report-label { font-size: 7px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .report-val { font-size: 10px; font-weight: 900; color: #0f172a; }
+    .report-sub { font-size: 8.2px; font-weight: 800; color: #0284c7; }
+    
+    .controls-wrap {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 126px;
+      padding: 0 2px;
+      flex-shrink: 0;
+      transition: all 0.25s ease;
+    }
+    .controls-wrap.align-left {
+      justify-content: flex-start;
+      flex-direction: row;
+    }
+    .controls-wrap.align-right {
+      justify-content: flex-end;
+      flex-direction: row-reverse;
+    }
+    .controls-wrap.align-center {
+      justify-content: center;
+      flex-direction: row;
+    }
+
+    .dir-grid {
+      display: grid;
+      grid-template-columns: 60px 60px;
+      grid-template-rows: 60px 60px;
+      gap: 6px;
+    }
+    button {
+      background: #1e293b; color: #f8fafc; border: 1px solid #334155;
+      padding: 7px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;
+    }
+    button.dir-btn {
+      width: 60px;
+      height: 60px;
+      aspect-ratio: 1 / 1;
+      background: #e2e8f0;
+      color: #0f172a;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 2px;
+      line-height: 1.1;
+      user-select: none;
+    }
+    .dir-arrow {
+      font-size: 18px;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    button.dir-btn:active { background: #0284c7; color: #fff; border-color: #38bdf8; }
+    button.cant-see-btn {
+      height: 126px;
+      width: 88px;
+      background: rgba(220, 38, 38, 0.18);
+      color: #f87171;
+      border: 1px solid rgba(248, 113, 113, 0.45);
+      border-radius: 10px;
+      font-size: 9.5px;
+      font-weight: 900;
+      padding: 6px;
+      text-transform: uppercase;
+      line-height: 1.25;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    button.cant-see-btn:active { background: #dc2626; color: #fff; }
+
+    .horizon-deck {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      height: 122px;
+    }
+    .horizon-btn-blur {
+      flex: 1;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #0f172a;
+      border: 2px solid #fde047;
+      border-radius: 10px;
+      font-size: 11.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      padding: 8px 10px;
+      line-height: 1.25;
+    }
+
+    .bottom-bar {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .reset-btn {
+      padding: 4px 10px;
+      font-size: 9.5px;
+    }
+    footer { font-size: 8.5px; color: #64748b; text-align: right; white-space: nowrap; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- CONFIDENTIAL PIN GATE -->
+  <div id="pinVaultOverlay">
+    <div class="vault-card">
+      <div class="vault-title">🔒 Project Eyes v3.46</div>
+      <div class="vault-sub">USPTO Patent Pending • 64/174,835</div>
+      <input type="password" id="vaultPinInput" class="vault-input" maxlength="4" inputmode="numeric" placeholder="••••" />
+      <button class="vault-btn" onclick="unlockVault()">Authorize & Start Camera</button>
+      <div class="vault-err" id="vaultErrMsg"></div>
+      <div style="font-size: 8px; color: #64748b; margin-top: 10px;">
+        &copy; 2026 Terrance Lamont Watkins. All Rights Reserved.
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <h1>Project Eyes v3.46</h1>
+    <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
+  </header>
+
+  <div class="stage-bar">
+    <div class="stage-step active" id="st1">1. Blur Pt</div>
+    <div class="stage-step" id="st2">2. Left Eye</div>
+    <div class="stage-step" id="st3">3. Right Eye</div>
+    <div class="stage-step" id="st4">4. Both</div>
+    <div class="stage-step" id="st5">5. Read</div>
+    <div class="stage-step" id="st6">6. Results</div>
+  </div>
+
+  <div class="camera-box" id="cameraBox">
+    <video id="webcam" autoplay playsinline muted></video>
+    <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
+
+    <div class="hud-top">
+      <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
+      <div class="badge"><span id="targetLabel">Target:</span> <span id="zoneVal" class="badge-val" style="color: #fbbf24;">35–45 cm</span></div>
+    </div>
+
+    <div class="center-guide-pill" id="centerGuidePill">CENTER DOT ON CROSSHAIR</div>
+
+    <div class="hud-bottom">
+      <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
+      <div class="badge" style="font-size: 8px;">T.L.W.</div>
+    </div>
+  </div>
+
+  <div class="coach-panel" id="coachPanel">
+    <div class="coach-header">
+      <span id="coachTitle">📋 STEP 1 OF 6: PLACE PHONE IN HOLDER & FIND BLUR EDGE</span>
+      <span id="coachBadge" style="color:#38bdf8;">PHONE IN STAND</span>
+    </div>
+    <div class="coach-list" id="coachList">
+      <div class="coach-line">1. <span class="coach-highlight">PUT PHONE IN A HOLDER/STAND</span> on a table at eye level (remove glasses).</div>
+      <div class="coach-line">2. Keep <span class="coach-highlight">BOTH EYES OPEN</span> (~35 cm away) with the green dot on the crosshair.</div>
+      <div class="coach-line">3. Tap the <span class="coach-highlight">BLUE BUTTON</span> below to start sliding the holder back.</div>
+    </div>
+  </div>
+
+  <div class="optotype-card">
+    <div class="card-header">
+      <span id="acuityLabel">Step 1: Table Stand & Blur-Point Check</span>
+      <span id="scaleReadout">Ready</span>
+    </div>
+
+    <div class="optotype-viewport">
+      <div id="gatePromptBtn" onclick="handleGateTap()">
+        <div class="gate-posture" id="gatePostureText">
+          📱 PUT PHONE IN A TABLE HOLDER / STAND AT EYE LEVEL
+        </div>
+        <div class="gate-sub" id="gateSubText">Keep Both Eyes Open • Center Dot on Crosshair (~35 cm)</div>
+        <div class="gate-main" id="gateMainText">👉 TAP HERE TO START SLIDE-BACK 👈</div>
+      </div>
+
+      <canvas id="snellenCanvas"></canvas>
+
+      <div id="readingBox">
+        <div style="font-size: 8px; color: #0284c7; margin-bottom: 2px; font-weight: 800;">TAP EACH WORD IN ORDER FROM LEFT TO RIGHT:</div>
+        <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 3px; justify-content: center;"></div>
+      </div>
+
+      <div id="reportBox">
+        <div class="report-grid">
+          <div class="report-item">
+            <div class="report-label">Left Eye (O.S.) Rx</div>
+            <div class="report-val" id="repOS">--</div>
+            <div class="report-sub" id="rxOS">SPH: --</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">Right Eye (O.D.) Rx</div>
+            <div class="report-val" id="repOD">--</div>
+            <div class="report-sub" id="rxOD">SPH: --</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">Acuity Split (L / R)</div>
+            <div class="report-val" id="repOU">--</div>
+            <div class="report-sub" id="rxOU">Blur Edge: --</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">Reading & Fatigue</div>
+            <div class="report-val" id="repWPM">-- WPM</div>
+            <div class="report-sub" id="rxLat">Optimal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls-wrap align-center" id="examControls"></div>
+
+  <div class="bottom-bar">
+    <button class="reset-btn" onclick="resetExam()">Reset Exam</button>
+    <footer>&copy; 2026 Terrance Lamont Watkins</footer>
+  </div>
+
+  <script>
+    const videoElement = document.getElementById('webcam');
+    const viewfinderCanvas = document.getElementById('viewfinderCanvas');
+    const vfCtx = viewfinderCanvas.getContext('2d');
+    const cameraBox = document.getElementById('cameraBox');
+    const centerGuidePill = document.getElementById('centerGuidePill');
+    const distVal = document.getElementById('distVal');
+    const targetLabel = document.getElementById('targetLabel');
+    const zoneVal = document.getElementById('zoneVal');
+    const eyeStateVal = document.getElementById('eyeStateVal');
+    const snellenCanvas = document.getElementById('snellenCanvas');
+    const ctx = snellenCanvas.getContext('2d');
+    const gatePromptBtn = document.getElementById('gatePromptBtn');
+    const gatePostureText = document.getElementById('gatePostureText');
+    const gateSubText = document.getElementById('gateSubText');
+    const gateMainText = document.getElementById('gateMainText');
+    const readingBox = document.getElementById('readingBox');
+    const wordContainer = document.getElementById('wordContainer');
+    const reportBox = document.getElementById('reportBox');
+    const scaleReadout = document.getElementById('scaleReadout');
+    const acuityLabel = document.getElementById('acuityLabel');
+    const examControls = document.getElementById('examControls');
+    const coachTitle = document.getElementById('coachTitle');
+    const coachBadge = document.getElementById('coachBadge');
+    const coachList = document.getElementById('coachList');
+
+    videoElement.addEventListener('loadedmetadata', () => {
+      viewfinderCanvas.width = cameraBox.clientWidth || 360;
+      viewfinderCanvas.height = cameraBox.clientHeight || 148;
+    });
+
+    const _K1 = 63.0;
+    const _K2 = 580;
+    const _K3 = 3.78;
+    const DIRECTIONS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
+    const ACUITY_STEPS = [200, 150, 100, 70, 50, 40, 30, 25, 20, 15];
+
+    let examStage = 1;
+    let waitingForGateTap = true;
+    let inBlurHorizonCheck = false;
+    let stepIndex = 0;
+    let currentDenominator = ACUITY_STEPS[0];
+    let currentDirection = 'RIGHT';
+    let levelHits = 0;
+    let levelMisses = 0;
+
+    let osDenom = 250;
+    let odDenom = 250;
+    let ouDenom = 250;
+    let baseBlurCm = null;
+    let lockedDistanceCm = null;
+
+    let _nConst = 2800.0; 
+    let _lastNPx = 60.0;
+
+    let osHorizMiss = 0, osVertMiss = 0;
+    let odHorizMiss = 0, odVertMiss = 0;
+
+    const PASSAGE_WORDS = ["Clear", "vision", "opens", "every", "door", "for", "young", "minds."];
+    let wordIndex = 0;
+    let tapTimestamps = [];
+
+    let smoothedDistanceCm = null;
+    let smoothedLeftEAR = 0.30;
+    let smoothedRightEAR = 0.30;
+    let confirmedEyeState = "Binocular";
+
+    function unlockVault() {
+      const pin = document.getElementById('vaultPinInput').value.trim();
+      if (pin === "1982") {
+        document.getElementById('pinVaultOverlay').style.display = "none";
+        camera.start();
+      } else {
+        document.getElementById('vaultErrMsg').innerText = "UNAUTHORIZED PIN CODE";
+      }
+    }
+
+    function setCoachInstructions(titleText, badgeText, line1, line2, line3) {
+      coachTitle.innerText = titleText;
+      coachBadge.innerText = badgeText;
+      coachList.innerHTML = `
+        <div class="coach-line">1. ${line1}</div>
+        <div class="coach-line">2. ${line2}</div>
+        <div class="coach-line">3. ${line3}</div>
+      `;
+    }
+
+    function _calcRx(a, b, c, h, v) {
+      let cv = 0.0;
+      let ct = "";
+      const ad = Math.abs(h - v);
+      if (ad >= 1 && (h + v) >= 1) {
+        cv = ad >= 2 ? -0.75 : -0.50;
+        const ax = h > v ? "180°/15°" : "90°";
+        ct = ` • CYL ${cv.toFixed(2)} (${ax})`;
+      }
+
+      if (c !== null && c < 64) {
+        const rB = -(100 / c);
+        const aB = Math.round(rB * 4) / 4;
+        const bestD = Math.min(a, b);
+        const tI = ACUITY_STEPS.indexOf(a);
+        const bI = ACUITY_STEPS.indexOf(bestD);
+
+        let dS = 0;
+        if (tI !== -1 && bI !== -1 && tI < bI) {
+          dS = bI - tI;
+        } else if (a > b) {
+          dS = 1;
+        }
+        const mO = -(Math.min(3, dS) * 0.25);
+        const qS = Math.round((aB + mO) * 4) / 4;
+
+        let wD = 20;
+        const absD = Math.abs(qS);
+        if (absD >= 3.00) wD = 250;
+        else if (absD >= 2.50) wD = 200;
+        else if (absD >= 2.00) wD = 150;
+        else if (absD >= 1.50) wD = 100;
+        else if (absD >= 1.25) wD = 70;
+        else if (absD >= 1.00) wD = 50;
+        else if (absD >= 0.75) wD = 40;
+        else if (absD >= 0.50) wD = 30;
+
+        return {
+          snellen20Ft: wD > 200 ? "< 20/200" : `20/${wD}`,
+          diopterStr: `SPH ${qS.toFixed(2)} D${ct}`
+        };
+      }
+
+      if (a <= 20) return { snellen20Ft: `20/${a}`, diopterStr: `SPH 0.00 D${ct}` };
+      if (a <= 25) return { snellen20Ft: "20/25", diopterStr: `SPH +0.50 / -0.50 D${ct}` };
+      if (a <= 30) return { snellen20Ft: "20/30", diopterStr: `SPH +0.75 / -0.75 D${ct}` };
+      if (a <= 40) return { snellen20Ft: "20/40", diopterStr: `SPH +1.25 / -1.25 D${ct}` };
+      if (a <= 50) return { snellen20Ft: "20/50", diopterStr: `SPH +1.50 / -1.50 D${ct}` };
+      if (a <= 70) return { snellen20Ft: "20/70", diopterStr: `SPH +1.75 / -2.00 D${ct}` };
+      if (a <= 100) return { snellen20Ft: "20/100", diopterStr: `SPH +2.25 / -2.50 D${ct}` };
+      if (a <= 150) return { snellen20Ft: "20/150", diopterStr: `SPH +2.50 / -3.00 D${ct}` };
+      return { snellen20Ft: "< 20/200", diopterStr: `SPH +3.00 / -3.50 D${ct}` };
+    }
+
+    function showGatePrompt(postureText, subText, mainText) {
+      waitingForGateTap = true;
+      inBlurHorizonCheck = false;
+      snellenCanvas.style.display = "none";
+      readingBox.style.display = "none";
+      reportBox.style.display = "none";
+      examControls.innerHTML = "";
+      examControls.className = "controls-wrap align-center";
+      gatePostureText.innerText = postureText;
+      gateSubText.innerText = subText;
+      gateMainText.innerText = mainText;
+      gatePromptBtn.style.display = "flex";
+    }
+
+    function handleGateTap() {
+      if (!waitingForGateTap) return;
+      waitingForGateTap = false;
+      gatePromptBtn.style.display = "none";
+
+      if (examStage === 1) {
+        startBinocularBlurCheck();
+      } else if (examStage === 2 || examStage === 3 || examStage === 4) {
+        startAcuitySeries();
+      } else if (examStage === 5) {
+        launchReadingWords();
+      }
+    }
+
+    function startBinocularBlurCheck() {
+      inBlurHorizonCheck = true;
+      snellenCanvas.style.display = "block";
+      acuityLabel.innerText = "Step 1: Slide Holder Back Until 'E' Blurs";
+      drawTumblingE('RIGHT', 44, 25);
+
+      setCoachInstructions(
+        "📋 STEP 1: SLIDE PHONE HOLDER BACK (BOTH EYES OPEN)",
+        "SLIDE HOLDER BACK",
+        "Keep <span class='coach-highlight'>BOTH EYES UNCOVERED</span> with the dot on the crosshair.",
+        "Start at ~35 cm (where 'E' is clear) and <span class='coach-highlight'>SLOWLY SLIDE HOLDER BACK</span> (or lean back).",
+        "Tap the big <span class='coach-highlight'>YELLOW BUTTON</span> the exact second the 'E' starts turning blurry!"
+      );
+
+      examControls.className = "controls-wrap align-center";
+      examControls.innerHTML = `
+        <div class="horizon-deck">
+          <button class="horizon-btn-blur" onclick="lockBinocularBlur()">
+            👀 SLOWLY SLIDE HOLDER BACK (BOTH EYES OPEN)<br>TAP HERE THE SECOND THE "E" STARTS BLURRING (<span id="liveBlurBtnCm">-- cm</span>)
+          </button>
+        </div>
+      `;
+    }
+
+    function lockBinocularBlur() {
+      inBlurHorizonCheck = false;
+      const liveCm = smoothedDistanceCm || 46.0;
+      baseBlurCm = Math.max(32.0, Math.min(62.0, liveCm));
+      lockedDistanceCm = baseBlurCm;
+
+      if (_lastNPx > 10) {
+        _nConst = baseBlurCm * _lastNPx;
+      }
+
+      examStage = 2;
+      updateStageUI();
+      const targetStr = `${lockedDistanceCm.toFixed(1)} cm`;
+      acuityLabel.innerText = "Step 2: Cover Right Eye (Leave Holder Still)";
+      scaleReadout.innerText = `Target: ${targetStr}`;
+      setCoachInstructions(
+        "📋 STEP 2: LEAVE HOLDER AT " + targetStr + " • COVER RIGHT EYE",
+        "LEFT HAND TAPS",
+        `<span class='coach-highlight'>LEAVE THE HOLDER RIGHT THERE</span> so <span class='coach-highlight'>Dist</span> matches <span class='coach-highlight'>Target: ${targetStr}</span>!`,
+        "Cover your <span class='coach-highlight'>RIGHT EYE</span> with your RIGHT hand (keep nose visible).",
+        "Use your free <span class='coach-highlight'>LEFT HAND</span> to tap the <span class='coach-highlight'>BLUE BUTTON</span> below."
+      );
+      showGatePrompt(
+        "📱 LEAVE HOLDER STILL • COVER RIGHT EYE WITH RIGHT HAND",
+        `Target Locked at ${targetStr} (Top-Right) • Tap With Left Hand`,
+        "👉 TAP HERE ONCE RIGHT EYE IS COVERED 👈"
+      );
+    }
+
+    function startAcuitySeries() {
+      snellenCanvas.style.display = "block";
+      stepIndex = 0;
+      levelHits = 0;
+      levelMisses = 0;
+      currentDenominator = ACUITY_STEPS[0];
+
+      const distTxt = (lockedDistanceCm || 45).toFixed(1);
+
+      if (examStage === 2) {
+        setCoachInstructions(
+          "📋 STEP 2: LEFT EYE ARROWS (KEEP HOLDER AT " + distTxt + " CM)",
+          "LEFT HAND TAPS",
+          `Keep <span class='coach-highlight'>RIGHT EYE COVERED</span> • Keep <span class='coach-highlight'>Dist</span> matched to <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
+          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> with your LEFT hand to match the 'E'.",
+          "When the 'E' gets too blurry to tell, tap the red <span class='coach-highlight'>TOO BLURRY</span> button!"
+        );
+      } else if (examStage === 3) {
+        setCoachInstructions(
+          "📋 STEP 3: RIGHT EYE ARROWS (KEEP HOLDER AT " + distTxt + " CM)",
+          "RIGHT HAND TAPS",
+          `Keep <span class='coach-highlight'>LEFT EYE COVERED</span> • Keep <span class='coach-highlight'>Dist</span> matched to <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
+          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> with your RIGHT hand to match the 'E'.",
+          "When the 'E' gets too blurry to tell, tap the red <span class='coach-highlight'>TOO BLURRY</span> button!"
+        );
+      } else if (examStage === 4) {
+        setCoachInstructions(
+          "📋 STEP 4: BOTH EYES OPEN ARROWS (HOLDER AT " + distTxt + " CM)",
+          "BOTH EYES OPEN",
+          `<span class='coach-highlight'>UNCOVER BOTH EYES</span> • Keep <span class='coach-highlight'>Dist</span> at <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
+          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> to match the 'E' as it shrinks.",
+          "Tap <span class='coach-highlight'>TOO BLURRY</span> if it gets too small to read."
+        );
+      }
+
+      renderDirectionButtons();
+      loadNewAcuityRound();
+    }
+
+    function renderDirectionButtons() {
+      examControls.className = "controls-wrap";
+      if (examStage === 2) {
+        examControls.classList.add("align-left");
+      } else if (examStage === 3) {
+        examControls.classList.add("align-right");
+      } else {
+        examControls.classList.add("align-center");
+      }
+
+      examControls.innerHTML = `
+        <div class="dir-grid">
+          <button class="dir-btn" onclick="submitAnswer('UP')">
+            <span class="dir-arrow">⬆️</span>UP
+          </button>
+          <button class="dir-btn" onclick="submitAnswer('RIGHT')">
+            <span class="dir-arrow">➡️</span>RIGHT
+          </button>
+          <button class="dir-btn" onclick="submitAnswer('LEFT')">
+            <span class="dir-arrow">⬅️</span>LEFT
+          </button>
+          <button class="dir-btn" onclick="submitAnswer('DOWN')">
+            <span class="dir-arrow">⬇️</span>DOWN
+          </button>
+        </div>
+        <button class="cant-see-btn" onclick="submitAnswer('CANT_SEE')">Too Blurry<br>Can't See</button>
+      `;
+    }
+
+    function drawTumblingE(direction, distanceCm, denominator) {
+      const dpr = window.devicePixelRatio || 3;
+      const canvasSizeCss = 74;
+      snellenCanvas.style.width = `${canvasSizeCss}px`;
+      snellenCanvas.style.height = `${canvasSizeCss}px`;
+      snellenCanvas.width = Math.round(canvasSizeCss * dpr);
+      snellenCanvas.height = Math.round(canvasSizeCss * dpr);
+
+      ctx.save();
+      ctx.clearRect(0, 0, snellenCanvas.width, snellenCanvas.height);
+
+      const distMm = distanceCm * 10;
+      const angleRad = (5 * (denominator / 20) / 60) * (Math.PI / 180);
+      const heightMm = 2 * distMm * Math.tan(angleRad / 2);
+
+      const sizeCssPx = Math.min(70, heightMm * _K3);
+      const rawDevicePx = sizeCssPx * dpr;
+
+      const unit = Math.max(1, Math.round(rawDevicePx / 5));
+      const totalDevicePx = unit * 5;
+      const strokeCssPx = unit / dpr;
+
+      scaleReadout.innerText = `Stroke: ${strokeCssPx.toFixed(2)}px | 20/${denominator}`;
+
+      ctx.translate(Math.round(snellenCanvas.width / 2), Math.round(snellenCanvas.height / 2));
+      let angle = 0;
+      if (direction === 'DOWN') angle = Math.PI / 2;
+      else if (direction === 'LEFT') angle = Math.PI;
+      else if (direction === 'UP') angle = -Math.PI / 2;
+      ctx.rotate(angle);
+
+      ctx.fillStyle = "#0f172a";
+      const startX = -Math.round(totalDevicePx / 2);
+      const startY = -Math.round(totalDevicePx / 2);
+
+      ctx.fillRect(startX, startY, unit, totalDevicePx);
+      ctx.fillRect(startX, startY, totalDevicePx, unit);
+      ctx.fillRect(startX, startY + 2 * unit, totalDevicePx, unit);
+      ctx.fillRect(startX, startY + 4 * unit, totalDevicePx, unit);
+
+      ctx.restore();
+    }
+
+    function loadNewAcuityRound() {
+      currentDirection = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
+
+      let stageName = "Left Eye";
+      if (examStage === 3) stageName = "Right Eye";
+      if (examStage === 4) stageName = "Binocular";
+
+      acuityLabel.innerText = `${stageName} • Line: 20/${currentDenominator} • Hits: ${levelHits}/3`;
+
+      const activeDist = lockedDistanceCm || 45.0;
+      snellenCanvas.style.opacity = "0.15";
+      setTimeout(() => {
+        drawTumblingE(currentDirection, activeDist, currentDenominator);
+        snellenCanvas.style.opacity = "1";
+      }, 65);
+    }
+
+    function submitAnswer(selectedDir) {
+      if (selectedDir === 'CANT_SEE') {
+        finishCurrentEyeStage();
+        return;
+      }
+
+      const isCorrect = (selectedDir === currentDirection);
+
+      if (isCorrect) {
+        levelHits++;
+        if (levelHits >= 3) {
+          if (examStage === 2) osDenom = currentDenominator;
+          if (examStage === 3) odDenom = currentDenominator;
+          if (examStage === 4) ouDenom = currentDenominator;
+
+          if (stepIndex < ACUITY_STEPS.length - 1) {
+            stepIndex++;
+            currentDenominator = ACUITY_STEPS[stepIndex];
+            levelHits = 0;
+            levelMisses = 0;
+            loadNewAcuityRound();
+          } else {
+            finishCurrentEyeStage();
+          }
+        } else {
+          loadNewAcuityRound();
+        }
+      } else {
+        const isHorizontalBars = (currentDirection === 'LEFT' || currentDirection === 'RIGHT');
+        if (examStage === 2) {
+          if (isHorizontalBars) osHorizMiss++; else osVertMiss++;
+        } else if (examStage === 3) {
+          if (isHorizontalBars) odHorizMiss++; else odVertMiss++;
+        }
+
+        levelMisses++;
+        if (levelMisses >= 2) {
+          finishCurrentEyeStage();
+        } else {
+          loadNewAcuityRound();
+        }
+      }
+    }
+
+    function finishCurrentEyeStage() {
+      if (examStage === 2) queueStage3Gate();
+      else if (examStage === 3) queueStage4Gate();
+      else if (examStage === 4) queueStage5Gate();
+    }
+
+    function queueStage3Gate() {
+      examStage = 3;
+      updateStageUI();
+      const distTxt = (lockedDistanceCm || 45).toFixed(1);
+      acuityLabel.innerText = "Step 3: Cover Left Eye (Leave Holder Still)";
+      scaleReadout.innerText = `L Line: 20/${osDenom}`;
+      setCoachInstructions(
+        "📋 STEP 3: LEAVE HOLDER AT " + distTxt + " CM • COVER LEFT EYE",
+        "RIGHT HAND TAPS",
+        `<span class='coach-highlight'>LEAVE THE HOLDER STILL</span> so <span class='coach-highlight'>Dist</span> stays at <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
+        "Cover your <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand (keep nose visible).",
+        "Use your free <span class='coach-highlight'>RIGHT HAND</span> to tap the <span class='coach-highlight'>BLUE BUTTON</span> below."
+      );
+      showGatePrompt(
+        "📱 LEAVE HOLDER STILL • COVER LEFT EYE WITH LEFT HAND",
+        `Left Eye Read 20/${osDenom} • Tap With Right Hand`,
+        "👉 TAP HERE ONCE LEFT EYE IS COVERED 👈"
+      );
+    }
+
+    function queueStage4Gate() {
+      examStage = 4;
+      updateStageUI();
+      const distTxt = (lockedDistanceCm || 45).toFixed(1);
+      acuityLabel.innerText = "Step 4: Uncover Both Eyes";
+      scaleReadout.innerText = `R Line: 20/${odDenom}`;
+      setCoachInstructions(
+        "📋 STEP 4: BOTH EYES OPEN (HOLDER AT " + distTxt + " CM)",
+        "BOTH EYES OPEN",
+        `<span class='coach-highlight'>UNCOVER BOTH EYES</span> and keep <span class='coach-highlight'>Dist</span> at <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
+        "Keep the green dot centered on the crosshair.",
+        "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below to test both eyes together."
+      );
+      showGatePrompt(
+        "👀 UNCOVER BOTH EYES • LEAVE HOLDER AT TARGET",
+        `L: 20/${osDenom} | R: 20/${odDenom} • Target: ${distTxt} cm`,
+        "👉 TAP HERE ONCE BOTH EYES ARE OPEN 👈"
+      );
+    }
+
+    function queueStage5Gate() {
+      examStage = 5;
+      updateStageUI();
+      acuityLabel.innerText = "Step 5: Quick 8-Word Reading Check";
+      scaleReadout.innerText = `O.U. 20/${ouDenom}`;
+      setCoachInstructions(
+        "📋 STEP 5: TAP 8 WORDS IN ORDER",
+        "READING SPEED",
+        "Keep the phone in the holder at a comfortable reading distance.",
+        "8 words will appear in the white box below.",
+        "Read and <span class='coach-highlight'>tap each word in order</span> from first to last."
+      );
+      showGatePrompt(
+        "📖 STEP 5: 8-WORD READING CHECK",
+        "Tap Each Word in Order as You Read It",
+        "👉 TAP HERE TO SHOW THE 8 WORDS 👈"
+      );
+    }
+
+    function launchReadingWords() {
+      currentDenominator = 40;
+      snellenCanvas.style.display = "none";
+      examControls.innerHTML = "";
+      examControls.className = "controls-wrap align-center";
+      readingBox.style.display = "block";
+      acuityLabel.innerText = "Step 5: Tap Words In Order (1 to 8)";
+      scaleReadout.innerText = `0 / ${PASSAGE_WORDS.length} Words`;
+      wordContainer.innerHTML = "";
+      wordIndex = 0;
+      tapTimestamps = [performance.now()];
+      PASSAGE_WORDS.forEach((w, idx) => {
+        const span = document.createElement('span');
+        span.innerText = w;
+        span.style.padding = "3px 6px";
+        span.style.borderRadius = "4px";
+        span.style.cursor = "pointer";
+        span.style.border = idx === 0 ? "2px solid #0284c7" : "1px solid #cbd5e1";
+        span.onclick = () => {
+          if (idx !== wordIndex) return;
+          tapTimestamps.push(performance.now());
+          wordIndex++;
+          scaleReadout.innerText = `${wordIndex} / ${PASSAGE_WORDS.length} Words`;
+          if (wordIndex >= PASSAGE_WORDS.length) {
+            startStage6();
+          } else {
+            Array.from(wordContainer.children).forEach((el, i) => {
+              el.style.border = i === wordIndex ? "2px solid #0284c7" : "1px solid #cbd5e1";
+              el.style.background = i < wordIndex ? "#dcfce7" : "#f8fafc";
+            });
+          }
+        };
+        wordContainer.appendChild(span);
+      });
+    }
+
+    function startStage6() {
+      examStage = 6;
+      updateStageUI();
+      readingBox.style.display = "none";
+      reportBox.style.display = "block";
+      examControls.innerHTML = "";
+      examControls.className = "controls-wrap align-center";
+      acuityLabel.innerText = "Step 6: Your Complete Eye Prescription Scorecard";
+      scaleReadout.innerText = "Complete";
+
+      setCoachInstructions(
+        "✅ EXAM COMPLETE — YOUR SCORECARD IS BELOW",
+        "FINISHED",
+        "<span class='coach-highlight'>Left Eye (O.S.) & Right Eye (O.D.)</span> prescriptions are shown in the white box below.",
+        "Compare <span class='coach-highlight'>SPH (Sphere)</span> and <span class='coach-highlight'>CYL (Astigmatism)</span> to your real Rx.",
+        "Tap <span class='coach-highlight'>Reset Exam</span> at the bottom anytime to run another test."
+      );
+
+      const totalSec = (tapTimestamps[tapTimestamps.length - 1] - tapTimestamps[0]) / 1000;
+      const wpm = Math.round((PASSAGE_WORDS.length / Math.max(1, totalSec)) * 60);
+
+      let maxGapMs = 0;
+      for (let i = 1; i < tapTimestamps.length; i++) {
+        const gap = tapTimestamps[i] - tapTimestamps[i - 1];
+        if (gap > maxGapMs) maxGapMs = gap;
+      }
+
+      const osMetrics = _calcRx(osDenom, odDenom, baseBlurCm, osHorizMiss, osVertMiss);
+      const odMetrics = _calcRx(odDenom, osDenom, baseBlurCm, odHorizMiss, odVertMiss);
+
+      document.getElementById('repOS').innerText = `${osMetrics.snellen20Ft} (20-Ft Eq)`;
+      document.getElementById('rxOS').innerText = osMetrics.diopterStr;
+
+      document.getElementById('repOD').innerText = `${odMetrics.snellen20Ft} (20-Ft Eq)`;
+      document.getElementById('rxOD').innerText = odMetrics.diopterStr;
+
+      document.getElementById('repOU').innerText = `L 20/${osDenom} | R 20/${odDenom}`;
+      document.getElementById('rxOU').innerText = baseBlurCm
+        ? `Target Edge: ${baseBlurCm.toFixed(1)} cm`
+        : `Clear > 60 cm`;
+
+      document.getElementById('repWPM').innerText = `${wpm} WPM`;
+      document.getElementById('rxLat').innerText = maxGapMs > 1400 ? "Fatigue: Elevated" : "Fatigue: Optimal";
+    }
+
+    function resetExam() {
+      examStage = 1;
+      inBlurHorizonCheck = false;
+      stepIndex = 0;
+      levelHits = 0;
+      levelMisses = 0;
+      currentDenominator = ACUITY_STEPS[0];
+      osDenom = 250;
+      odDenom = 250;
+      ouDenom = 250;
+      baseBlurCm = null;
+      lockedDistanceCm = null;
+      osHorizMiss = 0; osVertMiss = 0;
+      odHorizMiss = 0; odVertMiss = 0;
+      examControls.className = "controls-wrap align-center";
+      updateStageUI();
+      acuityLabel.innerText = "Step 1: Table Stand & Blur-Point Check";
+      scaleReadout.innerText = "Ready";
+      targetLabel.innerText = "Target:";
+      zoneVal.innerText = "35–45 cm";
+      zoneVal.style.color = "#fbbf24";
+      setCoachInstructions(
+        "📋 STEP 1 OF 6: PLACE PHONE IN HOLDER & FIND BLUR EDGE",
+        "PHONE IN STAND",
+        "<span class='coach-highlight'>PUT PHONE IN A HOLDER/STAND</span> on a table at eye level (remove glasses).",
+        "Keep <span class='coach-highlight'>BOTH EYES OPEN</span> (~35 cm away) with the green dot on the crosshair.",
+        "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below to start sliding the holder back."
+      );
+      showGatePrompt(
+        "📱 PUT PHONE IN A TABLE HOLDER / STAND AT EYE LEVEL",
+        "Keep Both Eyes Open • Center Dot on Crosshair (~35 cm)",
+        "👉 TAP HERE TO START SLIDE-BACK 👈"
+      );
+    }
+
+    function updateStageUI() {
+      ['st1', 'st2', 'st3', 'st4', 'st5', 'st6'].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.className = 'stage-step';
+          if (idx + 1 < examStage) el.classList.add('done');
+          if (idx + 1 === examStage) el.classList.add('active');
+        }
+      });
+    }
+
+    function getEAR(l, top, bot, inr, out) {
+      return Math.hypot(l[top].x - l[bot].x, l[top].y - l[bot].y) / Math.hypot(l[inr].x - l[out].x, l[inr].y - l[out].y);
+    }
+
+    function renderUnifiedViewfinder(noseBridge) {
+      const cw = cameraBox.clientWidth || 360;
+      const ch = cameraBox.clientHeight || 148;
+      if (viewfinderCanvas.width !== cw || viewfinderCanvas.height !== ch) {
+        viewfinderCanvas.width = cw;
+        viewfinderCanvas.height = ch;
+      }
+
+      const vw = videoElement.videoWidth || 480;
+      const vh = videoElement.videoHeight || 640;
+
+      vfCtx.clearRect(0, 0, cw, ch);
+
+      const scale = Math.max(cw / vw, ch / vh);
+      const drawW = vw * scale;
+      const drawH = vh * scale;
+      const offsetX = (cw - drawW) / 2;
+      const offsetY = (ch - drawH) * 0.35;
+
+      vfCtx.save();
+      vfCtx.translate(cw, 0);
+      vfCtx.scale(-1, 1);
+      vfCtx.drawImage(videoElement, offsetX, offsetY, drawW, drawH);
+      vfCtx.restore();
+
+      const centerX = cw * 0.5;
+      const centerY = ch * 0.52;
+
+      let isLocked = false;
+      let dotX = centerX;
+      let dotY = centerY;
+
+      if (noseBridge) {
+        const mirroredNormX = 1.0 - noseBridge.x;
+        dotX = offsetX + (mirroredNormX * drawW);
+        dotY = offsetY + (noseBridge.y * drawH);
+
+        const errX = Math.abs(dotX - centerX) / cw;
+        const errY = Math.abs(dotY - centerY) / ch;
+        isLocked = (errX <= 0.12 && errY <= 0.18);
+
+        if (isLocked) {
+          centerGuidePill.classList.add('locked');
+          centerGuidePill.innerText = "CROSSHAIR LOCKED ✓";
+        } else {
+          centerGuidePill.classList.remove('locked');
+          if (dotY < centerY - (ch * 0.18)) {
+            centerGuidePill.innerText = "LOWER PHONE / HEAD SLIGHTLY";
+          } else if (dotY > centerY + (ch * 0.18)) {
+            centerGuidePill.innerText = "RAISE PHONE TO EYE LEVEL";
+          } else {
+            centerGuidePill.innerText = "CENTER DOT ON CROSSHAIR";
+          }
+        }
+      } else {
+        centerGuidePill.classList.remove('locked');
+        centerGuidePill.innerText = "CENTER DOT ON CROSSHAIR";
+      }
+
+      vfCtx.save();
+      vfCtx.lineWidth = 2;
+      vfCtx.strokeStyle = isLocked ? "rgba(74, 222, 128, 0.95)" : "rgba(250, 204, 21, 0.85)";
+      if (!isLocked) vfCtx.setLineDash([6, 5]);
+
+      vfCtx.beginPath();
+      vfCtx.moveTo(centerX, 0);
+      vfCtx.lineTo(centerX, ch);
+      vfCtx.stroke();
+
+      vfCtx.beginPath();
+      vfCtx.moveTo(0, centerY);
+      vfCtx.lineTo(cw, centerY);
+      vfCtx.stroke();
+
+      if (noseBridge) {
+        vfCtx.setLineDash([]);
+        vfCtx.beginPath();
+        vfCtx.arc(dotX, dotY, 7, 0, Math.PI * 2);
+        vfCtx.fillStyle = isLocked ? "rgba(74, 222, 128, 0.7)" : "rgba(250, 204, 21, 0.6)";
+        vfCtx.fill();
+        vfCtx.lineWidth = 2;
+        vfCtx.strokeStyle = isLocked ? "#4ade80" : "#fde047";
+        vfCtx.stroke();
+      }
+      vfCtx.restore();
+    }
+
+    function onResults(results) {
+      if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+        const lm = results.multiFaceLandmarks[0];
+        const noseBridge = lm[168] || lm[1];
+        const vw = videoElement.videoWidth || 480;
+        const vh = videoElement.videoHeight || 640;
+
+        renderUnifiedViewfinder(noseBridge);
+
+        const subjectRightEAR = getEAR(lm, 159, 145, 133, 33);
+        const subjectLeftEAR = getEAR(lm, 386, 374, 362, 263);
+
+        smoothedRightEAR = 0.3 * subjectRightEAR + 0.7 * smoothedRightEAR;
+        smoothedLeftEAR = 0.3 * subjectLeftEAR + 0.7 * smoothedLeftEAR;
+
+        let dState = "Binocular";
+        if (examStage === 2) dState = "Right Covered";
+        else if (examStage === 3) dState = "Left Covered";
+        else if (smoothedRightEAR < 0.20 && smoothedLeftEAR >= 0.20) dState = "Right Covered";
+        else if (smoothedLeftEAR < 0.20 && smoothedRightEAR >= 0.20) dState = "Left Covered";
+
+        confirmedEyeState = dState;
+
+        const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
+        const ipdPx = Math.hypot((lp.x - rp.x) * vw, (lp.y - rp.y) * vh);
+
+        const noseTop = lm[168], noseBot = lm[2];
+        const noseVertPx = (noseTop && noseBot)
+          ? Math.hypot((noseTop.x - noseBot.x) * vw, (noseTop.y - noseBot.y) * vh)
+          : 0;
+
+        if (noseVertPx > 12) {
+          _lastNPx = 0.3 * noseVertPx + 0.7 * _lastNPx;
+        }
+
+        if (examStage !== 2 && examStage !== 3 && ipdPx > 0) {
+          const rCm = ((_K2 * _K1) / ipdPx) / 10;
+          smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.25 * rCm) + (0.75 * smoothedDistanceCm);
+          if (_lastNPx > 12) {
+            _nConst = 0.2 * (smoothedDistanceCm * _lastNPx) + 0.8 * _nConst;
+          }
+        } else if ((examStage === 2 || examStage === 3) && _lastNPx > 12) {
+          const monoCm = _nConst / _lastNPx;
+          if (monoCm >= 24 && monoCm <= 72) {
+            smoothedDistanceCm = smoothedDistanceCm === null ? monoCm : (0.22 * monoCm) + (0.78 * smoothedDistanceCm);
+          }
+        }
+
+        if (smoothedDistanceCm !== null) {
+          distVal.innerText = `${smoothedDistanceCm.toFixed(1)} cm`;
+
+          if (inBlurHorizonCheck) {
+            scaleReadout.innerText = `Live Dist: ${smoothedDistanceCm.toFixed(1)} cm`;
+            const liveBtnSpan = document.getElementById('liveBlurBtnCm');
+            if (liveBtnSpan) liveBtnSpan.innerText = `${smoothedDistanceCm.toFixed(0)} cm`;
+          }
+
+          if (lockedDistanceCm !== null && examStage >= 2) {
+            targetLabel.innerText = "Target:";
+            zoneVal.innerText = `${lockedDistanceCm.toFixed(1)} cm`;
+            const diffFromTarget = Math.abs(smoothedDistanceCm - lockedDistanceCm);
+            if (diffFromTarget <= 3.5) {
+              zoneVal.style.color = "#4ade80";
+              cameraBox.style.borderColor = "#4ade80";
+            } else {
+              zoneVal.style.color = "#fbbf24";
+              cameraBox.style.borderColor = "#fbbf24";
+            }
+          } else {
+            targetLabel.innerText = "Target:";
+            zoneVal.innerText = inBlurHorizonCheck ? "Slide Back" : "35–45 cm";
+            if (smoothedDistanceCm >= 35 && smoothedDistanceCm <= 45) {
+              zoneVal.style.color = "#4ade80"; cameraBox.style.borderColor = "#4ade80";
+            } else if (smoothedDistanceCm < 35) {
+              zoneVal.style.color = "#f87171"; cameraBox.style.borderColor = "#f87171";
+            } else {
+              zoneVal.style.color = "#fbbf24"; cameraBox.style.borderColor = "#fbbf24";
+            }
+          }
+        }
+        eyeStateVal.innerText = confirmedEyeState;
+      } else {
+        renderUnifiedViewfinder(null);
+      }
+    }
+
+    const faceMesh = new FaceMesh({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}` });
+    faceMesh.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+    faceMesh.onResults(onResults);
+    const camera = new Camera(videoElement, {
+      onFrame: async () => { await faceMesh.send({ image: videoElement }); },
+      width: 640,
+      height: 480
+    });
+  </script>
+</body>
+</html>
