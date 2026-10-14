@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.33 - 2D Eye-Level Crosshair + iOS Portrait Sensor Framing + Far-Point Blur Rx
+  Project "Eyes" v3.34 - True 1:1 Crosshair Mapping + Unblocked Live Distance + Far-Point Rx
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.33 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.34 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -56,7 +56,7 @@
     }
     .stage-step {
       flex: 1; text-align: center; padding: 3px 2px; font-size: 8px; font-weight: 800;
-      background: #1e293b; color: #64748b; border-radius: 5px; border: 1px solid #334155;
+      background: #1e293b; color: #64748b; border-radius: 5px; border-radius: 5px; border: 1px solid #334155;
     }
     .stage-step.active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: #38bdf8; }
     .stage-step.done { background: rgba(74, 222, 128, 0.2); color: #4ade80; border-color: #4ade80; }
@@ -72,12 +72,12 @@
       background: #000;
       flex-shrink: 0;
     }
-    /* Upper-sensor framing so holding phone at eye level shows eyes instead of neck/chin */
+    /* Exact 50% center crop so MediaPipe coordinates (0.5, 0.5) match the visual crosshair 1:1 */
     video {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center 22%;
+      object-position: center 50%;
       transform: scaleX(-1);
     }
 
@@ -92,7 +92,7 @@
       border-left: 2px dashed rgba(250, 204, 21, 0.85);
       pointer-events: none;
       z-index: 2;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .center-guide-line.locked {
       border-left: 2px solid rgba(74, 222, 128, 0.95);
@@ -102,17 +102,38 @@
       position: absolute;
       left: 0;
       right: 0;
-      top: 52%;
+      top: 50%;
       transform: translateY(-50%);
       height: 0px;
-      border-top: 1.5px dashed rgba(250, 204, 21, 0.65);
+      border-top: 1.5px dashed rgba(250, 204, 21, 0.75);
       pointer-events: none;
       z-index: 2;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .eye-horizon-line.locked {
-      border-top: 1.5px solid rgba(74, 222, 128, 0.85);
+      border-top: 2px solid rgba(74, 222, 128, 0.95);
+      box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
     }
+
+    /* LIVE NOSE-BRIDGE TRACKER DOT */
+    .eye-tracker-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #fde047;
+      background: rgba(250, 204, 21, 0.35);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 3;
+      display: none;
+    }
+    .eye-tracker-dot.locked {
+      border-color: #4ade80;
+      background: rgba(74, 222, 128, 0.55);
+      box-shadow: 0 0 8px #4ade80;
+    }
+
     .center-guide-pill {
       position: absolute;
       top: 4px;
@@ -128,7 +149,7 @@
       border-radius: 999px;
       text-transform: uppercase;
       pointer-events: none;
-      z-index: 3;
+      z-index: 4;
       white-space: nowrap;
     }
     .center-guide-pill.locked {
@@ -139,7 +160,7 @@
     .hud-top, .hud-bottom {
       position: absolute; left: 6px; right: 6px;
       display: flex; justify-content: space-between; pointer-events: none;
-      z-index: 3;
+      z-index: 4;
     }
     .hud-top { top: 4px; }
     .hud-bottom { bottom: 4px; }
@@ -404,7 +425,7 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.33</h1>
+    <h1>Project Eyes v3.34</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -420,10 +441,11 @@
   <div class="camera-box" id="cameraBox">
     <video id="webcam" playsinline></video>
 
-    <!-- 2D EYE-LEVEL CROSSHAIR (VERTICAL NOSE LINE + HORIZONTAL EYE LINE) -->
+    <!-- 2D EYE-LEVEL CROSSHAIR + LIVE NOSE-BRIDGE TARGET DOT -->
     <div class="center-guide-line" id="centerGuideLine"></div>
     <div class="eye-horizon-line" id="eyeHorizonLine"></div>
-    <div class="center-guide-pill" id="centerGuidePill">ALIGN EYES ON CROSSHAIR</div>
+    <div class="eye-tracker-dot" id="eyeTrackerDot"></div>
+    <div class="center-guide-pill" id="centerGuidePill">PUT DOT BETWEEN EYES ON CROSSHAIR</div>
 
     <div class="hud-top">
       <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
@@ -436,9 +458,9 @@
   </div>
 
   <div class="roadmap-panel" id="roadmapPanel">
-    <div class="roadmap-title">Eye-Level Crosshair + Far-Point Blur Horizon Protocol</div>
+    <div class="roadmap-title">1:1 Eye-Crosshair Lock + Far-Point Blur Horizon Protocol</div>
     <div class="roadmap-steps">
-      <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Put Eyes on Crosshair • Push Back Until Blur</div>
+      <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Put Dot on Crosshair (35–45cm) • Push Back to Blur</div>
       <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Acuity (Cover Right • Controls Shift LEFT)</div>
       <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Acuity (Cover Left • Controls Shift RIGHT)</div>
       <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Acuity (Both Open • Controls CENTERED)</div>
@@ -456,9 +478,9 @@
     <div class="optotype-viewport">
       <div id="gatePromptBtn" onclick="handleGateTap()">
         <div class="gate-posture" id="gatePostureText">
-          🎯 PUT YOUR EYES ON THE CROSSHAIR • REMOVE GLASSES
+          🎯 PUT THE DOT BETWEEN YOUR EYES ON THE CROSSHAIR
         </div>
-        <div class="gate-sub" id="gateSubText">Tilt Top of Phone Forward Slightly So Your Eyes Show in Box</div>
+        <div class="gate-sub" id="gateSubText">Hold Phone Upright at 35–45 cm (Green Border) • Remove Glasses</div>
         <div class="gate-main" id="gateMainText">TAP TO START BLUR-POINT CHECK</div>
       </div>
 
@@ -508,6 +530,7 @@
     const cameraBox = document.getElementById('cameraBox');
     const centerGuideLine = document.getElementById('centerGuideLine');
     const eyeHorizonLine = document.getElementById('eyeHorizonLine');
+    const eyeTrackerDot = document.getElementById('eyeTrackerDot');
     const centerGuidePill = document.getElementById('centerGuidePill');
     const distVal = document.getElementById('distVal');
     const zoneVal = document.getElementById('zoneVal');
@@ -629,7 +652,7 @@
     function startBlurHorizonCheck() {
       inBlurHorizonCheck = true;
       snellenCanvas.style.display = "block";
-      acuityLabel.innerText = "Keep Eyes on Crosshair • Push Phone Back";
+      acuityLabel.innerText = "Keep Dot on Crosshair • Push Phone Back";
       drawTumblingE('RIGHT', 45, 30);
       examControls.className = "controls-wrap align-center";
       examControls.innerHTML = `
@@ -662,7 +685,7 @@
         ? `Blur Pt: ${blurHorizonCm.toFixed(0)}cm`
         : `Clear @ Arm's Reach`;
       showGatePrompt(
-        "🎯 KEEP EYES ON CROSSHAIR • COVER RIGHT EYE",
+        "🎯 KEEP DOT ON CROSSHAIR • COVER RIGHT EYE",
         "Stage 2 of 6 • Tap With Left Hand (Controls Shift Left)",
         "TAP ONCE YOUR RIGHT EYE IS COVERED"
       );
@@ -742,7 +765,7 @@
 
     function updateRoadmapUI() {
       const labels = [
-        "Stage 1: Put Eyes on Crosshair • Push Back Until Blur",
+        "Stage 1: Put Dot on Crosshair (35–45cm) • Push Back to Blur",
         "Stage 2: Left Eye Acuity (Cover Right • Controls Shift LEFT)",
         "Stage 3: Right Eye Acuity (Cover Left • Controls Shift RIGHT)",
         "Stage 4: Binocular Acuity (Both Open • Controls CENTERED)",
@@ -833,7 +856,7 @@
       acuityLabel.innerText = "Stage 3: Right Eye Setup";
       scaleReadout.innerText = `O.S. Near 20/${osDenom}`;
       showGatePrompt(
-        "🎯 KEEP EYES ON CROSSHAIR • COVER LEFT EYE",
+        "🎯 KEEP DOT ON CROSSHAIR • COVER LEFT EYE",
         `Left Eye Near 20/${osDenom} • Controls Shift Right`,
         "TAP ONCE YOUR LEFT EYE IS COVERED"
       );
@@ -845,7 +868,7 @@
       acuityLabel.innerText = "Stage 4: Binocular Setup";
       scaleReadout.innerText = `O.D. Near 20/${odDenom}`;
       showGatePrompt(
-        "🎯 KEEP EYES ON CROSSHAIR • BOTH EYES OPEN",
+        "🎯 KEEP DOT ON CROSSHAIR • BOTH EYES OPEN",
         `Right Eye Near 20/${odDenom} • Controls Centered`,
         "TAP ONCE BOTH EYES ARE OPEN"
       );
@@ -857,7 +880,7 @@
       acuityLabel.innerText = "Stage 5: Reading Intake Setup";
       scaleReadout.innerText = `O.U. Near 20/${ouDenom}`;
       showGatePrompt(
-        "🎯 KEEP EYES ON CROSSHAIR • HOLD WITH BOTH HANDS",
+        "🎯 KEEP DOT ON CROSSHAIR • HOLD WITH BOTH HANDS",
         `Binocular Near 20/${ouDenom} • 8 Quick Words`,
         "TAP TO BEGIN READING INTAKE"
       );
@@ -955,8 +978,8 @@
       acuityLabel.innerText = "Stage 1: Eye-Level Crosshair & Blur Horizon";
       scaleReadout.innerText = "Ready";
       showGatePrompt(
-        "🎯 PUT YOUR EYES ON THE CROSSHAIR • REMOVE GLASSES",
-        "Tilt Top of Phone Forward Slightly So Your Eyes Show in Box",
+        "🎯 PUT THE DOT BETWEEN YOUR EYES ON THE CROSSHAIR",
+        "Hold Phone Upright at 35–45 cm (Green Border) • Remove Glasses",
         "TAP TO START BLUR-POINT CHECK"
       );
     }
@@ -977,34 +1000,63 @@
       return Math.hypot(l[top].x - l[bot].x, l[top].y - l[bot].y) / Math.hypot(l[inr].x - l[out].x, l[inr].y - l[out].y);
     }
 
+    // Maps raw MediaPipe normalized (x, y) into the exact visible CSS cameraBox coordinates under object-fit: cover
+    function mapLandmarkToCameraBox(normX, normY) {
+      const boxW = cameraBox.clientWidth || 350;
+      const boxH = cameraBox.clientHeight || 160;
+      const vidW = videoElement.videoWidth || 480;
+      const vidH = videoElement.videoHeight || 640;
+
+      const scale = Math.max(boxW / vidW, boxH / vidH);
+      const renderedW = vidW * scale;
+      const renderedH = vidH * scale;
+      const offsetX = (renderedW - boxW) / 2;
+      const offsetY = (renderedH - boxH) / 2;
+
+      // Mirror X because video uses scaleX(-1)
+      const mirroredX = 1.0 - normX;
+      const boxPxX = (mirroredX * renderedW) - offsetX;
+      const boxPxY = (normY * renderedH) - offsetY;
+
+      return {
+        pctX: (boxPxX / boxW) * 100,
+        pctY: (boxPxY / boxH) * 100
+      };
+    }
+
     function onResults(results) {
       if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
         const lm = results.multiFaceLandmarks[0];
 
-        // 1. 2D Crosshair Alignment Check (Horizontal X + Vertical Pitch Y on Landmark 168 Between Eyes)
+        // 1. Exact 1:1 Visual Crosshair Mapping for Landmark 168 (Point Between Eyes)
         const noseBridge = lm[168] || lm[1];
         if (noseBridge) {
-          const offsetX = Math.abs(noseBridge.x - 0.50);
-          // Because video uses object-position: center 22%, upper sensor y (~0.18 to 0.52) maps onto the crosshair
-          const inVerticalWindow = (noseBridge.y >= 0.16 && noseBridge.y <= 0.56);
+          const mapped = mapLandmarkToCameraBox(noseBridge.x, noseBridge.y);
+          eyeTrackerDot.style.display = "block";
+          eyeTrackerDot.style.left = `${Math.max(4, Math.min(96, mapped.pctX))}%`;
+          eyeTrackerDot.style.top = `${Math.max(8, Math.min(92, mapped.pctY))}%`;
 
-          if (offsetX <= 0.08 && inVerticalWindow) {
+          const errX = Math.abs(mapped.pctX - 50);
+          const errY = Math.abs(mapped.pctY - 50);
+
+          if (errX <= 10 && errY <= 18) {
             centerGuideLine.classList.add('locked');
             eyeHorizonLine.classList.add('locked');
+            eyeTrackerDot.classList.add('locked');
             centerGuidePill.classList.add('locked');
             centerGuidePill.innerText = "EYES LOCKED ON CROSSHAIR ✓";
-          } else if (!inVerticalWindow) {
-            centerGuideLine.classList.remove('locked');
-            eyeHorizonLine.classList.remove('locked');
-            centerGuidePill.classList.remove('locked');
-            centerGuidePill.innerText = noseBridge.y < 0.16
-              ? "TILT TOP OF PHONE TOWARD YOU"
-              : "RAISE PHONE TO EYE LEVEL";
           } else {
             centerGuideLine.classList.remove('locked');
             eyeHorizonLine.classList.remove('locked');
+            eyeTrackerDot.classList.remove('locked');
             centerGuidePill.classList.remove('locked');
-            centerGuidePill.innerText = "CENTER NOSE ON VERTICAL LINE";
+            if (mapped.pctY < 32) {
+              centerGuidePill.innerText = "LOWER PHONE SLIGHTLY";
+            } else if (mapped.pctY > 68) {
+              centerGuidePill.innerText = "RAISE PHONE TO EYE LEVEL";
+            } else {
+              centerGuidePill.innerText = "CENTER DOT ON VERTICAL LINE";
+            }
           }
         }
 
@@ -1026,19 +1078,18 @@
           eyeStateFrameCount = 1;
         }
 
-        // 3. IPD Distance Calculation
+        // 3. Unblocked Live IPD Distance Calculation in Stage 1
         const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
         const pPx = Math.hypot((lp.x - rp.x) * videoElement.videoWidth, (lp.y - rp.y) * videoElement.videoHeight);
 
         if (pPx > 0) {
           const rCm = ((FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / pPx) / 10;
-          const jumpLimit = inBlurHorizonCheck ? 5.5 : 2.2;
-          const blocked = (examStage > 1 && lockedDistanceCm !== null) || confirmedEyeState !== "Binocular" || Math.abs(rCm - (smoothedDistanceCm || rCm)) > jumpLimit;
+          const lockActive = (examStage > 1 && lockedDistanceCm !== null);
 
-          if (!blocked) {
-            smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.18 * rCm) + (0.82 * smoothedDistanceCm);
-          } else {
-            smoothedDistanceCm = lockedDistanceCm !== null ? lockedDistanceCm : (smoothedDistanceCm || 38.5);
+          if (!lockActive && confirmedEyeState === "Binocular") {
+            smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.25 * rCm) + (0.75 * smoothedDistanceCm);
+          } else if (lockActive) {
+            smoothedDistanceCm = lockedDistanceCm;
           }
         }
 
@@ -1059,10 +1110,11 @@
         }
         eyeStateVal.innerText = confirmedEyeState;
       } else {
+        eyeTrackerDot.style.display = "none";
         centerGuideLine.classList.remove('locked');
         eyeHorizonLine.classList.remove('locked');
         centerGuidePill.classList.remove('locked');
-        centerGuidePill.innerText = "ALIGN EYES ON CROSSHAIR";
+        centerGuidePill.innerText = "PUT DOT BETWEEN EYES ON CROSSHAIR";
       }
     }
 
