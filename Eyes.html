@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.44 - Hand-Symmetric Vertical Nose-Vector Distance Lock + Clean HUD Layout
+  Project "Eyes" v3.45 - Table Stand / Phone Holder Protocol + Live Dist vs. Target Mirror HUD
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.44 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.45 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -92,7 +92,6 @@
       -webkit-transform: translateZ(0);
     }
 
-    /* Positioned at bottom-center so it never collides with top Dist / Target badges */
     .center-guide-pill {
       position: absolute;
       bottom: 4px;
@@ -381,7 +380,7 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.44</h1>
+    <h1>Project Eyes v3.45</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -412,32 +411,32 @@
     </div>
   </div>
 
-  <!-- LIVE PLAIN-ENGLISH STEP-BY-STEP COACH -->
+  <!-- LIVE PLAIN-ENGLISH STEP-BY-STEP COACH (TABLE STAND / HOLDER PROTOCOL) -->
   <div class="coach-panel" id="coachPanel">
     <div class="coach-header">
-      <span id="coachTitle">📋 STEP 1 OF 6: FIND YOUR BLUR DISTANCE (BOTH EYES OPEN)</span>
-      <span id="coachBadge" style="color:#38bdf8;">BOTH EYES OPEN</span>
+      <span id="coachTitle">📋 STEP 1 OF 6: PLACE PHONE IN HOLDER & FIND BLUR EDGE</span>
+      <span id="coachBadge" style="color:#38bdf8;">PHONE IN STAND</span>
     </div>
     <div class="coach-list" id="coachList">
-      <div class="coach-line">1. <span class="coach-highlight">TAKE OFF GLASSES/CONTACTS</span> and keep <span class="coach-highlight">BOTH EYES OPEN</span>.</div>
-      <div class="coach-line">2. Hold phone with <span class="coach-highlight">BOTH HANDS</span> (~14 in / 35 cm away) with dot on crosshair.</div>
-      <div class="coach-line">3. Tap the <span class="coach-highlight">BLUE BUTTON</span> below to start the push-back check.</div>
+      <div class="coach-line">1. <span class="coach-highlight">PUT PHONE IN A HOLDER/STAND</span> on a table at eye level (remove glasses).</div>
+      <div class="coach-line">2. Keep <span class="coach-highlight">BOTH EYES OPEN</span> (~35 cm away) with the green dot on the crosshair.</div>
+      <div class="coach-line">3. Tap the <span class="coach-highlight">BLUE BUTTON</span> below to start sliding the holder back.</div>
     </div>
   </div>
 
   <div class="optotype-card">
     <div class="card-header">
-      <span id="acuityLabel">Step 1: Unblocked Blur-Point Check</span>
+      <span id="acuityLabel">Step 1: Table Stand & Blur-Point Check</span>
       <span id="scaleReadout">Ready</span>
     </div>
 
     <div class="optotype-viewport">
       <div id="gatePromptBtn" onclick="handleGateTap()">
         <div class="gate-posture" id="gatePostureText">
-          🎯 STEP 1: KEEP BOTH EYES UNCOVERED • DOT ON CROSSHAIR
+          📱 PUT PHONE IN A TABLE HOLDER / STAND AT EYE LEVEL
         </div>
-        <div class="gate-sub" id="gateSubText">Hold Phone With Both Hands at ~35 cm • Remove Glasses</div>
-        <div class="gate-main" id="gateMainText">👉 TAP HERE TO START PUSH-BACK 👈</div>
+        <div class="gate-sub" id="gateSubText">Keep Both Eyes Open • Center Dot on Crosshair (~35 cm)</div>
+        <div class="gate-main" id="gateMainText">👉 TAP HERE TO START SLIDE-BACK 👈</div>
       </div>
 
       <canvas id="snellenCanvas"></canvas>
@@ -533,7 +532,6 @@
     let baseBlurCm = null;
     let lockedDistanceCm = null;
 
-    // Vertical Nose-Bridge Constant (Immune to Left-Hand vs Right-Hand horizontal angle & hand occlusion!)
     let noseConstantCmPx = 2800.0; 
     let lastValidNosePx = 60.0;
 
@@ -648,14 +646,14 @@
     function startBinocularBlurCheck() {
       inBlurHorizonCheck = true;
       snellenCanvas.style.display = "block";
-      acuityLabel.innerText = "Step 1: Push Phone Back Until 'E' Blurs";
+      acuityLabel.innerText = "Step 1: Slide Holder Back Until 'E' Blurs";
       drawTumblingE('RIGHT', 44, 25);
 
       setCoachInstructions(
-        "📋 STEP 1: PUSH PHONE BACK WITH BOTH EYES OPEN",
-        "KEEP BOTH EYES OPEN",
-        "Keep <span class='coach-highlight'>BOTH EYES UNCOVERED</span> so the camera tracks both eyes cleanly.",
-        "Start at ~35 cm (where 'E' is clear) and <span class='coach-highlight'>SLOWLY PUSH PHONE BACK</span>.",
+        "📋 STEP 1: SLIDE PHONE HOLDER BACK (BOTH EYES OPEN)",
+        "SLIDE HOLDER BACK",
+        "Keep <span class='coach-highlight'>BOTH EYES UNCOVERED</span> with the dot on the crosshair.",
+        "Start at ~35 cm (where 'E' is clear) and <span class='coach-highlight'>SLOWLY SLIDE HOLDER BACK</span> (or lean back).",
         "Tap the big <span class='coach-highlight'>YELLOW BUTTON</span> the exact second the 'E' starts turning blurry!"
       );
 
@@ -663,7 +661,7 @@
       examControls.innerHTML = `
         <div class="horizon-deck">
           <button class="horizon-btn-blur" onclick="lockBinocularBlur()">
-            👀 SLOWLY PUSH PHONE BACK (BOTH EYES OPEN)<br>TAP HERE THE SECOND THE "E" STARTS BLURRING (<span id="liveBlurBtnCm">-- cm</span>)
+            👀 SLOWLY SLIDE HOLDER BACK (BOTH EYES OPEN)<br>TAP HERE THE SECOND THE "E" STARTS BLURRING (<span id="liveBlurBtnCm">-- cm</span>)
           </button>
         </div>
       `;
@@ -675,7 +673,6 @@
       baseBlurCm = Math.max(32.0, Math.min(62.0, liveCm));
       lockedDistanceCm = baseBlurCm;
 
-      // Exact 1:1 Hand-Symmetric Calibration: Lock vertical nose-vector constant at the exact moment of tap!
       if (lastValidNosePx > 10) {
         noseConstantCmPx = baseBlurCm * lastValidNosePx;
       }
@@ -683,18 +680,18 @@
       examStage = 2;
       updateStageUI();
       const targetStr = `${lockedDistanceCm.toFixed(1)} cm`;
-      acuityLabel.innerText = "Step 2: Cover Right Eye (Match Target Dist)";
+      acuityLabel.innerText = "Step 2: Cover Right Eye (Leave Holder Still)";
       scaleReadout.innerText = `Target: ${targetStr}`;
       setCoachInstructions(
-        "📋 STEP 2: COVER RIGHT EYE (MATCH TARGET DISTANCE ON TOP RIGHT)",
-        "HOLD IN LEFT HAND",
-        `Match <span class='coach-highlight'>Dist (Top-Left)</span> to <span class='coach-highlight'>Target: ${targetStr} (Top-Right)</span>!`,
-        "Hold phone in <span class='coach-highlight'>LEFT HAND</span> • Cover <span class='coach-highlight'>RIGHT EYE</span> (keep nose visible).",
-        "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below, then tap the arrows until the 'E' gets too blurry."
+        "📋 STEP 2: LEAVE HOLDER AT " + targetStr + " • COVER RIGHT EYE",
+        "LEFT HAND TAPS",
+        `<span class='coach-highlight'>LEAVE THE HOLDER RIGHT THERE</span> so <span class='coach-highlight'>Dist</span> matches <span class='coach-highlight'>Target: ${targetStr}</span>!`,
+        "Cover your <span class='coach-highlight'>RIGHT EYE</span> with your RIGHT hand (keep nose visible).",
+        "Use your free <span class='coach-highlight'>LEFT HAND</span> to tap the <span class='coach-highlight'>BLUE BUTTON</span> below."
       );
       showGatePrompt(
-        "🤚 HOLD PHONE IN LEFT HAND • COVER RIGHT EYE",
-        `Keep Dist Matched to Target: ${targetStr} (Top-Right Corner)`,
+        "📱 LEAVE HOLDER STILL • COVER RIGHT EYE WITH RIGHT HAND",
+        `Target Locked at ${targetStr} (Top-Right) • Tap With Left Hand`,
         "👉 TAP HERE ONCE RIGHT EYE IS COVERED 👈"
       );
     }
@@ -710,25 +707,25 @@
 
       if (examStage === 2) {
         setCoachInstructions(
-          "📋 STEP 2: LEFT EYE ARROWS (STAY AT TARGET: " + distTxt + " CM)",
-          "LEFT THUMB",
-          `Keep <span class='coach-highlight'>RIGHT EYE COVERED</span> • Match <span class='coach-highlight'>Dist</span> to <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
-          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> with your LEFT thumb to match the 'E'.",
-          "If the 'E' is too blurry to tell, tap the red <span class='coach-highlight'>TOO BLURRY</span> button!"
+          "📋 STEP 2: LEFT EYE ARROWS (KEEP HOLDER AT " + distTxt + " CM)",
+          "LEFT HAND TAPS",
+          `Keep <span class='coach-highlight'>RIGHT EYE COVERED</span> • Keep <span class='coach-highlight'>Dist</span> matched to <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
+          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> with your LEFT hand to match the 'E'.",
+          "When the 'E' gets too blurry to tell, tap the red <span class='coach-highlight'>TOO BLURRY</span> button!"
         );
       } else if (examStage === 3) {
         setCoachInstructions(
-          "📋 STEP 3: RIGHT EYE ARROWS (STAY AT TARGET: " + distTxt + " CM)",
-          "RIGHT THUMB",
-          `Keep <span class='coach-highlight'>LEFT EYE COVERED</span> • Match <span class='coach-highlight'>Dist</span> to <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
-          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> with your RIGHT thumb to match the 'E'.",
-          "If the 'E' is too blurry to tell, tap the red <span class='coach-highlight'>TOO BLURRY</span> button!"
+          "📋 STEP 3: RIGHT EYE ARROWS (KEEP HOLDER AT " + distTxt + " CM)",
+          "RIGHT HAND TAPS",
+          `Keep <span class='coach-highlight'>LEFT EYE COVERED</span> • Keep <span class='coach-highlight'>Dist</span> matched to <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
+          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> with your RIGHT hand to match the 'E'.",
+          "When the 'E' gets too blurry to tell, tap the red <span class='coach-highlight'>TOO BLURRY</span> button!"
         );
       } else if (examStage === 4) {
         setCoachInstructions(
-          "📋 STEP 4: BOTH EYES OPEN ARROWS (STAY AT TARGET: " + distTxt + " CM)",
-          "BOTH HANDS",
-          `<span class='coach-highlight'>UNCOVER BOTH EYES</span> • Match <span class='coach-highlight'>Dist</span> to <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
+          "📋 STEP 4: BOTH EYES OPEN ARROWS (HOLDER AT " + distTxt + " CM)",
+          "BOTH EYES OPEN",
+          `<span class='coach-highlight'>UNCOVER BOTH EYES</span> • Keep <span class='coach-highlight'>Dist</span> at <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
           "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> to match the 'E' as it shrinks.",
           "Tap <span class='coach-highlight'>TOO BLURRY</span> if it gets too small to read."
         );
@@ -881,18 +878,18 @@
       examStage = 3;
       updateStageUI();
       const distTxt = (lockedDistanceCm || 45).toFixed(1);
-      acuityLabel.innerText = "Step 3: Switch Hands & Cover Left Eye";
+      acuityLabel.innerText = "Step 3: Cover Left Eye (Leave Holder Still)";
       scaleReadout.innerText = `L Line: 20/${osDenom}`;
       setCoachInstructions(
-        "📋 STEP 3: SWITCH HANDS FOR RIGHT EYE (TARGET: " + distTxt + " CM)",
-        "HOLD IN RIGHT HAND",
-        `Switch! Hold phone in <span class='coach-highlight'>RIGHT HAND</span> matched to <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
+        "📋 STEP 3: LEAVE HOLDER AT " + distTxt + " CM • COVER LEFT EYE",
+        "RIGHT HAND TAPS",
+        `<span class='coach-highlight'>LEAVE THE HOLDER STILL</span> so <span class='coach-highlight'>Dist</span> stays at <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
         "Cover your <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand (keep nose visible).",
-        "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below with your RIGHT thumb."
+        "Use your free <span class='coach-highlight'>RIGHT HAND</span> to tap the <span class='coach-highlight'>BLUE BUTTON</span> below."
       );
       showGatePrompt(
-        "🤚 HOLD PHONE IN RIGHT HAND • COVER LEFT EYE",
-        `Left Eye Read 20/${osDenom} • Keep Dist at Target: ${distTxt} cm`,
+        "📱 LEAVE HOLDER STILL • COVER LEFT EYE WITH LEFT HAND",
+        `Left Eye Read 20/${osDenom} • Tap With Right Hand`,
         "👉 TAP HERE ONCE LEFT EYE IS COVERED 👈"
       );
     }
@@ -904,14 +901,14 @@
       acuityLabel.innerText = "Step 4: Uncover Both Eyes";
       scaleReadout.innerText = `R Line: 20/${odDenom}`;
       setCoachInstructions(
-        "📋 STEP 4: BOTH EYES OPEN (TARGET: " + distTxt + " CM)",
-        "BOTH HANDS",
-        `<span class='coach-highlight'>UNCOVER BOTH EYES</span> and match <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
+        "📋 STEP 4: BOTH EYES OPEN (HOLDER AT " + distTxt + " CM)",
+        "BOTH EYES OPEN",
+        `<span class='coach-highlight'>UNCOVER BOTH EYES</span> and keep <span class='coach-highlight'>Dist</span> at <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
         "Keep the green dot centered on the crosshair.",
         "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below to test both eyes together."
       );
       showGatePrompt(
-        "👀 UNCOVER BOTH EYES • HOLD WITH BOTH HANDS",
+        "👀 UNCOVER BOTH EYES • LEAVE HOLDER AT TARGET",
         `L: 20/${osDenom} | R: 20/${odDenom} • Target: ${distTxt} cm`,
         "👉 TAP HERE ONCE BOTH EYES ARE OPEN 👈"
       );
@@ -925,7 +922,7 @@
       setCoachInstructions(
         "📋 STEP 5: TAP 8 WORDS IN ORDER",
         "READING SPEED",
-        "Keep holding the phone with <span class='coach-highlight'>BOTH HANDS</span> at a comfortable distance.",
+        "Keep the phone in the holder at a comfortable reading distance.",
         "8 words will appear in the white box below.",
         "Read and <span class='coach-highlight'>tap each word in order</span> from first to last."
       );
@@ -1033,22 +1030,22 @@
       odHorizMiss = 0; odVertMiss = 0;
       examControls.className = "controls-wrap align-center";
       updateStageUI();
-      acuityLabel.innerText = "Step 1: Unblocked Blur-Point Check";
+      acuityLabel.innerText = "Step 1: Table Stand & Blur-Point Check";
       scaleReadout.innerText = "Ready";
       targetLabel.innerText = "Target:";
       zoneVal.innerText = "35–45 cm";
       zoneVal.style.color = "#fbbf24";
       setCoachInstructions(
-        "📋 STEP 1 OF 6: FIND YOUR BLUR DISTANCE (BOTH EYES OPEN)",
-        "BOTH EYES OPEN",
-        "<span class='coach-highlight'>TAKE OFF GLASSES/CONTACTS</span> and keep <span class='coach-highlight'>BOTH EYES OPEN</span>.",
-        "Hold phone with <span class='coach-highlight'>BOTH HANDS</span> (~14 in / 35 cm away) with dot on crosshair.",
-        "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below to start the push-back check."
+        "📋 STEP 1 OF 6: PLACE PHONE IN HOLDER & FIND BLUR EDGE",
+        "PHONE IN STAND",
+        "<span class='coach-highlight'>PUT PHONE IN A HOLDER/STAND</span> on a table at eye level (remove glasses).",
+        "Keep <span class='coach-highlight'>BOTH EYES OPEN</span> (~35 cm away) with the green dot on the crosshair.",
+        "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below to start sliding the holder back."
       );
       showGatePrompt(
-        "🎯 STEP 1: KEEP BOTH EYES UNCOVERED • DOT ON CROSSHAIR",
-        "Hold Phone With Both Hands at ~35 cm • Remove Glasses",
-        "👉 TAP HERE TO START PUSH-BACK 👈"
+        "📱 PUT PHONE IN A TABLE HOLDER / STAND AT EYE LEVEL",
+        "Keep Both Eyes Open • Center Dot on Crosshair (~35 cm)",
+        "👉 TAP HERE TO START SLIDE-BACK 👈"
       );
     }
 
@@ -1114,7 +1111,7 @@
         } else {
           centerGuidePill.classList.remove('locked');
           if (dotY < centerY - (ch * 0.18)) {
-            centerGuidePill.innerText = "LOWER PHONE SLIGHTLY";
+            centerGuidePill.innerText = "LOWER PHONE / HEAD SLIGHTLY";
           } else if (dotY > centerY + (ch * 0.18)) {
             centerGuidePill.innerText = "RAISE PHONE TO EYE LEVEL";
           } else {
@@ -1177,11 +1174,9 @@
 
         confirmedEyeState = dState;
 
-        // 1. Binocular Eye-to-Eye IPD (Used ONLY when BOTH eyes are uncovered in Stage 1, 4, 5, 6)
         const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
         const ipdPx = Math.hypot((lp.x - rp.x) * vw, (lp.y - rp.y) * vh);
 
-        // 2. Vertical Nose-Vector Height (lm[168] Bridge to lm[2] Base): Immune to Left/Right hand angle & covered eyes!
         const noseTop = lm[168], noseBot = lm[2];
         const noseVertPx = (noseTop && noseBot)
           ? Math.hypot((noseTop.x - noseBot.x) * vw, (noseTop.y - noseBot.y) * vh)
@@ -1192,14 +1187,12 @@
         }
 
         if (examStage !== 2 && examStage !== 3 && ipdPx > 0) {
-          // Both eyes open: Use IPD and continuously sync the vertical nose constant
           const rCm = ((FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / ipdPx) / 10;
           smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.25 * rCm) + (0.75 * smoothedDistanceCm);
           if (lastValidNosePx > 12) {
             noseConstantCmPx = 0.2 * (smoothedDistanceCm * lastValidNosePx) + 0.8 * noseConstantCmPx;
           }
         } else if ((examStage === 2 || examStage === 3) && lastValidNosePx > 12) {
-          // Stage 2 (Left Hand) or Stage 3 (Right Hand): Strictly use Vertical Nose Vector so 48cm is identical in both hands!
           const monoCm = noseConstantCmPx / lastValidNosePx;
           if (monoCm >= 24 && monoCm <= 72) {
             smoothedDistanceCm = smoothedDistanceCm === null ? monoCm : (0.22 * monoCm) + (0.78 * smoothedDistanceCm);
@@ -1228,7 +1221,7 @@
             }
           } else {
             targetLabel.innerText = "Target:";
-            zoneVal.innerText = inBlurHorizonCheck ? "Push Back" : "35–45 cm";
+            zoneVal.innerText = inBlurHorizonCheck ? "Slide Back" : "35–45 cm";
             if (smoothedDistanceCm >= 35 && smoothedDistanceCm <= 45) {
               zoneVal.style.color = "#4ade80"; cameraBox.style.borderColor = "#4ade80";
             } else if (smoothedDistanceCm < 35) {
