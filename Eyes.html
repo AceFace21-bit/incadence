@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.29 - Dynamic Thumb-Zone Control Shifting (Left / Right / Center)
+  Project "Eyes" v3.30 - Dynamic Thumb-Zone Control Shifting & Clean State Engine
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.29 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.30 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -310,7 +310,7 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.29</h1>
+    <h1>Project Eyes v3.30</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -350,7 +350,7 @@
   <div class="optotype-card">
     <div class="card-header">
       <span id="acuityLabel">Stage 1: Seated Posture & Calibration</span>
-      <span id="scaleReadout">-- px</span>
+      <span id="scaleReadout">Ready</span>
     </div>
 
     <div class="optotype-viewport">
@@ -470,6 +470,7 @@
       readingBox.style.display = "none";
       reportBox.style.display = "none";
       examControls.innerHTML = "";
+      examControls.className = "controls-wrap align-center";
       gatePostureText.innerText = postureText;
       gateSubText.innerText = subText;
       gateMainText.innerText = mainText;
@@ -490,6 +491,7 @@
         examStage = 2;
         updateStageUI();
         acuityLabel.innerText = "Stage 2: Left Eye Setup";
+        scaleReadout.innerText = `@ ${lockedDistanceCm.toFixed(1)} cm`;
         showGatePrompt(
           "🪑 COVER RIGHT EYE WITH RIGHT HAND • TAP WITH LEFT HAND",
           "Stage 2 of 6 • Controls Shift to Left Side",
@@ -672,6 +674,7 @@
       examStage = 3;
       updateStageUI();
       acuityLabel.innerText = "Stage 3: Right Eye Setup";
+      scaleReadout.innerText = `O.S. 20/${osDenom}`;
       showGatePrompt(
         "🪑 COVER LEFT EYE WITH LEFT HAND • TAP WITH RIGHT HAND",
         `Left Eye Locked at 20/${osDenom} Eq • Controls Shift Right`,
@@ -683,6 +686,7 @@
       examStage = 4;
       updateStageUI();
       acuityLabel.innerText = "Stage 4: Binocular Setup";
+      scaleReadout.innerText = `O.D. 20/${odDenom}`;
       showGatePrompt(
         "🪑 HOLD PHONE WITH BOTH HANDS • CONTROLS CENTERED",
         `Right Eye Locked at 20/${odDenom} Eq • Uncover Both Eyes`,
@@ -694,6 +698,7 @@
       examStage = 5;
       updateStageUI();
       acuityLabel.innerText = "Stage 5: Reading Intake Setup";
+      scaleReadout.innerText = `O.U. 20/${ouDenom}`;
       showGatePrompt(
         "🪑 KEEP ELBOWS ON ARMRESTS • HOLD WITH BOTH HANDS",
         `Binocular Locked at 20/${ouDenom} Eq • 8 Quick Words`,
@@ -703,8 +708,12 @@
 
     function launchReadingWords() {
       currentDenominator = 40;
+      snellenCanvas.style.display = "none";
+      examControls.innerHTML = "";
+      examControls.className = "controls-wrap align-center";
       readingBox.style.display = "block";
       acuityLabel.innerText = "Stage 5: Behavioral Reading Intake";
+      scaleReadout.innerText = `0 / ${PASSAGE_WORDS.length} Words`;
       wordContainer.innerHTML = "";
       wordIndex = 0;
       tapTimestamps = [performance.now()];
@@ -713,13 +722,16 @@
         span.innerText = w;
         span.style.padding = "3px 6px";
         span.style.borderRadius = "4px";
+        span.style.cursor = "pointer";
         span.style.border = idx === 0 ? "2px solid #0284c7" : "1px solid #cbd5e1";
         span.onclick = () => {
           if (idx !== wordIndex) return;
           tapTimestamps.push(performance.now());
           wordIndex++;
-          if (wordIndex >= PASSAGE_WORDS.length) startStage6();
-          else {
+          scaleReadout.innerText = `${wordIndex} / ${PASSAGE_WORDS.length} Words`;
+          if (wordIndex >= PASSAGE_WORDS.length) {
+            startStage6();
+          } else {
             Array.from(wordContainer.children).forEach((el, i) => {
               el.style.border = i === wordIndex ? "2px solid #0284c7" : "1px solid #cbd5e1";
               el.style.background = i < wordIndex ? "#dcfce7" : "#f8fafc";
@@ -735,7 +747,10 @@
       updateStageUI();
       readingBox.style.display = "none";
       reportBox.style.display = "block";
+      examControls.innerHTML = "";
+      examControls.className = "controls-wrap align-center";
       acuityLabel.innerText = `Stage 6: 20-Ft Eq (@ ${(lockedDistanceCm || 40).toFixed(1)}cm)`;
+      scaleReadout.innerText = "Complete";
 
       const totalSec = (tapTimestamps[tapTimestamps.length - 1] - tapTimestamps[0]) / 1000;
       const wpm = Math.round((PASSAGE_WORDS.length / Math.max(1, totalSec)) * 60);
@@ -772,6 +787,7 @@
       examControls.className = "controls-wrap align-center";
       updateStageUI();
       acuityLabel.innerText = "Stage 1: Seated Posture & Calibration";
+      scaleReadout.innerText = "Ready";
       showGatePrompt(
         "🪑 SIT IN CHAIR • ELBOWS ON ARMS • HOLD WITH BOTH HANDS",
         "Lock Distance at 35–45 cm (Remove Glasses)",
@@ -798,19 +814,23 @@
     function onResults(results) {
       if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
         const lm = results.multiFaceLandmarks[0];
-        const rEAR = getEAR(lm, 159, 145, 133, 33);
-        const lEAR = getEAR(lm, 386, 374, 362, 263);
+        // Subject's physical right eye (159/145/133/33) vs physical left eye (386/374/362/263)
+        const subjectRightEAR = getEAR(lm, 159, 145, 133, 33);
+        const subjectLeftEAR = getEAR(lm, 386, 374, 362, 263);
 
-        smoothedRightEAR = 0.3 * rEAR + 0.7 * smoothedRightEAR;
-        smoothedLeftEAR = 0.3 * lEAR + 0.7 * smoothedLeftEAR;
+        smoothedRightEAR = 0.3 * subjectRightEAR + 0.7 * smoothedRightEAR;
+        smoothedLeftEAR = 0.3 * subjectLeftEAR + 0.7 * smoothedLeftEAR;
 
         let dState = "Binocular";
-        if (smoothedRightEAR < 0.2 && smoothedLeftEAR >= 0.2) dState = "Left Covered";
-        else if (smoothedLeftEAR < 0.2 && smoothedRightEAR >= 0.2) dState = "Right Covered";
+        if (smoothedRightEAR < 0.20 && smoothedLeftEAR >= 0.20) dState = "Right Covered";
+        else if (smoothedLeftEAR < 0.20 && smoothedRightEAR >= 0.20) dState = "Left Covered";
 
         if (dState === pendingEyeState) {
           if (++eyeStateFrameCount >= 4) confirmedEyeState = dState;
-        } else { pendingEyeState = dState; eyeStateFrameCount = 1; }
+        } else {
+          pendingEyeState = dState;
+          eyeStateFrameCount = 1;
+        }
 
         const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
         const pPx = Math.hypot((lp.x - rp.x) * videoElement.videoWidth, (lp.y - rp.y) * videoElement.videoHeight);
