@@ -1,7 +1,17 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  PROJECT EYES v3.54 - TELEHEALTH REGULATORY SHIELD + IPAD/IPHONE CALIBRATOR
+  PROJECT EYES v3.54 - FAILSAFE PIN UNLOCK + IPAD/IPHONE CALIBRATOR + 9-CLAIM PATENT ARCHITECTURE
+   Protected Claims Architecture:
+  1. Zero-Hardware Binocular IPD-to-Centimeter Real-Time Optical Ranging
+  2. Dynamic Sub-Pixel Angular Optotype Scaling (5-Arcminute Snellen Compensation)
+  3. Monocular Eyelid Aperture & Squint/Occlusion Telemetry
+  4. Closed-Loop Refractive & Reading Intake Scorecard Engine
+  5. Dual-Mode Nose-Bridge Vector Hand-Off (Monocular Distance Continuity Under Hand Occlusion)
+  6. Virtual Far-Point Optical Horizon Simulation (Stationary Chair Blur-Edge Calculation)
+  7. Directional Axis Error Matrix for Automated Cylindrical (Astigmatism) Estimation
+  8. Contralateral Ergonomic UI Shifting for One-Handed Monocular Testing
+  9. Sequential Word-Tap Saccadic Micro-Latency & Visual Fatigue Telemetry
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -310,28 +320,16 @@
     }
     #readingBox { display: none; width: 100%; text-align: center; font-weight: 700; font-size: 12px; }
     #reportBox { display: none; width: 100%; text-align: left; }
-    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
     .report-item {
       background: #f1f5f9;
-      padding: 2px 5px;
-      border-radius: 4px;
+      padding: 3px 6px;
+      border-radius: 5px;
       border-left: 3px solid #0284c7;
     }
-    .report-label { font-size: 6.8px; font-weight: 700; color: #64748b; text-transform: uppercase; }
-    .report-val { font-size: 9.5px; font-weight: 900; color: #0f172a; }
-    .report-sub { font-size: 7.8px; font-weight: 800; color: #0284c7; }
-    .telehealth-shield {
-      margin-top: 2px;
-      font-size: 6.8px;
-      font-weight: 800;
-      color: #475569;
-      text-align: center;
-      background: #e2e8f0;
-      padding: 2px 4px;
-      border-radius: 3px;
-      text-transform: uppercase;
-      letter-spacing: 0.2px;
-    }
+    .report-label { font-size: 7px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .report-val { font-size: 10px; font-weight: 900; color: #0f172a; }
+    .report-sub { font-size: 8.2px; font-weight: 800; color: #0284c7; }
     .controls-wrap {
       width: 100%;
       max-width: 600px;
@@ -541,12 +539,12 @@
       <div id="reportBox">
         <div class="report-grid">
           <div class="report-item">
-            <div class="report-label">Left Eye (O.S.) Est.</div>
+            <div class="report-label">Left Eye (O.S.) Rx</div>
             <div class="report-val" id="repOS">--</div>
             <div class="report-sub" id="rxOS">SPH: --</div>
           </div>
           <div class="report-item">
-            <div class="report-label">Right Eye (O.D.) Est.</div>
+            <div class="report-label">Right Eye (O.D.) Rx</div>
             <div class="report-val" id="repOD">--</div>
             <div class="report-sub" id="rxOD">SPH: --</div>
           </div>
@@ -561,9 +559,6 @@
             <div class="report-sub" id="rxLat">Optimal</div>
           </div>
         </div>
-        <div class="telehealth-shield">
-          🛡️ Telehealth Acuity &amp; Refractive Screening (64/174,835) • Not an internal disease exam
-        </div>
       </div>
     </div>
   </div>
@@ -571,7 +566,7 @@
   <div class="controls-wrap align-center" id="examControls"></div>
 
   <div class="bottom-bar">
-    <button class="reset-btn" onclick="window._0xReset()">Reset Check</button>
+    <button class="reset-btn" onclick="window._0xReset()">Reset Exam</button>
     <footer>&copy; 2026 Terrance Lamont Watkins</footer>
   </div>
 
@@ -971,14 +966,14 @@
       _rBx.style.display = "none";
       _rpB.style.display = "block";
       _exC.innerHTML = "";
-      _aLb.innerText = "Step 6: Telehealth Refractive & Acuity Scorecard";
+      _aLb.innerText = "Step 6: Your Complete Eye Prescription Scorecard";
       _sRd.innerText = "Complete";
       _setC(
-        "✅ SCREENING COMPLETE — READY FOR TELEHEALTH SIGN-OFF!",
+        "✅ EXAM COMPLETE — SCREENSHOT THIS SCORECARD!",
         "FINISHED",
-        "<span class='coach-highlight'>TAKE A SCREENSHOT</span> of this Refractive & Acuity Scorecard!",
-        "<span class='coach-highlight'>Left Eye (O.S.) & Right Eye (O.D.)</span> diopter estimates are shown below.",
-        "Built for <span class='coach-highlight'>Rx Renewal & Telehealth Optometrist Review</span> (USPTO 64/174,835)."
+        "<span class='coach-highlight'>TAKE A SCREENSHOT</span> of this screen and send it to Terence with your real Rx!",
+        "<span class='coach-highlight'>Left Eye (O.S.) & Right Eye (O.D.)</span> prescriptions are shown in the white box below.",
+        "Tap <span class='coach-highlight'>Reset Exam</span> at the bottom anytime to run another test."
       );
       const tSec = (_tS[_tS.length - 1] - _tS[0]) / 1000;
       const wpm = Math.round((_WORDS.length / Math.max(1, tSec)) * 60);
@@ -1015,7 +1010,7 @@
         "ZERO-MOVEMENT STAND",
         "<span class='coach-highlight'>PUT DEVICE IN STAND</span> & sit comfortably in your chair (remove glasses).",
         "Keep <span class='coach-highlight'>BOTH EYES OPEN</span> with the green dot centered on the crosshair.",
-        "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below—you do NOT even have to move your chair!"
+        "Tap the <span class='coach-highlight">BLUE BUTTON</span> below—you do NOT even have to move your chair!"
       );
       _sGP(
         "📱 DEVICE IN STAND • SIT STILL IN YOUR CHAIR",
