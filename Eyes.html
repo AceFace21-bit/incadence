@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.45 - Table Stand / Phone Holder Protocol + Live Dist vs. Target Mirror HUD
+  CONFIDENTIAL & PROPRIETARY - UNAUTHORIZED REPRODUCTION PROHIBITED
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.45 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.46 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -26,6 +26,65 @@
       justify-content: space-between;
       padding: 6px 10px;
     }
+
+    /* FOUNDER PIN VAULT OVERLAY */
+    #pinVaultOverlay {
+      position: fixed;
+      inset: 0;
+      background: #070a12;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .vault-card {
+      width: 100%;
+      max-width: 340px;
+      background: #111827;
+      border: 2px solid #38bdf8;
+      border-radius: 14px;
+      padding: 20px 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.7);
+    }
+    .vault-title { font-size: 16px; font-weight: 900; color: #f8fafc; margin-bottom: 4px; }
+    .vault-sub { font-size: 9.5px; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; }
+    .vault-input {
+      width: 100%;
+      background: #0b0f19;
+      border: 2px solid #334155;
+      color: #fde047;
+      font-size: 22px;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    .vault-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fff;
+      border: 1px solid #38bdf8;
+      padding: 12px;
+      font-size: 12px;
+      font-weight: 900;
+      border-radius: 8px;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .vault-err {
+      color: #f87171;
+      font-size: 10px;
+      font-weight: 800;
+      margin-top: 8px;
+      min-height: 14px;
+    }
+
     header {
       text-align: center;
       width: 100%;
@@ -133,7 +192,6 @@
     }
     .badge-val { color: #38bdf8; font-size: 11px; font-weight: 900; margin-left: 2px; }
     
-    /* PLAIN-ENGLISH STEP-BY-STEP COACH PANEL */
     .coach-panel {
       width: 100%;
       max-width: 600px;
@@ -259,7 +317,6 @@
     .report-val { font-size: 10px; font-weight: 900; color: #0f172a; }
     .report-sub { font-size: 8.2px; font-weight: 800; color: #0284c7; }
     
-    /* DYNAMIC THUMB-ZONE SHIFTING CONTROL DECK (LEFT / RIGHT / CENTER) */
     .controls-wrap {
       width: 100%;
       max-width: 600px;
@@ -338,7 +395,6 @@
     }
     button.cant-see-btn:active { background: #dc2626; color: #fff; }
 
-    /* STAGE 1 BINOCULAR BLUR-HORIZON CALIBRATION BUTTON */
     .horizon-deck {
       width: 100%;
       display: flex;
@@ -379,8 +435,22 @@
 </head>
 <body>
 
+  <!-- CONFIDENTIAL PIN GATE -->
+  <div id="pinVaultOverlay">
+    <div class="vault-card">
+      <div class="vault-title">🔒 Project Eyes v3.46</div>
+      <div class="vault-sub">USPTO Patent Pending • 64/174,835</div>
+      <input type="password" id="vaultPinInput" class="vault-input" maxlength="4" inputmode="numeric" placeholder="••••" />
+      <button class="vault-btn" onclick="unlockVault()">Authorize & Start Camera</button>
+      <div class="vault-err" id="vaultErrMsg"></div>
+      <div style="font-size: 8px; color: #64748b; margin-top: 10px;">
+        &copy; 2026 Terrance Lamont Watkins. All Rights Reserved.
+      </div>
+    </div>
+  </div>
+
   <header>
-    <h1>Project Eyes v3.45</h1>
+    <h1>Project Eyes v3.46</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -397,7 +467,6 @@
     <video id="webcam" autoplay playsinline muted></video>
     <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
 
-    <!-- TOP-LEFT LIVE DISTANCE vs. TOP-RIGHT TARGET DISTANCE MIRROR -->
     <div class="hud-top">
       <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
       <div class="badge"><span id="targetLabel">Target:</span> <span id="zoneVal" class="badge-val" style="color: #fbbf24;">35–45 cm</span></div>
@@ -411,7 +480,6 @@
     </div>
   </div>
 
-  <!-- LIVE PLAIN-ENGLISH STEP-BY-STEP COACH (TABLE STAND / HOLDER PROTOCOL) -->
   <div class="coach-panel" id="coachPanel">
     <div class="coach-header">
       <span id="coachTitle">📋 STEP 1 OF 6: PLACE PHONE IN HOLDER & FIND BLUR EDGE</span>
@@ -511,9 +579,9 @@
       viewfinderCanvas.height = cameraBox.clientHeight || 148;
     });
 
-    const AVERAGE_IPD_MM = 63.0;
-    const FOCAL_LENGTH_PIXELS = 580;
-    const CSS_PX_PER_MM = 3.78;
+    const _K1 = 63.0;
+    const _K2 = 580;
+    const _K3 = 3.78;
     const DIRECTIONS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
     const ACUITY_STEPS = [200, 150, 100, 70, 50, 40, 30, 25, 20, 15];
 
@@ -532,8 +600,8 @@
     let baseBlurCm = null;
     let lockedDistanceCm = null;
 
-    let noseConstantCmPx = 2800.0; 
-    let lastValidNosePx = 60.0;
+    let _nConst = 2800.0; 
+    let _lastNPx = 60.0;
 
     let osHorizMiss = 0, osVertMiss = 0;
     let odHorizMiss = 0, odVertMiss = 0;
@@ -545,9 +613,17 @@
     let smoothedDistanceCm = null;
     let smoothedLeftEAR = 0.30;
     let smoothedRightEAR = 0.30;
-    let pendingEyeState = "Binocular";
     let confirmedEyeState = "Binocular";
-    let eyeStateFrameCount = 0;
+
+    function unlockVault() {
+      const pin = document.getElementById('vaultPinInput').value.trim();
+      if (pin === "1982") {
+        document.getElementById('pinVaultOverlay').style.display = "none";
+        camera.start();
+      } else {
+        document.getElementById('vaultErrMsg').innerText = "UNAUTHORIZED PIN CODE";
+      }
+    }
 
     function setCoachInstructions(titleText, badgeText, line1, line2, line3) {
       coachTitle.innerText = titleText;
@@ -559,60 +635,58 @@
       `;
     }
 
-    function computeDifferentialEyeRx(thisEyeDenom, otherEyeDenom, sharedBlurCm, horizMisses, vertMisses) {
-      let cylVal = 0.0;
-      let cylTag = "";
-      const axisDiff = Math.abs(horizMisses - vertMisses);
-      if (axisDiff >= 1 && (horizMisses + vertMisses) >= 1) {
-        cylVal = axisDiff >= 2 ? -0.75 : -0.50;
-        const estAxis = horizMisses > vertMisses ? "180°/15°" : "90°";
-        cylTag = ` • CYL ${cylVal.toFixed(2)} (${estAxis})`;
+    function _calcRx(a, b, c, h, v) {
+      let cv = 0.0;
+      let ct = "";
+      const ad = Math.abs(h - v);
+      if (ad >= 1 && (h + v) >= 1) {
+        cv = ad >= 2 ? -0.75 : -0.50;
+        const ax = h > v ? "180°/15°" : "90°";
+        ct = ` • CYL ${cv.toFixed(2)} (${ax})`;
       }
 
-      if (sharedBlurCm !== null && sharedBlurCm < 64) {
-        const rawBaseSph = -(100 / sharedBlurCm);
-        const anchoredBaseSph = Math.round(rawBaseSph * 4) / 4;
+      if (c !== null && c < 64) {
+        const rB = -(100 / c);
+        const aB = Math.round(rB * 4) / 4;
+        const bestD = Math.min(a, b);
+        const tI = ACUITY_STEPS.indexOf(a);
+        const bI = ACUITY_STEPS.indexOf(bestD);
 
-        const bestDenom = Math.min(thisEyeDenom, otherEyeDenom);
-        const thisIdx = ACUITY_STEPS.indexOf(thisEyeDenom);
-        const bestIdx = ACUITY_STEPS.indexOf(bestDenom);
-
-        let lineDiffSteps = 0;
-        if (thisIdx !== -1 && bestIdx !== -1 && thisIdx < bestIdx) {
-          lineDiffSteps = bestIdx - thisIdx;
-        } else if (thisEyeDenom > otherEyeDenom) {
-          lineDiffSteps = 1;
+        let dS = 0;
+        if (tI !== -1 && bI !== -1 && tI < bI) {
+          dS = bI - tI;
+        } else if (a > b) {
+          dS = 1;
         }
-        const monocularOffsetD = -(Math.min(3, lineDiffSteps) * 0.25);
+        const mO = -(Math.min(3, dS) * 0.25);
+        const qS = Math.round((aB + mO) * 4) / 4;
 
-        const quarterStepSph = Math.round((anchoredBaseSph + monocularOffsetD) * 4) / 4;
-
-        let wallDenom = 20;
-        const absD = Math.abs(quarterStepSph);
-        if (absD >= 3.00) wallDenom = 250;
-        else if (absD >= 2.50) wallDenom = 200;
-        else if (absD >= 2.00) wallDenom = 150;
-        else if (absD >= 1.50) wallDenom = 100;
-        else if (absD >= 1.25) wallDenom = 70;
-        else if (absD >= 1.00) wallDenom = 50;
-        else if (absD >= 0.75) wallDenom = 40;
-        else if (absD >= 0.50) wallDenom = 30;
+        let wD = 20;
+        const absD = Math.abs(qS);
+        if (absD >= 3.00) wD = 250;
+        else if (absD >= 2.50) wD = 200;
+        else if (absD >= 2.00) wD = 150;
+        else if (absD >= 1.50) wD = 100;
+        else if (absD >= 1.25) wD = 70;
+        else if (absD >= 1.00) wD = 50;
+        else if (absD >= 0.75) wD = 40;
+        else if (absD >= 0.50) wD = 30;
 
         return {
-          snellen20Ft: wallDenom > 200 ? "< 20/200" : `20/${wallDenom}`,
-          diopterStr: `SPH ${quarterStepSph.toFixed(2)} D${cylTag}`
+          snellen20Ft: wD > 200 ? "< 20/200" : `20/${wD}`,
+          diopterStr: `SPH ${qS.toFixed(2)} D${ct}`
         };
       }
 
-      if (thisEyeDenom <= 20) return { snellen20Ft: `20/${thisEyeDenom}`, diopterStr: `SPH 0.00 D${cylTag}` };
-      if (thisEyeDenom <= 25) return { snellen20Ft: "20/25", diopterStr: `SPH +0.50 / -0.50 D${cylTag}` };
-      if (thisEyeDenom <= 30) return { snellen20Ft: "20/30", diopterStr: `SPH +0.75 / -0.75 D${cylTag}` };
-      if (thisEyeDenom <= 40) return { snellen20Ft: "20/40", diopterStr: `SPH +1.25 / -1.25 D${cylTag}` };
-      if (thisEyeDenom <= 50) return { snellen20Ft: "20/50", diopterStr: `SPH +1.50 / -1.50 D${cylTag}` };
-      if (thisEyeDenom <= 70) return { snellen20Ft: "20/70", diopterStr: `SPH +1.75 / -2.00 D${cylTag}` };
-      if (thisEyeDenom <= 100) return { snellen20Ft: "20/100", diopterStr: `SPH +2.25 / -2.50 D${cylTag}` };
-      if (thisEyeDenom <= 150) return { snellen20Ft: "20/150", diopterStr: `SPH +2.50 / -3.00 D${cylTag}` };
-      return { snellen20Ft: "< 20/200", diopterStr: `SPH +3.00 / -3.50 D${cylTag}` };
+      if (a <= 20) return { snellen20Ft: `20/${a}`, diopterStr: `SPH 0.00 D${ct}` };
+      if (a <= 25) return { snellen20Ft: "20/25", diopterStr: `SPH +0.50 / -0.50 D${ct}` };
+      if (a <= 30) return { snellen20Ft: "20/30", diopterStr: `SPH +0.75 / -0.75 D${ct}` };
+      if (a <= 40) return { snellen20Ft: "20/40", diopterStr: `SPH +1.25 / -1.25 D${ct}` };
+      if (a <= 50) return { snellen20Ft: "20/50", diopterStr: `SPH +1.50 / -1.50 D${ct}` };
+      if (a <= 70) return { snellen20Ft: "20/70", diopterStr: `SPH +1.75 / -2.00 D${ct}` };
+      if (a <= 100) return { snellen20Ft: "20/100", diopterStr: `SPH +2.25 / -2.50 D${ct}` };
+      if (a <= 150) return { snellen20Ft: "20/150", diopterStr: `SPH +2.50 / -3.00 D${ct}` };
+      return { snellen20Ft: "< 20/200", diopterStr: `SPH +3.00 / -3.50 D${ct}` };
     }
 
     function showGatePrompt(postureText, subText, mainText) {
@@ -673,8 +747,8 @@
       baseBlurCm = Math.max(32.0, Math.min(62.0, liveCm));
       lockedDistanceCm = baseBlurCm;
 
-      if (lastValidNosePx > 10) {
-        noseConstantCmPx = baseBlurCm * lastValidNosePx;
+      if (_lastNPx > 10) {
+        _nConst = baseBlurCm * _lastNPx;
       }
 
       examStage = 2;
@@ -779,7 +853,7 @@
       const angleRad = (5 * (denominator / 20) / 60) * (Math.PI / 180);
       const heightMm = 2 * distMm * Math.tan(angleRad / 2);
 
-      const sizeCssPx = Math.min(70, heightMm * CSS_PX_PER_MM);
+      const sizeCssPx = Math.min(70, heightMm * _K3);
       const rawDevicePx = sizeCssPx * dpr;
 
       const unit = Math.max(1, Math.round(rawDevicePx / 5));
@@ -996,8 +1070,8 @@
         if (gap > maxGapMs) maxGapMs = gap;
       }
 
-      const osMetrics = computeDifferentialEyeRx(osDenom, odDenom, baseBlurCm, osHorizMiss, osVertMiss);
-      const odMetrics = computeDifferentialEyeRx(odDenom, osDenom, baseBlurCm, odHorizMiss, odVertMiss);
+      const osMetrics = _calcRx(osDenom, odDenom, baseBlurCm, osHorizMiss, osVertMiss);
+      const odMetrics = _calcRx(odDenom, osDenom, baseBlurCm, odHorizMiss, odVertMiss);
 
       document.getElementById('repOS').innerText = `${osMetrics.snellen20Ft} (20-Ft Eq)`;
       document.getElementById('rxOS').innerText = osMetrics.diopterStr;
@@ -1183,17 +1257,17 @@
           : 0;
 
         if (noseVertPx > 12) {
-          lastValidNosePx = 0.3 * noseVertPx + 0.7 * lastValidNosePx;
+          _lastNPx = 0.3 * noseVertPx + 0.7 * _lastNPx;
         }
 
         if (examStage !== 2 && examStage !== 3 && ipdPx > 0) {
-          const rCm = ((FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / ipdPx) / 10;
+          const rCm = ((_K2 * _K1) / ipdPx) / 10;
           smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.25 * rCm) + (0.75 * smoothedDistanceCm);
-          if (lastValidNosePx > 12) {
-            noseConstantCmPx = 0.2 * (smoothedDistanceCm * lastValidNosePx) + 0.8 * noseConstantCmPx;
+          if (_lastNPx > 12) {
+            _nConst = 0.2 * (smoothedDistanceCm * _lastNPx) + 0.8 * _nConst;
           }
-        } else if ((examStage === 2 || examStage === 3) && lastValidNosePx > 12) {
-          const monoCm = noseConstantCmPx / lastValidNosePx;
+        } else if ((examStage === 2 || examStage === 3) && _lastNPx > 12) {
+          const monoCm = _nConst / _lastNPx;
           if (monoCm >= 24 && monoCm <= 72) {
             smoothedDistanceCm = smoothedDistanceCm === null ? monoCm : (0.22 * monoCm) + (0.78 * smoothedDistanceCm);
           }
@@ -1245,7 +1319,6 @@
       width: 640,
       height: 480
     });
-    camera.start();
   </script>
 </body>
 </html>
