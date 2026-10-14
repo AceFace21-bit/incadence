@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  PROJECT EYES v3.58 - DUAL GLASSES & CONTACT LENS RX ENGINE (L/R EYE)
+  PROJECT EYES v3.59 - PLAYSTATION CROSS D-PAD + GLASSES & CONTACTS RX ENGINE
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.58 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.59 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -149,7 +149,7 @@
       position: relative;
       width: 100%;
       max-width: 600px;
-      height: 122px;
+      height: 118px;
       border-radius: 10px;
       overflow: hidden;
       border: 2px solid #1e293b;
@@ -226,7 +226,7 @@
       background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
       border: 2.5px solid #fde047;
       border-radius: 12px;
-      padding: 8px 10px;
+      padding: 7px 10px;
       flex-shrink: 0;
       box-shadow: 0 6px 20px rgba(253, 224, 71, 0.14);
     }
@@ -239,7 +239,7 @@
       letter-spacing: 0.4px;
       padding: 4px 8px;
       border-radius: 6px;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -252,14 +252,14 @@
       font-size: 9.5px;
       font-weight: 900;
     }
-    .coach-list { display: flex; flex-direction: column; gap: 5px; }
+    .coach-list { display: flex; flex-direction: column; gap: 4px; }
     .coach-line {
-      font-size: 12.2px;
+      font-size: 12px;
       font-weight: 800;
       color: #ffffff;
-      line-height: 1.26;
+      line-height: 1.25;
       background: #1e293b;
-      padding: 6px 9px;
+      padding: 5px 9px;
       border-radius: 7px;
       border-left: 4px solid #38bdf8;
     }
@@ -274,7 +274,7 @@
       position: relative;
       width: 100%;
       max-width: 600px;
-      height: 114px;
+      height: 112px;
       background: #ffffff;
       color: #0f172a;
       border-radius: 10px;
@@ -367,20 +367,27 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      height: 114px;
-      padding: 0 2px;
+      gap: 10px;
+      height: 122px;
+      padding: 0 4px;
       flex-shrink: 0;
       transition: all 0.25s ease;
     }
     .controls-wrap.align-left { justify-content: flex-start; flex-direction: row; }
     .controls-wrap.align-right { justify-content: flex-end; flex-direction: row-reverse; }
     .controls-wrap.align-center { justify-content: center; flex-direction: row; }
-    .dir-grid {
+
+    /* PLAYSTATION DUALSHOCK CROSS D-PAD LAYOUT */
+    .dpad-cross {
       display: grid;
-      grid-template-columns: 56px 56px;
-      grid-template-rows: 54px 54px;
-      gap: 5px;
+      grid-template-columns: 44px 44px 44px;
+      grid-template-rows: 38px 38px 38px;
+      gap: 3px;
+      background: radial-gradient(circle, #1e293b 0%, #0f172a 75%);
+      padding: 4px;
+      border-radius: 50%;
+      border: 2px solid #334155;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.65), 0 4px 10px rgba(0,0,0,0.45);
     }
     button {
       background: #1e293b;
@@ -392,32 +399,79 @@
       font-weight: 800;
       cursor: pointer;
     }
-    button.dir-btn {
-      width: 56px;
-      height: 54px;
-      background: #e2e8f0;
-      color: #0f172a;
-      border: 2px solid #cbd5e1;
-      border-radius: 10px;
+    button.dpad-btn {
+      width: 44px;
+      height: 38px;
+      background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+      color: #f8fafc;
+      border: 2px solid #64748b;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 8.5px;
       font-weight: 900;
-      padding: 2px;
-      line-height: 1.1;
+      padding: 1px;
+      line-height: 1;
       user-select: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     }
-    .dir-arrow { font-size: 17px; line-height: 1; margin-bottom: 1px; }
-    button.dir-btn:active { background: #0284c7; color: #fff; border-color: #38bdf8; }
+    button.dpad-up {
+      grid-column: 2;
+      grid-row: 1;
+      border-radius: 9px 9px 3px 3px;
+    }
+    button.dpad-left {
+      grid-column: 1;
+      grid-row: 2;
+      border-radius: 9px 3px 3px 9px;
+    }
+    .dpad-center {
+      grid-column: 2;
+      grid-row: 2;
+      background: #0b0f19;
+      border-radius: 50%;
+      border: 1.5px solid #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #38bdf8;
+      font-size: 11px;
+      pointer-events: none;
+    }
+    button.dpad-right {
+      grid-column: 3;
+      grid-row: 2;
+      border-radius: 3px 9px 9px 3px;
+    }
+    button.dpad-down {
+      grid-column: 2;
+      grid-row: 3;
+      border-radius: 3px 3px 9px 9px;
+    }
+    .dpad-tri {
+      font-size: 13px;
+      color: #38bdf8;
+      line-height: 1;
+      margin-bottom: 1px;
+    }
+    button.dpad-btn:active {
+      background: #0284c7;
+      color: #fde047;
+      border-color: #fde047;
+      transform: scale(0.95);
+    }
+    button.dpad-btn:active .dpad-tri {
+      color: #fde047;
+    }
+
     button.cant-see-btn {
-      height: 113px;
+      height: 118px;
       width: 92px;
       background: rgba(220, 38, 38, 0.22);
       color: #fca5a5;
       border: 2px solid rgba(248, 113, 113, 0.55);
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 10.5px;
       font-weight: 900;
       padding: 6px;
@@ -428,7 +482,7 @@
       justify-content: center;
       text-align: center;
     }
-    .horizon-deck { width: 100%; display: flex; gap: 6px; height: 112px; }
+    .horizon-deck { width: 100%; display: flex; gap: 6px; height: 114px; }
     .horizon-btn-blur {
       flex: 1.35;
       background: linear-gradient(135deg, #f59e0b, #d97706);
@@ -494,7 +548,7 @@
   <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">✅ Project Eyes v3.58</div>
+      <div class="vault-title">✅ Project Eyes v3.59</div>
       <div class="vault-sub">USPTO Patent Pending • 64/174,835</div>
       <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 12px; font-weight: 600;">
         Enter 4-Digit Access PIN:
@@ -509,7 +563,7 @@
   </div>
 
   <header>
-    <h1>Project Eyes v3.58</h1>
+    <h1>Project Eyes v3.59</h1>
     <div class="patent-pill" id="hwBadgePill">Patent Pending • 64/174,835</div>
   </header>
 
@@ -630,7 +684,7 @@
 
     _vEl.addEventListener('loadedmetadata', () => {
       _vfC.width = _cBx.clientWidth || 360;
-      _vfC.height = _cBx.clientHeight || 122;
+      _vfC.height = _cBx.clientHeight || 118;
     });
 
     let _K1 = 63.0, _K2 = 580, _K3 = 3.78, _isTab = false;
@@ -825,17 +879,17 @@
       if (_st === 2) {
         _setC(
           "⚡ STEP 2: LEFT EYE GLASSES & CONTACTS RX",
-          "LEFT HAND TAPS",
+          "LEFT D-PAD",
           "Keep <span class='coach-highlight'>RIGHT EYE COVERED</span> for Left Eye Rx.",
-          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, RIGHT</span> to match the 'E'.",
+          "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to match the 'E'.",
           "Tap red <span class='coach-highlight'>TOO BLURRY</span> to lock Left Eye Rx!"
         );
       } else if (_st === 3) {
         _setC(
           "⚡ STEP 3: RIGHT EYE GLASSES & CONTACTS RX",
-          "RIGHT HAND TAPS",
+          "RIGHT D-PAD",
           "Keep <span class='coach-highlight'>LEFT EYE COVERED</span> for Right Eye Rx.",
-          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, RIGHT</span> to match the 'E'.",
+          "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to match the 'E'.",
           "Tap red <span class='coach-highlight'>TOO BLURRY</span> to lock Right Eye Rx!"
         );
       } else {
@@ -843,17 +897,18 @@
           "⚡ STEP 4: BOTH EYES BALANCE CHECK",
           "BOTH EYES OPEN",
           "<span class='coach-highlight'>UNCOVER BOTH EYES</span> & stay at " + dT + " cm.",
-          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, RIGHT</span> to verify binocular Rx.",
+          "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to verify binocular Rx.",
           "Tap red <span class='coach-highlight'>TOO BLURRY</span> when you can't read it!"
         );
       }
       _exC.className = "controls-wrap " + (_st === 2 ? "align-left" : _st === 3 ? "align-right" : "align-center");
       _exC.innerHTML =
-        `<div class="dir-grid">` +
-        `<button class="dir-btn" onclick="window._0xAns('UP')"><span class="dir-arrow">⬆️</span>UP</button>` +
-        `<button class="dir-btn" onclick="window._0xAns('RIGHT')"><span class="dir-arrow">➡️</span>RIGHT</button>` +
-        `<button class="dir-btn" onclick="window._0xAns('LEFT')"><span class="dir-arrow">⬅️</span>LEFT</button>` +
-        `<button class="dir-btn" onclick="window._0xAns('DOWN')"><span class="dir-arrow">⬇️</span>DOWN</button>` +
+        `<div class="dpad-cross">` +
+        `<button class="dpad-btn dpad-up" onclick="window._0xAns('UP')"><span class="dpad-tri">▲</span>UP</button>` +
+        `<button class="dpad-btn dpad-left" onclick="window._0xAns('LEFT')"><span class="dpad-tri">◀</span>LEFT</button>` +
+        `<div class="dpad-center">✚</div>` +
+        `<button class="dpad-btn dpad-right" onclick="window._0xAns('RIGHT')"><span class="dpad-tri">▶</span>RIGHT</button>` +
+        `<button class="dpad-btn dpad-down" onclick="window._0xAns('DOWN')"><span class="dpad-tri">▼</span>DOWN</button>` +
         `</div>` +
         `<button class="cant-see-btn" onclick="window._0xAns('CANT_SEE')">Too Blurry<br>Can't See</button>`;
       _lNAR();
@@ -1076,7 +1131,7 @@
     }
 
     function _rUV(nB) {
-      const cw = _cBx.clientWidth || 360, ch = _cBx.clientHeight || 122;
+      const cw = _cBx.clientWidth || 360, ch = _cBx.clientHeight || 118;
       if (_vfC.width !== cw || _vfC.height !== ch) { _vfC.width = cw; _vfC.height = ch; }
       const vw = _vEl.videoWidth || 480, vh = _vEl.videoHeight || 640;
       _vfX.clearRect(0, 0, cw, ch);
