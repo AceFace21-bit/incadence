@@ -1,8 +1,8 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  PROJECT EYES v3.54 - FAILSAFE PIN UNLOCK + IPAD/IPHONE CALIBRATOR + 9-CLAIM PATENT ARCHITECTURE
-   Protected Claims Architecture:
+  PROJECT EYES v3.55 - IOS SAFARI NATIVE CAMERA IGNITION + HUD COLLISION FIX + 9-CLAIM PATENT ARCHITECTURE
+  Protected Claims Architecture:
   1. Zero-Hardware Binocular IPD-to-Centimeter Real-Time Optical Ranging
   2. Dynamic Sub-Pixel Angular Optotype Scaling (5-Arcminute Snellen Compensation)
   3. Monocular Eyelid Aperture & Squint/Occlusion Telemetry
@@ -18,7 +18,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.54 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.55 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -154,6 +154,7 @@
       flex-shrink: 0;
       transform: translateZ(0);
       -webkit-transform: translateZ(0);
+      cursor: pointer;
     }
     #webcam {
       position: absolute;
@@ -174,11 +175,11 @@
     }
     .center-guide-pill {
       position: absolute;
-      bottom: 4px;
+      top: 4px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(15, 23, 42, 0.92);
-      border: 1px solid rgba(250, 204, 21, 0.6);
+      border: 1px solid rgba(250, 204, 21, 0.65);
       color: #fde047;
       font-size: 7.5px;
       font-weight: 900;
@@ -187,11 +188,11 @@
       border-radius: 999px;
       text-transform: uppercase;
       pointer-events: none;
-      z-index: 4;
+      z-index: 5;
       white-space: nowrap;
     }
     .center-guide-pill.locked {
-      border-color: rgba(74, 222, 128, 0.8);
+      border-color: rgba(74, 222, 128, 0.85);
       color: #4ade80;
     }
     .hud-top, .hud-bottom {
@@ -436,18 +437,64 @@
     footer { font-size: 8.5px; color: #64748b; text-align: right; white-space: nowrap; }
   </style>
 
-  <!-- ISOLATED TOP-LEVEL PIN UNLOCK SCRIPT (CAN NEVER BE BLOCKED BY MEDIA-PIPE LOADING) -->
+  <!-- ISOLATED TOP-LEVEL PIN UNLOCK + DIRECT IOS SAFARI CAMERA IGNITION -->
   <script>
+    window._camBooted = false;
+
+    window.igniteNativeCamera = function() {
+      var v = document.getElementById('webcam');
+      var devB = document.getElementById('devTypeBadge');
+      var stB = document.getElementById('eyeStateVal');
+
+      if (typeof window._0xCalibrateHardware === 'function') {
+        window._0xCalibrateHardware();
+      } else if (devB) {
+        var isPad = /iPad/.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        devB.innerText = isPad ? '💻 iPad Cal' : '📱 iPhone Cal';
+      }
+
+      if (window._camBooted && v && v.srcObject) {
+        v.play().catch(function(){});
+        return;
+      }
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        if (stB) stB.innerText = 'Starting Cam...';
+        navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+          audio: false
+        }).then(function(stream) {
+          window._camBooted = true;
+          v.srcObject = stream;
+          v.setAttribute('playsinline', 'true');
+          v.muted = true;
+          v.play().then(function() {
+            if (typeof window.startEyesEngine === 'function') {
+              window.startEyesEngine();
+            }
+          }).catch(function() {
+            if (typeof window.startEyesEngine === 'function') {
+              window.startEyesEngine();
+            }
+          });
+        }).catch(function(err) {
+          if (stB) {
+            stB.innerText = 'Tap Box to Allow Cam';
+            stB.style.color = '#fbbf24';
+          }
+        });
+      }
+    };
+
     window.checkVaultPin = function() {
       var box = document.getElementById('vaultPinInput');
       var err = document.getElementById('vaultErrMsg');
       if (!box) return;
       var digits = box.value.replace(/[^0-9]/g, '');
       if (digits === '1982') {
+        box.blur();
         document.getElementById('pinVaultOverlay').style.display = 'none';
-        if (typeof window.startEyesEngine === 'function') {
-          window.startEyesEngine();
-        }
+        window.igniteNativeCamera();
       } else if (digits.length >= 4) {
         err.innerText = 'INVALID PIN CODE';
       } else {
@@ -464,7 +511,7 @@
   <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">✅ Project Eyes v3.54</div>
+      <div class="vault-title">✅ Project Eyes v3.55</div>
       <div class="vault-sub">USPTO Patent Pending • 64/174,835</div>
       <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 12px; font-weight: 600;">
         Enter 4-Digit Access PIN:
@@ -479,7 +526,7 @@
   </div>
 
   <header>
-    <h1>Project Eyes v3.54</h1>
+    <h1>Project Eyes v3.55</h1>
     <div class="patent-pill" id="hwBadgePill">Patent Pending • 64/174,835</div>
   </header>
 
@@ -492,7 +539,7 @@
     <div class="stage-step" id="st6">6. Results</div>
   </div>
 
-  <div class="camera-box" id="cameraBox">
+  <div class="camera-box" id="cameraBox" onclick="window.igniteNativeCamera()">
     <video id="webcam" autoplay playsinline muted></video>
     <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
     <div class="hud-top">
@@ -615,8 +662,9 @@
     let _osHM = 0, _osVM = 0, _odHM = 0, _odVM = 0;
     let _wI = 0, _tS = [], _sCm = null;
     let _sLE = 0.30, _sRE = 0.30, _cES = "Binocular";
+    let _lastNB = null, _fMReady = false, _loopRunning = false, _fM = null;
 
-    function _0xCalibrateHardware() {
+    window._0xCalibrateHardware = function() {
       const ua = navigator.userAgent || "";
       const minDim = Math.min(window.screen.width, window.screen.height);
       const maxDim = Math.max(window.screen.width, window.screen.height);
@@ -632,7 +680,7 @@
         _K3 = 3.78;
         _dBg.innerText = "📱 iPhone Cal";
       }
-    }
+    };
 
     function _setC(t, b, l1, l2, l3) {
       _cTl.innerText = t;
@@ -695,6 +743,7 @@
     }
 
     window._0xGate = function() {
+      if (!window._camBooted) window.igniteNativeCamera();
       if (!_wG) return;
       _wG = false;
       _gBt.style.display = "none";
@@ -1039,56 +1088,59 @@
       if (_vfC.width !== cw || _vfC.height !== ch) { _vfC.width = cw; _vfC.height = ch; }
       const vw = _vEl.videoWidth || 480, vh = _vEl.videoHeight || 640;
       _vfX.clearRect(0, 0, cw, ch);
-      const sc = Math.max(cw / vw, ch / vh);
-      const dW = vw * sc, dH = vh * sc;
-      const oX = (cw - dW) / 2, oY = (ch - dH) * 0.35;
-      _vfX.save();
-      _vfX.translate(cw, 0);
-      _vfX.scale(-1, 1);
-      _vfX.drawImage(_vEl, oX, oY, dW, dH);
-      _vfX.restore();
-      const cX = cw * 0.5, cY = ch * 0.52;
-      let isL = false, dX = cX, dY = cY;
-      if (nB) {
-        dX = oX + ((1.0 - nB.x) * dW);
-        dY = oY + (nB.y * dH);
-        isL = ((Math.abs(dX - cX) / cw) <= 0.12 && (Math.abs(dY - cY) / ch) <= 0.18);
-        if (isL) {
-          _cPl.classList.add('locked');
-          _cPl.innerText = "CROSSHAIR LOCKED ✓";
+      if (_vEl.readyState >= 2) {
+        const sc = Math.max(cw / vw, ch / vh);
+        const dW = vw * sc, dH = vh * sc;
+        const oX = (cw - dW) / 2, oY = (ch - dH) * 0.35;
+        _vfX.save();
+        _vfX.translate(cw, 0);
+        _vfX.scale(-1, 1);
+        _vfX.drawImage(_vEl, oX, oY, dW, dH);
+        _vfX.restore();
+        const cX = cw * 0.5, cY = ch * 0.52;
+        let isL = false, dX = cX, dY = cY;
+        if (nB) {
+          dX = oX + ((1.0 - nB.x) * dW);
+          dY = oY + (nB.y * dH);
+          isL = ((Math.abs(dX - cX) / cw) <= 0.12 && (Math.abs(dY - cY) / ch) <= 0.18);
+          if (isL) {
+            _cPl.classList.add('locked');
+            _cPl.innerText = "CROSSHAIR LOCKED ✓";
+          } else {
+            _cPl.classList.remove('locked');
+            if (dY < cY - (ch * 0.18)) _cPl.innerText = "LOWER DEVICE / HEAD SLIGHTLY";
+            else if (dY > cY + (ch * 0.18)) _cPl.innerText = "RAISE DEVICE TO EYE LEVEL";
+            else _cPl.innerText = "CENTER DOT ON CROSSHAIR";
+          }
         } else {
           _cPl.classList.remove('locked');
-          if (dY < cY - (ch * 0.18)) _cPl.innerText = "LOWER DEVICE / HEAD SLIGHTLY";
-          else if (dY > cY + (ch * 0.18)) _cPl.innerText = "RAISE DEVICE TO EYE LEVEL";
-          else _cPl.innerText = "CENTER DOT ON CROSSHAIR";
+          _cPl.innerText = "CENTER DOT ON CROSSHAIR";
         }
-      } else {
-        _cPl.classList.remove('locked');
-        _cPl.innerText = "CENTER DOT ON CROSSHAIR";
-      }
-      _vfX.save();
-      _vfX.lineWidth = 2;
-      _vfX.strokeStyle = isL ? "rgba(74, 222, 128, 0.95)" : "rgba(250, 204, 21, 0.85)";
-      if (!isL) _vfX.setLineDash([6, 5]);
-      _vfX.beginPath(); _vfX.moveTo(cX, 0); _vfX.lineTo(cX, ch); _vfX.stroke();
-      _vfX.beginPath(); _vfX.moveTo(0, cY); _vfX.lineTo(cw, cY); _vfX.stroke();
-      if (nB) {
-        _vfX.setLineDash([]);
-        _vfX.beginPath();
-        _vfX.arc(dX, dY, 7, 0, Math.PI * 2);
-        _vfX.fillStyle = isL ? "rgba(74, 222, 128, 0.7)" : "rgba(250, 204, 21, 0.6)";
-        _vfX.fill();
+        _vfX.save();
         _vfX.lineWidth = 2;
-        _vfX.strokeStyle = isL ? "#4ade80" : "#fde047";
-        _vfX.stroke();
+        _vfX.strokeStyle = isL ? "rgba(74, 222, 128, 0.95)" : "rgba(250, 204, 21, 0.85)";
+        if (!isL) _vfX.setLineDash([6, 5]);
+        _vfX.beginPath(); _vfX.moveTo(cX, 0); _vfX.lineTo(cX, ch); _vfX.stroke();
+        _vfX.beginPath(); _vfX.moveTo(0, cY); _vfX.lineTo(cw, cY); _vfX.stroke();
+        if (nB) {
+          _vfX.setLineDash([]);
+          _vfX.beginPath();
+          _vfX.arc(dX, dY, 7, 0, Math.PI * 2);
+          _vfX.fillStyle = isL ? "rgba(74, 222, 128, 0.7)" : "rgba(250, 204, 21, 0.6)";
+          _vfX.fill();
+          _vfX.lineWidth = 2;
+          _vfX.strokeStyle = isL ? "#4ade80" : "#fde047";
+          _vfX.stroke();
+        }
+        _vfX.restore();
       }
-      _vfX.restore();
     }
 
     function _onR(res) {
       if (res.multiFaceLandmarks && res.multiFaceLandmarks.length > 0) {
         const lm = res.multiFaceLandmarks[0];
         const nB = lm[168] || lm[1];
+        _lastNB = nB;
         const vw = _vEl.videoWidth || 480, vh = _vEl.videoHeight || 640;
         _rUV(nB);
         _sRE = 0.3 * _gE(lm, 159, 145, 133, 33) + 0.7 * _sRE;
@@ -1138,19 +1190,51 @@
           }
         }
         _eVl.innerText = _cES;
+        _eVl.style.color = "#4ade80";
       } else {
         _rUV(null);
       }
     }
 
-    const _fM = new FaceMesh({ locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
-    _fM.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
-    _fM.onResults(_onR);
-    const _cam = new Camera(_vEl, { onFrame: async () => { await _fM.send({ image: _vEl }); }, width: 640, height: 480 });
+    function _initFaceMeshIfAvailable() {
+      if (_fMReady) return true;
+      if (typeof FaceMesh !== 'undefined') {
+        try {
+          _fM = new FaceMesh({ locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
+          _fM.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+          _fM.onResults(_onR);
+          _fMReady = true;
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+      return false;
+    }
+
+    async function _framePump() {
+      if (!_loopRunning) return;
+      if (_vEl && _vEl.readyState >= 2) {
+        if (_initFaceMeshIfAvailable() && _fM) {
+          try {
+            await _fM.send({ image: _vEl });
+          } catch (e) {
+            _rUV(_lastNB);
+          }
+        } else {
+          _rUV(null);
+          _eVl.innerText = "Cam Live • AI Loading";
+        }
+      }
+      requestAnimationFrame(_framePump);
+    }
 
     window.startEyesEngine = function() {
-      _0xCalibrateHardware();
-      _cam.start();
+      window._0xCalibrateHardware();
+      if (!_loopRunning) {
+        _loopRunning = true;
+        requestAnimationFrame(_framePump);
+      }
     };
   </script>
 </body>
