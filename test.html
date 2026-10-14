@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  PROJECT EYES v3.57 - EXPLICIT MONOCULAR OCCLUSION BANNER FOR ASTIGMATISM CHECK
+  PROJECT EYES v3.54 - TELEHEALTH REGULATORY SHIELD + IPAD/IPHONE CALIBRATOR
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.57 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.54 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -164,24 +164,24 @@
     }
     .center-guide-pill {
       position: absolute;
-      top: 5px;
+      bottom: 4px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(15, 23, 42, 0.92);
-      border: 1px solid rgba(250, 204, 21, 0.65);
+      border: 1px solid rgba(250, 204, 21, 0.6);
       color: #fde047;
-      font-size: 7px;
+      font-size: 7.5px;
       font-weight: 900;
-      letter-spacing: 0.25px;
-      padding: 2px 6px;
+      letter-spacing: 0.3px;
+      padding: 2px 7px;
       border-radius: 999px;
       text-transform: uppercase;
       pointer-events: none;
-      z-index: 5;
+      z-index: 4;
       white-space: nowrap;
     }
     .center-guide-pill.locked {
-      border-color: rgba(74, 222, 128, 0.85);
+      border-color: rgba(74, 222, 128, 0.8);
       color: #4ade80;
     }
     .hud-top, .hud-bottom {
@@ -190,7 +190,6 @@
       right: 6px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
       pointer-events: none;
       z-index: 4;
     }
@@ -201,12 +200,11 @@
       padding: 2px 6px;
       border-radius: 5px;
       border: 1px solid #334155;
-      font-size: 8.5px;
+      font-size: 9px;
       font-weight: 700;
       color: #cbd5e1;
-      white-space: nowrap;
     }
-    .badge-val { color: #38bdf8; font-size: 10.5px; font-weight: 900; margin-left: 2px; }
+    .badge-val { color: #38bdf8; font-size: 11px; font-weight: 900; margin-left: 2px; }
     .coach-panel {
       width: 100%;
       max-width: 600px;
@@ -269,25 +267,10 @@
       left: 8px;
       right: 8px;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       background: #ffffff;
       overflow: hidden;
-    }
-    #astigEyeBanner {
-      display: none;
-      background: #dc2626;
-      color: #ffffff;
-      font-size: 9px;
-      font-weight: 900;
-      padding: 2px 10px;
-      border-radius: 999px;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-      margin-bottom: 3px;
-      box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
-      white-space: nowrap;
     }
     #snellenCanvas { display: none; transition: opacity 0.06s ease; }
     #gatePromptBtn {
@@ -327,16 +310,28 @@
     }
     #readingBox { display: none; width: 100%; text-align: center; font-weight: 700; font-size: 12px; }
     #reportBox { display: none; width: 100%; text-align: left; }
-    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
     .report-item {
       background: #f1f5f9;
-      padding: 3px 6px;
-      border-radius: 5px;
+      padding: 2px 5px;
+      border-radius: 4px;
       border-left: 3px solid #0284c7;
     }
-    .report-label { font-size: 7px; font-weight: 700; color: #64748b; text-transform: uppercase; }
-    .report-val { font-size: 10px; font-weight: 900; color: #0f172a; }
-    .report-sub { font-size: 8.2px; font-weight: 800; color: #0284c7; }
+    .report-label { font-size: 6.8px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .report-val { font-size: 9.5px; font-weight: 900; color: #0f172a; }
+    .report-sub { font-size: 7.8px; font-weight: 800; color: #0284c7; }
+    .telehealth-shield {
+      margin-top: 2px;
+      font-size: 6.8px;
+      font-weight: 800;
+      color: #475569;
+      text-align: center;
+      background: #e2e8f0;
+      padding: 2px 4px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
     .controls-wrap {
       width: 100%;
       max-width: 600px;
@@ -430,66 +425,6 @@
       padding: 6px 8px;
       line-height: 1.2;
     }
-    .astig-deck {
-      width: 100%;
-      display: flex;
-      gap: 6px;
-      height: 122px;
-    }
-    .astig-btn-even {
-      flex: 1.25;
-      background: linear-gradient(135deg, #16a34a, #15803d);
-      color: #ffffff;
-      border: 2px solid #4ade80;
-      border-radius: 10px;
-      font-size: 9.5px;
-      font-weight: 900;
-      text-transform: uppercase;
-      padding: 6px;
-      line-height: 1.25;
-    }
-    .astig-btn-axis {
-      flex: 1;
-      background: #1e293b;
-      color: #f8fafc;
-      border: 2px solid #38bdf8;
-      border-radius: 10px;
-      font-size: 9.2px;
-      font-weight: 900;
-      text-transform: uppercase;
-      padding: 6px;
-      line-height: 1.25;
-    }
-    .finish-deck {
-      width: 100%;
-      height: 110px;
-      background: #111827;
-      border: 2px solid #4ade80;
-      border-radius: 10px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      text-align: center;
-    }
-    .finish-note {
-      font-size: 10px;
-      font-weight: 800;
-      color: #cbd5e1;
-      line-height: 1.3;
-    }
-    .finish-reset-btn {
-      width: 100%;
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: #ffffff;
-      border: 1px solid #38bdf8;
-      padding: 9px;
-      font-size: 11.5px;
-      font-weight: 900;
-      border-radius: 8px;
-      text-transform: uppercase;
-    }
     .bottom-bar {
       width: 100%;
       max-width: 600px;
@@ -503,7 +438,7 @@
     footer { font-size: 8.5px; color: #64748b; text-align: right; white-space: nowrap; }
   </style>
 
-  <!-- ISOLATED TOP-LEVEL PIN UNLOCK SCRIPT -->
+  <!-- ISOLATED TOP-LEVEL PIN UNLOCK SCRIPT (CAN NEVER BE BLOCKED BY MEDIA-PIPE LOADING) -->
   <script>
     window.checkVaultPin = function() {
       var box = document.getElementById('vaultPinInput');
@@ -531,7 +466,7 @@
   <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">✅ Project Eyes v3.57</div>
+      <div class="vault-title">✅ Project Eyes v3.54</div>
       <div class="vault-sub">USPTO Patent Pending • 64/174,835</div>
       <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 12px; font-weight: 600;">
         Enter 4-Digit Access PIN:
@@ -546,7 +481,7 @@
   </div>
 
   <header>
-    <h1>Project Eyes v3.57</h1>
+    <h1>Project Eyes v3.54</h1>
     <div class="patent-pill" id="hwBadgePill">Patent Pending • 64/174,835</div>
   </header>
 
@@ -566,7 +501,7 @@
       <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
       <div class="badge"><span id="targetLabel">Target:</span> <span id="zoneVal" class="badge-val" style="color: #fbbf24;">35–55 cm</span></div>
     </div>
-    <div class="center-guide-pill" id="centerGuidePill">CENTER DOT</div>
+    <div class="center-guide-pill" id="centerGuidePill">CENTER DOT ON CROSSHAIR</div>
     <div class="hud-bottom">
       <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
       <div class="badge" id="devTypeBadge" style="font-size: 8px;">Auto-Cal</div>
@@ -598,7 +533,6 @@
         <div class="gate-sub" id="gateSubText">Auto-Calibrated for iPhone &amp; iPad Screens • Keep Both Eyes Open</div>
         <div class="gate-main" id="gateMainText">👉 TAP HERE TO LOCK CHAIR DISTANCE 👈</div>
       </div>
-      <div id="astigEyeBanner">✋ KEEP RIGHT EYE COVERED • LOOK WITH LEFT EYE ONLY</div>
       <canvas id="snellenCanvas"></canvas>
       <div id="readingBox">
         <div style="font-size: 8px; color: #0284c7; margin-bottom: 2px; font-weight: 800;">TAP EACH WORD IN ORDER FROM LEFT TO RIGHT:</div>
@@ -607,12 +541,12 @@
       <div id="reportBox">
         <div class="report-grid">
           <div class="report-item">
-            <div class="report-label">Left Eye (O.S.) Rx</div>
+            <div class="report-label">Left Eye (O.S.) Est.</div>
             <div class="report-val" id="repOS">--</div>
             <div class="report-sub" id="rxOS">SPH: --</div>
           </div>
           <div class="report-item">
-            <div class="report-label">Right Eye (O.D.) Rx</div>
+            <div class="report-label">Right Eye (O.D.) Est.</div>
             <div class="report-val" id="repOD">--</div>
             <div class="report-sub" id="rxOD">SPH: --</div>
           </div>
@@ -627,6 +561,9 @@
             <div class="report-sub" id="rxLat">Optimal</div>
           </div>
         </div>
+        <div class="telehealth-shield">
+          🛡️ Telehealth Acuity &amp; Refractive Screening (64/174,835) • Not an internal disease exam
+        </div>
       </div>
     </div>
   </div>
@@ -634,7 +571,7 @@
   <div class="controls-wrap align-center" id="examControls"></div>
 
   <div class="bottom-bar">
-    <button class="reset-btn" onclick="window._0xReset()">Reset Exam</button>
+    <button class="reset-btn" onclick="window._0xReset()">Reset Check</button>
     <footer>&copy; 2026 Terrance Lamont Watkins</footer>
   </div>
 
@@ -650,7 +587,6 @@
     const _eVl = document.getElementById('eyeStateVal');
     const _sCv = document.getElementById('snellenCanvas');
     const _sCx = _sCv.getContext('2d');
-    const _aBn = document.getElementById('astigEyeBanner');
     const _gBt = document.getElementById('gatePromptBtn');
     const _gPt = document.getElementById('gatePostureText');
     const _gSb = document.getElementById('gateSubText');
@@ -682,7 +618,6 @@
     let _osD = 250, _odD = 250, _ouD = 250;
     let _bCm = null, _lCm = null, _nK = 2800.0, _lNPx = 60.0;
     let _osHM = 0, _osVM = 0, _odHM = 0, _odVM = 0;
-    let _osAstig = 'NONE', _odAstig = 'NONE';
     let _wI = 0, _tS = [], _sCm = null;
     let _sLE = 0.30, _sRE = 0.30, _cES = "Binocular";
 
@@ -713,16 +648,14 @@
         `<div class="coach-line">3. ${l3}</div>`;
     }
 
-    function _0xCalc(a, b, c, h, v, astigPick) {
+    function _0xCalc(a, b, c, h, v) {
       let cv = 0.0, ct = "";
-      if (astigPick === 'VERT') {
-        cv = (v - h >= 2) ? -0.75 : -0.50;
-        ct = ` • CYL ${cv.toFixed(2)} (90°)`;
-      } else if (astigPick === 'HORIZ') {
-        cv = (h - v >= 2) ? -0.75 : -0.50;
-        ct = ` • CYL ${cv.toFixed(2)} (180°)`;
+      const ad = Math.abs(h - v);
+      if (ad >= 1 && (h + v) >= 1) {
+        cv = ad >= 2 ? -0.75 : -0.50;
+        const ax = h > v ? "180°/15°" : "90°";
+        ct = ` • CYL ${cv.toFixed(2)} (${ax})`;
       }
-
       if (c !== null && c < 64) {
         const aB = Math.round((-(100 / c)) * 4) / 4;
         const bD = Math.min(a, b);
@@ -755,7 +688,6 @@
     function _sGP(p, s, m) {
       _wG = true;
       _inB = false;
-      _aBn.style.display = "none";
       _sCv.style.display = "none";
       _rBx.style.display = "none";
       _rpB.style.display = "none";
@@ -771,7 +703,6 @@
       if (!_wG) return;
       _wG = false;
       _gBt.style.display = "none";
-      _aBn.style.display = "none";
       if (_st === 1) {
         _inB = true;
         _bStepIdx = 1;
@@ -844,7 +775,6 @@
     };
 
     function _sAS() {
-      _aBn.style.display = "none";
       _sCv.style.display = "block";
       _sI = 0; _lH = 0; _lM = 0; _cD = _STEPS[0];
       const dT = (_lCm || 45).toFixed(1);
@@ -913,78 +843,6 @@
       _sCx.restore();
     }
 
-    function _dAstigGrid() {
-      const dpr = window.devicePixelRatio || 3;
-      const cW = 190, cH = 58;
-      _sCv.style.width = `${cW}px`;
-      _sCv.style.height = `${cH}px`;
-      _sCv.width = Math.round(cW * dpr);
-      _sCv.height = Math.round(cH * dpr);
-      _sCx.save();
-      _sCx.clearRect(0, 0, _sCv.width, _sCv.height);
-      _sCx.fillStyle = "#0f172a";
-      const barW = Math.max(2, Math.round(2.3 * dpr));
-      const gap = Math.round(6.5 * dpr);
-      const padY = Math.round(6 * dpr);
-      const boxS = Math.round(46 * dpr);
-
-      // Left block: 5 Vertical Bars (|||)
-      const startVX = Math.round(24 * dpr);
-      for (let i = 0; i < 5; i++) {
-        _sCx.fillRect(startVX + i * gap, padY, barW, boxS);
-      }
-
-      // Right block: 5 Horizontal Bars (===)
-      const startHX = Math.round(118 * dpr);
-      for (let i = 0; i < 5; i++) {
-        _sCx.fillRect(startHX, padY + i * gap, boxS, barW);
-      }
-      _sCx.restore();
-    }
-
-    function _promptAstigCheck(eyeStage) {
-      const isLeftEyeTest = (eyeStage === 2);
-      const openEye = isLeftEyeTest ? "LEFT EYE" : "RIGHT EYE";
-      const coveredEye = isLeftEyeTest ? "RIGHT EYE" : "LEFT EYE";
-      const coverHand = isLeftEyeTest ? "RIGHT HAND" : "LEFT HAND";
-      const tapHand = isLeftEyeTest ? "LEFT HAND" : "RIGHT HAND";
-
-      _aBn.style.display = "block";
-      _aBn.innerText = `✋ KEEP ${coveredEye} COVERED • LOOK WITH ${openEye} ONLY`;
-
-      _sCv.style.display = "block";
-      _dAstigGrid();
-      _aLb.innerText = `${openEye} Astigmatism Check (${coveredEye} Covered)`;
-      _sRd.innerText = `Keep ${coveredEye} Covered`;
-
-      _setC(
-        `📋 ${openEye} ASTIGMATISM CHECK — KEEP ${coveredEye} COVERED!`,
-        `KEEP ${coveredEye} COVERED`,
-        `<span class='coach-highlight'>DO NOT LOWER YOUR HAND!</span> Keep your <span class='coach-highlight'>${coveredEye} COVERED</span> with your ${coverHand}.`,
-        `Look at the <span class='coach-highlight'>VERTICAL (|||)</span> & <span class='coach-highlight'>HORIZONTAL (===)</span> stripes using <span class='coach-highlight'>ONLY YOUR ${openEye}</span>.`,
-        `Tap with your <span class='coach-highlight'>${tapHand}</span>: tap <span class='coach-highlight'>GREEN</span> if both sets look equal, or tap whichever set looks darker.`
-      );
-
-      _exC.className = "controls-wrap align-center";
-      _exC.innerHTML =
-        `<div class="astig-deck">` +
-        `<button class="astig-btn-even" onclick="window._0xSetAstig('NONE')">✅ BOTH LOOK EQUAL<br>IN ${openEye}<br>(NO ASTIGMATISM)</button>` +
-        `<button class="astig-btn-axis" onclick="window._0xSetAstig('VERT')">↕️ VERTICAL (|||)<br>DARKER IN<br>${openEye}</button>` +
-        `<button class="astig-btn-axis" onclick="window._0xSetAstig('HORIZ')">↔️ HORIZONTAL (===)<br>DARKER IN<br>${openEye}</button>` +
-        `</div>`;
-    }
-
-    window._0xSetAstig = function(choice) {
-      _aBn.style.display = "none";
-      if (_st === 2) {
-        _osAstig = choice;
-        _advanceAfterMonocular(2);
-      } else if (_st === 3) {
-        _odAstig = choice;
-        _advanceAfterMonocular(3);
-      }
-    };
-
     function _lNAR() {
       _cDir = _DIRS[Math.floor(Math.random() * _DIRS.length)];
       const sN = _st === 3 ? "Right Eye" : _st === 4 ? "Binocular" : "Left Eye";
@@ -1021,68 +879,59 @@
     };
 
     function _fCES() {
-      if (_st === 2 || _st === 3) {
-        _promptAstigCheck(_st);
-      } else if (_st === 4) {
-        _advanceAfterMonocular(4);
-      }
-    }
-
-    function _advanceAfterMonocular(completedStage) {
       const dT = (_lCm || 45).toFixed(1);
-      if (completedStage === 2) {
+      if (_st === 2) {
         _st = 3; _uSUI();
-        _aLb.innerText = "Step 3: Switch Hands — Cover Left Eye";
+        _aLb.innerText = "Step 3: Cover Left Eye (Stay in Chair)";
         _sRd.innerText = `L Line: 20/${_osD}`;
         _setC(
-          "📋 STEP 3: SWITCH HANDS • COVER LEFT EYE NOW",
+          "📋 STEP 3: STAY AT " + dT + " CM • COVER LEFT EYE",
           "RIGHT HAND TAPS",
-          `<span class='coach-highlight'>SWITCH HANDS:</span> Lower your right hand and <span class='coach-highlight'>COVER YOUR LEFT EYE</span> with your LEFT hand.`,
-          `Stay still in your chair so <span class='coach-highlight'>Dist</span> stays at <span class='coach-highlight'>Target: ${dT} cm</span>.`,
+          `<span class='coach-highlight'>STAY STILL IN YOUR CHAIR</span> so <span class='coach-highlight'>Dist</span> stays at <span class='coach-highlight'>Target: ${dT} cm</span>.`,
+          "Cover your <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand (keep nose visible).",
           "Use your free <span class='coach-highlight'>RIGHT HAND</span> to tap the <span class='coach-highlight'>BLUE BUTTON</span> below."
         );
         _sGP(
-          "✋ SWITCH HANDS • COVER LEFT EYE WITH LEFT HAND",
-          `Left Eye Done (20/${_osD}) • Now Testing Right Eye Only`,
+          "📱 STAY IN CHAIR • COVER LEFT EYE WITH LEFT HAND",
+          `Left Eye Read 20/${_osD} • Tap With Right Hand`,
           "👉 TAP HERE ONCE LEFT EYE IS COVERED 👈"
         );
-      } else if (completedStage === 3) {
+      } else if (_st === 3) {
         _st = 4; _uSUI();
         _aLb.innerText = "Step 4: Uncover Both Eyes";
         _sRd.innerText = `R Line: 20/${_odD}`;
         _setC(
-          "📋 STEP 4: UNCOVER BOTH EYES (NO HAND OVER EYES)",
+          "📋 STEP 4: BOTH EYES OPEN (STAY AT " + dT + " CM)",
           "BOTH EYES OPEN",
-          `<span class='coach-highlight'>LOWER YOUR HAND!</span> Keep <span class='coach-highlight'>BOTH EYES OPEN</span> and uncovered.`,
-          `Keep <span class='coach-highlight'>Dist</span> at <span class='coach-highlight'>Target: ${dT} cm</span> with the green dot centered.`,
+          `<span class='coach-highlight'>UNCOVER BOTH EYES</span> and keep <span class='coach-highlight'>Dist</span> at <span class='coach-highlight'>Target: ${dT} cm</span>.`,
+          "Keep the green dot centered on the crosshair.",
           "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below to test both eyes together."
         );
         _sGP(
-          "👀 LOWER YOUR HAND • UNCOVER BOTH EYES NOW",
-          `L: 20/${_osD} | R: 20/${_odD} • Keep Both Eyes Open`,
+          "👀 UNCOVER BOTH EYES • STAY AT TARGET DISTANCE",
+          `L: 20/${_osD} | R: 20/${_odD} • Target: ${dT} cm`,
           "👉 TAP HERE ONCE BOTH EYES ARE OPEN 👈"
         );
-      } else if (completedStage === 4) {
+      } else if (_st === 4) {
         _st = 5; _uSUI();
         _aLb.innerText = "Step 5: Quick 8-Word Reading Check";
         _sRd.innerText = `O.U. 20/${_ouD}`;
         _setC(
-          "📋 STEP 5: TAP 8 WORDS IN ORDER (BOTH EYES OPEN)",
-          "BOTH EYES OPEN",
-          "Keep <span class='coach-highlight'>BOTH EYES OPEN</span> and stay seated comfortably.",
+          "📋 STEP 5: TAP 8 WORDS IN ORDER",
+          "READING SPEED",
+          "Stay seated comfortably in front of the stand.",
           "8 words will appear in the white box below.",
           "Read and <span class='coach-highlight'>tap each word in order</span> from first to last."
         );
         _sGP(
-          "📖 STEP 5: 8-WORD READING CHECK (BOTH EYES OPEN)",
-          "Keep Both Eyes Open • Tap Each Word in Order",
+          "📖 STEP 5: 8-WORD READING CHECK",
+          "Tap Each Word in Order as You Read It",
           "👉 TAP HERE TO SHOW THE 8 WORDS 👈"
         );
       }
     }
 
     function _lRW() {
-      _aBn.style.display = "none";
       _sCv.style.display = "none";
       _exC.innerHTML = "";
       _exC.className = "controls-wrap align-center";
@@ -1119,18 +968,17 @@
 
     function _sS6() {
       _st = 6; _uSUI();
-      _aBn.style.display = "none";
       _rBx.style.display = "none";
       _rpB.style.display = "block";
-      _aLb.innerText = "Step 6: Your Complete Eye Prescription Scorecard";
+      _exC.innerHTML = "";
+      _aLb.innerText = "Step 6: Telehealth Refractive & Acuity Scorecard";
       _sRd.innerText = "Complete";
-      _eVl.innerText = "Exam Complete ✓";
       _setC(
-        "✅ EXAM COMPLETE — SCREENSHOT THIS SCORECARD!",
+        "✅ SCREENING COMPLETE — READY FOR TELEHEALTH SIGN-OFF!",
         "FINISHED",
-        "<span class='coach-highlight'>TAKE A SCREENSHOT</span> of this screen and send it to Terence with your real Rx!",
-        "<span class='coach-highlight'>Left Eye (O.S.) & Right Eye (O.D.)</span> prescriptions are shown in the white box below.",
-        "Tap <span class='coach-highlight'>Run New Eye Exam</span> below anytime to test again."
+        "<span class='coach-highlight'>TAKE A SCREENSHOT</span> of this Refractive & Acuity Scorecard!",
+        "<span class='coach-highlight'>Left Eye (O.S.) & Right Eye (O.D.)</span> diopter estimates are shown below.",
+        "Built for <span class='coach-highlight'>Rx Renewal & Telehealth Optometrist Review</span> (USPTO 64/174,835)."
       );
       const tSec = (_tS[_tS.length - 1] - _tS[0]) / 1000;
       const wpm = Math.round((_WORDS.length / Math.max(1, tSec)) * 60);
@@ -1139,8 +987,8 @@
         const g = _tS[i] - _tS[i - 1];
         if (g > mG) mG = g;
       }
-      const osM = _0xCalc(_osD, _odD, _bCm, _osHM, _osVM, _osAstig);
-      const odM = _0xCalc(_odD, _osD, _bCm, _odHM, _odVM, _odAstig);
+      const osM = _0xCalc(_osD, _odD, _bCm, _osHM, _osVM);
+      const odM = _0xCalc(_odD, _osD, _bCm, _odHM, _odVM);
       document.getElementById('repOS').innerText = `${osM.snellen20Ft} (20-Ft Eq)`;
       document.getElementById('rxOS').innerText = osM.diopterStr;
       document.getElementById('repOD').innerText = `${odM.snellen20Ft} (20-Ft Eq)`;
@@ -1149,21 +997,12 @@
       document.getElementById('rxOU').innerText = _bCm ? `Blur Eq: ${_bCm.toFixed(1)} cm` : `Clear > 60 cm`;
       document.getElementById('repWPM').innerText = `${wpm} WPM`;
       document.getElementById('rxLat').innerText = mG > 1400 ? "Fatigue: Elevated" : "Fatigue: Optimal";
-
-      _exC.className = "controls-wrap align-center";
-      _exC.innerHTML =
-        `<div class="finish-deck">` +
-        `<div class="finish-note">📸 <span style="color:#fde047;">Screenshot this page</span> to save your Left &amp; Right Eye Rx Scorecard.<br>Locked Chair Dist: <b>${(_lCm || 45).toFixed(1)} cm</b> • Binocular Near: <b>20/${_ouD}</b></div>` +
-        `<button class="finish-reset-btn" onclick="window._0xReset()">🔄 Run New Eye Exam</button>` +
-        `</div>`;
     }
 
     window._0xReset = function() {
       _st = 1; _inB = false; _sI = 0; _bStepIdx = 1; _lH = 0; _lM = 0; _cD = _STEPS[0];
       _osD = 250; _odD = 250; _ouD = 250; _bCm = null; _lCm = null;
       _osHM = 0; _osVM = 0; _odHM = 0; _odVM = 0;
-      _osAstig = 'NONE'; _odAstig = 'NONE';
-      _aBn.style.display = "none";
       _exC.className = "controls-wrap align-center";
       _uSUI();
       _aLb.innerText = "Step 1: Stationary Stand & Blur Finder";
@@ -1221,16 +1060,16 @@
         isL = ((Math.abs(dX - cX) / cw) <= 0.12 && (Math.abs(dY - cY) / ch) <= 0.18);
         if (isL) {
           _cPl.classList.add('locked');
-          _cPl.innerText = "LOCKED ✓";
+          _cPl.innerText = "CROSSHAIR LOCKED ✓";
         } else {
           _cPl.classList.remove('locked');
-          if (dY < cY - (ch * 0.18)) _cPl.innerText = "LOWER SLIGHTLY";
-          else if (dY > cY + (ch * 0.18)) _cPl.innerText = "RAISE TO EYES";
-          else _cPl.innerText = "CENTER DOT";
+          if (dY < cY - (ch * 0.18)) _cPl.innerText = "LOWER DEVICE / HEAD SLIGHTLY";
+          else if (dY > cY + (ch * 0.18)) _cPl.innerText = "RAISE DEVICE TO EYE LEVEL";
+          else _cPl.innerText = "CENTER DOT ON CROSSHAIR";
         }
       } else {
         _cPl.classList.remove('locked');
-        _cPl.innerText = "CENTER DOT";
+        _cPl.innerText = "CENTER DOT ON CROSSHAIR";
       }
       _vfX.save();
       _vfX.lineWidth = 2;
@@ -1259,8 +1098,7 @@
         _rUV(nB);
         _sRE = 0.3 * _gE(lm, 159, 145, 133, 33) + 0.7 * _sRE;
         _sLE = 0.3 * _gE(lm, 386, 374, 362, 263) + 0.7 * _sLE;
-        if (_st === 6) _cES = "Exam Complete ✓";
-        else if (_st === 2) _cES = "Right Covered";
+        if (_st === 2) _cES = "Right Covered";
         else if (_st === 3) _cES = "Left Covered";
         else if (_sRE < 0.20 && _sLE >= 0.20) _cES = "Right Covered";
         else if (_sLE < 0.20 && _sRE >= 0.20) _cES = "Left Covered";
@@ -1307,7 +1145,6 @@
         _eVl.innerText = _cES;
       } else {
         _rUV(null);
-        _eVl.innerText = _st === 6 ? "Exam Complete ✓" : "No Face";
       }
     }
 
