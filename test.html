@@ -1,16 +1,20 @@
 <!-- 
   Copyright (c) 2026 Terrance Watkins. All Rights Reserved.
+  USPTO PROVISIONAL PATENT APPLICATION NO. 64/174,835
   Terrance Watkins • Patent Pending 64/174,835
-  PROJECT EYES v3.62 - CLEAN UI + CENTERED TOP BADGE + PRINTABLE RX ENGINE
+  PROJECT EYES v3.63 - PIN 3206 + LAYERS 1, 2 & 3 SECURITY SHIELD
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.62 | Terrance Watkins • Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.63 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box; margin: 0; padding: 0;
+      -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+    }
     html, body {
       width: 100%; height: 100dvh; overflow: hidden;
       background-color: #0b0f19; color: #f8fafc;
@@ -23,30 +27,40 @@
     #pinVaultOverlay {
       position: fixed; inset: 0; background: #070a12; z-index: 9999;
       display: flex; flex-direction: column; align-items: center;
-      justify-content: center; padding: 24px; text-align: center;
+      justify-content: center; padding: 18px; text-align: center;
     }
     .vault-card {
-      width: 100%; max-width: 350px; background: #111827;
-      border: 2px solid #38bdf8; border-radius: 14px; padding: 22px 18px;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.75);
+      width: 100%; max-width: 365px; background: #111827;
+      border: 2px solid #38bdf8; border-radius: 14px; padding: 18px 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.85);
     }
-    .vault-title { font-size: 17px; font-weight: 900; color: #f8fafc; margin-bottom: 6px; }
+    .vault-title { font-size: 16px; font-weight: 900; color: #f8fafc; margin-bottom: 4px; }
     .vault-sub {
-      font-size: 10px; font-weight: 800; color: #38bdf8;
-      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px;
+      font-size: 9.5px; font-weight: 900; color: #38bdf8;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
     }
+    .nda-box {
+      background: rgba(15, 23, 42, 0.95); border: 1.5px solid #fde047;
+      border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; text-align: left;
+    }
+    .nda-title {
+      font-size: 8.5px; font-weight: 900; color: #fde047;
+      text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px;
+    }
+    .nda-text { font-size: 8px; font-weight: 700; color: #cbd5e1; line-height: 1.35; }
     .vault-input {
       width: 100%; background: #0b0f19; border: 2px solid #334155;
       color: #fde047; font-size: 24px; font-weight: 900; text-align: center;
-      letter-spacing: 8px; padding: 10px; border-radius: 8px; margin-bottom: 12px; outline: none;
+      letter-spacing: 8px; padding: 9px; border-radius: 8px; margin-bottom: 10px;
+      outline: none; -webkit-user-select: text; user-select: text;
     }
     .vault-btn {
       width: 100%; background: linear-gradient(135deg, #0284c7, #0369a1);
       color: #fff; border: 1px solid #38bdf8; padding: 12px;
-      font-size: 12px; font-weight: 900; border-radius: 8px;
+      font-size: 11px; font-weight: 900; border-radius: 8px;
       text-transform: uppercase; cursor: pointer;
     }
-    .vault-err { color: #f87171; font-size: 10.5px; font-weight: 800; margin-top: 8px; min-height: 15px; }
+    .vault-err { color: #f87171; font-size: 10.5px; font-weight: 800; margin-top: 6px; min-height: 14px; }
     header {
       text-align: center; width: 100%; max-width: 600px;
       display: flex; align-items: center; justify-content: center; padding: 2px 4px;
@@ -266,16 +280,32 @@
   </style>
 
   <script>
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('copy', function(e) { e.preventDefault(); });
+    document.addEventListener('cut', function(e) { e.preventDefault(); });
+    document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+    document.addEventListener('keydown', function(e) {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+        (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'U' || e.key === 'u')) ||
+        (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
     window.checkVaultPin = function() {
       var box = document.getElementById('vaultPinInput');
       var err = document.getElementById('vaultErrMsg');
       if (!box) return;
       var digits = box.value.replace(/[^0-9]/g, '');
-      if (digits === '1982') {
+      if (digits.length === 4 && window.btoa(digits) === 'MzIwNg==') {
         document.getElementById('pinVaultOverlay').style.display = 'none';
         if (typeof window.startEyesEngine === 'function') window.startEyesEngine();
       } else if (digits.length >= 4) {
-        err.innerText = 'INVALID PIN CODE';
+        err.innerText = 'UNAUTHORIZED ACCESS CODE';
       } else {
         err.innerText = '';
       }
@@ -287,19 +317,23 @@
 </head>
 <body>
 
-  <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">✅ Project Eyes v3.62</div>
+      <div class="vault-title">🔒 Project Eyes v3.63</div>
       <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
-      <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 12px; font-weight: 600;">Enter 4-Digit Access PIN:</div>
+      <div class="nda-box">
+        <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
+        <div class="nda-text">
+          Protected under USPTO Provisional Patent Application No. <strong>64/174,835</strong> (Inventor: <strong>Terrance Watkins</strong>). By entering your tester PIN and unlocking this system, you agree that this software is strictly confidential and that you will not copy, share, forward, or reverse-engineer any part of this system.
+        </div>
+      </div>
+      <div style="font-size: 10.5px; color: #cbd5e1; margin-bottom: 8px; font-weight: 700;">Enter 4-Digit Authorized Tester PIN:</div>
       <input type="tel" id="vaultPinInput" class="vault-input" maxlength="4" placeholder="••••" oninput="window.checkVaultPin()" onkeyup="window.checkVaultPin()" />
-      <button class="vault-btn" type="button" onclick="window.checkVaultPin()">Unlock &amp; Start Camera</button>
+      <button class="vault-btn" type="button" onclick="window.checkVaultPin()">Accept Confidentiality &amp; Unlock</button>
       <div class="vault-err" id="vaultErrMsg"></div>
     </div>
   </div>
 
-  <!-- CENTERED BLUE PATENT PILL HEADER -->
   <header>
     <div class="patent-pill" id="hwBadgePill">Terrance Watkins • Patent Pending 64/174,835</div>
   </header>
@@ -313,7 +347,6 @@
     <div class="stage-step" id="st6">6. Rx Score</div>
   </div>
 
-  <!-- BOX 1 UNDER THE 6 STEPS: CAMERA BOX (NO NAME) -->
   <div class="camera-box" id="cameraBox">
     <video id="webcam" autoplay playsinline muted></video>
     <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
@@ -328,7 +361,6 @@
     </div>
   </div>
 
-  <!-- BOX 2 UNDER CAMERA BOX: COACH PANEL (NO NAME) -->
   <div class="coach-panel" id="coachPanel">
     <div class="coach-header">
       <span id="coachTitle">⚡ STEP 1 OF 6: GLASSES &amp; CONTACTS RX SETUP</span>
@@ -341,7 +373,6 @@
     </div>
   </div>
 
-  <!-- BOX 3 UNDER COACH PANEL: OPTOTYPE & RESULTS CARD (NO NAME) -->
   <div class="optotype-card">
     <div class="card-header">
       <span id="acuityLabel">Step 1: Glasses &amp; Contacts Rx Calibration</span>
@@ -391,14 +422,12 @@
     <button class="reset-btn" onclick="window._0xReset()">Reset Check</button>
     <footer>Terrance Watkins • Patent Pending 64/174,835</footer>
   </div>
-
-  <!-- OFFICIAL PRINTABLE PRESCRIPTION DOCUMENT (WITH YOUR NAME & PATENT PENDING) -->
   <div id="printableRxSheet">
     <div class="prx-header">
       <div>
         <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
         <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.62</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.63</div>
       </div>
       <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
