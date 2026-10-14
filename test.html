@@ -2,18 +2,20 @@
   Copyright (c) 2026 Terrance Watkins. All Rights Reserved.
   USPTO PROVISIONAL PATENT APPLICATION NO. 64/174,835
   Terrance Watkins • Patent Pending 64/174,835
-  PROJECT EYES v3.63 - PIN 3206 + LAYERS 1, 2 & 3 SECURITY SHIELD
+  CONFIDENTIAL PROPRIETARY TELEMETRY SYSTEM - UNAUTHORIZED REPRODUCTION PROHIBITED
+  PROJECT EYES v3.64 - PIN 3206 + LAYERS 1, 2 & 3 SECURITY SHIELD
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.63 | Terrance Watkins • Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.64 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
     * {
       box-sizing: border-box; margin: 0; padding: 0;
-      -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+      -webkit-touch-callout: none;
     }
     html, body {
       width: 100%; height: 100dvh; overflow: hidden;
@@ -47,18 +49,20 @@
       font-size: 8.5px; font-weight: 900; color: #fde047;
       text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px;
     }
-    .nda-text { font-size: 8px; font-weight: 700; color: #cbd5e1; line-height: 1.35; }
+    .nda-text {
+      font-size: 8px; font-weight: 700; color: #cbd5e1; line-height: 1.35;
+    }
     .vault-input {
       width: 100%; background: #0b0f19; border: 2px solid #334155;
       color: #fde047; font-size: 24px; font-weight: 900; text-align: center;
-      letter-spacing: 8px; padding: 9px; border-radius: 8px; margin-bottom: 10px;
-      outline: none; -webkit-user-select: text; user-select: text;
+      letter-spacing: 8px; padding: 9px; border-radius: 8px; margin-bottom: 10px; outline: none;
+      -webkit-user-select: text; user-select: text;
     }
     .vault-btn {
       width: 100%; background: linear-gradient(135deg, #0284c7, #0369a1);
       color: #fff; border: 1px solid #38bdf8; padding: 12px;
       font-size: 11px; font-weight: 900; border-radius: 8px;
-      text-transform: uppercase; cursor: pointer;
+      text-transform: uppercase; cursor: pointer; letter-spacing: 0.3px;
     }
     .vault-err { color: #f87171; font-size: 10.5px; font-weight: 800; margin-top: 6px; min-height: 14px; }
     header {
@@ -279,6 +283,7 @@
     }
   </style>
 
+  <!-- LAYER 3: ANTI-INSPECT / ANTI-COPY / ENCODED PIN 3206 GUARD -->
   <script>
     document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
     document.addEventListener('copy', function(e) { e.preventDefault(); });
@@ -317,9 +322,10 @@
 </head>
 <body>
 
+  <!-- PIN VAULT OVERLAY (LAYERS 1 & 2: USPTO PRIORITY + CONFIDENTIAL BETA AGREEMENT) -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">🔒 Project Eyes v3.63</div>
+      <div class="vault-title">🔒 Project Eyes v3.64</div>
       <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
       <div class="nda-box">
         <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
@@ -334,6 +340,7 @@
     </div>
   </div>
 
+  <!-- CENTERED BLUE PATENT PILL HEADER -->
   <header>
     <div class="patent-pill" id="hwBadgePill">Terrance Watkins • Patent Pending 64/174,835</div>
   </header>
@@ -347,6 +354,7 @@
     <div class="stage-step" id="st6">6. Rx Score</div>
   </div>
 
+  <!-- BOX 1 UNDER THE 6 STEPS: CAMERA BOX (NO NAME) -->
   <div class="camera-box" id="cameraBox">
     <video id="webcam" autoplay playsinline muted></video>
     <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
@@ -361,6 +369,7 @@
     </div>
   </div>
 
+  <!-- BOX 2 UNDER CAMERA BOX: COACH PANEL (NO NAME) -->
   <div class="coach-panel" id="coachPanel">
     <div class="coach-header">
       <span id="coachTitle">⚡ STEP 1 OF 6: GLASSES &amp; CONTACTS RX SETUP</span>
@@ -373,6 +382,7 @@
     </div>
   </div>
 
+  <!-- BOX 3 UNDER COACH PANEL: OPTOTYPE & RESULTS CARD (NO NAME) -->
   <div class="optotype-card">
     <div class="card-header">
       <span id="acuityLabel">Step 1: Glasses &amp; Contacts Rx Calibration</span>
@@ -422,12 +432,13 @@
     <button class="reset-btn" onclick="window._0xReset()">Reset Check</button>
     <footer>Terrance Watkins • Patent Pending 64/174,835</footer>
   </div>
+  <!-- OFFICIAL PRINTABLE PRESCRIPTION DOCUMENT (WITH YOUR NAME & PATENT PENDING) -->
   <div id="printableRxSheet">
     <div class="prx-header">
       <div>
         <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
         <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.63</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.64</div>
       </div>
       <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
@@ -518,7 +529,7 @@
     const _DIRS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
     const _STEPS = [200, 150, 100, 70, 50, 40, 30, 25, 20, 15];
     const _BLUR_STEPS = [35, 30, 25, 20, 15];
-    const _WORDS = ["Clear", "focus", "locks", "sharp", "optical", "vision", "ranges", "fast."];
+    const _WORDS = ["Army", "veteran", "Terence", "Watkins", "built", "this", "vision", "engine."];
 
     let _st = 1, _wG = true, _inB = false, _sI = 0, _bStepIdx = 1;
     let _cD = _STEPS[0], _cDir = 'RIGHT', _lH = 0, _lM = 0;
