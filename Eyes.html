@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.36 - Independent Monocular Far-Point Physics + Astigmatism Axis Differential
+  Project "Eyes" v3.37 - On-Screen Step-by-Step Coach + Independent Monocular Rx
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.36 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.37 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -65,7 +65,7 @@
       position: relative;
       width: 100%;
       max-width: 600px;
-      height: 156px;
+      height: 148px;
       border-radius: 10px;
       overflow: hidden;
       border: 2px solid #1e293b;
@@ -130,44 +130,52 @@
     }
     .badge-val { color: #38bdf8; font-size: 11px; font-weight: 900; margin-left: 2px; }
     
-    .roadmap-panel {
+    /* PLAIN-ENGLISH STEP-BY-STEP COACH PANEL */
+    .coach-panel {
       width: 100%;
       max-width: 600px;
       background: #111827;
-      border: 1px solid #334155;
+      border: 2px solid #38bdf8;
       border-radius: 10px;
-      padding: 5px 8px;
+      padding: 6px 10px;
       flex-shrink: 0;
     }
-    .roadmap-title {
-      font-size: 8px;
-      font-weight: 800;
-      color: #94a3b8;
+    .coach-header {
+      font-size: 9px;
+      font-weight: 900;
+      color: #fde047;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
-      margin-bottom: 3px;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .roadmap-steps { display: flex; flex-direction: column; gap: 2px; }
-    .roadmap-step {
-      display: flex; align-items: center; gap: 6px; font-size: 9px; font-weight: 700;
-      color: #64748b; padding: 2px 6px; border-radius: 4px; background: #0f172a; border: 1px solid #1e293b;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    .coach-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
     }
-    .roadmap-dot {
-      width: 11px; height: 11px; border-radius: 50%; background: #334155;
-      display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 900; color: #fff;
-      flex-shrink: 0;
+    .coach-line {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #f8fafc;
+      line-height: 1.25;
+      background: #0f172a;
+      padding: 3px 6px;
+      border-radius: 5px;
+      border-left: 3px solid #38bdf8;
     }
-    .roadmap-step.done { color: #4ade80; border-color: rgba(74, 222, 128, 0.3); background: rgba(74, 222, 128, 0.05); }
-    .roadmap-step.done .roadmap-dot { background: #16a34a; }
-    .roadmap-step.active { color: #facc15; border-color: rgba(250, 204, 21, 0.4); background: rgba(250, 204, 21, 0.08); }
-    .roadmap-step.active .roadmap-dot { background: #eab308; }
+    .coach-highlight {
+      color: #fde047;
+      font-weight: 900;
+    }
     
     .optotype-card {
       position: relative;
       width: 100%;
       max-width: 600px;
-      height: 108px;
+      height: 112px;
       background: #ffffff;
       color: #0f172a;
       border-radius: 10px;
@@ -216,28 +224,28 @@
       background: #0369a1;
     }
     .gate-posture {
-      background: rgba(15, 23, 42, 0.45);
-      border: 1px solid rgba(186, 230, 253, 0.4);
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(253, 224, 71, 0.6);
       color: #fde047;
-      font-size: 8px;
+      font-size: 9px;
       font-weight: 900;
-      padding: 2px 6px;
+      padding: 2px 8px;
       border-radius: 4px;
       text-transform: uppercase;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
     .gate-sub {
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 800;
-      color: #bae6fd;
-      text-transform: uppercase;
-      margin-bottom: 2px;
+      color: #e0f2fe;
+      margin-bottom: 3px;
     }
     .gate-main {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 900;
       line-height: 1.15;
       text-transform: uppercase;
+      color: #ffffff;
     }
 
     #readingBox { display: none; width: 100%; text-align: center; font-weight: 700; font-size: 12px; }
@@ -380,17 +388,17 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.36</h1>
+    <h1>Project Eyes v3.37</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
   <div class="stage-bar">
-    <div class="stage-step active" id="st1">1. Cal</div>
-    <div class="stage-step" id="st2">2. Left</div>
-    <div class="stage-step" id="st3">3. Right</div>
+    <div class="stage-step active" id="st1">1. Start</div>
+    <div class="stage-step" id="st2">2. Left Eye</div>
+    <div class="stage-step" id="st3">3. Right Eye</div>
     <div class="stage-step" id="st4">4. Both</div>
     <div class="stage-step" id="st5">5. Read</div>
-    <div class="stage-step" id="st6">6. Rx</div>
+    <div class="stage-step" id="st6">6. Results</div>
   </div>
 
   <div class="camera-box" id="cameraBox">
@@ -409,54 +417,55 @@
     </div>
   </div>
 
-  <div class="roadmap-panel" id="roadmapPanel">
-    <div class="roadmap-title">Independent Monocular Blur-Point + Astigmatism Engine</div>
-    <div class="roadmap-steps">
-      <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Center Dot on Crosshair at 35–45 cm (Base Lock)</div>
-      <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Blur Point & Acuity (Cover Right Eye)</div>
-      <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Blur Point & Acuity (Cover Left Eye)</div>
-      <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Acuity (Both Eyes Open • Centered)</div>
-      <div class="roadmap-step" id="rs5"><div class="roadmap-dot" id="dot5">5</div> Stage 5: Reading Intake (8 Quick Words)</div>
-      <div class="roadmap-step" id="rs6"><div class="roadmap-dot" id="dot6">6</div> Stage 6: Independent O.S. / O.D. Sphere & Cyl Scorecard</div>
+  <!-- LIVE PLAIN-ENGLISH STEP-BY-STEP COACH -->
+  <div class="coach-panel" id="coachPanel">
+    <div class="coach-header">
+      <span id="coachTitle">📋 EXACTLY WHAT TO DO RIGHT NOW (STEP 1 OF 6)</span>
+      <span id="coachBadge" style="color:#38bdf8;">BOTH EYES OPEN</span>
+    </div>
+    <div class="coach-list" id="coachList">
+      <div class="coach-line">1. <span class="coach-highlight">TAKE OFF GLASSES/CONTACTS</span> and sit comfortably.</div>
+      <div class="coach-line">2. Hold phone with <span class="coach-highlight">BOTH HANDS</span> (~14 inches away) so the dot is on the crosshair.</div>
+      <div class="coach-line">3. Tap the big <span class="coach-highlight">BLUE BUTTON</span> below to start.</div>
     </div>
   </div>
 
   <div class="optotype-card">
     <div class="card-header">
-      <span id="acuityLabel">Stage 1: Posture & Crosshair Calibration</span>
+      <span id="acuityLabel">Step 1: Get Lined Up</span>
       <span id="scaleReadout">Ready</span>
     </div>
 
     <div class="optotype-viewport">
       <div id="gatePromptBtn" onclick="handleGateTap()">
         <div class="gate-posture" id="gatePostureText">
-          🎯 PUT DOT BETWEEN YOUR EYES ON THE CROSSHAIR
+          🎯 STEP 1: LINE UP DOT ON CROSSHAIR (35–45 CM)
         </div>
-        <div class="gate-sub" id="gateSubText">Hold Phone Upright at 35–45 cm (Remove Glasses/Contacts)</div>
-        <div class="gate-main" id="gateMainText">TAP TO LOCK BASE POSTURE</div>
+        <div class="gate-sub" id="gateSubText">Hold Phone With Both Hands • Remove Glasses</div>
+        <div class="gate-main" id="gateMainText">👉 TAP HERE TO LOCK & START 👈</div>
       </div>
 
       <canvas id="snellenCanvas"></canvas>
 
       <div id="readingBox">
-        <div style="font-size: 8px; color: #0284c7; margin-bottom: 2px; font-weight: 800;">TAP WORDS IN ORDER:</div>
+        <div style="font-size: 8px; color: #0284c7; margin-bottom: 2px; font-weight: 800;">TAP EACH WORD IN ORDER FROM LEFT TO RIGHT:</div>
         <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 3px; justify-content: center;"></div>
       </div>
 
       <div id="reportBox">
         <div class="report-grid">
           <div class="report-item">
-            <div class="report-label">Left (O.S.) 20-Ft Eq & Rx</div>
+            <div class="report-label">Left Eye (O.S.) Rx</div>
             <div class="report-val" id="repOS">--</div>
             <div class="report-sub" id="rxOS">SPH: --</div>
           </div>
           <div class="report-item">
-            <div class="report-label">Right (O.D.) 20-Ft Eq & Rx</div>
+            <div class="report-label">Right Eye (O.D.) Rx</div>
             <div class="report-val" id="repOD">--</div>
             <div class="report-sub" id="rxOD">SPH: --</div>
           </div>
           <div class="report-item">
-            <div class="report-label">Binocular & Blur Pts</div>
+            <div class="report-label">Blur Distance (L / R)</div>
             <div class="report-val" id="repOU">--</div>
             <div class="report-sub" id="rxOU">O.S. / O.D. Blur</div>
           </div>
@@ -498,6 +507,9 @@
     const scaleReadout = document.getElementById('scaleReadout');
     const acuityLabel = document.getElementById('acuityLabel');
     const examControls = document.getElementById('examControls');
+    const coachTitle = document.getElementById('coachTitle');
+    const coachBadge = document.getElementById('coachBadge');
+    const coachList = document.getElementById('coachList');
 
     const AVERAGE_IPD_MM = 63.0;
     const FOCAL_LENGTH_PIXELS = 580;
@@ -514,15 +526,13 @@
     let levelHits = 0;
     let levelMisses = 0;
 
-    // Independent Monocular Metrics (Zero Hardcoding — Strictly Measured Per Eye)
     let osDenom = 250;
     let odDenom = 250;
     let ouDenom = 250;
     let lockedDistanceCm = null;
-    let osBlurCm = null; // Left Eye Independent Far-Point Blur Horizon (cm)
-    let odBlurCm = null; // Right Eye Independent Far-Point Blur Horizon (cm)
+    let osBlurCm = null;
+    let odBlurCm = null;
 
-    // Astigmatism (CYL) Directional Error Tracking: Horizontal Bars (LEFT/RIGHT) vs Vertical Bars (UP/DOWN)
     let osHorizMiss = 0, osVertMiss = 0;
     let odHorizMiss = 0, odVertMiss = 0;
 
@@ -537,7 +547,16 @@
     let confirmedEyeState = "Binocular";
     let eyeStateFrameCount = 0;
 
-    // Universal Optical Physics Formula: Computes Sphere (D = -100/cm) + Cylindrical Astigmatism Flag
+    function setCoachInstructions(titleText, badgeText, line1, line2, line3) {
+      coachTitle.innerText = titleText;
+      coachBadge.innerText = badgeText;
+      coachList.innerHTML = `
+        <div class="coach-line">1. ${line1}</div>
+        <div class="coach-line">2. ${line2}</div>
+        <div class="coach-line">3. ${line3}</div>
+      `;
+    }
+
     function computeUniversalEyeRx(nearDenom, eyeBlurCm, horizMisses, vertMisses) {
       let cylTag = "";
       const axisDiff = Math.abs(horizMisses - vertMisses);
@@ -605,19 +624,24 @@
         lockedDistanceCm = Math.max(34.0, Math.min(44.0, liveCm));
         examStage = 2;
         updateStageUI();
-        acuityLabel.innerText = "Stage 2: Left Eye (O.S.) Setup";
+        acuityLabel.innerText = "Step 2: Cover Right Eye";
         scaleReadout.innerText = `Base: ${lockedDistanceCm.toFixed(0)} cm`;
+        setCoachInstructions(
+          "📋 STEP 2A: GET READY FOR LEFT EYE",
+          "HOLD IN LEFT HAND",
+          "Hold the phone in your <span class='coach-highlight'>LEFT HAND</span>.",
+          "Cup your <span class='coach-highlight'>RIGHT HAND over your RIGHT EYE</span> (don't press on your eyelid).",
+          "Tap the big <span class='coach-highlight'>BLUE BUTTON</span> below with your LEFT thumb."
+        );
         showGatePrompt(
-          "🎯 COVER RIGHT EYE • KEEP DOT ON CROSSHAIR",
-          "Stage 2A: First We Measure Your LEFT EYE Blur Point",
-          "TAP ONCE YOUR RIGHT EYE IS COVERED"
+          "🤚 HOLD PHONE IN LEFT HAND • COVER RIGHT EYE",
+          "We Are Testing Your LEFT EYE Only",
+          "👉 TAP HERE ONCE RIGHT EYE IS COVERED 👈"
         );
       } else if (examStage === 2) {
-        // Launch Left Eye (O.S.) Monocular Blur-Horizon Check first
-        startMonocularBlurCheck("LEFT EYE (O.S.)");
+        startMonocularBlurCheck("LEFT EYE");
       } else if (examStage === 3) {
-        // Launch Right Eye (O.D.) Monocular Blur-Horizon Check first
-        startMonocularBlurCheck("RIGHT EYE (O.D.)");
+        startMonocularBlurCheck("RIGHT EYE");
       } else if (examStage === 4) {
         startAcuitySeries();
       } else if (examStage === 5) {
@@ -628,16 +652,35 @@
     function startMonocularBlurCheck(eyeLabel) {
       inBlurHorizonCheck = true;
       snellenCanvas.style.display = "block";
-      acuityLabel.innerText = `${eyeLabel}: Push Phone Back Until Blur`;
+      acuityLabel.innerText = `${eyeLabel}: Push Back Until "E" Blurs`;
       drawTumblingE('RIGHT', 42, 25);
+
+      if (examStage === 2) {
+        setCoachInstructions(
+          "📋 STEP 2A: FIND LEFT EYE BLUR DISTANCE",
+          "PUSH PHONE BACK SLOWLY",
+          "Keep your <span class='coach-highlight'>RIGHT EYE COVERED</span>. Start at ~35 cm so the 'E' below is clear.",
+          "<span class='coach-highlight'>SLOWLY push the phone back</span> away from your face (watch cm climb).",
+          "The <span class='coach-highlight'>EXACT SECOND the 'E' starts blurring</span>, tap the big <span class='coach-highlight'>YELLOW BUTTON</span>!"
+        );
+      } else {
+        setCoachInstructions(
+          "📋 STEP 3A: FIND RIGHT EYE BLUR DISTANCE",
+          "PUSH PHONE BACK SLOWLY",
+          "Keep your <span class='coach-highlight'>LEFT EYE COVERED</span>. Start at ~35 cm so the 'E' below is clear.",
+          "<span class='coach-highlight'>SLOWLY push the phone back</span> away from your face (watch cm climb).",
+          "The <span class='coach-highlight'>EXACT SECOND the 'E' starts blurring</span>, tap the big <span class='coach-highlight'>YELLOW BUTTON</span>!"
+        );
+      }
+
       examControls.className = "controls-wrap align-center";
       examControls.innerHTML = `
         <div class="horizon-deck">
           <button class="horizon-btn-blur" onclick="lockMonocularBlur(true)">
-            👀 TAP THE SECOND THE "E" BLURS IN YOUR ${eyeLabel}<br>(Live Distance: <span id="liveBlurBtnCm">-- cm</span>)
+            👀 TAP HERE THE SECOND THE "E" TURNS BLURRY<br>IN YOUR ${eyeLabel} (Distance: <span id="liveBlurBtnCm">-- cm</span>)
           </button>
           <button class="horizon-btn-clear" onclick="lockMonocularBlur(false)">
-            Still 100% sharp at full arm's reach (60+ cm)
+            Only tap here if still 100% sharp at full arm's reach (60+ cm)
           </button>
         </div>
       `;
@@ -662,6 +705,33 @@
       levelHits = 0;
       levelMisses = 0;
       currentDenominator = ACUITY_STEPS[0];
+
+      if (examStage === 2) {
+        setCoachInstructions(
+          "📋 STEP 2B: LEFT EYE DIRECTION TEST",
+          "LEFT THUMB CONTROLS",
+          "Keep your <span class='coach-highlight'>RIGHT EYE COVERED</span> • Bring phone back in to ~38 cm (clear zone).",
+          "Look at the black <span class='coach-highlight'>'E'</span> in the white box below.",
+          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> with your LEFT thumb to match the 'E'."
+        );
+      } else if (examStage === 3) {
+        setCoachInstructions(
+          "📋 STEP 3B: RIGHT EYE DIRECTION TEST",
+          "RIGHT THUMB CONTROLS",
+          "Keep your <span class='coach-highlight'>LEFT EYE COVERED</span> • Bring phone back in to ~38 cm (clear zone).",
+          "Look at the black <span class='coach-highlight'>'E'</span> in the white box below.",
+          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> with your RIGHT thumb to match the 'E'."
+        );
+      } else if (examStage === 4) {
+        setCoachInstructions(
+          "📋 STEP 4: BOTH EYES OPEN DIRECTION TEST",
+          "BOTH HANDS",
+          "<span class='coach-highlight'>UNCOVER BOTH EYES</span> and hold the phone with both hands at ~38 cm.",
+          "Keep the green dot on the crosshair.",
+          "Tap <span class='coach-highlight'>UP, DOWN, LEFT, or RIGHT</span> to match the 'E' as it shrinks."
+        );
+      }
+
       renderDirectionButtons();
       loadNewAcuityRound();
     }
@@ -738,30 +808,6 @@
       ctx.restore();
     }
 
-    function updateRoadmapUI() {
-      const labels = [
-        "Stage 1: Center Dot on Crosshair at 35–45 cm (Base Lock)",
-        "Stage 2: Left Eye Blur Point & Acuity (Cover Right Eye)",
-        "Stage 3: Right Eye Blur Point & Acuity (Cover Left Eye)",
-        "Stage 4: Binocular Acuity (Both Eyes Open • Centered)",
-        "Stage 5: Reading Intake (8 Quick Words)",
-        "Stage 6: Independent O.S. / O.D. Sphere & Cyl Scorecard"
-      ];
-      for (let i = 1; i <= 6; i++) {
-        const stepEl = document.getElementById(`rs${i}`);
-        stepEl.className = "roadmap-step";
-        if (i < examStage) {
-          stepEl.classList.add('done');
-          stepEl.innerHTML = `<div class="roadmap-dot" id="dot${i}">✓</div> ${labels[i - 1]}`;
-        } else if (i === examStage) {
-          stepEl.classList.add('active');
-          stepEl.innerHTML = `<div class="roadmap-dot" id="dot${i}">${i}</div> ${labels[i - 1]}`;
-        } else {
-          stepEl.innerHTML = `<div class="roadmap-dot" id="dot${i}">${i}</div> ${labels[i - 1]}`;
-        }
-      }
-    }
-
     function loadNewAcuityRound() {
       currentDirection = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
 
@@ -769,10 +815,7 @@
       if (examStage === 3) stageName = "Right Eye";
       if (examStage === 4) stageName = "Binocular";
 
-      acuityLabel.innerText = `${stageName} • Near: 20/${currentDenominator} • Hits: ${levelHits}/3`;
-
-      let roadmapStepId = (examStage === 2) ? "rs2" : (examStage === 3) ? "rs3" : "rs4";
-      document.getElementById(roadmapStepId).innerHTML = `<div class="roadmap-dot" id="dot${examStage}">${examStage}</div> Stage ${examStage}: ${stageName} (20/${currentDenominator} • Miss: ${levelMisses}/2)`;
+      acuityLabel.innerText = `${stageName} • Line: 20/${currentDenominator} • Hits: ${levelHits}/3`;
 
       const activeDist = lockedDistanceCm || smoothedDistanceCm || 38.0;
       snellenCanvas.style.opacity = "0.15";
@@ -810,7 +853,6 @@
           loadNewAcuityRound();
         }
       } else {
-        // Record directional miss for universal astigmatism (CYL) axis differential
         const isHorizontalBars = (currentDirection === 'LEFT' || currentDirection === 'RIGHT');
         if (examStage === 2) {
           if (isHorizontalBars) osHorizMiss++; else osVertMiss++;
@@ -836,36 +878,57 @@
     function queueStage3Gate() {
       examStage = 3;
       updateStageUI();
-      acuityLabel.innerText = "Stage 3: Right Eye (O.D.) Setup";
-      scaleReadout.innerText = osBlurCm ? `O.S. Blur: ${osBlurCm.toFixed(0)}cm` : `O.S. Near 20/${osDenom}`;
+      acuityLabel.innerText = "Step 3: Switch Hands & Cover Left Eye";
+      scaleReadout.innerText = osBlurCm ? `L Blur: ${osBlurCm.toFixed(0)}cm` : `L Near 20/${osDenom}`;
+      setCoachInstructions(
+        "📋 STEP 3A: SWITCH HANDS FOR RIGHT EYE",
+        "HOLD IN RIGHT HAND",
+        "Switch! Hold the phone in your <span class='coach-highlight'>RIGHT HAND</span>.",
+        "Cup your <span class='coach-highlight'>LEFT HAND over your LEFT EYE</span>.",
+        "Tap the big <span class='coach-highlight'>BLUE BUTTON</span> below with your RIGHT thumb."
+      );
       showGatePrompt(
-        "🎯 COVER LEFT EYE • KEEP DOT ON CROSSHAIR",
-        "Stage 3A: Now We Measure Your RIGHT EYE Blur Point",
-        "TAP ONCE YOUR LEFT EYE IS COVERED"
+        "🤚 HOLD PHONE IN RIGHT HAND • COVER LEFT EYE",
+        "Now We Are Testing Your RIGHT EYE Only",
+        "👉 TAP HERE ONCE LEFT EYE IS COVERED 👈"
       );
     }
 
     function queueStage4Gate() {
       examStage = 4;
       updateStageUI();
-      acuityLabel.innerText = "Stage 4: Binocular Setup";
-      scaleReadout.innerText = odBlurCm ? `O.D. Blur: ${odBlurCm.toFixed(0)}cm` : `O.D. Near 20/${odDenom}`;
+      acuityLabel.innerText = "Step 4: Uncover Both Eyes";
+      scaleReadout.innerText = odBlurCm ? `R Blur: ${odBlurCm.toFixed(0)}cm` : `R Near 20/${odDenom}`;
+      setCoachInstructions(
+        "📋 STEP 4: BOTH EYES OPEN",
+        "BOTH HANDS",
+        "<span class='coach-highlight'>UNCOVER BOTH EYES</span> and hold phone with BOTH hands.",
+        "Keep the green dot centered on the crosshair (~38 cm).",
+        "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below to test both eyes together."
+      );
       showGatePrompt(
-        "🎯 KEEP DOT ON CROSSHAIR • BOTH EYES OPEN",
-        `Independent Blur Points Locked • Controls Centered`,
-        "TAP ONCE BOTH EYES ARE OPEN"
+        "👀 UNCOVER BOTH EYES • HOLD WITH BOTH HANDS",
+        "Controls Centered Below",
+        "👉 TAP HERE ONCE BOTH EYES ARE OPEN 👈"
       );
     }
 
     function queueStage5Gate() {
       examStage = 5;
       updateStageUI();
-      acuityLabel.innerText = "Stage 5: Reading Intake Setup";
-      scaleReadout.innerText = `O.U. Near 20/${ouDenom}`;
+      acuityLabel.innerText = "Step 5: Quick 8-Word Reading Check";
+      scaleReadout.innerText = `O.U. 20/${ouDenom}`;
+      setCoachInstructions(
+        "📋 STEP 5: TAP 8 WORDS IN ORDER",
+        "READING SPEED",
+        "Keep holding the phone with <span class='coach-highlight'>BOTH HANDS</span> at ~38 cm.",
+        "8 words will appear in the white box below.",
+        "Read and <span class='coach-highlight'>tap each word in order</span> from first to last."
+      );
       showGatePrompt(
-        "🎯 KEEP DOT ON CROSSHAIR • HOLD WITH BOTH HANDS",
-        `Binocular Near 20/${ouDenom} • 8 Quick Words`,
-        "TAP TO BEGIN READING INTAKE"
+        "📖 STEP 5: 8-WORD READING CHECK",
+        "Tap Each Word in Order as You Read It",
+        "👉 TAP HERE TO SHOW THE 8 WORDS 👈"
       );
     }
 
@@ -875,7 +938,7 @@
       examControls.innerHTML = "";
       examControls.className = "controls-wrap align-center";
       readingBox.style.display = "block";
-      acuityLabel.innerText = "Stage 5: Behavioral Reading Intake";
+      acuityLabel.innerText = "Step 5: Tap Words In Order (1 to 8)";
       scaleReadout.innerText = `0 / ${PASSAGE_WORDS.length} Words`;
       wordContainer.innerHTML = "";
       wordIndex = 0;
@@ -912,8 +975,16 @@
       reportBox.style.display = "block";
       examControls.innerHTML = "";
       examControls.className = "controls-wrap align-center";
-      acuityLabel.innerText = "Stage 6: Independent O.S. / O.D. Rx Scorecard";
+      acuityLabel.innerText = "Step 6: Your Complete Eye Prescription Scorecard";
       scaleReadout.innerText = "Complete";
+
+      setCoachInstructions(
+        "✅ EXAM COMPLETE — YOUR SCORECARD IS BELOW",
+        "FINISHED",
+        "<span class='coach-highlight'>Left Eye (O.S.) & Right Eye (O.D.)</span> prescriptions are shown in the white box below.",
+        "Compare <span class='coach-highlight'>SPH (Sphere)</span> and <span class='coach-highlight'>CYL (Astigmatism)</span> to your real Rx.",
+        "Tap <span class='coach-highlight'>Reset Exam</span> at the bottom anytime to run another test."
+      );
 
       const totalSec = (tapTimestamps[tapTimestamps.length - 1] - tapTimestamps[0]) / 1000;
       const wpm = Math.round((PASSAGE_WORDS.length / Math.max(1, totalSec)) * 60);
@@ -959,12 +1030,19 @@
       odHorizMiss = 0; odVertMiss = 0;
       examControls.className = "controls-wrap align-center";
       updateStageUI();
-      acuityLabel.innerText = "Stage 1: Posture & Crosshair Calibration";
+      acuityLabel.innerText = "Step 1: Get Lined Up";
       scaleReadout.innerText = "Ready";
+      setCoachInstructions(
+        "📋 EXACTLY WHAT TO DO RIGHT NOW (STEP 1 OF 6)",
+        "BOTH EYES OPEN",
+        "<span class='coach-highlight'>TAKE OFF GLASSES/CONTACTS</span> and sit comfortably.",
+        "Hold phone with <span class='coach-highlight'>BOTH HANDS</span> (~14 inches away) so the dot is on the crosshair.",
+        "Tap the big <span class='coach-highlight'>BLUE BUTTON</span> below to start."
+      );
       showGatePrompt(
-        "🎯 PUT DOT BETWEEN YOUR EYES ON THE CROSSHAIR",
-        "Hold Phone Upright at 35–45 cm (Remove Glasses/Contacts)",
-        "TAP TO LOCK BASE POSTURE"
+        "🎯 STEP 1: LINE UP DOT ON CROSSHAIR (35–45 CM)",
+        "Hold Phone With Both Hands • Remove Glasses",
+        "👉 TAP HERE TO LOCK & START 👈"
       );
     }
 
@@ -977,7 +1055,6 @@
           if (idx + 1 === examStage) el.classList.add('active');
         }
       });
-      updateRoadmapUI();
     }
 
     function getEAR(l, top, bot, inr, out) {
@@ -1078,7 +1155,6 @@
           eyeStateFrameCount = 1;
         }
 
-        // Live IPD Distance Calculation: Active during Stage 1 AND during Monocular Blur-Point Push-Back!
         const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
         const pPx = Math.hypot((lp.x - rp.x) * videoElement.videoWidth, (lp.y - rp.y) * videoElement.videoHeight);
 
