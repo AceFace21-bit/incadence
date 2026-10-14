@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.35 - Pixel-Locked Canvas Crosshair Overlay + Guided Far-Point Blur Rx
+  Project "Eyes" v3.36 - Independent Monocular Far-Point Physics + Astigmatism Axis Differential
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.35 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.36 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -75,7 +75,6 @@
       align-items: center;
       justify-content: center;
     }
-    /* Both video and hudCanvas share identical object-fit: contain so 0% of your face is ever cropped off */
     video, #hudCanvas {
       position: absolute;
       top: 0;
@@ -246,8 +245,8 @@
     .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
     .report-item { background: #f1f5f9; padding: 3px 6px; border-radius: 5px; border-left: 3px solid #0284c7; }
     .report-label { font-size: 7px; font-weight: 700; color: #64748b; text-transform: uppercase; }
-    .report-val { font-size: 10.5px; font-weight: 900; color: #0f172a; }
-    .report-sub { font-size: 8.5px; font-weight: 800; color: #0284c7; }
+    .report-val { font-size: 10px; font-weight: 900; color: #0f172a; }
+    .report-sub { font-size: 8.2px; font-weight: 800; color: #0284c7; }
     
     /* DYNAMIC THUMB-ZONE SHIFTING CONTROL DECK (LEFT / RIGHT / CENTER) */
     .controls-wrap {
@@ -328,7 +327,7 @@
     }
     button.cant-see-btn:active { background: #dc2626; color: #fff; }
 
-    /* STAGE 1 BLUR-HORIZON CALIBRATION BUTTONS */
+    /* MONOCULAR BLUR-HORIZON CALIBRATION BUTTONS */
     .horizon-deck {
       width: 100%;
       display: flex;
@@ -342,7 +341,7 @@
       color: #0f172a;
       border: 2px solid #fde047;
       border-radius: 10px;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 900;
       text-transform: uppercase;
       padding: 6px 10px;
@@ -381,12 +380,12 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.35</h1>
+    <h1>Project Eyes v3.36</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
   <div class="stage-bar">
-    <div class="stage-step active" id="st1">1. Blur Pt</div>
+    <div class="stage-step active" id="st1">1. Cal</div>
     <div class="stage-step" id="st2">2. Left</div>
     <div class="stage-step" id="st3">3. Right</div>
     <div class="stage-step" id="st4">4. Both</div>
@@ -411,20 +410,20 @@
   </div>
 
   <div class="roadmap-panel" id="roadmapPanel">
-    <div class="roadmap-title">1:1 Pixel-Locked Crosshair + Far-Point Blur Horizon</div>
+    <div class="roadmap-title">Independent Monocular Blur-Point + Astigmatism Engine</div>
     <div class="roadmap-steps">
-      <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Push Phone Back Until Letter Blurs (Tap Yellow Btn)</div>
-      <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Acuity (Cover Right • Controls Shift LEFT)</div>
-      <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Acuity (Cover Left • Controls Shift RIGHT)</div>
-      <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Acuity (Both Open • Controls CENTERED)</div>
+      <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Center Dot on Crosshair at 35–45 cm (Base Lock)</div>
+      <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Blur Point & Acuity (Cover Right Eye)</div>
+      <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Blur Point & Acuity (Cover Left Eye)</div>
+      <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Acuity (Both Eyes Open • Centered)</div>
       <div class="roadmap-step" id="rs5"><div class="roadmap-dot" id="dot5">5</div> Stage 5: Reading Intake (8 Quick Words)</div>
-      <div class="roadmap-step" id="rs6"><div class="roadmap-dot" id="dot6">6</div> Stage 6: True Distance Rx + Near Acuity Scorecard</div>
+      <div class="roadmap-step" id="rs6"><div class="roadmap-dot" id="dot6">6</div> Stage 6: Independent O.S. / O.D. Sphere & Cyl Scorecard</div>
     </div>
   </div>
 
   <div class="optotype-card">
     <div class="card-header">
-      <span id="acuityLabel">Stage 1: Eye-Level Crosshair & Blur Horizon</span>
+      <span id="acuityLabel">Stage 1: Posture & Crosshair Calibration</span>
       <span id="scaleReadout">Ready</span>
     </div>
 
@@ -433,8 +432,8 @@
         <div class="gate-posture" id="gatePostureText">
           🎯 PUT DOT BETWEEN YOUR EYES ON THE CROSSHAIR
         </div>
-        <div class="gate-sub" id="gateSubText">Next: Slowly Push Phone Back Until The "E" Starts Turning Blurry</div>
-        <div class="gate-main" id="gateMainText">TAP TO START BLUR-POINT CHECK</div>
+        <div class="gate-sub" id="gateSubText">Hold Phone Upright at 35–45 cm (Remove Glasses/Contacts)</div>
+        <div class="gate-main" id="gateMainText">TAP TO LOCK BASE POSTURE</div>
       </div>
 
       <canvas id="snellenCanvas"></canvas>
@@ -447,19 +446,19 @@
       <div id="reportBox">
         <div class="report-grid">
           <div class="report-item">
-            <div class="report-label">Left (O.S.) 20-Ft Eq</div>
+            <div class="report-label">Left (O.S.) 20-Ft Eq & Rx</div>
             <div class="report-val" id="repOS">--</div>
-            <div class="report-sub" id="rxOS">Est: -- D</div>
+            <div class="report-sub" id="rxOS">SPH: --</div>
           </div>
           <div class="report-item">
-            <div class="report-label">Right (O.D.) 20-Ft Eq</div>
+            <div class="report-label">Right (O.D.) 20-Ft Eq & Rx</div>
             <div class="report-val" id="repOD">--</div>
-            <div class="report-sub" id="rxOD">Est: -- D</div>
+            <div class="report-sub" id="rxOD">SPH: --</div>
           </div>
           <div class="report-item">
-            <div class="report-label">Near & Blur Point</div>
+            <div class="report-label">Binocular & Blur Pts</div>
             <div class="report-val" id="repOU">--</div>
-            <div class="report-sub" id="rxOU">Add: -- D</div>
+            <div class="report-sub" id="rxOU">O.S. / O.D. Blur</div>
           </div>
           <div class="report-item">
             <div class="report-label">Reading & Fatigue</div>
@@ -514,12 +513,18 @@
     let currentDirection = 'RIGHT';
     let levelHits = 0;
     let levelMisses = 0;
-    
+
+    // Independent Monocular Metrics (Zero Hardcoding — Strictly Measured Per Eye)
     let osDenom = 250;
     let odDenom = 250;
     let ouDenom = 250;
     let lockedDistanceCm = null;
-    let blurHorizonCm = null;
+    let osBlurCm = null; // Left Eye Independent Far-Point Blur Horizon (cm)
+    let odBlurCm = null; // Right Eye Independent Far-Point Blur Horizon (cm)
+
+    // Astigmatism (CYL) Directional Error Tracking: Horizontal Bars (LEFT/RIGHT) vs Vertical Bars (UP/DOWN)
+    let osHorizMiss = 0, osVertMiss = 0;
+    let odHorizMiss = 0, odVertMiss = 0;
 
     const PASSAGE_WORDS = ["Clear", "vision", "opens", "every", "door", "for", "young", "minds."];
     let wordIndex = 0;
@@ -532,9 +537,18 @@
     let confirmedEyeState = "Binocular";
     let eyeStateFrameCount = 0;
 
-    function computeClinicalEyeMetrics(nearDenom, farPointCm) {
-      if (farPointCm !== null && farPointCm < 65) {
-        const rawMyopiaD = -(100 / farPointCm);
+    // Universal Optical Physics Formula: Computes Sphere (D = -100/cm) + Cylindrical Astigmatism Flag
+    function computeUniversalEyeRx(nearDenom, eyeBlurCm, horizMisses, vertMisses) {
+      let cylTag = "";
+      const axisDiff = Math.abs(horizMisses - vertMisses);
+      if (axisDiff >= 1 && (horizMisses + vertMisses) >= 1) {
+        const estCyl = axisDiff >= 2 ? "-0.75" : "-0.50";
+        const estAxis = horizMisses > vertMisses ? "180°/15°" : "90°";
+        cylTag = ` • CYL ${estCyl} (${estAxis})`;
+      }
+
+      if (eyeBlurCm !== null && eyeBlurCm < 65) {
+        const rawMyopiaD = -(100 / eyeBlurCm);
         const quarterStepD = Math.round(rawMyopiaD * 4) / 4;
         let wallDenom = 20;
         const absD = Math.abs(quarterStepD);
@@ -552,19 +566,19 @@
         }
         return {
           snellen20Ft: wallDenom > 200 ? "< 20/200" : `20/${wallDenom}`,
-          diopterStr: `${quarterStepD.toFixed(2)} D (Myopia)`
+          diopterStr: `SPH ${quarterStepD.toFixed(2)} D${cylTag}`
         };
       }
 
-      if (nearDenom <= 20) return { snellen20Ft: `20/${nearDenom}`, diopterStr: "0.00 D (Plano)" };
-      if (nearDenom <= 25) return { snellen20Ft: "20/25", diopterStr: "+0.50 D / -0.50 D" };
-      if (nearDenom <= 30) return { snellen20Ft: "20/30", diopterStr: "+0.75 D / -0.75 D" };
-      if (nearDenom <= 40) return { snellen20Ft: "20/40", diopterStr: "+1.25 D / -1.25 D" };
-      if (nearDenom <= 50) return { snellen20Ft: "20/50", diopterStr: "+1.50 D / -1.50 D" };
-      if (nearDenom <= 70) return { snellen20Ft: "20/70", diopterStr: "+1.75 D / -2.00 D" };
-      if (nearDenom <= 100) return { snellen20Ft: "20/100", diopterStr: "+2.25 D / -2.50 D" };
-      if (nearDenom <= 150) return { snellen20Ft: "20/150", diopterStr: "+2.50 D / -3.00 D" };
-      return { snellen20Ft: "< 20/200", diopterStr: "+3.00 D / -3.50 D" };
+      if (nearDenom <= 20) return { snellen20Ft: `20/${nearDenom}`, diopterStr: `SPH 0.00 D${cylTag}` };
+      if (nearDenom <= 25) return { snellen20Ft: "20/25", diopterStr: `SPH +0.50 / -0.50 D${cylTag}` };
+      if (nearDenom <= 30) return { snellen20Ft: "20/30", diopterStr: `SPH +0.75 / -0.75 D${cylTag}` };
+      if (nearDenom <= 40) return { snellen20Ft: "20/40", diopterStr: `SPH +1.25 / -1.25 D${cylTag}` };
+      if (nearDenom <= 50) return { snellen20Ft: "20/50", diopterStr: `SPH +1.50 / -1.50 D${cylTag}` };
+      if (nearDenom <= 70) return { snellen20Ft: "20/70", diopterStr: `SPH +1.75 / -2.00 D${cylTag}` };
+      if (nearDenom <= 100) return { snellen20Ft: "20/100", diopterStr: `SPH +2.25 / -2.50 D${cylTag}` };
+      if (nearDenom <= 150) return { snellen20Ft: "20/150", diopterStr: `SPH +2.50 / -3.00 D${cylTag}` };
+      return { snellen20Ft: "< 20/200", diopterStr: `SPH +3.00 / -3.50 D${cylTag}` };
     }
 
     function showGatePrompt(postureText, subText, mainText) {
@@ -587,60 +601,69 @@
       gatePromptBtn.style.display = "none";
 
       if (examStage === 1) {
-        startBlurHorizonCheck();
-      } else if (examStage === 2 || examStage === 3 || examStage === 4) {
-        snellenCanvas.style.display = "block";
-        stepIndex = 0;
-        levelHits = 0;
-        levelMisses = 0;
-        currentDenominator = ACUITY_STEPS[0];
-        renderDirectionButtons();
-        loadNewAcuityRound();
+        const liveCm = smoothedDistanceCm || 38.0;
+        lockedDistanceCm = Math.max(34.0, Math.min(44.0, liveCm));
+        examStage = 2;
+        updateStageUI();
+        acuityLabel.innerText = "Stage 2: Left Eye (O.S.) Setup";
+        scaleReadout.innerText = `Base: ${lockedDistanceCm.toFixed(0)} cm`;
+        showGatePrompt(
+          "🎯 COVER RIGHT EYE • KEEP DOT ON CROSSHAIR",
+          "Stage 2A: First We Measure Your LEFT EYE Blur Point",
+          "TAP ONCE YOUR RIGHT EYE IS COVERED"
+        );
+      } else if (examStage === 2) {
+        // Launch Left Eye (O.S.) Monocular Blur-Horizon Check first
+        startMonocularBlurCheck("LEFT EYE (O.S.)");
+      } else if (examStage === 3) {
+        // Launch Right Eye (O.D.) Monocular Blur-Horizon Check first
+        startMonocularBlurCheck("RIGHT EYE (O.D.)");
+      } else if (examStage === 4) {
+        startAcuitySeries();
       } else if (examStage === 5) {
         launchReadingWords();
       }
     }
 
-    function startBlurHorizonCheck() {
+    function startMonocularBlurCheck(eyeLabel) {
       inBlurHorizonCheck = true;
       snellenCanvas.style.display = "block";
-      acuityLabel.innerText = "Slowly Push Phone Back Away From Face";
-      drawTumblingE('RIGHT', 45, 25);
+      acuityLabel.innerText = `${eyeLabel}: Push Phone Back Until Blur`;
+      drawTumblingE('RIGHT', 42, 25);
       examControls.className = "controls-wrap align-center";
       examControls.innerHTML = `
         <div class="horizon-deck">
-          <button class="horizon-btn-blur" onclick="lockBlurHorizon(true)">
-            👀 TAP THIS YELLOW BUTTON THE SECOND<br>THE "E" STARTS TURNING BLURRY (<span id="liveBlurBtnCm">-- cm</span>)
+          <button class="horizon-btn-blur" onclick="lockMonocularBlur(true)">
+            👀 TAP THE SECOND THE "E" BLURS IN YOUR ${eyeLabel}<br>(Live Distance: <span id="liveBlurBtnCm">-- cm</span>)
           </button>
-          <button class="horizon-btn-clear" onclick="lockBlurHorizon(false)">
-            Only tap here if still 100% sharp at full arm's reach (60+ cm)
+          <button class="horizon-btn-clear" onclick="lockMonocularBlur(false)">
+            Still 100% sharp at full arm's reach (60+ cm)
           </button>
         </div>
       `;
     }
 
-    function lockBlurHorizon(didBlur) {
+    function lockMonocularBlur(didBlur) {
       inBlurHorizonCheck = false;
-      const liveCm = smoothedDistanceCm || 46.0;
-      if (didBlur) {
-        blurHorizonCm = Math.max(25.0, Math.min(62.0, liveCm));
-        lockedDistanceCm = Math.max(35.0, Math.min(45.0, blurHorizonCm - 3.0));
-      } else {
-        blurHorizonCm = null;
-        lockedDistanceCm = (liveCm >= 35 && liveCm <= 48) ? liveCm : 40.0;
-      }
+      const liveCm = smoothedDistanceCm || 44.0;
+      const capturedCm = didBlur ? Math.max(25.0, Math.min(62.0, liveCm)) : null;
 
-      examStage = 2;
-      updateStageUI();
-      acuityLabel.innerText = "Stage 2: Left Eye Setup";
-      scaleReadout.innerText = blurHorizonCm
-        ? `Blur Pt: ${blurHorizonCm.toFixed(0)}cm`
-        : `Clear @ Arm's Reach`;
-      showGatePrompt(
-        "🎯 KEEP DOT ON CROSSHAIR • COVER RIGHT EYE",
-        `Blur Horizon Locked (${blurHorizonCm ? blurHorizonCm.toFixed(0) + 'cm' : '60+ cm'}) • Controls Shift Left`,
-        "TAP ONCE YOUR RIGHT EYE IS COVERED"
-      );
+      if (examStage === 2) {
+        osBlurCm = capturedCm;
+      } else if (examStage === 3) {
+        odBlurCm = capturedCm;
+      }
+      startAcuitySeries();
+    }
+
+    function startAcuitySeries() {
+      snellenCanvas.style.display = "block";
+      stepIndex = 0;
+      levelHits = 0;
+      levelMisses = 0;
+      currentDenominator = ACUITY_STEPS[0];
+      renderDirectionButtons();
+      loadNewAcuityRound();
     }
 
     function renderDirectionButtons() {
@@ -717,12 +740,12 @@
 
     function updateRoadmapUI() {
       const labels = [
-        "Stage 1: Push Phone Back Until Letter Blurs (Tap Yellow Btn)",
-        "Stage 2: Left Eye Acuity (Cover Right • Controls Shift LEFT)",
-        "Stage 3: Right Eye Acuity (Cover Left • Controls Shift RIGHT)",
-        "Stage 4: Binocular Acuity (Both Open • Controls CENTERED)",
+        "Stage 1: Center Dot on Crosshair at 35–45 cm (Base Lock)",
+        "Stage 2: Left Eye Blur Point & Acuity (Cover Right Eye)",
+        "Stage 3: Right Eye Blur Point & Acuity (Cover Left Eye)",
+        "Stage 4: Binocular Acuity (Both Eyes Open • Centered)",
         "Stage 5: Reading Intake (8 Quick Words)",
-        "Stage 6: True Distance Rx + Near Acuity Scorecard"
+        "Stage 6: Independent O.S. / O.D. Sphere & Cyl Scorecard"
       ];
       for (let i = 1; i <= 6; i++) {
         const stepEl = document.getElementById(`rs${i}`);
@@ -751,7 +774,7 @@
       let roadmapStepId = (examStage === 2) ? "rs2" : (examStage === 3) ? "rs3" : "rs4";
       document.getElementById(roadmapStepId).innerHTML = `<div class="roadmap-dot" id="dot${examStage}">${examStage}</div> Stage ${examStage}: ${stageName} (20/${currentDenominator} • Miss: ${levelMisses}/2)`;
 
-      const activeDist = lockedDistanceCm || smoothedDistanceCm || 40.0;
+      const activeDist = lockedDistanceCm || smoothedDistanceCm || 38.0;
       snellenCanvas.style.opacity = "0.15";
       setTimeout(() => {
         drawTumblingE(currentDirection, activeDist, currentDenominator);
@@ -787,6 +810,14 @@
           loadNewAcuityRound();
         }
       } else {
+        // Record directional miss for universal astigmatism (CYL) axis differential
+        const isHorizontalBars = (currentDirection === 'LEFT' || currentDirection === 'RIGHT');
+        if (examStage === 2) {
+          if (isHorizontalBars) osHorizMiss++; else osVertMiss++;
+        } else if (examStage === 3) {
+          if (isHorizontalBars) odHorizMiss++; else odVertMiss++;
+        }
+
         levelMisses++;
         if (levelMisses >= 2) {
           finishCurrentEyeStage();
@@ -805,11 +836,11 @@
     function queueStage3Gate() {
       examStage = 3;
       updateStageUI();
-      acuityLabel.innerText = "Stage 3: Right Eye Setup";
-      scaleReadout.innerText = `O.S. Near 20/${osDenom}`;
+      acuityLabel.innerText = "Stage 3: Right Eye (O.D.) Setup";
+      scaleReadout.innerText = osBlurCm ? `O.S. Blur: ${osBlurCm.toFixed(0)}cm` : `O.S. Near 20/${osDenom}`;
       showGatePrompt(
-        "🎯 KEEP DOT ON CROSSHAIR • COVER LEFT EYE",
-        `Left Eye Near 20/${osDenom} • Controls Shift Right`,
+        "🎯 COVER LEFT EYE • KEEP DOT ON CROSSHAIR",
+        "Stage 3A: Now We Measure Your RIGHT EYE Blur Point",
         "TAP ONCE YOUR LEFT EYE IS COVERED"
       );
     }
@@ -818,10 +849,10 @@
       examStage = 4;
       updateStageUI();
       acuityLabel.innerText = "Stage 4: Binocular Setup";
-      scaleReadout.innerText = `O.D. Near 20/${odDenom}`;
+      scaleReadout.innerText = odBlurCm ? `O.D. Blur: ${odBlurCm.toFixed(0)}cm` : `O.D. Near 20/${odDenom}`;
       showGatePrompt(
         "🎯 KEEP DOT ON CROSSHAIR • BOTH EYES OPEN",
-        `Right Eye Near 20/${odDenom} • Controls Centered`,
+        `Independent Blur Points Locked • Controls Centered`,
         "TAP ONCE BOTH EYES ARE OPEN"
       );
     }
@@ -881,9 +912,7 @@
       reportBox.style.display = "block";
       examControls.innerHTML = "";
       examControls.className = "controls-wrap align-center";
-      acuityLabel.innerText = blurHorizonCm
-        ? `Stage 6: Myopia Blur @ ${blurHorizonCm.toFixed(0)}cm`
-        : `Stage 6: 20-Ft Eq (@ ${(lockedDistanceCm || 40).toFixed(0)}cm)`;
+      acuityLabel.innerText = "Stage 6: Independent O.S. / O.D. Rx Scorecard";
       scaleReadout.innerText = "Complete";
 
       const totalSec = (tapTimestamps[tapTimestamps.length - 1] - tapTimestamps[0]) / 1000;
@@ -895,19 +924,19 @@
         if (gap > maxGapMs) maxGapMs = gap;
       }
 
-      const osMetrics = computeClinicalEyeMetrics(osDenom, blurHorizonCm);
-      const odMetrics = computeClinicalEyeMetrics(odDenom, blurHorizonCm);
+      const osMetrics = computeUniversalEyeRx(osDenom, osBlurCm, osHorizMiss, osVertMiss);
+      const odMetrics = computeUniversalEyeRx(odDenom, odBlurCm, odHorizMiss, odVertMiss);
 
       document.getElementById('repOS').innerText = `${osMetrics.snellen20Ft} (20-Ft Eq)`;
-      document.getElementById('rxOS').innerText = `Est: ${osMetrics.diopterStr}`;
+      document.getElementById('rxOS').innerText = osMetrics.diopterStr;
 
       document.getElementById('repOD').innerText = `${odMetrics.snellen20Ft} (20-Ft Eq)`;
-      document.getElementById('rxOD').innerText = `Est: ${odMetrics.diopterStr}`;
+      document.getElementById('rxOD').innerText = odMetrics.diopterStr;
 
       document.getElementById('repOU').innerText = `Near: 20/${ouDenom}`;
-      document.getElementById('rxOU').innerText = blurHorizonCm
-        ? `Blur Pt: ${blurHorizonCm.toFixed(0)} cm`
-        : `Clear > 60 cm`;
+      const osBlurTxt = osBlurCm ? `${osBlurCm.toFixed(0)}cm` : `60+cm`;
+      const odBlurTxt = odBlurCm ? `${odBlurCm.toFixed(0)}cm` : `60+cm`;
+      document.getElementById('rxOU').innerText = `Blur: L ${osBlurTxt} | R ${odBlurTxt}`;
 
       document.getElementById('repWPM').innerText = `${wpm} WPM`;
       document.getElementById('rxLat').innerText = maxGapMs > 1400 ? "Fatigue: Elevated" : "Fatigue: Optimal";
@@ -924,15 +953,18 @@
       odDenom = 250;
       ouDenom = 250;
       lockedDistanceCm = null;
-      blurHorizonCm = null;
+      osBlurCm = null;
+      odBlurCm = null;
+      osHorizMiss = 0; osVertMiss = 0;
+      odHorizMiss = 0; odVertMiss = 0;
       examControls.className = "controls-wrap align-center";
       updateStageUI();
-      acuityLabel.innerText = "Stage 1: Eye-Level Crosshair & Blur Horizon";
+      acuityLabel.innerText = "Stage 1: Posture & Crosshair Calibration";
       scaleReadout.innerText = "Ready";
       showGatePrompt(
         "🎯 PUT DOT BETWEEN YOUR EYES ON THE CROSSHAIR",
-        "Next: Slowly Push Phone Back Until The 'E' Starts Turning Blurry",
-        "TAP TO START BLUR-POINT CHECK"
+        "Hold Phone Upright at 35–45 cm (Remove Glasses/Contacts)",
+        "TAP TO LOCK BASE POSTURE"
       );
     }
 
@@ -952,7 +984,6 @@
       return Math.hypot(l[top].x - l[bot].x, l[top].y - l[bot].y) / Math.hypot(l[inr].x - l[out].x, l[inr].y - l[out].y);
     }
 
-    // Draws the 2D Crosshair + Nose-Bridge Target Dot directly on the identical video pixel grid
     function drawSyncedHudOverlay(noseBridge) {
       const vw = videoElement.videoWidth || 480;
       const vh = videoElement.videoHeight || 640;
@@ -964,7 +995,7 @@
       hudCtx.clearRect(0, 0, vw, vh);
 
       const centerX = vw * 0.5;
-      const centerY = vh * 0.45; // Upper-middle eye line on raw sensor
+      const centerY = vh * 0.45;
 
       let isLocked = false;
       let dotX = centerX;
@@ -995,25 +1026,21 @@
         centerGuidePill.innerText = "PUT DOT BETWEEN EYES ON CROSSHAIR";
       }
 
-      // Draw Crosshair Lines
       hudCtx.save();
       hudCtx.lineWidth = 3;
       hudCtx.strokeStyle = isLocked ? "rgba(74, 222, 128, 0.95)" : "rgba(250, 204, 21, 0.85)";
       if (!isLocked) hudCtx.setLineDash([8, 6]);
 
-      // Vertical Line
       hudCtx.beginPath();
       hudCtx.moveTo(centerX, 0);
       hudCtx.lineTo(centerX, vh);
       hudCtx.stroke();
 
-      // Horizontal Eye Line
       hudCtx.beginPath();
       hudCtx.moveTo(0, centerY);
       hudCtx.lineTo(vw, centerY);
       hudCtx.stroke();
 
-      // Draw Nose-Bridge Target Dot (100% locked to lm[168])
       if (noseBridge) {
         hudCtx.setLineDash([]);
         hudCtx.beginPath();
@@ -1034,7 +1061,6 @@
 
         drawSyncedHudOverlay(noseBridge);
 
-        // Eye Aspect Ratio (EAR) for Occlusion Status
         const subjectRightEAR = getEAR(lm, 159, 145, 133, 33);
         const subjectLeftEAR = getEAR(lm, 386, 374, 362, 263);
 
@@ -1052,17 +1078,17 @@
           eyeStateFrameCount = 1;
         }
 
-        // Unblocked Live IPD Distance Calculation in Stage 1
+        // Live IPD Distance Calculation: Active during Stage 1 AND during Monocular Blur-Point Push-Back!
         const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
         const pPx = Math.hypot((lp.x - rp.x) * videoElement.videoWidth, (lp.y - rp.y) * videoElement.videoHeight);
 
         if (pPx > 0) {
           const rCm = ((FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / pPx) / 10;
-          const lockActive = (examStage > 1 && lockedDistanceCm !== null);
+          const allowLiveTracking = (examStage === 1 || inBlurHorizonCheck);
 
-          if (!lockActive && confirmedEyeState === "Binocular") {
+          if (allowLiveTracking) {
             smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.28 * rCm) + (0.72 * smoothedDistanceCm);
-          } else if (lockActive) {
+          } else if (lockedDistanceCm !== null) {
             smoothedDistanceCm = lockedDistanceCm;
           }
         }
