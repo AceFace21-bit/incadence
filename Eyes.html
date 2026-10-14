@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.43 - Live Dist vs. Target Mirror HUD + Quarter-Diopter Differential Engine
+  Project "Eyes" v3.44 - Hand-Symmetric Vertical Nose-Vector Distance Lock + Clean HUD Layout
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.43 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.44 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -92,18 +92,19 @@
       -webkit-transform: translateZ(0);
     }
 
+    /* Positioned at bottom-center so it never collides with top Dist / Target badges */
     .center-guide-pill {
       position: absolute;
-      top: 4px;
+      bottom: 4px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(15, 23, 42, 0.92);
       border: 1px solid rgba(250, 204, 21, 0.6);
       color: #fde047;
-      font-size: 7px;
+      font-size: 7.5px;
       font-weight: 900;
       letter-spacing: 0.3px;
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 999px;
       text-transform: uppercase;
       pointer-events: none;
@@ -380,7 +381,7 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.43</h1>
+    <h1>Project Eyes v3.44</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -397,13 +398,14 @@
     <video id="webcam" autoplay playsinline muted></video>
     <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
 
-    <div class="center-guide-pill" id="centerGuidePill">PUT GREEN DOT ON CROSSHAIR</div>
-
     <!-- TOP-LEFT LIVE DISTANCE vs. TOP-RIGHT TARGET DISTANCE MIRROR -->
     <div class="hud-top">
       <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
       <div class="badge"><span id="targetLabel">Target:</span> <span id="zoneVal" class="badge-val" style="color: #fbbf24;">35–45 cm</span></div>
     </div>
+
+    <div class="center-guide-pill" id="centerGuidePill">CENTER DOT ON CROSSHAIR</div>
+
     <div class="hud-bottom">
       <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
       <div class="badge" style="font-size: 8px;">T.L.W.</div>
@@ -528,13 +530,12 @@
     let osDenom = 250;
     let odDenom = 250;
     let ouDenom = 250;
-    let baseBlurCm = null;       // Captured in Stage 1 with BOTH eyes open
-    let lockedDistanceCm = null; // Target distance to stay in during Stages 2, 3, and 4
+    let baseBlurCm = null;
+    let lockedDistanceCm = null;
 
-    // Calibrated in Stage 1 so live distance keeps working accurately in Stages 2 & 3 even with one eye covered
-    let calibratedNoseHeightMm = 48.0;
-    let calibratedLeftEyeWidthMm = 28.5;
-    let calibratedRightEyeWidthMm = 28.5;
+    // Vertical Nose-Bridge Constant (Immune to Left-Hand vs Right-Hand horizontal angle & hand occlusion!)
+    let noseConstantCmPx = 2800.0; 
+    let lastValidNosePx = 60.0;
 
     let osHorizMiss = 0, osVertMiss = 0;
     let odHorizMiss = 0, odVertMiss = 0;
@@ -571,7 +572,6 @@
       }
 
       if (sharedBlurCm !== null && sharedBlurCm < 64) {
-        // Anchor base Sphere to nearest 0.25 D step first so monocular line differential adds cleanly
         const rawBaseSph = -(100 / sharedBlurCm);
         const anchoredBaseSph = Math.round(rawBaseSph * 4) / 4;
 
@@ -675,6 +675,11 @@
       baseBlurCm = Math.max(32.0, Math.min(62.0, liveCm));
       lockedDistanceCm = baseBlurCm;
 
+      // Exact 1:1 Hand-Symmetric Calibration: Lock vertical nose-vector constant at the exact moment of tap!
+      if (lastValidNosePx > 10) {
+        noseConstantCmPx = baseBlurCm * lastValidNosePx;
+      }
+
       examStage = 2;
       updateStageUI();
       const targetStr = `${lockedDistanceCm.toFixed(1)} cm`;
@@ -684,7 +689,7 @@
         "📋 STEP 2: COVER RIGHT EYE (MATCH TARGET DISTANCE ON TOP RIGHT)",
         "HOLD IN LEFT HAND",
         `Match <span class='coach-highlight'>Dist (Top-Left)</span> to <span class='coach-highlight'>Target: ${targetStr} (Top-Right)</span>!`,
-        "Hold phone in <span class='coach-highlight'>LEFT HAND</span> • Cover <span class='coach-highlight'>RIGHT EYE</span> with RIGHT hand.",
+        "Hold phone in <span class='coach-highlight'>LEFT HAND</span> • Cover <span class='coach-highlight'>RIGHT EYE</span> (keep nose visible).",
         "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below, then tap the arrows until the 'E' gets too blurry."
       );
       showGatePrompt(
@@ -882,7 +887,7 @@
         "📋 STEP 3: SWITCH HANDS FOR RIGHT EYE (TARGET: " + distTxt + " CM)",
         "HOLD IN RIGHT HAND",
         `Switch! Hold phone in <span class='coach-highlight'>RIGHT HAND</span> matched to <span class='coach-highlight'>Target: ${distTxt} cm</span>.`,
-        "Cover your <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand.",
+        "Cover your <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand (keep nose visible).",
         "Tap the <span class='coach-highlight'>BLUE BUTTON</span> below with your RIGHT thumb."
       );
       showGatePrompt(
@@ -1101,11 +1106,11 @@
 
         const errX = Math.abs(dotX - centerX) / cw;
         const errY = Math.abs(dotY - centerY) / ch;
-        isLocked = (errX <= 0.11 && errY <= 0.18);
+        isLocked = (errX <= 0.12 && errY <= 0.18);
 
         if (isLocked) {
           centerGuidePill.classList.add('locked');
-          centerGuidePill.innerText = "EYES LOCKED ON CROSSHAIR ✓";
+          centerGuidePill.innerText = "CROSSHAIR LOCKED ✓";
         } else {
           centerGuidePill.classList.remove('locked');
           if (dotY < centerY - (ch * 0.18)) {
@@ -1113,12 +1118,12 @@
           } else if (dotY > centerY + (ch * 0.18)) {
             centerGuidePill.innerText = "RAISE PHONE TO EYE LEVEL";
           } else {
-            centerGuidePill.innerText = "CENTER DOT ON VERTICAL LINE";
+            centerGuidePill.innerText = "CENTER DOT ON CROSSHAIR";
           }
         }
       } else {
         centerGuidePill.classList.remove('locked');
-        centerGuidePill.innerText = "PUT DOT BETWEEN EYES ON CROSSHAIR";
+        centerGuidePill.innerText = "CENTER DOT ON CROSSHAIR";
       }
 
       vfCtx.save();
@@ -1165,45 +1170,39 @@
         smoothedLeftEAR = 0.3 * subjectLeftEAR + 0.7 * smoothedLeftEAR;
 
         let dState = "Binocular";
-        if (smoothedRightEAR < 0.20 && smoothedLeftEAR >= 0.20) dState = "Right Covered";
+        if (examStage === 2) dState = "Right Covered";
+        else if (examStage === 3) dState = "Left Covered";
+        else if (smoothedRightEAR < 0.20 && smoothedLeftEAR >= 0.20) dState = "Right Covered";
         else if (smoothedLeftEAR < 0.20 && smoothedRightEAR >= 0.20) dState = "Left Covered";
 
-        if (dState === pendingEyeState) {
-          if (++eyeStateFrameCount >= 4) confirmedEyeState = dState;
-        } else {
-          pendingEyeState = dState;
-          eyeStateFrameCount = 1;
-        }
+        confirmedEyeState = dState;
 
+        // 1. Binocular Eye-to-Eye IPD (Used ONLY when BOTH eyes are uncovered in Stage 1, 4, 5, 6)
         const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
         const ipdPx = Math.hypot((lp.x - rp.x) * vw, (lp.y - rp.y) * vh);
 
+        // 2. Vertical Nose-Vector Height (lm[168] Bridge to lm[2] Base): Immune to Left/Right hand angle & covered eyes!
         const noseTop = lm[168], noseBot = lm[2];
-        const nosePx = (noseTop && noseBot) ? Math.hypot((noseTop.x - noseBot.x) * vw, (noseTop.y - noseBot.y) * vh) : 0;
+        const noseVertPx = (noseTop && noseBot)
+          ? Math.hypot((noseTop.x - noseBot.x) * vw, (noseTop.y - noseBot.y) * vh)
+          : 0;
 
-        const leftEyeWidthPx = Math.hypot((lm[362].x - lm[263].x) * vw, (lm[362].y - lm[263].y) * vh);
-        const rightEyeWidthPx = Math.hypot((lm[133].x - lm[33].x) * vw, (lm[133].y - lm[33].y) * vh);
+        if (noseVertPx > 12) {
+          lastValidNosePx = 0.3 * noseVertPx + 0.7 * lastValidNosePx;
+        }
 
-        // Keep Live Distance active in ALL stages so user can match Top-Left Dist to Top-Right Target!
-        if (confirmedEyeState === "Binocular" && ipdPx > 0) {
+        if (examStage !== 2 && examStage !== 3 && ipdPx > 0) {
+          // Both eyes open: Use IPD and continuously sync the vertical nose constant
           const rCm = ((FOCAL_LENGTH_PIXELS * AVERAGE_IPD_MM) / ipdPx) / 10;
           smoothedDistanceCm = smoothedDistanceCm === null ? rCm : (0.25 * rCm) + (0.75 * smoothedDistanceCm);
-
-          if (examStage === 1) {
-            if (nosePx > 10) calibratedNoseHeightMm = 0.2 * (AVERAGE_IPD_MM * (nosePx / ipdPx)) + 0.8 * calibratedNoseHeightMm;
-            if (leftEyeWidthPx > 5) calibratedLeftEyeWidthMm = 0.2 * (AVERAGE_IPD_MM * (leftEyeWidthPx / ipdPx)) + 0.8 * calibratedLeftEyeWidthMm;
-            if (rightEyeWidthPx > 5) calibratedRightEyeWidthMm = 0.2 * (AVERAGE_IPD_MM * (rightEyeWidthPx / ipdPx)) + 0.8 * calibratedRightEyeWidthMm;
+          if (lastValidNosePx > 12) {
+            noseConstantCmPx = 0.2 * (smoothedDistanceCm * lastValidNosePx) + 0.8 * noseConstantCmPx;
           }
-        } else {
-          // When one hand covers an eye in Stage 2 or 3, use the uncovered eye width + nose to keep live Dist smooth
-          let estCmEye = null;
-          if (examStage === 2 && leftEyeWidthPx > 4) {
-            estCmEye = ((FOCAL_LENGTH_PIXELS * calibratedLeftEyeWidthMm) / leftEyeWidthPx) / 10;
-          } else if (examStage === 3 && rightEyeWidthPx > 4) {
-            estCmEye = ((FOCAL_LENGTH_PIXELS * calibratedRightEyeWidthMm) / rightEyeWidthPx) / 10;
-          }
-          if (estCmEye !== null && estCmEye >= 25 && estCmEye <= 70) {
-            smoothedDistanceCm = smoothedDistanceCm === null ? estCmEye : (0.18 * estCmEye) + (0.82 * smoothedDistanceCm);
+        } else if ((examStage === 2 || examStage === 3) && lastValidNosePx > 12) {
+          // Stage 2 (Left Hand) or Stage 3 (Right Hand): Strictly use Vertical Nose Vector so 48cm is identical in both hands!
+          const monoCm = noseConstantCmPx / lastValidNosePx;
+          if (monoCm >= 24 && monoCm <= 72) {
+            smoothedDistanceCm = smoothedDistanceCm === null ? monoCm : (0.22 * monoCm) + (0.78 * smoothedDistanceCm);
           }
         }
 
@@ -1216,16 +1215,15 @@
             if (liveBtnSpan) liveBtnSpan.innerText = `${smoothedDistanceCm.toFixed(0)} cm`;
           }
 
-          // Top-Right Badge Mirror Logic: Shows "Target: XX.X cm" once locked!
           if (lockedDistanceCm !== null && examStage >= 2) {
             targetLabel.innerText = "Target:";
             zoneVal.innerText = `${lockedDistanceCm.toFixed(1)} cm`;
             const diffFromTarget = Math.abs(smoothedDistanceCm - lockedDistanceCm);
             if (diffFromTarget <= 3.5) {
-              zoneVal.style.color = "#4ade80"; // Green when matched to target!
+              zoneVal.style.color = "#4ade80";
               cameraBox.style.borderColor = "#4ade80";
             } else {
-              zoneVal.style.color = "#fbbf24"; // Amber if drifting away from target
+              zoneVal.style.color = "#fbbf24";
               cameraBox.style.borderColor = "#fbbf24";
             }
           } else {
