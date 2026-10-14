@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.39 - Bidirectional Pull-In/Push-Out Focus Edge + Spherical Equivalent Rx Split
+  Project "Eyes" v3.40 - Single-Canvas Viewfinder Engine (No iOS Video Crush) + Bidirectional Focus Edge
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.39 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.40 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -71,22 +71,15 @@
       border: 2px solid #1e293b;
       background: #000;
       flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    video, #hudCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
+    /* Raw video stays hidden; single viewfinderCanvas renders both camera + HUD cleanly on iOS */
+    #webcam {
+      display: none;
+    }
+    #viewfinderCanvas {
+      display: block;
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      transform: scaleX(-1);
-    }
-    #hudCanvas {
-      z-index: 2;
-      pointer-events: none;
     }
 
     .center-guide-pill {
@@ -388,7 +381,7 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.39</h1>
+    <h1>Project Eyes v3.40</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -402,8 +395,8 @@
   </div>
 
   <div class="camera-box" id="cameraBox">
-    <video id="webcam" playsinline></video>
-    <canvas id="hudCanvas"></canvas>
+    <video id="webcam" playsinline muted></video>
+    <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
 
     <div class="center-guide-pill" id="centerGuidePill">PUT GREEN DOT ON CROSSHAIR</div>
 
@@ -488,8 +481,8 @@
 
   <script>
     const videoElement = document.getElementById('webcam');
-    const hudCanvas = document.getElementById('hudCanvas');
-    const hudCtx = hudCanvas.getContext('2d');
+    const viewfinderCanvas = document.getElementById('viewfinderCanvas');
+    const vfCtx = viewfinderCanvas.getContext('2d');
     const cameraBox = document.getElementById('cameraBox');
     const centerGuidePill = document.getElementById('centerGuidePill');
     const distVal = document.getElementById('distVal');
@@ -533,7 +526,6 @@
     let osBlurCm = null;
     let odBlurCm = null;
 
-    // Hand-Proof Monocular Distance Calibration Ratios (Locked in Stage 1 when both eyes are open)
     let calibratedNoseHeightMm = 48.0;
     let calibratedLeftEyeWidthMm = 28.5;
     let calibratedRightEyeWidthMm = 28.5;
@@ -562,7 +554,6 @@
       `;
     }
 
-    // Universal Optical Physics: Spherical Equivalent (SE = -100/cm) de-coupled into Sphere (SPH) and Cylinder (CYL)
     function computeUniversalEyeRx(nearDenom, eyeBlurCm, horizMisses, vertMisses) {
       let cylVal = 0.0;
       let cylTag = "";
@@ -574,9 +565,7 @@
       }
 
       if (eyeBlurCm !== null && eyeBlurCm < 65) {
-        // Focus edge captures Spherical Equivalent (SE = SPH + 0.5 * CYL)
         const sphericalEquivalentD = -(100 / eyeBlurCm);
-        // De-couple true Sphere (SPH = SE - 0.5 * CYL) so astigmatism doesn't over-inflate Sphere!
         const rawSphereD = sphericalEquivalentD - (0.5 * cylVal);
         const quarterStepSph = Math.round(rawSphereD * 4) / 4;
 
@@ -714,7 +703,6 @@
       levelMisses = 0;
       currentDenominator = ACUITY_STEPS[0];
 
-      // Automatically test each eye at its own clear focus distance (just inside its focus edge)
       let clearTestCm = 38;
       if (examStage === 2 && osBlurCm !== null) clearTestCm = Math.max(22, Math.round(osBlurCm - 3));
       if (examStage === 3 && odBlurCm !== null) clearTestCm = Math.max(22, Math.round(odBlurCm - 3));
@@ -1077,38 +1065,59 @@
       return Math.hypot(l[top].x - l[bot].x, l[top].y - l[bot].y) / Math.hypot(l[inr].x - l[out].x, l[inr].y - l[out].y);
     }
 
-    function drawSyncedHudOverlay(noseBridge) {
-      const vw = videoElement.videoWidth || 480;
-      const vh = videoElement.videoHeight || 640;
-      if (hudCanvas.width !== vw || hudCanvas.height !== vh) {
-        hudCanvas.width = vw;
-        hudCanvas.height = vh;
+    // Single-Canvas Viewfinder: Renders mirrored camera image + crosshair + nose dot onto one unified surface
+    function renderUnifiedViewfinder(noseBridge) {
+      const cw = cameraBox.clientWidth || 360;
+      const ch = cameraBox.clientHeight || 148;
+      if (viewfinderCanvas.width !== cw || viewfinderCanvas.height !== ch) {
+        viewfinderCanvas.width = cw;
+        viewfinderCanvas.height = ch;
       }
 
-      hudCtx.clearRect(0, 0, vw, vh);
+      const vw = videoElement.videoWidth || 480;
+      const vh = videoElement.videoHeight || 640;
 
-      const centerX = vw * 0.5;
-      const centerY = vh * 0.45;
+      vfCtx.clearRect(0, 0, cw, ch);
+
+      // Compute cover scaling so the camera fills the box cleanly centered on the upper-middle face
+      const scale = Math.max(cw / vw, ch / vh);
+      const drawW = vw * scale;
+      const drawH = vh * scale;
+      const offsetX = (cw - drawW) / 2;
+      const offsetY = (ch - drawH) * 0.35; // Biased toward upper sensor where eyes sit
+
+      // 1. Draw Mirrored Video Frame
+      vfCtx.save();
+      vfCtx.translate(cw, 0);
+      vfCtx.scale(-1, 1);
+      vfCtx.drawImage(videoElement, offsetX, offsetY, drawW, drawH);
+      vfCtx.restore();
+
+      const centerX = cw * 0.5;
+      const centerY = ch * 0.52;
 
       let isLocked = false;
       let dotX = centerX;
       let dotY = centerY;
 
       if (noseBridge) {
-        dotX = noseBridge.x * vw;
-        dotY = noseBridge.y * vh;
-        const errX = Math.abs(noseBridge.x - 0.50);
-        const errY = Math.abs(noseBridge.y - 0.45);
-        isLocked = (errX <= 0.11 && errY <= 0.14);
+        // Mirror X coordinate to match mirrored video draw
+        const mirroredNormX = 1.0 - noseBridge.x;
+        dotX = offsetX + (mirroredNormX * drawW);
+        dotY = offsetY + (noseBridge.y * drawH);
+
+        const errX = Math.abs(dotX - centerX) / cw;
+        const errY = Math.abs(dotY - centerY) / ch;
+        isLocked = (errX <= 0.11 && errY <= 0.18);
 
         if (isLocked) {
           centerGuidePill.classList.add('locked');
           centerGuidePill.innerText = "EYES LOCKED ON CROSSHAIR ✓";
         } else {
           centerGuidePill.classList.remove('locked');
-          if (noseBridge.y < 0.31) {
+          if (dotY < centerY - (ch * 0.18)) {
             centerGuidePill.innerText = "LOWER PHONE SLIGHTLY";
-          } else if (noseBridge.y > 0.59) {
+          } else if (dotY > centerY + (ch * 0.18)) {
             centerGuidePill.innerText = "RAISE PHONE TO EYE LEVEL";
           } else {
             centerGuidePill.innerText = "CENTER DOT ON VERTICAL LINE";
@@ -1119,32 +1128,34 @@
         centerGuidePill.innerText = "PUT DOT BETWEEN EYES ON CROSSHAIR";
       }
 
-      hudCtx.save();
-      hudCtx.lineWidth = 3;
-      hudCtx.strokeStyle = isLocked ? "rgba(74, 222, 128, 0.95)" : "rgba(250, 204, 21, 0.85)";
-      if (!isLocked) hudCtx.setLineDash([8, 6]);
+      // 2. Draw Crosshair Lines
+      vfCtx.save();
+      vfCtx.lineWidth = 2;
+      vfCtx.strokeStyle = isLocked ? "rgba(74, 222, 128, 0.95)" : "rgba(250, 204, 21, 0.85)";
+      if (!isLocked) vfCtx.setLineDash([6, 5]);
 
-      hudCtx.beginPath();
-      hudCtx.moveTo(centerX, 0);
-      hudCtx.lineTo(centerX, vh);
-      hudCtx.stroke();
+      vfCtx.beginPath();
+      vfCtx.moveTo(centerX, 0);
+      vfCtx.lineTo(centerX, ch);
+      vfCtx.stroke();
 
-      hudCtx.beginPath();
-      hudCtx.moveTo(0, centerY);
-      hudCtx.lineTo(vw, centerY);
-      hudCtx.stroke();
+      vfCtx.beginPath();
+      vfCtx.moveTo(0, centerY);
+      vfCtx.lineTo(cw, centerY);
+      vfCtx.stroke();
 
+      // 3. Draw Nose-Bridge Target Dot
       if (noseBridge) {
-        hudCtx.setLineDash([]);
-        hudCtx.beginPath();
-        hudCtx.arc(dotX, dotY, 12, 0, Math.PI * 2);
-        hudCtx.fillStyle = isLocked ? "rgba(74, 222, 128, 0.65)" : "rgba(250, 204, 21, 0.55)";
-        hudCtx.fill();
-        hudCtx.lineWidth = 3;
-        hudCtx.strokeStyle = isLocked ? "#4ade80" : "#fde047";
-        hudCtx.stroke();
+        vfCtx.setLineDash([]);
+        vfCtx.beginPath();
+        vfCtx.arc(dotX, dotY, 7, 0, Math.PI * 2);
+        vfCtx.fillStyle = isLocked ? "rgba(74, 222, 128, 0.7)" : "rgba(250, 204, 21, 0.6)";
+        vfCtx.fill();
+        vfCtx.lineWidth = 2;
+        vfCtx.strokeStyle = isLocked ? "#4ade80" : "#fde047";
+        vfCtx.stroke();
       }
-      hudCtx.restore();
+      vfCtx.restore();
     }
 
     function onResults(results) {
@@ -1154,7 +1165,7 @@
         const vw = videoElement.videoWidth || 480;
         const vh = videoElement.videoHeight || 640;
 
-        drawSyncedHudOverlay(noseBridge);
+        renderUnifiedViewfinder(noseBridge);
 
         const subjectRightEAR = getEAR(lm, 159, 145, 133, 33);
         const subjectLeftEAR = getEAR(lm, 386, 374, 362, 263);
@@ -1244,7 +1255,7 @@
         }
         eyeStateVal.innerText = confirmedEyeState;
       } else {
-        drawSyncedHudOverlay(null);
+        renderUnifiedViewfinder(null);
       }
     }
 
