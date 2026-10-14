@@ -1,14 +1,14 @@
 <!-- 
   Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
   PATENT PENDING: USPTO Provisional Application No. 64/174,835
-  Project "Eyes" v3.32 - Far-Point Blur Horizon (Myopia Rx) + Center-Face Reticle + Dynamic Thumb-Zone
+  Project "Eyes" v3.33 - 2D Eye-Level Crosshair + iOS Portrait Sensor Framing + Far-Point Blur Rx
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.32 | Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.33 | Patent Pending 64/174,835</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -65,16 +65,23 @@
       position: relative;
       width: 100%;
       max-width: 600px;
-      aspect-ratio: 2.35 / 1;
+      aspect-ratio: 2.15 / 1;
       border-radius: 10px;
       overflow: hidden;
       border: 2px solid #1e293b;
       background: #000;
       flex-shrink: 0;
     }
-    video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    /* Upper-sensor framing so holding phone at eye level shows eyes instead of neck/chin */
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 22%;
+      transform: scaleX(-1);
+    }
 
-    /* CENTER-FACE ALIGNMENT LINE & RETICLE */
+    /* 2D EYE-LEVEL CROSSHAIR (VERTICAL NOSE LINE + HORIZONTAL EYE LINE) */
     .center-guide-line {
       position: absolute;
       top: 0;
@@ -90,6 +97,21 @@
     .center-guide-line.locked {
       border-left: 2px solid rgba(74, 222, 128, 0.95);
       box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    }
+    .eye-horizon-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 52%;
+      transform: translateY(-50%);
+      height: 0px;
+      border-top: 1.5px dashed rgba(250, 204, 21, 0.65);
+      pointer-events: none;
+      z-index: 2;
+      transition: border-color 0.2s ease;
+    }
+    .eye-horizon-line.locked {
+      border-top: 1.5px solid rgba(74, 222, 128, 0.85);
     }
     .center-guide-pill {
       position: absolute;
@@ -382,7 +404,7 @@
 <body>
 
   <header>
-    <h1>Project Eyes v3.32</h1>
+    <h1>Project Eyes v3.33</h1>
     <div class="patent-pill">Patent Pending • USPTO 64/174,835</div>
   </header>
 
@@ -398,9 +420,10 @@
   <div class="camera-box" id="cameraBox">
     <video id="webcam" playsinline></video>
 
-    <!-- CENTER-FACE ALIGNMENT LINE & PILL -->
+    <!-- 2D EYE-LEVEL CROSSHAIR (VERTICAL NOSE LINE + HORIZONTAL EYE LINE) -->
     <div class="center-guide-line" id="centerGuideLine"></div>
-    <div class="center-guide-pill" id="centerGuidePill">KEEP LINE IN CENTER OF FACE</div>
+    <div class="eye-horizon-line" id="eyeHorizonLine"></div>
+    <div class="center-guide-pill" id="centerGuidePill">ALIGN EYES ON CROSSHAIR</div>
 
     <div class="hud-top">
       <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
@@ -413,9 +436,9 @@
   </div>
 
   <div class="roadmap-panel" id="roadmapPanel">
-    <div class="roadmap-title">Far-Point Blur Horizon + Dynamic Thumb-Zone Protocol</div>
+    <div class="roadmap-title">Eye-Level Crosshair + Far-Point Blur Horizon Protocol</div>
     <div class="roadmap-steps">
-      <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Push Phone Back Until Letter Blurs (Far-Point Rx)</div>
+      <div class="roadmap-step active" id="rs1"><div class="roadmap-dot" id="dot1">1</div> Stage 1: Put Eyes on Crosshair • Push Back Until Blur</div>
       <div class="roadmap-step" id="rs2"><div class="roadmap-dot" id="dot2">2</div> Stage 2: Left Eye Acuity (Cover Right • Controls Shift LEFT)</div>
       <div class="roadmap-step" id="rs3"><div class="roadmap-dot" id="dot3">3</div> Stage 3: Right Eye Acuity (Cover Left • Controls Shift RIGHT)</div>
       <div class="roadmap-step" id="rs4"><div class="roadmap-dot" id="dot4">4</div> Stage 4: Binocular Acuity (Both Open • Controls CENTERED)</div>
@@ -426,16 +449,16 @@
 
   <div class="optotype-card">
     <div class="card-header">
-      <span id="acuityLabel">Stage 1: Far-Point Blur Horizon Check</span>
+      <span id="acuityLabel">Stage 1: Eye-Level Crosshair & Blur Horizon</span>
       <span id="scaleReadout">Ready</span>
     </div>
 
     <div class="optotype-viewport">
       <div id="gatePromptBtn" onclick="handleGateTap()">
         <div class="gate-posture" id="gatePostureText">
-          🪑 KEEP LINE IN CENTER OF FACE • REMOVE GLASSES
+          🎯 PUT YOUR EYES ON THE CROSSHAIR • REMOVE GLASSES
         </div>
-        <div class="gate-sub" id="gateSubText">Step 1: Find Where Your Clear Vision Starts Turning Blurry</div>
+        <div class="gate-sub" id="gateSubText">Tilt Top of Phone Forward Slightly So Your Eyes Show in Box</div>
         <div class="gate-main" id="gateMainText">TAP TO START BLUR-POINT CHECK</div>
       </div>
 
@@ -484,6 +507,7 @@
     const videoElement = document.getElementById('webcam');
     const cameraBox = document.getElementById('cameraBox');
     const centerGuideLine = document.getElementById('centerGuideLine');
+    const eyeHorizonLine = document.getElementById('eyeHorizonLine');
     const centerGuidePill = document.getElementById('centerGuidePill');
     const distVal = document.getElementById('distVal');
     const zoneVal = document.getElementById('zoneVal');
@@ -503,7 +527,6 @@
 
     const AVERAGE_IPD_MM = 63.0;
     const FOCAL_LENGTH_PIXELS = 580;
-    // Standardized CSS px/mm (3.78 W3C optical geometry so letters are true clinical size)
     const CSS_PX_PER_MM = 3.78;
     const DIRECTIONS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
     const ACUITY_STEPS = [200, 150, 100, 70, 50, 40, 30, 25, 20, 15];
@@ -521,7 +544,7 @@
     let odDenom = 250;
     let ouDenom = 250;
     let lockedDistanceCm = null;
-    let blurHorizonCm = null; // Captures Far-Point Myopia Blur Distance (cm)
+    let blurHorizonCm = null;
 
     const PASSAGE_WORDS = ["Clear", "vision", "opens", "every", "door", "for", "young", "minds."];
     let wordIndex = 0;
@@ -534,14 +557,10 @@
     let confirmedEyeState = "Binocular";
     let eyeStateFrameCount = 0;
 
-    // Combines Far-Point Myopia Horizon (cm) + Near Snellen Acuity into Clinical Diopter Rx & 20-Ft Equivalent
     function computeClinicalEyeMetrics(nearDenom, farPointCm) {
-      // 1. If the user reported a Myopia Blur Horizon (e.g., blurs at 42 cm when pushing arm back)
       if (farPointCm !== null && farPointCm < 65) {
         const rawMyopiaD = -(100 / farPointCm);
-        // Round to nearest 0.25 D clinical step
         const quarterStepD = Math.round(rawMyopiaD * 4) / 4;
-        // Convert Myopia Diopters to true 20-foot Snellen wall-chart equivalent
         let wallDenom = 20;
         const absD = Math.abs(quarterStepD);
         if (absD >= 3.00) wallDenom = 250;
@@ -553,7 +572,6 @@
         else if (absD >= 0.75) wallDenom = 40;
         else if (absD >= 0.50) wallDenom = 30;
 
-        // Factor in any extra monocular difference from the near test
         if (nearDenom > 30) {
           wallDenom = Math.max(wallDenom, nearDenom);
         }
@@ -563,7 +581,6 @@
         };
       }
 
-      // 2. If clear at full arm's reach, evaluate Near Acuity (Hyperopia / Presbyopia / Emmetropia)
       if (nearDenom <= 20) return { snellen20Ft: `20/${nearDenom}`, diopterStr: "0.00 D (Plano)" };
       if (nearDenom <= 25) return { snellen20Ft: "20/25", diopterStr: "+0.50 D / -0.50 D" };
       if (nearDenom <= 30) return { snellen20Ft: "20/30", diopterStr: "+0.75 D / -0.75 D" };
@@ -595,7 +612,6 @@
       gatePromptBtn.style.display = "none";
 
       if (examStage === 1) {
-        // Launch interactive Push-Back Blur Horizon Check
         startBlurHorizonCheck();
       } else if (examStage === 2 || examStage === 3 || examStage === 4) {
         snellenCanvas.style.display = "block";
@@ -613,7 +629,7 @@
     function startBlurHorizonCheck() {
       inBlurHorizonCheck = true;
       snellenCanvas.style.display = "block";
-      acuityLabel.innerText = "Push Phone Slowly Toward Arm's Reach";
+      acuityLabel.innerText = "Keep Eyes on Crosshair • Push Phone Back";
       drawTumblingE('RIGHT', 45, 30);
       examControls.className = "controls-wrap align-center";
       examControls.innerHTML = `
@@ -632,9 +648,7 @@
       inBlurHorizonCheck = false;
       const liveCm = smoothedDistanceCm || 46.0;
       if (didBlur) {
-        // Clamp blur horizon between 25 cm and 62 cm
         blurHorizonCm = Math.max(25.0, Math.min(62.0, liveCm));
-        // Lock test distance slightly inside their clear zone (or 40 cm)
         lockedDistanceCm = Math.max(35.0, Math.min(45.0, blurHorizonCm - 4.0));
       } else {
         blurHorizonCm = null;
@@ -648,7 +662,7 @@
         ? `Blur Pt: ${blurHorizonCm.toFixed(0)}cm`
         : `Clear @ Arm's Reach`;
       showGatePrompt(
-        "🪑 KEEP LINE IN CENTER OF FACE • COVER RIGHT EYE",
+        "🎯 KEEP EYES ON CROSSHAIR • COVER RIGHT EYE",
         "Stage 2 of 6 • Tap With Left Hand (Controls Shift Left)",
         "TAP ONCE YOUR RIGHT EYE IS COVERED"
       );
@@ -728,7 +742,7 @@
 
     function updateRoadmapUI() {
       const labels = [
-        "Stage 1: Push Phone Back Until Letter Blurs (Far-Point Rx)",
+        "Stage 1: Put Eyes on Crosshair • Push Back Until Blur",
         "Stage 2: Left Eye Acuity (Cover Right • Controls Shift LEFT)",
         "Stage 3: Right Eye Acuity (Cover Left • Controls Shift RIGHT)",
         "Stage 4: Binocular Acuity (Both Open • Controls CENTERED)",
@@ -757,7 +771,6 @@
       if (examStage === 3) stageName = "Right Eye";
       if (examStage === 4) stageName = "Binocular";
 
-      // Require 3 hits per line for clinical accuracy
       acuityLabel.innerText = `${stageName} • Near: 20/${currentDenominator} • Hits: ${levelHits}/3`;
 
       let roadmapStepId = (examStage === 2) ? "rs2" : (examStage === 3) ? "rs3" : "rs4";
@@ -820,7 +833,7 @@
       acuityLabel.innerText = "Stage 3: Right Eye Setup";
       scaleReadout.innerText = `O.S. Near 20/${osDenom}`;
       showGatePrompt(
-        "🪑 KEEP LINE IN CENTER OF FACE • COVER LEFT EYE",
+        "🎯 KEEP EYES ON CROSSHAIR • COVER LEFT EYE",
         `Left Eye Near 20/${osDenom} • Controls Shift Right`,
         "TAP ONCE YOUR LEFT EYE IS COVERED"
       );
@@ -832,7 +845,7 @@
       acuityLabel.innerText = "Stage 4: Binocular Setup";
       scaleReadout.innerText = `O.D. Near 20/${odDenom}`;
       showGatePrompt(
-        "🪑 KEEP LINE IN CENTER OF FACE • BOTH EYES OPEN",
+        "🎯 KEEP EYES ON CROSSHAIR • BOTH EYES OPEN",
         `Right Eye Near 20/${odDenom} • Controls Centered`,
         "TAP ONCE BOTH EYES ARE OPEN"
       );
@@ -844,7 +857,7 @@
       acuityLabel.innerText = "Stage 5: Reading Intake Setup";
       scaleReadout.innerText = `O.U. Near 20/${ouDenom}`;
       showGatePrompt(
-        "🪑 KEEP LINE IN CENTER OF FACE • HOLD WITH BOTH HANDS",
+        "🎯 KEEP EYES ON CROSSHAIR • HOLD WITH BOTH HANDS",
         `Binocular Near 20/${ouDenom} • 8 Quick Words`,
         "TAP TO BEGIN READING INTAKE"
       );
@@ -939,11 +952,11 @@
       blurHorizonCm = null;
       examControls.className = "controls-wrap align-center";
       updateStageUI();
-      acuityLabel.innerText = "Stage 1: Far-Point Blur Horizon Check";
+      acuityLabel.innerText = "Stage 1: Eye-Level Crosshair & Blur Horizon";
       scaleReadout.innerText = "Ready";
       showGatePrompt(
-        "🪑 KEEP LINE IN CENTER OF FACE • REMOVE GLASSES",
-        "Step 1: Find Where Your Clear Vision Starts Turning Blurry",
+        "🎯 PUT YOUR EYES ON THE CROSSHAIR • REMOVE GLASSES",
+        "Tilt Top of Phone Forward Slightly So Your Eyes Show in Box",
         "TAP TO START BLUR-POINT CHECK"
       );
     }
@@ -968,18 +981,30 @@
       if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
         const lm = results.multiFaceLandmarks[0];
 
-        // 1. Center-Line Nose Alignment Check (Landmark 168 = Mid-Brow / Nose Bridge)
-        const noseMid = lm[168] || lm[1];
-        if (noseMid) {
-          const offsetFromCenter = Math.abs(noseMid.x - 0.5);
-          if (offsetFromCenter <= 0.07) {
+        // 1. 2D Crosshair Alignment Check (Horizontal X + Vertical Pitch Y on Landmark 168 Between Eyes)
+        const noseBridge = lm[168] || lm[1];
+        if (noseBridge) {
+          const offsetX = Math.abs(noseBridge.x - 0.50);
+          // Because video uses object-position: center 22%, upper sensor y (~0.18 to 0.52) maps onto the crosshair
+          const inVerticalWindow = (noseBridge.y >= 0.16 && noseBridge.y <= 0.56);
+
+          if (offsetX <= 0.08 && inVerticalWindow) {
             centerGuideLine.classList.add('locked');
+            eyeHorizonLine.classList.add('locked');
             centerGuidePill.classList.add('locked');
-            centerGuidePill.innerText = "FACE CENTERED ✓";
+            centerGuidePill.innerText = "EYES LOCKED ON CROSSHAIR ✓";
+          } else if (!inVerticalWindow) {
+            centerGuideLine.classList.remove('locked');
+            eyeHorizonLine.classList.remove('locked');
+            centerGuidePill.classList.remove('locked');
+            centerGuidePill.innerText = noseBridge.y < 0.16
+              ? "TILT TOP OF PHONE TOWARD YOU"
+              : "RAISE PHONE TO EYE LEVEL";
           } else {
             centerGuideLine.classList.remove('locked');
+            eyeHorizonLine.classList.remove('locked');
             centerGuidePill.classList.remove('locked');
-            centerGuidePill.innerText = "KEEP LINE IN CENTER OF FACE";
+            centerGuidePill.innerText = "CENTER NOSE ON VERTICAL LINE";
           }
         }
 
@@ -1001,7 +1026,7 @@
           eyeStateFrameCount = 1;
         }
 
-        // 3. IPD Distance Calculation (Unlocked during Stage 1 Blur Horizon Check up to 70cm)
+        // 3. IPD Distance Calculation
         const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
         const pPx = Math.hypot((lp.x - rp.x) * videoElement.videoWidth, (lp.y - rp.y) * videoElement.videoHeight);
 
@@ -1035,8 +1060,9 @@
         eyeStateVal.innerText = confirmedEyeState;
       } else {
         centerGuideLine.classList.remove('locked');
+        eyeHorizonLine.classList.remove('locked');
         centerGuidePill.classList.remove('locked');
-        centerGuidePill.innerText = "KEEP LINE IN CENTER OF FACE";
+        centerGuidePill.innerText = "ALIGN EYES ON CROSSHAIR";
       }
     }
 
