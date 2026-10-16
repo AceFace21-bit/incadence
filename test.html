@@ -3,14 +3,14 @@
   USPTO PROVISIONAL PATENT APPLICATION NO. 64/174,835
   Terrance Watkins • Patent Pending 64/174,835
   CONFIDENTIAL PROPRIETARY TELEMETRY SYSTEM - UNAUTHORIZED REPRODUCTION PROHIBITED
-  PROJECT EYES v3.68 - BROADCAST WEATHER ALERT DUAL-TONE (853Hz+960Hz) + SMOOTH GEMINI VOICE + FULL BUILD TXT
+  PROJECT EYES v3.70 - BROADCAST ALERT BUZZ + HIGH-OCTANE GEMINI VOICE PROMPTS + FULL BUILD TXT
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.68 | Terrance Watkins • Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.70 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
     * {
       box-sizing: border-box; margin: 0; padding: 0;
@@ -325,7 +325,7 @@
   <!-- PIN VAULT OVERLAY (LAYERS 1 & 2: USPTO PRIORITY + CONFIDENTIAL BETA AGREEMENT) -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">🔒 Project Eyes v3.68</div>
+      <div class="vault-title">🔒 Project Eyes v3.70</div>
       <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
       <div class="nda-box">
         <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
@@ -409,7 +409,7 @@
             <div class="report-label">Right Eye (O.D.) Glasses &amp; Contacts</div>
             <div class="report-val" id="repOD">--</div>
             <div class="report-sub" id="rxOD">👓 Glasses: --</div>
-            <div class="report-cl" id="clOD">💧 Contacts: --</div>
+            <div class="report-cl" id="clOS">💧 Contacts: --</div>
           </div>
           <div class="report-item">
             <div class="report-label">Acuity Split (Left / Right)</div>
@@ -439,7 +439,7 @@
       <div>
         <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
         <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.68</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.70</div>
       </div>
       <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
@@ -498,8 +498,8 @@
 
   <script>
     /* =========================================================================
-       AUDIO ENGINE: OFFICIAL EAS BROADCAST WEATHER ALERT DUAL-TONE (853 Hz + 960 Hz)
-       Synthesizes simultaneous 853 Hz + 960 Hz harmonic frequencies lasting 1.25 seconds,
+       AUDIO ENGINE: BROADCAST DUAL-TONE (853 Hz + 960 Hz) + NATURAL GEMINI VOICE
+       Every single voice command plays the authentic broadcast weather warning tone,
        followed immediately by the smooth Gemini female voice.
        ========================================================================= */
     let _audioCtx = null;
@@ -515,9 +515,8 @@
         }
 
         const now = _audioCtx.currentTime;
-        const dur = 1.25; // 1.25-second sustained broadcast alarm buzz
+        const dur = 1.25; // 1.25-second sustained broadcast alert
 
-        // Master Gain
         const masterGain = _audioCtx.createGain();
         masterGain.gain.setValueAtTime(0.001, now);
         masterGain.gain.linearRampToValueAtTime(0.24, now + 0.04);
@@ -525,16 +524,14 @@
         masterGain.gain.linearRampToValueAtTime(0.001, now + dur);
         masterGain.connect(_audioCtx.destination);
 
-        // Tone 1: 853 Hz (Official FCC EAS Attention Signal Low)
         const osc1 = _audioCtx.createOscillator();
         osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(853, now);
+        osc1.frequency.setValueAtTime(853, now); // EAS 853 Hz
         osc1.connect(masterGain);
 
-        // Tone 2: 960 Hz (Official FCC EAS Attention Signal High)
         const osc2 = _audioCtx.createOscillator();
         osc2.type = 'sine';
-        osc2.frequency.setValueAtTime(960, now);
+        osc2.frequency.setValueAtTime(960, now); // EAS 960 Hz
         osc2.connect(masterGain);
 
         osc1.start(now);
@@ -575,17 +572,17 @@
 
     function speakGemini(text) {
       if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel(); // Stop any pending speech
+      window.speechSynthesis.cancel(); // Stop prior speech immediately
 
-      // Sound the sustained EAS weather alert buzz
+      // Fire the broadcast alert tone first
       _playBroadcastAlertBuzzer();
 
-      // Delay speech slightly past the 1.25s alert tone so the broadcast sounds distinct and commanding
+      // Pause for the 1.25s alert tone to ring out, then drop the smooth Gemini voice
       setTimeout(() => {
         const utt = new SpeechSynthesisUtterance(text);
         if (_activeVoice) utt.voice = _activeVoice;
         utt.pitch = 1.02; // Warm, smooth, authoritative
-        utt.rate = 0.94;  // Natural cadence
+        utt.rate = 0.94;  // Natural conversational tempo
         utt.volume = 1.0;
         window.speechSynthesis.speak(utt);
       }, 1320);
@@ -741,16 +738,20 @@
       _lCm = Math.max(34.0, Math.min(60.0, lv));
       if (_lNPx > 10) _nK = _lCm * _lNPx;
       _st = 2; _uSUI();
+      const roundedDist = Math.round(_lCm);
       const tS = `${_lCm.toFixed(1)} cm`;
       _aLb.innerText = "Step 2: Left Eye Calibration";
       _sRd.innerText = `Target: ${tS}`;
       _setC(
         "⚡ STEP 2: MEASURE LEFT EYE (GLASSES & CONTACTS)", "LEFT EYE RX",
-        "Stay at <span class='coach-highlight'>Target: " + tS + "</span> to measure <span class='coach-highlight'>LEFT EYE</span>.",
+        "Stay at <span class='coach-highlight'>Target: " + tS + "</span> (±5 cm play).",
         "Cover <span class='coach-highlight'>RIGHT EYE</span> with your RIGHT hand.",
         "Tap <span class='coach-highlight'>BLUE BUTTON</span> with your LEFT hand!"
       );
-      speakGemini("Distance locked. Now gently cover your right eye with your right hand. When you are ready, tap the blue button to begin your left eye check.");
+
+      // Custom voice prompt with exact distance, top-left HUD pointer, and ±5cm chill-out buffer
+      speakGemini(`Distance locked at ${roundedDist} centimeters. Make sure you stay right around that distance. Your live distance is displayed right in the top left of your camera view. You only have to stay within five centimeters either way, so don't trip or freeze up like a statue—just stay chill in your chair. Now cover your right eye with your right hand, and tap the blue button to start.`);
+
       _sGP("👉 TAP HERE ONCE YOUR RIGHT EYE IS COVERED WITH YOUR HAND 👈");
     };
 
@@ -763,19 +764,19 @@
           "Keep <span class='coach-highlight'>RIGHT EYE COVERED</span> for Left Eye Rx.",
           "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to match the 'E'.",
           "Tap red <span class='coach-highlight'>TOO BLURRY</span> to lock Left Eye Rx!");
-        speakGemini("Look at the E on your screen. Tap the matching direction on the pad. If it becomes too blurry to read, tap the red button.");
+        speakGemini("Look at the letter E on your screen. Tap the matching direction on the pad. If it gets too blurry to tell, just tap the red button.");
       } else if (_st === 3) {
         _setC("⚡ STEP 3: RIGHT EYE GLASSES & CONTACTS RX", "RIGHT D-PAD",
           "Keep <span class='coach-highlight'>LEFT EYE COVERED</span> for Right Eye Rx.",
           "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to match the 'E'.",
           "Tap red <span class='coach-highlight'>TOO BLURRY</span> to lock Right Eye Rx!");
-        speakGemini("Now for your right eye. Tap the direction the E points, or tap the red button if it's too blurry.");
+        speakGemini("Now for your right eye. Tap the direction the E points, or hit the red button if it gets too blurry.");
       } else {
         _setC("⚡ STEP 4: BOTH EYES BALANCE CHECK", "BOTH EYES OPEN",
           "<span class='coach-highlight'>UNCOVER BOTH EYES</span> & stay at " + dT + " cm.",
           "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to verify binocular Rx.",
           "Tap red <span class='coach-highlight'>TOO BLURRY</span> when you can't read it!");
-        speakGemini("Both eyes open now. Let's verify how your eyes balance together.");
+        speakGemini("Both eyes open now. Let's see how your eyes lock in and balance out together.");
       }
       _exC.className = "controls-wrap " + (_st === 2 ? "align-left" : _st === 3 ? "align-right" : "align-center");
       _exC.innerHTML =
@@ -841,7 +842,7 @@
           "Stay at <span class='coach-highlight'>Target: " + dT + " cm</span> to measure <span class='coach-highlight'>RIGHT EYE</span>.",
           "Cover <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand.",
           "Tap <span class='coach-highlight'>BLUE BUTTON</span> with your RIGHT hand!");
-        speakGemini("Great work on your left eye. Now cover your left eye with your left hand, and tap the blue button when you are set.");
+        speakGemini("Great job on your left eye. Now switch and cover your left eye with your left hand. Tap the blue button when you're set.");
         _sGP("👉 TAP HERE ONCE YOUR LEFT EYE IS COVERED WITH YOUR HAND 👈");
       } else if (_st === 3) {
         _st = 4; _uSUI(); _aLb.innerText = "Step 4: Uncover Both Eyes"; _sRd.innerText = `R Line: 20/${_odD}`;
@@ -849,7 +850,7 @@
           "<span class='coach-highlight'>OPEN BOTH EYES</span> at Target: " + dT + " cm.",
           "Balancing <span class='coach-highlight'>LEFT & RIGHT EYE</span> Glasses + Contacts Rx.",
           "Tap <span class='coach-highlight'>BLUE BUTTON</span> to test both eyes together!");
-        speakGemini("Now uncover both eyes. Tap the blue button to check how both eyes function as one.");
+        speakGemini("Now uncover both eyes. Tap the blue button to check how both eyes balance out together.");
         _sGP("👉 TAP HERE ONCE BOTH EYES ARE UNCOVERED 👈");
       } else if (_st === 4) {
         _st = 5; _uSUI(); _aLb.innerText = "Step 5: Reading Check"; _sRd.innerText = `O.U. 20/${_ouD}`;
@@ -857,7 +858,7 @@
           "Keep <span class='coach-highlight'>BOTH EYES OPEN</span> in your chair.",
           "8 words will appear in the white box below.",
           "<span class='coach-highlight'>TAP EACH WORD IN ORDER</span> to unlock your Glasses & Contacts Rx!");
-        speakGemini("Almost there. You will see eight words appear. Tap each word in order from left to right as quickly and comfortably as you can.");
+        speakGemini("Almost there. You will see eight words appear. Tap each word in order from left to right as comfortably as you can.");
         _sGP("👉 TAP HERE TO SHOW THE 8 WORDS 👈");
       }
     }
@@ -901,6 +902,7 @@
         `💧 <span class='coach-highlight'>CONTACTS RX</span>: Left ${osM.shortContacts} | Right ${odM.shortContacts}`,
         "Tap <span class='coach-highlight'>PRINT OFFICIAL RX</span> below to print your prescription!");
 
+      // Final voice wrap-up with credit
       speakGemini(`Your vision assessment is complete. Your glasses prescription is ${osM.shortGlasses} for your left eye, and ${odM.shortGlasses} for your right eye. You can print your complete report below. Brought to you by Terrance Watkins.`);
 
       document.getElementById('repOS').innerText = `${osM.snellen20Ft} (20-Ft Eq)`;
@@ -1026,7 +1028,7 @@
           }
           if (_lCm !== null && _st >= 2) {
             _tLb.innerText = "Target:"; _zVl.innerText = `${_lCm.toFixed(1)} cm`;
-            const ok = Math.abs(_sCm - _lCm) <= 3.5;
+            const ok = Math.abs(_sCm - _lCm) <= 5.0; // 5 cm play buffer
             _zVl.style.color = ok ? "#4ade80" : "#fbbf24"; _cBx.style.borderColor = ok ? "#4ade80" : "#fbbf24";
           } else {
             _tLb.innerText = "Target:"; _zVl.innerText = _inB ? "Find Blur" : "35–55 cm";
