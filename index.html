@@ -1,601 +1,1018 @@
+<!-- 
+  Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
+  PATENT PENDING: USPTO Provisional Application No. 64/174,835
+  Terrance Watkins • Patent Pending 64/174,835
+  CONFIDENTIAL PROPRIETARY TELEMETRY SYSTEM - UNAUTHORIZED REPRODUCTION PROHIBITED
+  PROJECT EYES v3.65 - VOICE-GUIDED ACCESSIBILITY + VISUAL STEP CHECKMARKS + LAYERS 1, 2 & 3 SHIELD
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>In Cadence | Veteran Access Platform</title>
-  
-  <!-- Privacy-friendly analytics by Plausible with Tagged Events Extension -->
-  <script defer data-domain="aceface21-bit.github.io" src="https://plausible.io/js/script.tagged-events.js"></script>
-  <script>
-    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};
-  </script>
-
-  <!-- Tailwind CSS & Lucide Icons -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Mapbox GL JS -->
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Project Eyes v3.65 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    * {
+      box-sizing: border-box; margin: 0; padding: 0;
+      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+      -webkit-touch-callout: none;
+    }
+    html, body {
+      width: 100%; height: 100dvh; overflow: hidden;
+      background-color: #0b0f19; color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      -webkit-tap-highlight-color: transparent;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: space-between; padding: 5px 10px;
     }
-    .font-mono-code {
-      font-family: 'JetBrains Mono', monospace;
+    #pinVaultOverlay {
+      position: fixed; inset: 0; background: #070a12; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 18px; text-align: center;
     }
-    .mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right {
-      transform: scale(0.7);
-      transform-origin: bottom left;
-      left: 6px !important;
-      bottom: 2px !important;
-      right: auto !important;
+    .vault-card {
+      width: 100%; max-width: 365px; background: #111827;
+      border: 2px solid #38bdf8; border-radius: 14px; padding: 18px 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.85);
     }
-    .radar-crosshair {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
+    .vault-title { font-size: 16px; font-weight: 900; color: #f8fafc; margin-bottom: 4px; }
+    .vault-sub {
+      font-size: 9.5px; font-weight: 900; color: #38bdf8;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
     }
+    .nda-box {
+      background: rgba(15, 23, 42, 0.95); border: 1.5px solid #fde047;
+      border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; text-align: left;
+    }
+    .nda-title {
+      font-size: 8.5px; font-weight: 900; color: #fde047;
+      text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px;
+    }
+    .nda-text {
+      font-size: 8px; font-weight: 700; color: #cbd5e1; line-height: 1.35;
+    }
+    .vault-input {
+      width: 100%; background: #0b0f19; border: 2px solid #334155;
+      color: #fde047; font-size: 24px; font-weight: 900; text-align: center;
+      letter-spacing: 8px; padding: 9px; border-radius: 8px; margin-bottom: 10px; outline: none;
+      -webkit-user-select: text; user-select: text;
+    }
+    .vault-btn {
+      width: 100%; background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fff; border: 1px solid #38bdf8; padding: 12px;
+      font-size: 11px; font-weight: 900; border-radius: 8px;
+      text-transform: uppercase; cursor: pointer; letter-spacing: 0.3px;
+    }
+    .vault-err { color: #f87171; font-size: 10.5px; font-weight: 800; margin-top: 6px; min-height: 14px; }
+    header {
+      text-align: center; width: 100%; max-width: 600px;
+      display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 2px 4px;
+    }
+    .patent-pill {
+      background: rgba(56, 189, 248, 0.14); color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4); font-size: 8.5px; font-weight: 900;
+      letter-spacing: 0.4px; padding: 4px 10px; border-radius: 999px; text-transform: uppercase;
+      flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .voice-pill-btn {
+      background: rgba(253, 224, 71, 0.16); color: #fde047;
+      border: 1.5px solid #fde047; font-size: 9px; font-weight: 900;
+      padding: 4px 9px; border-radius: 999px; text-transform: uppercase;
+      cursor: pointer; flex-shrink: 0; display: flex; align-items: center; gap: 4px;
+    }
+    .voice-pill-btn:active { transform: scale(0.95); background: rgba(253, 224, 71, 0.3); }
+    .stage-bar { width: 100%; max-width: 600px; display: flex; gap: 4px; flex-shrink: 0; }
+    .stage-step {
+      flex: 1; text-align: center; padding: 6px 2px; font-size: 9.5px; font-weight: 900;
+      background: #111827; color: #94a3b8; border-radius: 7px;
+      border: 2px solid #334155; transition: all 0.2s ease;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .stage-step.active {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fde047; border-color: #fde047;
+      box-shadow: 0 0 12px rgba(253, 224, 71, 0.5); transform: scale(1.04);
+    }
+    .stage-step.done {
+      background: rgba(22, 163, 74, 0.28); color: #4ade80; border-color: #4ade80;
+    }
+    .camera-box {
+      position: relative; width: 100%; max-width: 600px; height: 118px;
+      border-radius: 10px; overflow: hidden; border: 2px solid #1e293b;
+      background: #000; flex-shrink: 0; transform: translateZ(0); -webkit-transform: translateZ(0);
+    }
+    #webcam { position: absolute; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: 1; }
+    #viewfinderCanvas {
+      position: relative; display: block; width: 100%; height: 100%;
+      z-index: 2; transform: translateZ(0); -webkit-transform: translateZ(0);
+    }
+    .center-guide-pill {
+      position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92); border: 1px solid rgba(250, 204, 21, 0.6);
+      color: #fde047; font-size: 8px; font-weight: 900; letter-spacing: 0.3px;
+      padding: 2px 8px; border-radius: 999px; text-transform: uppercase;
+      pointer-events: none; z-index: 4; white-space: nowrap;
+    }
+    .center-guide-pill.locked { border-color: rgba(74, 222, 128, 0.8); color: #4ade80; }
+    .hud-top, .hud-bottom {
+      position: absolute; left: 6px; right: 6px;
+      display: flex; justify-content: space-between; pointer-events: none; z-index: 4;
+    }
+    .hud-top { top: 4px; }
+    .hud-bottom { bottom: 4px; }
+    .badge {
+      background: rgba(15, 23, 42, 0.92); padding: 2px 6px; border-radius: 5px;
+      border: 1px solid #334155; font-size: 9.5px; font-weight: 800; color: #cbd5e1;
+    }
+    .badge-val { color: #38bdf8; font-size: 11.5px; font-weight: 900; margin-left: 2px; }
+    .coach-panel {
+      width: 100%; max-width: 600px;
+      background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+      border: 2.5px solid #fde047; border-radius: 12px; padding: 7px 10px;
+      flex-shrink: 0; box-shadow: 0 6px 20px rgba(253, 224, 71, 0.14);
+    }
+    .coach-header {
+      font-size: 11px; font-weight: 900; color: #0f172a; background: #fde047;
+      text-transform: uppercase; letter-spacing: 0.4px; padding: 4px 8px;
+      border-radius: 6px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .coach-badge-pill { background: #0f172a; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 900; cursor: pointer; }
+    .coach-list { display: flex; flex-direction: column; gap: 4px; }
+    .coach-line {
+      font-size: 11.5px; font-weight: 800; color: #ffffff; line-height: 1.25;
+      background: #1e293b; padding: 5px 9px; border-radius: 7px; border-left: 4px solid #38bdf8;
+    }
+    .coach-highlight { color: #fde047; font-weight: 900; text-decoration: underline; text-underline-offset: 2px; }
+    .optotype-card {
+      position: relative; width: 100%; max-width: 600px; height: 112px;
+      background: #ffffff; color: #0f172a; border-radius: 10px; padding: 4px 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); flex-shrink: 0;
+    }
+    .card-header {
+      width: 100%; display: flex; justify-content: space-between; font-size: 8.5px;
+      font-weight: 900; color: #475569; border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 2px; text-transform: uppercase;
+    }
+    .optotype-viewport {
+      position: absolute; top: 20px; bottom: 4px; left: 8px; right: 8px;
+      display: flex; align-items: center; justify-content: center; background: #ffffff; overflow: hidden;
+    }
+    #snellenCanvas { display: none; transition: opacity 0.06s ease; }
+    #gatePromptBtn {
+      width: 100%; height: 100%; background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #ffffff; border: 2.5px solid #38bdf8; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; padding: 8px 14px;
+      cursor: pointer; text-align: center; user-select: none;
+    }
+    #gatePromptBtn:active { background: #0369a1; border-color: #fde047; }
+    .gate-main { font-size: 15px; font-weight: 900; line-height: 1.25; text-transform: uppercase; color: #ffffff; letter-spacing: 0.3px; }
+    #readingBox { display: none; width: 100%; text-align: center; font-weight: 800; font-size: 13px; }
+    #reportBox { display: none; width: 100%; text-align: left; }
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .report-item { background: #f1f5f9; padding: 3px 6px; border-radius: 4px; border-left: 3px solid #0284c7; }
+    .report-label { font-size: 6.5px; font-weight: 800; color: #64748b; text-transform: uppercase; }
+    .report-val { font-size: 9.5px; font-weight: 900; color: #0f172a; line-height: 1.15; }
+    .report-sub { font-size: 7.5px; font-weight: 800; color: #0284c7; line-height: 1.15; }
+    .report-cl { font-size: 7.5px; font-weight: 900; color: #0f766e; line-height: 1.15; }
+    .controls-wrap {
+      width: 100%; max-width: 600px; display: flex; align-items: center;
+      justify-content: center; gap: 10px; height: 122px; padding: 0 4px;
+      flex-shrink: 0; transition: all 0.25s ease;
+    }
+    .controls-wrap.align-left { justify-content: flex-start; flex-direction: row; }
+    .controls-wrap.align-right { justify-content: flex-end; flex-direction: row-reverse; }
+    .controls-wrap.align-center { justify-content: center; flex-direction: row; }
+    .dpad-cross {
+      display: grid; grid-template-columns: 44px 44px 44px; grid-template-rows: 38px 38px 38px;
+      gap: 3px; background: radial-gradient(circle, #1e293b 0%, #0f172a 75%);
+      padding: 4px; border-radius: 50%; border: 2px solid #334155;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.65), 0 4px 10px rgba(0,0,0,0.45);
+    }
+    button {
+      background: #1e293b; color: #f8fafc; border: 1px solid #334155;
+      padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;
+    }
+    button.dpad-btn {
+      width: 44px; height: 38px; background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+      color: #f8fafc; border: 2px solid #64748b; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; font-size: 8.5px; font-weight: 900;
+      padding: 1px; line-height: 1; user-select: none; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+    button.dpad-up { grid-column: 2; grid-row: 1; border-radius: 9px 9px 3px 3px; }
+    button.dpad-left { grid-column: 1; grid-row: 2; border-radius: 9px 3px 3px 9px; }
+    .dpad-center {
+      grid-column: 2; grid-row: 2; background: #0b0f19; border-radius: 50%;
+      border: 1.5px solid #334155; display: flex; align-items: center;
+      justify-content: center; color: #38bdf8; font-size: 11px; pointer-events: none;
+    }
+    button.dpad-right { grid-column: 3; grid-row: 2; border-radius: 3px 9px 9px 3px; }
+    button.dpad-down { grid-column: 2; grid-row: 3; border-radius: 3px 3px 9px 9px; }
+    .dpad-tri { font-size: 13px; color: #38bdf8; line-height: 1; margin-bottom: 1px; }
+    button.dpad-btn:active { background: #0284c7; color: #fde047; border-color: #fde047; transform: scale(0.95); }
+    button.dpad-btn:active .dpad-tri { color: #fde047; }
+    button.cant-see-btn {
+      height: 118px; width: 92px; background: rgba(220, 38, 38, 0.22);
+      color: #fca5a5; border: 2px solid rgba(248, 113, 113, 0.55); border-radius: 12px;
+      font-size: 10.5px; font-weight: 900; padding: 6px; text-transform: uppercase;
+      line-height: 1.25; display: flex; align-items: center; justify-content: center; text-align: center;
+    }
+    .horizon-deck { width: 100%; display: flex; gap: 6px; height: 114px; }
+    .horizon-btn-blur {
+      flex: 1.35; background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #0f172a; border: 2px solid #fde047; border-radius: 10px;
+      font-size: 11.5px; font-weight: 900; text-transform: uppercase; padding: 6px 8px; line-height: 1.2;
+    }
+    .horizon-btn-shrink {
+      flex: 1; background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #ffffff; border: 2px solid #38bdf8; border-radius: 10px;
+      font-size: 11px; font-weight: 900; text-transform: uppercase; padding: 6px 8px; line-height: 1.2;
+    }
+    .print-rx-btn {
+      width: 100%; height: 106px; background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
+      color: #ffffff; border: 2.5px solid #38bdf8; border-radius: 12px;
+      font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.4px;
+      line-height: 1.35; box-shadow: 0 6px 18px rgba(56, 189, 248, 0.25);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .print-rx-btn:active { transform: scale(0.98); background: #0369a1; }
+    .bottom-bar {
+      width: 100%; max-width: 600px; display: flex; align-items: center;
+      justify-content: space-between; gap: 8px; flex-shrink: 0;
+    }
+    .reset-btn { padding: 4px 10px; font-size: 9.5px; }
+    footer { font-size: 8.5px; font-weight: 800; color: #94a3b8; text-align: right; white-space: nowrap; }
+    #printableRxSheet { display: none; }
 
-    /* Red, White, & Blue Wave Animation */
-    @keyframes patriotWave {
-      0% {
-        background-position: 0% center;
+    @media print {
+      @page { size: portrait; margin: 12mm; }
+      html, body {
+        background: #ffffff !important; color: #000000 !important;
+        height: auto !important; overflow: visible !important; display: block !important; padding: 0 !important;
       }
-      100% {
-        background-position: 200% center;
+      #pinVaultOverlay, header, .stage-bar, .camera-box, .coach-panel, .optotype-card, .controls-wrap, .bottom-bar {
+        display: none !important;
       }
-    }
-
-    .patriot-wave-text {
-      background: linear-gradient(
-        90deg, 
-        #ef4444 0%, 
-        #f8fafc 25%, 
-        #3b82f6 50%, 
-        #ef4444 75%, 
-        #f8fafc 100%
-      );
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: patriotWave 4s linear infinite;
-      display: inline-block;
+      #printableRxSheet {
+        display: block !important; width: 100%; max-width: 720px; margin: 0 auto;
+        border: 3px solid #0f172a; padding: 20px 24px;
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #0f172a; background: #ffffff;
+      }
+      .prx-header {
+        border-bottom: 3px solid #0f172a; padding-bottom: 12px; margin-bottom: 16px;
+        display: flex; justify-content: space-between; align-items: flex-start;
+      }
+      .prx-title { font-size: 22px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; color: #0f172a; }
+      .prx-inventor { font-size: 13px; font-weight: 900; color: #0284c7; margin-top: 3px; text-transform: uppercase; }
+      .prx-patent { font-size: 11px; font-weight: 800; color: #334155; margin-top: 2px; }
+      .prx-seal {
+        text-align: right; border: 2px solid #0f172a; padding: 6px 10px;
+        border-radius: 6px; font-size: 10px; font-weight: 900; text-transform: uppercase;
+      }
+      .prx-meta-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc;
+        border: 1.5px solid #cbd5e1; padding: 10px 14px; border-radius: 6px; margin-bottom: 18px; font-size: 11.5px;
+      }
+      .prx-meta-row strong { font-weight: 900; text-transform: uppercase; color: #0f172a; }
+      .prx-section-title {
+        font-size: 13px; font-weight: 900; text-transform: uppercase; background: #0f172a;
+        color: #ffffff; padding: 6px 10px; margin-bottom: 10px; letter-spacing: 0.4px;
+      }
+      .prx-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+      .prx-table th, .prx-table td { border: 1.5px solid #0f172a; padding: 9px 10px; text-align: left; font-size: 12px; }
+      .prx-table th { background: #e2e8f0; font-weight: 900; text-transform: uppercase; font-size: 11px; }
+      .prx-table td { font-weight: 800; }
+      .prx-sig-box {
+        margin-top: 24px; padding-top: 14px; border-top: 2px dashed #64748b;
+        display: flex; justify-content: space-between; align-items: flex-end;
+      }
+      .prx-sig-line { width: 55%; border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 10.5px; font-weight: 800; }
+      .prx-footer-stamp {
+        margin-top: 18px; text-align: center; font-size: 10px; font-weight: 900;
+        text-transform: uppercase; color: #334155; background: #f1f5f9; padding: 8px; border: 1px solid #cbd5e1;
+      }
     }
   </style>
+
+  <!-- LAYER 3: ANTI-INSPECT / ANTI-COPY / FAILSAFE PIN GUARD (SUPPORTS 3206 & 1982) -->
+  <script>
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('copy', function(e) { e.preventDefault(); });
+    document.addEventListener('cut', function(e) { e.preventDefault(); });
+    document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+    document.addEventListener('keydown', function(e) {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+        (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'U' || e.key === 'u')) ||
+        (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    window._lastSpokenPrompt = "Tap the blue bar below to begin your vision check.";
+    window._voiceEnabled = true;
+
+    window._0xSpeak = function(text) {
+      if (text) window._lastSpokenPrompt = text;
+      if (!window._voiceEnabled || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        var utter = new SpeechSynthesisUtterance(window._lastSpokenPrompt);
+        utter.rate = 0.96;
+        utter.pitch = 1.0;
+        utter.volume = 1.0;
+        window.speechSynthesis.speak(utter);
+      } catch (err) {}
+    };
+
+    window._0xReplayVoice = function() {
+      window._voiceEnabled = true;
+      window._0xSpeak(window._lastSpokenPrompt);
+    };
+
+    window.checkVaultPin = function() {
+      var box = document.getElementById('vaultPinInput');
+      var err = document.getElementById('vaultErrMsg');
+      if (!box) return;
+      var digits = box.value.replace(/[^0-9]/g, '');
+      var enc = digits.length === 4 ? window.btoa(digits) : '';
+      if (digits.length === 4 && (enc === 'MzIwNg==' || enc === 'MTk4Mg==')) {
+        document.getElementById('pinVaultOverlay').style.display = 'none';
+        if (typeof window.startEyesEngine === 'function') window.startEyesEngine();
+      } else if (digits.length >= 4) {
+        err.innerText = 'UNAUTHORIZED ACCESS CODE';
+      } else {
+        err.innerText = '';
+      }
+    };
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 h-[100dvh] w-screen overflow-hidden flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-slate-950 select-none">
+<body>
 
-  <!-- Header -->
-  <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur px-3 py-2 shrink-0 z-50">
-    <div class="max-w-md mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <div class="w-6 h-6 rounded bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-        </div>
-        <div>
-          <span class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none block">In Cadence</span>
-          <span class="text-[8px] text-emerald-400 font-mono-code tracking-wide block mt-0.5">FORWARD MARCH TRANSIT // ALL-VISN</span>
+  <!-- PIN VAULT OVERLAY (LAYERS 1 & 2: USPTO PRIORITY + CONFIDENTIAL BETA AGREEMENT) -->
+  <div id="pinVaultOverlay">
+    <div class="vault-card">
+      <div class="vault-title">🔒 Project Eyes v3.65</div>
+      <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
+      <div class="nda-box">
+        <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
+        <div class="nda-text">
+          Protected under USPTO Provisional Patent Application No. <strong>64/174,835</strong> (Inventor: <strong>Terrance Lamont Watkins</strong>). By entering your tester PIN and unlocking this system, you agree that this software is strictly confidential and that you will not copy, share, forward, or reverse-engineer any part of this system.
         </div>
       </div>
-
-      <div class="flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-[8px] font-medium text-slate-300">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>Zero-PII</span>
-      </div>
+      <div style="font-size: 10.5px; color: #cbd5e1; margin-bottom: 8px; font-weight: 700;">Enter 4-Digit Authorized Tester PIN:</div>
+      <input type="tel" id="vaultPinInput" class="vault-input" maxlength="4" placeholder="••••" oninput="window.checkVaultPin()" onkeyup="window.checkVaultPin()" />
+      <button class="vault-btn" type="button" onclick="window.checkVaultPin()">Accept Confidentiality &amp; Unlock</button>
+      <div class="vault-err" id="vaultErrMsg"></div>
     </div>
+  </div>
+
+  <!-- HEADER WITH PATENT PILL + VOICE REPLAY BUTTON -->
+  <header>
+    <div class="patent-pill" id="hwBadgePill">Terrance Watkins • Patent Pending 64/174,835</div>
+    <button type="button" class="voice-pill-btn" onclick="window._0xReplayVoice()">🔊 Repeat Voice</button>
   </header>
 
-  <!-- Main Viewport Dashboard -->
-  <main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0">
+  <!-- 6-STAGE PROGRESS BAR WITH LIVE POINTER & CHECKMARKS -->
+  <div class="stage-bar">
+    <div class="stage-step active" id="st1">👉 1. Blur</div>
+    <div class="stage-step" id="st2">2. Left</div>
+    <div class="stage-step" id="st3">3. Right</div>
+    <div class="stage-step" id="st4">4. Both</div>
+    <div class="stage-step" id="st5">5. Read</div>
+    <div class="stage-step" id="st6">6. Rx Score</div>
+  </div>
 
-    <!-- Compact ZIP & Geolocation Input Row -->
-    <section class="bg-slate-900/90 border border-slate-800 rounded-lg p-2 shrink-0 shadow-sm">
-      <div class="flex items-center justify-between mb-1">
-        <label for="zipInput" class="block text-[10px] font-bold uppercase tracking-wider patriot-wave-text">
-          Enter your zip code below
-        </label>
-        <span id="matchStatus" class="text-[9px] font-mono-code text-slate-500">Live Auto-Lookup</span>
+  <!-- BOX 1 UNDER THE 6 STEPS: CAMERA BOX -->
+  <div class="camera-box" id="cameraBox">
+    <video id="webcam" autoplay playsinline muted></video>
+    <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
+    <div class="hud-top">
+      <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
+      <div class="badge"><span id="targetLabel">Target:</span> <span id="zoneVal" class="badge-val" style="color: #fbbf24;">35–55 cm</span></div>
+    </div>
+    <div class="center-guide-pill" id="centerGuidePill">CENTER DOT ON CROSSHAIR</div>
+    <div class="hud-bottom">
+      <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
+      <div class="badge" id="devTypeBadge" style="font-size: 8.5px;">Auto Cal</div>
+    </div>
+  </div>
+
+  <!-- BOX 2 UNDER CAMERA BOX: COACH PANEL -->
+  <div class="coach-panel" id="coachPanel">
+    <div class="coach-header">
+      <span id="coachTitle">⚡ STEP 1 OF 6: GLASSES &amp; CONTACTS RX SETUP</span>
+      <span id="coachBadge" class="coach-badge-pill" onclick="window._0xReplayVoice()">🔊 STEP 1</span>
+    </div>
+    <div class="coach-list" id="coachList">
+      <div class="coach-line">1. Put in <span class="coach-highlight">STAND</span> &amp; remove glasses to measure <span class="coach-highlight">LEFT &amp; RIGHT EYE</span>.</div>
+      <div class="coach-line">2. Center <span class="coach-highlight">GREEN DOT</span> to calibrate <span class="coach-highlight">GLASSES &amp; CONTACTS RX</span>.</div>
+      <div class="coach-line">3. Tap the <span class="coach-highlight">BLUE BAR BELOW</span> to begin your vision check!</div>
+    </div>
+  </div>
+
+  <!-- BOX 3 UNDER COACH PANEL: OPTOTYPE & RESULTS CARD -->
+  <div class="optotype-card">
+    <div class="card-header">
+      <span id="acuityLabel">Step 1: Glasses &amp; Contacts Rx Calibration</span>
+      <span id="scaleReadout">Ready</span>
+    </div>
+    <div class="optotype-viewport">
+      <div id="gatePromptBtn" onclick="window._0xGate()">
+        <div class="gate-main" id="gateMainText">👉 TAP BLUE BAR BELOW TO BEGIN VISION CHECK 👈</div>
       </div>
-
-      <div class="flex space-x-1.5">
-        <div class="relative flex-1">
-          <input 
-            type="text" 
-            id="zipInput" 
-            pattern="[0-9]*" 
-            inputmode="numeric" 
-            maxlength="5" 
-            placeholder="5-digit ZIP..."
-            class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 rounded-md pl-2.5 pr-8 py-1.5 text-xs text-slate-100 placeholder-slate-500 font-mono-code transition outline-none"
-          >
-          <button 
-            type="button" 
-            id="clearZipBtn" 
-            class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 active:text-white p-0.5"
-          >
-            <i data-lucide="x" class="w-3.5 h-3.5"></i>
-          </button>
+      <canvas id="snellenCanvas"></canvas>
+      <div id="readingBox">
+        <div style="font-size: 8.5px; color: #0284c7; margin-bottom: 3px; font-weight: 900;">TAP EACH WORD IN ORDER FROM LEFT TO RIGHT:</div>
+        <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;"></div>
+      </div>
+      <div id="reportBox">
+        <div class="report-grid">
+          <div class="report-item">
+            <div class="report-label">Left Eye (O.S.) Glasses &amp; Contacts</div>
+            <div class="report-val" id="repOS">--</div>
+            <div class="report-sub" id="rxOS">👓 Glasses: --</div>
+            <div class="report-cl" id="clOS">💧 Contacts: --</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">Right Eye (O.D.) Glasses &amp; Contacts</div>
+            <div class="report-val" id="repOD">--</div>
+            <div class="report-sub" id="rxOD">👓 Glasses: --</div>
+            <div class="report-cl" id="clOD">💧 Contacts: --</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">Acuity Split (Left / Right)</div>
+            <div class="report-val" id="repOU">--</div>
+            <div class="report-sub" id="rxOU">Blur Edge: --</div>
+          </div>
+          <div class="report-item">
+            <div class="report-label">Reading &amp; Fatigue</div>
+            <div class="report-val" id="repWPM">-- WPM</div>
+            <div class="report-sub" id="rxLat">Optimal</div>
+          </div>
         </div>
-        <button 
-          id="geoBtn"
-          title="Detect Current Location"
-          class="bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold px-2.5 py-1.5 rounded-md text-[10px] uppercase tracking-wider flex items-center space-x-1 transition shrink-0"
-        >
-          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span id="geoBtnLabel">GPS</span>
-        </button>
       </div>
+    </div>
+  </div>
 
-      <div id="statusAlert" class="hidden text-[10px] py-1 px-2 mt-1 rounded bg-amber-500/10 border border-amber-500/20 text-amber-300"></div>
-    </section>
+  <div class="controls-wrap align-center" id="examControls"></div>
 
-    <!-- Tactical Target Map -->
-    <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative flex-1 min-h-[140px] max-h-[220px] shadow-sm flex flex-col">
-      <div class="px-2.5 py-1 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/70 shrink-0">
-        <div class="flex items-center space-x-1.5">
-          <i data-lucide="radar" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-300">Target Location View</span>
-        </div>
-        <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">STANDBY // NO FIX</span>
-      </div>
-      
-      <div class="relative w-full flex-1 bg-slate-950">
-        <div id="map" class="w-full h-full"></div>
+  <div class="bottom-bar">
+    <button class="reset-btn" onclick="window._0xReset()">Reset Check</button>
+    <footer>Terrance Watkins • Patent Pending 64/174,835</footer>
+  </div>
 
-        <!-- Center Radar Reticle -->
-        <div class="radar-crosshair w-28 h-28 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center">
-          <div class="w-16 h-16 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
-        </div>
-
-        <!-- Primary Call Button Anchored to Bottom Right -->
-        <div class="absolute bottom-2 right-2 pointer-events-none z-10">
-          <a 
-            id="centerCallBtn" 
-            href="tel:4123603620,1" 
-            class="plausible-event-name=Dialer+Click pointer-events-auto shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-md font-extrabold uppercase tracking-wider flex items-center space-x-1.5 transition transform active:scale-95 border border-emerald-300/60"
-          >
-            <i data-lucide="phone-call" class="w-3.5 h-3.5 fill-slate-950"></i>
-            <span id="centerCallText" class="text-[10px] font-mono-code tracking-wide">CALL TRANSIT HUB</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Facility Result Micro-Card -->
-    <section id="resultCard" class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 space-y-1.5 shadow-sm">
-      <div class="flex items-center justify-between">
-        <span id="hubBadge" class="text-[9px] font-mono-code font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 truncate max-w-[200px]">
-          SW Pennsylvania Hub
-        </span>
-        <span id="visnBadge" class="text-[10px] text-slate-400 font-mono-code shrink-0">VISN 4</span>
-      </div>
-
+  <!-- OFFICIAL PRINTABLE PRESCRIPTION DOCUMENT -->
+  <div id="printableRxSheet">
+    <div class="prx-header">
       <div>
-        <h2 id="facilityName" class="text-xs font-bold text-slate-100 leading-tight truncate">
-          VA Pittsburgh Healthcare System
-        </h2>
-        <p id="facilityAddress" class="text-[10px] text-slate-400 truncate">
-          University Drive & H.J. Heinz Divisions
-        </p>
+        <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
+        <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Lamont Watkins • Build v3.65</div>
       </div>
-
-      <div class="py-1 px-2 rounded bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-        <div class="truncate mr-2">
-          <div class="text-[8px] uppercase font-mono-code tracking-wider text-slate-400">Direct Travel Coordinator</div>
-          <div id="facilityPhone" class="text-[11px] font-bold text-emerald-400 font-mono-code truncate">412-360-3620 (Press 1)</div>
-        </div>
-        <a 
-          id="callBtn" 
-          href="tel:4123603620,1" 
-          class="plausible-event-name=Dialer+Click bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-emerald-500/40 text-emerald-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-wider flex items-center space-x-1 shrink-0"
-        >
-          <i data-lucide="phone" class="w-2.5 h-2.5"></i>
-          <span>Dial</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- Streamlined Secondary Actions & Modal Trigger -->
-    <div class="grid grid-cols-2 gap-1.5 shrink-0">
-      <!-- Nationwide Dispatch Dial -->
-      <a 
-        id="fallbackCallBtn"
-        href="tel:8555747292" 
-        class="plausible-event-name=Dialer+Click bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition"
-      >
-        <div class="truncate">
-          <div class="text-[9px] font-bold uppercase text-slate-200">National Fallback</div>
-          <div class="text-[9px] font-mono-code text-emerald-400">855-574-7292</div>
-        </div>
-        <i data-lucide="phone-forwarded" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1"></i>
-      </a>
-
-      <!-- Call Script Trigger Button (Tagged for Goal 3) -->
-      <button 
-        id="openScriptBtn" 
-        type="button" 
-        class="plausible-event-name=Call+Script+Opened bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition text-left"
-      >
-        <div>
-          <div class="text-[9px] font-bold uppercase text-slate-200">Call Script</div>
-          <div class="text-[9px] text-slate-400 font-mono-code">5-Step Guide</div>
-        </div>
-        <i data-lucide="help-circle" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1"></i>
-      </button>
+      <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-800/80 py-1.5 text-center text-slate-500 text-[8px] font-mono-code px-2 shrink-0">
-    <div class="text-slate-400 font-semibold tracking-wide truncate">
-      DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
+    <div class="prx-meta-grid">
+      <div class="prx-meta-row"><strong>Inventor:</strong> Terrance Lamont Watkins</div>
+      <div class="prx-meta-row"><strong>Patent Status:</strong> Patent Pending 64/174,835</div>
+      <div class="prx-meta-row"><strong>Locked Calibration Distance:</strong> <span id="prxLockedDist">--</span></div>
+      <div class="prx-meta-row"><strong>Measured Blur Horizon:</strong> <span id="prxBlurDist">--</span></div>
+      <div class="prx-meta-row"><strong>Hardware Calibration Profile:</strong> <span id="prxHwCal">--</span></div>
+      <div class="prx-meta-row"><strong>Exam Timestamp:</strong> <span id="prxDate">--</span></div>
     </div>
-  </footer>
-
-  <!-- Call Script Modal Overlay -->
-  <div id="scriptModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm p-4 flex items-center justify-center">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-4 space-y-3 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <div class="flex items-center space-x-2">
-          <i data-lucide="phone-outgoing" class="w-4 h-4 text-emerald-400"></i>
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-100">Call Script & Checklist</span>
-        </div>
-        <button id="closeScriptBtn" class="text-slate-400 hover:text-slate-100 p-1">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+    <div class="prx-section-title">1. REFRACTIVE EYEGLASSES &amp; CONTACT LENS PRESCRIPTION (O.S. / O.D.)</div>
+    <table class="prx-table">
+      <thead>
+        <tr>
+          <th>Eye</th>
+          <th>20-Ft Snellen Eq.</th>
+          <th>Near Line Read</th>
+          <th>Eyeglasses Rx (SPH / CYL / AXIS)</th>
+          <th>Contact Lens Rx (12mm Vertex)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>LEFT EYE (O.S.)</td>
+          <td id="prxOsSnellen">--</td>
+          <td id="prxOsNear">--</td>
+          <td id="prxOsGlasses">--</td>
+          <td id="prxOsContacts">--</td>
+        </tr>
+        <tr>
+          <td>RIGHT EYE (O.D.)</td>
+          <td id="prxOdSnellen">--</td>
+          <td id="prxOdNear">--</td>
+          <td id="prxOdGlasses">--</td>
+          <td id="prxOdContacts">--</td>
+        </tr>
+        <tr>
+          <td>BINOCULAR (O.U.)</td>
+          <td colspan="2" id="prxOuSummary">--</td>
+          <td colspan="2" id="prxWpmSummary">--</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="prx-sig-box">
+      <div class="prx-sig-line">Reviewing Optometrist / Ophthalmologist Telehealth Sign-Off Signature &amp; License #</div>
+      <div style="text-align: right; font-size: 11px; font-weight: 900;">
+        Invented By:<br>
+        <span style="font-size: 14px; color: #0284c7;">TERRANCE WATKINS • PATENT PENDING 64/174,835</span>
       </div>
-
-      <div class="space-y-2.5 text-xs text-slate-300">
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-slate-500 mt-0.5">01</span>
-          <p><span class="text-slate-100 font-semibold">Answer:</span> "Hello, Veterans Transportation Service, how can I help you?"</p>
-        </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">02</span>
-          <p><span class="text-emerald-400 font-semibold">Identify:</span> State your name and verify you are an eligible veteran.</p>
-        </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">03</span>
-          <p><span class="text-emerald-400 font-semibold">Request:</span> State you need a rideshare scheduled for your VA appointment.</p>
-        </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">04</span>
-          <p><span class="text-emerald-400 font-semibold">Details:</span> Provide appointment date/time or ask them to check the clinic record.</p>
-        </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">05</span>
-          <p><span class="text-emerald-400 font-semibold">Confirm:</span> State your physical pickup address and verify return transport.</p>
-        </div>
-      </div>
-
-      <button id="modalDismissBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider mt-2 border border-slate-700">
-        Close Script
-      </button>
+    </div>
+    <div class="prx-footer-stamp">
+      TERRANCE WATKINS • PATENT PENDING 64/174,835 • COPYRIGHT &copy; 2026 TERRANCE LAMONT WATKINS. ALL RIGHTS RESERVED.
     </div>
   </div>
 
   <script>
-    lucide.createIcons();
+    const _vEl = document.getElementById('webcam');
+    const _vfC = document.getElementById('viewfinderCanvas');
+    const _vfX = _vfC.getContext('2d');
+    const _cBx = document.getElementById('cameraBox');
+    const _cPl = document.getElementById('centerGuidePill');
+    const _dVl = document.getElementById('distVal');
+    const _tLb = document.getElementById('targetLabel');
+    const _zVl = document.getElementById('zoneVal');
+    const _eVl = document.getElementById('eyeStateVal');
+    const _sCv = document.getElementById('snellenCanvas');
+    const _sCx = _sCv.getContext('2d');
+    const _gBt = document.getElementById('gatePromptBtn');
+    const _gMn = document.getElementById('gateMainText');
+    const _rBx = document.getElementById('readingBox');
+    const _wCt = document.getElementById('wordContainer');
+    const _rpB = document.getElementById('reportBox');
+    const _sRd = document.getElementById('scaleReadout');
+    const _aLb = document.getElementById('acuityLabel');
+    const _exC = document.getElementById('examControls');
+    const _cTl = document.getElementById('coachTitle');
+    const _cBg = document.getElementById('coachBadge');
+    const _cLs = document.getElementById('coachList');
+    const _dBg = document.getElementById('devTypeBadge');
 
-    // Split Mapbox token segments to prevent automated scanner block
-    mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
-
-    const defaultHub = {
-      badge: "SW Pennsylvania Hub",
-      visn: "VISN 4",
-      name: "VA Pittsburgh Healthcare System",
-      desc: "University Drive & H.J. Heinz Divisions",
-      phone: "412-360-3620 (Press 1)",
-      cleanPhone: "4123603620,1",
-      coords: [-79.9600, 40.4444]
-    };
-
-    let activeHub = defaultHub;
-
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/dark-v11',
-      center: [-79.9600, 40.4444],
-      zoom: 11,
-      attributionControl: false
-    });
-    map.addControl(new mapboxgl.AttributionControl({ compact: true }));
-
-    const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
-      .setLngLat([-79.9600, 40.4444])
-      .addTo(map);
-
-    const visnDatabase = {
-      "visn1": { badge: "New England Hub", visn: "VISN 1", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
-      "visn2": { badge: "NY / NJ Metro Hub", visn: "VISN 2", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Catchment", phone: "718-584-9000", cleanPhone: "7185849000", coords: [-73.9004, 40.8677] },
-      "visn4_pgh": { badge: "SW Pennsylvania Hub", visn: "VISN 4", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Divisions", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
-      "visn4_butler": { badge: "Butler Regional Hub", visn: "VISN 4", name: "Butler VA Health Care System", desc: "Butler County Regional Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
-      "visn4_erie": { badge: "NW Pennsylvania Hub", visn: "VISN 4", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
-      "visn4_altoona": { badge: "Central PA Hub", visn: "VISN 4", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
-      "visn4_lebanon": { badge: "South Central PA Hub", visn: "VISN 4", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
-      "visn4_coatesville": { badge: "Brandywine Valley Hub", visn: "VISN 4", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
-      "visn4_wilkes": { badge: "Northeastern PA Hub", visn: "VISN 4", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
-      "visn4_wilmington": { badge: "Delaware Valley Hub", visn: "VISN 4", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
-      "visn4_philly": { badge: "SE Pennsylvania Hub", visn: "VISN 4", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
-      "visn5": { badge: "Capitol Hub", visn: "VISN 5", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0125, 38.9298] },
-      "visn6": { badge: "Mid-Atlantic Hub", visn: "VISN 6", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA", phone: "910-488-2120", cleanPhone: "9104882120", coords: [-78.8872, 35.0805] },
-      "visn7": { badge: "Southeast Hub", visn: "VISN 7", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.3015, 33.7938] },
-      "visn8": { badge: "Sunshine Hub", visn: "VISN 8", name: "James A. Haley Hospital (Tampa)", desc: "Florida & Puerto Rico Regional Catchment", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4278, 28.0592] },
-      "visn9": { badge: "MidSouth Hub", visn: "VISN 9", name: "Tennessee Valley Healthcare", desc: "Tennessee, Kentucky & South IN", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8041, 36.1444] },
-      "visn10": { badge: "Midwest Hub (OH/IN/MI)", visn: "VISN 10", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana & Lower Michigan", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6119, 41.5036] },
-      "visn12": { badge: "Great Lakes Hub", visn: "VISN 12", name: "Jesse Brown VAMC (Chicago)", desc: "Illinois, Wisconsin & Upper MI", phone: "312-569-8387", cleanPhone: "3125698387", coords: [-87.6749, 41.8703] },
-      "visn15": { badge: "Heartland Hub", visn: "VISN 15", name: "Kansas City VA Medical Center", desc: "Missouri, Kansas & South IL", phone: "816-861-4700", cleanPhone: "8168614700", coords: [-94.5222, 39.0494] },
-      "visn16": { badge: "South Central Hub", visn: "VISN 16", name: "Michael E. DeBakey VAMC", desc: "MS, LA, AR & East Texas", phone: "713-791-1414", cleanPhone: "7137911414", coords: [-95.3855, 29.7042] },
-      "visn17": { badge: "Heart of Texas Hub", visn: "VISN 17", name: "Central Texas Veterans Health", desc: "Central, South & West Texas", phone: "254-778-4811", cleanPhone: "2547784811", coords: [-97.3547, 31.0827] },
-      "visn19": { badge: "Rocky Mountain Hub", visn: "VISN 19", name: "Rocky Mountain Regional VAMC", desc: "CO, MT, UT, WY & West KS/NE", phone: "303-399-8020", cleanPhone: "3033998020", coords: [-104.8384, 39.7420] },
-      "visn20": { badge: "Northwest Hub", visn: "VISN 20", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, ID & Alaska", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3101, 47.5583] },
-      "visn21": { badge: "Sierra Pacific Hub", visn: "VISN 21", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii", phone: "415-221-4810", cleanPhone: "4152214810", coords: [-122.5052, 37.7820] },
-      "visn22": { badge: "Desert Pacific Hub", visn: "VISN 22", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4552, 34.0532] },
-      "visn23": { badge: "Midwest Hub (Upper)", visn: "VISN 23", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE", phone: "612-725-2000", cleanPhone: "6127252000", coords: [-93.2081, 44.9015] },
-      "national_fallback": { badge: "National Travel Coordination", visn: "VA National", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Help Desk Line", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
-    };
-
-    const zipInput = document.getElementById('zipInput');
-    const clearZipBtn = document.getElementById('clearZipBtn');
-    const geoBtn = document.getElementById('geoBtn');
-    const geoBtnLabel = document.getElementById('geoBtnLabel');
-    const matchStatus = document.getElementById('matchStatus');
-    const statusAlert = document.getElementById('statusAlert');
-    const hubBadge = document.getElementById('hubBadge');
-    const visnBadge = document.getElementById('visnBadge');
-    const facilityName = document.getElementById('facilityName');
-    const facilityAddress = document.getElementById('facilityAddress');
-    const facilityPhone = document.getElementById('facilityPhone');
-    const callBtn = document.getElementById('callBtn');
-    const centerCallBtn = document.getElementById('centerCallBtn');
-    const centerCallText = document.getElementById('centerCallText');
-    const fallbackCallBtn = document.getElementById('fallbackCallBtn');
-    const mapCoordinates = document.getElementById('mapCoordinates');
-
-    // Modal elements
-    const scriptModal = document.getElementById('scriptModal');
-    const openScriptBtn = document.getElementById('openScriptBtn');
-    const closeScriptBtn = document.getElementById('closeScriptBtn');
-    const modalDismissBtn = document.getElementById('modalDismissBtn');
-
-    // Goal 3: Plausible 'Call Script Opened' Telemetry
-    openScriptBtn.addEventListener('click', () => {
-      scriptModal.classList.remove('hidden');
-      if (typeof window.plausible === 'function') {
-        window.plausible('Call Script Opened', {
-          props: {
-            current_hub: activeHub ? activeHub.name : 'VA Pittsburgh Healthcare System',
-            visn: activeHub ? activeHub.visn : 'VISN 4'
-          }
-        });
-      }
+    _vEl.addEventListener('loadedmetadata', () => {
+      _vfC.width = _cBx.clientWidth || 360;
+      _vfC.height = _cBx.clientHeight || 118;
     });
 
-    closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
-    modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
+    let _K1 = 63.0, _K2 = 580, _K3 = 3.78, _isTab = false;
+    const _DIRS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
+    const _STEPS = [200, 150, 100, 70, 50, 40, 30, 25, 20, 15];
+    const _BLUR_STEPS = [35, 30, 25, 20, 15];
+    const _WORDS = ["Army", "veteran", "Terence", "Watkins", "built", "this", "vision", "engine."];
+    const _STAGE_LABELS = ["1. Blur", "2. Left", "3. Right", "4. Both", "5. Read", "6. Rx Score"];
 
-    // Dismiss number pad if tapping outside input field or clear button
-    document.addEventListener('touchstart', (e) => {
-      if (document.activeElement === zipInput && e.target !== zipInput && e.target !== clearZipBtn && !clearZipBtn.contains(e.target)) {
-        zipInput.blur();
-      }
-    });
+    let _st = 1, _wG = true, _inB = false, _sI = 0, _bStepIdx = 1;
+    let _cD = _STEPS[0], _cDir = 'RIGHT', _lH = 0, _lM = 0;
+    let _osD = 250, _odD = 250, _ouD = 250;
+    let _bCm = null, _lCm = null, _nK = 2800.0, _lNPx = 60.0;
+    let _osHM = 0, _osVM = 0, _odHM = 0, _odVM = 0;
+    let _wI = 0, _tS = [], _sCm = null;
+    let _sLE = 0.30, _sRE = 0.30, _cES = "Binocular";
 
-    // Clear ZIP input handler
-    clearZipBtn.addEventListener('click', () => {
-      zipInput.value = '';
-      clearZipBtn.classList.add('hidden');
-      hideAlert();
-      matchStatus.textContent = "Live Auto-Lookup";
-      matchStatus.className = "text-[9px] font-mono-code text-slate-500";
-      updateHubUI(defaultHub);
-      zipInput.focus();
-    });
-
-    // Goal 1: Plausible 'Hub Search' Telemetry
-    function trackLookup(zip, matchData, method) {
-      if (typeof window.plausible === 'function' && matchData) {
-        window.plausible('Hub Search', {
-          props: {
-            zip_prefix: zip.substring(0, 3),
-            visn: matchData.visn,
-            hub_name: matchData.name,
-            method: method
-          }
-        });
-      }
-    }
-
-    // Goal 2: Plausible 'Dialer Click' Telemetry
-    function trackDialerClick(buttonType, targetHub) {
-      if (typeof window.plausible === 'function' && targetHub) {
-        window.plausible('Dialer Click', {
-          props: {
-            button: buttonType,
-            visn: targetHub.visn,
-            hub_name: targetHub.name,
-            phone: targetHub.cleanPhone
-          }
-        });
-      }
-    }
-
-    // Attach programmatic click listeners for Dialer Click telemetry
-    centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
-    callBtn.addEventListener('click', () => trackDialerClick('Micro-Card Dial Button', activeHub));
-    fallbackCallBtn.addEventListener('click', () => trackDialerClick('National Fallback Dial Button', visnDatabase.national_fallback));
-
-    function resolveHub(zip) {
-      if (!zip || zip.length < 3) return null;
-      const p = parseInt(zip.substring(0, 3), 10);
-      
-      if (p >= 10 && p <= 69) return visnDatabase.visn1;
-      if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
-
-      // VISN 4 Audited
-      if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
-      if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
-      if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
-      if ([155, 157, 158, 159, 166, 168].includes(p)) return visnDatabase.visn4_altoona;
-      if ([170, 171, 172, 173, 174, 175, 176, 178, 179].includes(p)) return visnDatabase.visn4_lebanon;
-      if ([182, 183, 184, 185, 186, 187, 188].includes(p)) return visnDatabase.visn4_wilkes;
-      if ([193, 194, 195, 196].includes(p)) return visnDatabase.visn4_coatesville;
-      if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
-      if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
-
-      if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
-      if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
-      if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
-      if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
-      if (p >= 430 && p <= 499) return visnDatabase.visn10;
-      if ((p >= 530 && p <= 549) || (p >= 600 && p <= 619)) return visnDatabase.visn12;
-      if (p >= 620 && p <= 679) return visnDatabase.visn15;
-      if ((p >= 386 && p <= 397) || (p >= 700 && p <= 729) || (p >= 750 && p <= 759) || (p >= 770 && p <= 777)) return visnDatabase.visn16;
-      if ((p >= 760 && p <= 769) || (p >= 780 && p <= 799)) return visnDatabase.visn17;
-      if ((p >= 590 && p <= 599) || (p >= 800 && p <= 847)) return visnDatabase.visn19;
-      if (p >= 970 && p <= 999) return visnDatabase.visn20;
-      if ((p >= 890 && p <= 898) || (p >= 936 && p <= 969)) return visnDatabase.visn21;
-      if ((p >= 850 && p <= 865) || (p >= 900 && p <= 935)) return visnDatabase.visn22;
-      if ((p >= 500 && p <= 528) || (p >= 550 && p <= 588) || (p >= 680 && p <= 693)) return visnDatabase.visn23;
-
-      return visnDatabase.national_fallback;
-    }
-
-    function updateHubUI(data) {
-      activeHub = data;
-      hubBadge.textContent = data.badge;
-      visnBadge.textContent = data.visn;
-      facilityName.textContent = data.name;
-      facilityAddress.textContent = data.desc;
-      facilityPhone.textContent = data.phone;
-      
-      const callUri = "tel:" + data.cleanPhone;
-      callBtn.href = callUri;
-      centerCallBtn.href = callUri;
-      
-      const isFallback = (data.visn === "VA National");
-      centerCallText.textContent = isFallback ? "CALL DISPATCH" : "CALL TRANSIT HUB";
-
-      if (map && data.coords) {
-        map.flyTo({ center: data.coords, zoom: isFallback ? 5 : 12, speed: 1.4, essential: true });
-        mapMarker.setLngLat(data.coords);
-        mapCoordinates.textContent = `${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W`;
-      }
-    }
-
-    function showAlert(msg) {
-      statusAlert.textContent = msg;
-      statusAlert.classList.remove('hidden');
-    }
-
-    function hideAlert() {
-      statusAlert.classList.add('hidden');
-    }
-
-    zipInput.addEventListener('input', (e) => {
-      hideAlert();
-      const cleanVal = e.target.value.replace(/\D/g, '');
-      if (cleanVal !== e.target.value) {
-        e.target.value = cleanVal;
-      }
-
-      if (cleanVal.length > 0) {
-        clearZipBtn.classList.remove('hidden');
+    function _0xCalibrateHardware() {
+      const ua = navigator.userAgent || "";
+      const minDim = Math.min(window.screen.width, window.screen.height);
+      const maxDim = Math.max(window.screen.width, window.screen.height);
+      _isTab = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) || minDim >= 700 || maxDim >= 1000;
+      _K1 = 63.0;
+      if (_isTab) {
+        _K2 = 510; _K3 = 3.12; _dBg.innerText = "💻 iPad Cal";
       } else {
-        clearZipBtn.classList.add('hidden');
+        _K2 = 580; _K3 = 3.78; _dBg.innerText = "📱 iPhone Cal";
       }
+    }
 
-      if (cleanVal.length >= 3) {
-        const match = resolveHub(cleanVal);
-        if (match) {
-          updateHubUI(match);
-          if (match.visn === "VA National") {
-            matchStatus.textContent = "National Dispatch";
-            matchStatus.className = "text-[9px] font-mono-code text-amber-400";
-          } else {
-            matchStatus.textContent = cleanVal.length === 5 ? "Locked (Exact)" : "Searching Region...";
-            matchStatus.className = "text-[9px] font-mono-code text-emerald-400";
+    function _setC(t, b, l1, l2, l3) {
+      _cTl.innerText = t; _cBg.innerText = "🔊 " + b;
+      _cLs.innerHTML = `<div class="coach-line">1. ${l1}</div><div class="coach-line">2. ${l2}</div><div class="coach-line">3. ${l3}</div>`;
+    }
+
+    function _0xCalc(a, b, c, h, v) {
+      let cv = 0.0, ct = "";
+      const ad = Math.abs(h - v);
+      if (ad >= 1 && (h + v) >= 1) {
+        cv = ad >= 2 ? -0.75 : -0.50;
+        ct = ` CYL ${cv.toFixed(2)} (${h > v ? "180°" : "90°"})`;
+      }
+      if (c !== null && c < 64) {
+        const aB = Math.round((-(100 / c)) * 4) / 4;
+        const bD = Math.min(a, b);
+        const tI = _STEPS.indexOf(a), bI = _STEPS.indexOf(bD);
+        let dS = (tI !== -1 && bI !== -1 && tI < bI) ? (bI - tI) : (a > b ? 1 : 0);
+        const qS = Math.round((aB - (Math.min(3, dS) * 0.25)) * 4) / 4;
+        const clSph = Math.round((qS / (1 - (0.012 * qS))) * 4) / 4;
+        const clCyl = cv <= -0.75 ? " • Toric -0.75" : "";
+        const absD = Math.abs(qS);
+        let wD = absD >= 3.0 ? 250 : absD >= 2.5 ? 200 : absD >= 2.0 ? 150 : absD >= 1.5 ? 100 : absD >= 1.25 ? 70 : absD >= 1.0 ? 50 : absD >= 0.75 ? 40 : absD >= 0.5 ? 30 : 20;
+        return {
+          snellen20Ft: wD > 200 ? "< 20/200" : `20/${wD}`,
+          glassesStr: `👓 Glasses: SPH ${qS.toFixed(2)}${ct}`,
+          contactsStr: `💧 Contacts: PWR ${clSph.toFixed(2)}${clCyl}`,
+          cleanGlasses: `SPH ${qS.toFixed(2)} D${ct || ' (Spherical)'}`,
+          cleanContacts: `PWR ${clSph.toFixed(2)} D${clCyl || ' (Spherical)'}`,
+          shortGlasses: `${qS.toFixed(2)} D`,
+          shortContacts: `${clSph.toFixed(2)} D`
+        };
+      }
+      if (a <= 20) {
+        return {
+          snellen20Ft: `20/${a}`, glassesStr: `👓 Glasses: SPH 0.00${ct}`, contactsStr: `💧 Contacts: PWR 0.00`,
+          cleanGlasses: `SPH 0.00 D (Plano)${ct}`, cleanContacts: `PWR 0.00 D (Plano)`, shortGlasses: `0.00 D`, shortContacts: `0.00 D`
+        };
+      }
+      return {
+        snellen20Ft: `20/${a}`, glassesStr: `👓 Glasses: SPH -0.75${ct}`, contactsStr: `💧 Contacts: PWR -0.75`,
+        cleanGlasses: `SPH -0.75 D${ct}`, cleanContacts: `PWR -0.75 D`, shortGlasses: `-0.75 D`, shortContacts: `-0.75 D`
+      };
+    }
+
+    function _sGP(m, spokenText) {
+      _wG = true; _inB = false;
+      _sCv.style.display = "none"; _rBx.style.display = "none"; _rpB.style.display = "none";
+      _exC.innerHTML = ""; _exC.className = "controls-wrap align-center";
+      _gMn.innerText = m; _gBt.style.display = "flex";
+      if (spokenText) window._0xSpeak(spokenText);
+    }
+
+    window._0xGate = function() {
+      if (!_wG) return;
+      _wG = false; _gBt.style.display = "none";
+      if (_st === 1) {
+        _inB = true; _bStepIdx = 1; _sCv.style.display = "block";
+        _aLb.innerText = "Step 1: Find Blur Point";
+        _dTE('RIGHT', _sCm || 44, _BLUR_STEPS[_bStepIdx]);
+        _setC(
+          "⚡ STEP 1: CALIBRATE GLASSES & CONTACTS BLUR", "BLUR CHECK",
+          "Look in the <span class='coach-highlight'>WHITE BOX</span>. Can you see the direction the 'E' is facing?",
+          "If <span class='coach-highlight'>YES</span>: Click the <span class='coach-highlight'>BLUE BOX</span> to shrink it.",
+          "If <span class='coach-highlight'>NOT</span>: Click the <span class='coach-highlight'>ORANGE BOX</span> to lock your blur point!"
+        );
+        _exC.className = "controls-wrap align-center";
+        _exC.innerHTML = `<div class="horizon-deck"><button class="horizon-btn-blur" onclick="window._0xLockB()">🟧 CANNOT SEE "E"<br>TAP ORANGE BOX (<span id="liveBlurBtnCm">-- cm</span>)</button><button class="horizon-btn-shrink" onclick="window._0xShrinkBlurTarget()">🟦 YES, I SEE IT<br>(TAP BLUE BOX)</button></div>`;
+        window._0xSpeak("Look in the white box. Can you see the direction the E is facing? If yes, click the blue box. If not, click the orange box.");
+      } else if (_st >= 2 && _st <= 4) {
+        _sAS();
+      } else if (_st === 5) {
+        _lRW();
+      }
+    };
+
+    window._0xShrinkBlurTarget = function() {
+      if (_bStepIdx < _BLUR_STEPS.length - 1) {
+        _bStepIdx++;
+        const curDen = _BLUR_STEPS[_bStepIdx];
+        _cDir = _DIRS[Math.floor(Math.random() * _DIRS.length)];
+        _dTE(_cDir, _sCm || 44.0, curDen);
+        _aLb.innerText = `Step 1: Shrunk to 20/${curDen}`;
+        window._0xSpeak("Look in the white box. Can you see the direction the E is facing? If yes, click the blue box. If not, click the orange box.");
+      } else {
+        window._0xLockB();
+      }
+    };
+
+    window._0xLockB = function() {
+      _inB = false;
+      const lv = _sCm || 46.0;
+      const curDen = _BLUR_STEPS[_bStepIdx] || 25;
+      _bCm = Math.max(32.0, Math.min(62.0, lv * (25.0 / curDen)));
+      _lCm = Math.max(34.0, Math.min(60.0, lv));
+      if (_lNPx > 10) _nK = _lCm * _lNPx;
+      _st = 2; _uSUI();
+      const tS = `${_lCm.toFixed(1)} cm`;
+      _aLb.innerText = "Step 2: Left Eye Calibration";
+      _sRd.innerText = `Target: ${tS}`;
+      _setC(
+        "⚡ STEP 2: MEASURE LEFT EYE (GLASSES & CONTACTS)", "LEFT EYE RX",
+        "Stay at <span class='coach-highlight'>Target: " + tS + "</span> to measure <span class='coach-highlight'>LEFT EYE</span>.",
+        "Cover your <span class='coach-highlight'>RIGHT EYE</span> with your RIGHT hand.",
+        "Tap the <span class='coach-highlight'>BLUE BOX</span> once your right eye is covered!"
+      );
+      _sGP(
+        "👉 TAP BLUE BOX ONCE YOUR RIGHT EYE IS COVERED 👈",
+        "Tap the blue box once your right eye is covered. That will begin step one of the test."
+      );
+    };
+
+    function _sAS() {
+      _sCv.style.display = "block";
+      _sI = 0; _lH = 0; _lM = 0; _cD = _STEPS[0];
+      const dT = (_lCm || 45).toFixed(1);
+      if (_st === 2) {
+        _setC("⚡ STEP 2: LEFT EYE GLASSES & CONTACTS RX", "LEFT D-PAD",
+          "Keep <span class='coach-highlight'>RIGHT EYE COVERED</span> for Left Eye Rx.",
+          "Tap the <span class='coach-highlight'>ARROW</span> matching the direction the 'E' points.",
+          "Tap red <span class='coach-highlight'>TOO BLURRY</span> if you can't see it!");
+        window._0xSpeak("Tap the arrow matching the direction the E is facing, or tap Too Blurry.");
+      } else if (_st === 3) {
+        _setC("⚡ STEP 3: RIGHT EYE GLASSES & CONTACTS RX", "RIGHT D-PAD",
+          "Keep <span class='coach-highlight'>LEFT EYE COVERED</span> for Right Eye Rx.",
+          "Tap the <span class='coach-highlight'>ARROW</span> matching the direction the 'E' points.",
+          "Tap red <span class='coach-highlight'>TOO BLURRY</span> if you can't see it!");
+        window._0xSpeak("Tap the arrow matching the direction the E is facing, or tap Too Blurry.");
+      } else {
+        _setC("⚡ STEP 4: BOTH EYES BALANCE CHECK", "BOTH EYES OPEN",
+          "<span class='coach-highlight'>UNCOVER BOTH EYES</span> & stay at " + dT + " cm.",
+          "Tap the <span class='coach-highlight'>ARROW</span> matching the direction the 'E' points.",
+          "Tap red <span class='coach-highlight'>TOO BLURRY</span> when you can't read it!");
+        window._0xSpeak("With both eyes open, tap the arrow matching the E, or tap Too Blurry.");
+      }
+      _exC.className = "controls-wrap " + (_st === 2 ? "align-left" : _st === 3 ? "align-right" : "align-center");
+      _exC.innerHTML =
+        `<div class="dpad-cross">` +
+        `<button class="dpad-btn dpad-up" onclick="window._0xAns('UP')"><span class="dpad-tri">▲</span>UP</button>` +
+        `<button class="dpad-btn dpad-left" onclick="window._0xAns('LEFT')"><span class="dpad-tri">◀</span>LEFT</button>` +
+        `<div class="dpad-center">✚</div>` +
+        `<button class="dpad-btn dpad-right" onclick="window._0xAns('RIGHT')"><span class="dpad-tri">▶</span>RIGHT</button>` +
+        `<button class="dpad-btn dpad-down" onclick="window._0xAns('DOWN')"><span class="dpad-tri">▼</span>DOWN</button>` +
+        `</div><button class="cant-see-btn" onclick="window._0xAns('CANT_SEE')">Too Blurry<br>Can't See</button>`;
+      _lNAR();
+    }
+
+    function _dTE(dir, dCm, den) {
+      const dpr = window.devicePixelRatio || 3, cS = 72;
+      _sCv.style.width = `${cS}px`; _sCv.style.height = `${cS}px`;
+      _sCv.width = Math.round(cS * dpr); _sCv.height = Math.round(cS * dpr);
+      _sCx.save(); _sCx.clearRect(0, 0, _sCv.width, _sCv.height);
+      const aR = (5 * (den / 20) / 60) * (Math.PI / 180);
+      const sPx = Math.min(68, (2 * (dCm * 10) * Math.tan(aR / 2)) * _K3);
+      const u = Math.max(1, Math.round((sPx * dpr) / 5)), tDPx = u * 5;
+      _sRd.innerText = `Stroke: ${(u / dpr).toFixed(2)}px | 20/${den}`;
+      _sCx.translate(Math.round(_sCv.width / 2), Math.round(_sCv.height / 2));
+      _sCx.rotate(dir === 'DOWN' ? Math.PI / 2 : dir === 'LEFT' ? Math.PI : dir === 'UP' ? -Math.PI / 2 : 0);
+      _sCx.fillStyle = "#0f172a";
+      const sX = -Math.round(tDPx / 2), sY = -Math.round(tDPx / 2);
+      _sCx.fillRect(sX, sY, u, tDPx); _sCx.fillRect(sX, sY, tDPx, u);
+      _sCx.fillRect(sX, sY + 2 * u, tDPx, u); _sCx.fillRect(sX, sY + 4 * u, tDPx, u);
+      _sCx.restore();
+    }
+
+    function _lNAR() {
+      _cDir = _DIRS[Math.floor(Math.random() * _DIRS.length)];
+      const sN = _st === 3 ? "Right Eye" : _st === 4 ? "Binocular" : "Left Eye";
+      _aLb.innerText = `${sN} • Line: 20/${_cD} • Hits: ${_lH}/3`;
+      _sCv.style.opacity = "0.15";
+      setTimeout(() => { _dTE(_cDir, _lCm || 45.0, _cD); _sCv.style.opacity = "1"; }, 65);
+    }
+
+    window._0xAns = function(sD) {
+      if (sD === 'CANT_SEE') { _fCES(); return; }
+      if (sD === _cDir) {
+        if (++_lH >= 3) {
+          if (_st === 2) _osD = _cD;
+          if (_st === 3) _odD = _cD;
+          if (_st === 4) _ouD = _cD;
+          if (_sI < _STEPS.length - 1) { _sI++; _cD = _STEPS[_sI]; _lH = 0; _lM = 0; _lNAR(); }
+          else _fCES();
+        } else _lNAR();
+      } else {
+        const isH = (_cDir === 'LEFT' || _cDir === 'RIGHT');
+        if (_st === 2) { if (isH) _osHM++; else _osVM++; }
+        else if (_st === 3) { if (isH) _odHM++; else _odVM++; }
+        if (++_lM >= 2) _fCES(); else _lNAR();
+      }
+    };
+
+    function _fCES() {
+      const dT = (_lCm || 45).toFixed(1);
+      if (_st === 2) {
+        _st = 3; _uSUI(); _aLb.innerText = "Step 3: Right Eye Calibration"; _sRd.innerText = `L Line: 20/${_osD}`;
+        _setC("⚡ STEP 3: MEASURE RIGHT EYE (GLASSES & CONTACTS)", "RIGHT EYE RX",
+          "Stay at <span class='coach-highlight'>Target: " + dT + " cm</span> to measure <span class='coach-highlight'>RIGHT EYE</span>.",
+          "Cover your <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand.",
+          "Tap the <span class='coach-highlight'>BLUE BOX</span> once your left eye is covered!");
+        _sGP(
+          "👉 TAP BLUE BOX ONCE YOUR LEFT EYE IS COVERED 👈",
+          "Then tap the blue box once your left eye is covered."
+        );
+      } else if (_st === 3) {
+        _st = 4; _uSUI(); _aLb.innerText = "Step 4: Uncover Both Eyes"; _sRd.innerText = `R Line: 20/${_odD}`;
+        _setC("⚡ STEP 4: UNCOVER BOTH EYES (BALANCE CHECK)", "BOTH EYES OPEN",
+          "<span class='coach-highlight'>UNCOVER BOTH EYES</span> at Target: " + dT + " cm.",
+          "Balancing <span class='coach-highlight'>LEFT & RIGHT EYE</span> Glasses + Contacts Rx.",
+          "Tap the <span class='coach-highlight'>BLUE BOX</span> once you uncover both eyes!");
+        _sGP(
+          "👉 TAP BLUE BOX ONCE YOU UNCOVER BOTH EYES 👈",
+          "Tap the blue box once you uncover both eyes."
+        );
+      } else if (_st === 4) {
+        _st = 5; _uSUI(); _aLb.innerText = "Step 5: Reading Check"; _sRd.innerText = `O.U. 20/${_ouD}`;
+        _setC("⚡ STEP 5: 8-WORD READING TEST", "TAP IN ORDER",
+          "Keep <span class='coach-highlight'>BOTH EYES OPEN</span> in your chair.",
+          "8 words will appear in the white box below.",
+          "<span class='coach-highlight'>TAP EACH WORD IN ORDER</span> to finish the test!");
+        _sGP(
+          "👉 TAP BLUE BOX ONCE READY TO READ & TAP 8 WORDS 👈",
+          "Tap the blue box once you're ready to read and tap 8 words to finish the test."
+        );
+      }
+    }
+
+    function _lRW() {
+      _sCv.style.display = "none"; _exC.innerHTML = ""; _exC.className = "controls-wrap align-center";
+      _rBx.style.display = "block"; _aLb.innerText = "Step 5: Tap Words In Order";
+      _sRd.innerText = `0 / ${_WORDS.length} Words`; _wCt.innerHTML = ""; _wI = 0; _tS = [performance.now()];
+      window._0xSpeak("Tap each of the 8 words in order from left to right to finish the test.");
+      _WORDS.forEach((w, idx) => {
+        const sp = document.createElement('span');
+        sp.innerText = w; sp.style.padding = "4px 7px"; sp.style.borderRadius = "5px"; sp.style.cursor = "pointer";
+        sp.style.border = idx === 0 ? "2px solid #0284c7" : "1px solid #cbd5e1";
+        sp.onclick = () => {
+          if (idx !== _wI) return;
+          _tS.push(performance.now()); _wI++; _sRd.innerText = `${_wI} / ${_WORDS.length} Words`;
+          if (_wI >= _WORDS.length) _sS6();
+          else {
+            Array.from(_wCt.children).forEach((el, i) => {
+              el.style.border = i === _wI ? "2px solid #0284c7" : "1px solid #cbd5e1";
+              el.style.background = i < _wI ? "#dcfce7" : "#f8fafc";
+            });
           }
+        };
+        _wCt.appendChild(sp);
+      });
+    }
 
-          // Trigger Plausible custom event and auto-dismiss keyboard on 5th digit
-          if (cleanVal.length === 5) {
-            trackLookup(cleanVal, match, 'Manual ZIP');
-            e.target.blur();
+    function _sS6() {
+      _st = 6; _uSUI(); _rBx.style.display = "none"; _rpB.style.display = "block";
+      _aLb.innerText = "Step 6: Final Glasses & Contacts Rx"; _sRd.innerText = "Complete";
+      const tSec = (_tS[_tS.length - 1] - _tS[0]) / 1000;
+      const wpm = Math.round((_WORDS.length / Math.max(1, tSec)) * 60);
+      let mG = 0;
+      for (let i = 1; i < _tS.length; i++) { const g = _tS[i] - _tS[i - 1]; if (g > mG) mG = g; }
+      const osM = _0xCalc(_osD, _odD, _bCm, _osHM, _osVM);
+      const odM = _0xCalc(_odD, _osD, _bCm, _odHM, _odVM);
+      const fatStr = mG > 1400 ? "Fatigue: Elevated" : "Fatigue: Optimal";
+
+      _setC("✅ STEP 6: GLASSES & CONTACTS RX READY!", "FINAL RX",
+        `👓 <span class='coach-highlight'>GLASSES RX</span>: Left ${osM.shortGlasses} | Right ${odM.shortGlasses}`,
+        `💧 <span class='coach-highlight'>CONTACTS RX</span>: Left ${osM.shortContacts} | Right ${odM.shortContacts}`,
+        "Tap <span class='coach-highlight'>PRINT OFFICIAL RX</span> below to print your prescription!");
+
+      window._0xSpeak("Vision check complete. Your estimated glasses and contacts results are ready. Tap the blue button at the bottom to print or save your report.");
+
+      document.getElementById('repOS').innerText = `${osM.snellen20Ft} (20-Ft Eq)`;
+      document.getElementById('rxOS').innerText = osM.glassesStr;
+      document.getElementById('clOS').innerText = osM.contactsStr;
+      document.getElementById('repOD').innerText = `${odM.snellen20Ft} (20-Ft Eq)`;
+      document.getElementById('rxOD').innerText = odM.glassesStr;
+      document.getElementById('clOD').innerText = odM.contactsStr;
+      document.getElementById('repOU').innerText = `L 20/${_osD} | R 20/${_odD}`;
+      document.getElementById('rxOU').innerText = _bCm ? `Blur Eq: ${_bCm.toFixed(1)} cm` : `Clear > 60 cm`;
+      document.getElementById('repWPM').innerText = `${wpm} WPM`;
+      document.getElementById('rxLat').innerText = fatStr;
+
+      document.getElementById('prxDate').innerText = new Date().toLocaleString();
+      document.getElementById('prxLockedDist').innerText = _lCm ? `${_lCm.toFixed(1)} cm` : "45.0 cm";
+      document.getElementById('prxBlurDist').innerText = _bCm ? `${_bCm.toFixed(1)} cm` : "Clear > 60 cm";
+      document.getElementById('prxHwCal').innerText = _isTab ? "iPad Optical Profile (Terrance Watkins)" : "iPhone Optical Profile (Terrance Watkins)";
+      document.getElementById('prxOsSnellen').innerText = osM.snellen20Ft;
+      document.getElementById('prxOsNear').innerText = `20/${_osD}`;
+      document.getElementById('prxOsGlasses').innerText = osM.cleanGlasses;
+      document.getElementById('prxOsContacts').innerText = osM.cleanContacts;
+      document.getElementById('prxOdSnellen').innerText = odM.snellen20Ft;
+      document.getElementById('prxOdNear').innerText = `20/${_odD}`;
+      document.getElementById('prxOdGlasses').innerText = odM.cleanGlasses;
+      document.getElementById('prxOdContacts').innerText = odM.cleanContacts;
+      document.getElementById('prxOuSummary').innerText = `Binocular Near Acuity: 20/${_ouD} (L 20/${_osD} | R 20/${_odD})`;
+      document.getElementById('prxWpmSummary').innerText = `Reading Speed: ${wpm} WPM (${fatStr})`;
+
+      _exC.className = "controls-wrap align-center";
+      _exC.innerHTML = `<button class="print-rx-btn" onclick="window._0xPrintRx()"><span>🖨️ PRINT / SAVE OFFICIAL RX PRESCRIPTION</span><span style="font-size: 10px; color: #38bdf8; margin-top: 3px;">TERRANCE WATKINS • PATENT PENDING 64/174,835</span></button>`;
+    }
+
+    window._0xPrintRx = function() { window.print(); };
+
+    window._0xReset = function() {
+      _st = 1; _inB = false; _sI = 0; _bStepIdx = 1; _lH = 0; _lM = 0; _cD = _STEPS[0];
+      _osD = 250; _odD = 250; _ouD = 250; _bCm = null; _lCm = null;
+      _osHM = 0; _osVM = 0; _odHM = 0; _odVM = 0;
+      _exC.className = "controls-wrap align-center"; _uSUI();
+      _aLb.innerText = "Step 1: Glasses & Contacts Rx Calibration";
+      _sRd.innerText = "Ready"; _tLb.innerText = "Target:"; _zVl.innerText = "35–55 cm"; _zVl.style.color = "#fbbf24";
+      _setC("⚡ STEP 1 OF 6: GLASSES & CONTACTS RX SETUP", "STEP 1",
+        "Put in <span class='coach-highlight'>STAND</span> & remove glasses to measure <span class='coach-highlight'>LEFT & RIGHT EYE</span>.",
+        "Center <span class='coach-highlight'>GREEN DOT</span> to calibrate <span class='coach-highlight'>GLASSES & CONTACTS RX</span>.",
+        "Tap the <span class='coach-highlight'>BLUE BAR BELOW</span> to begin your vision check!");
+      _sGP(
+        "👉 TAP BLUE BAR BELOW TO BEGIN VISION CHECK 👈",
+        "Tap the blue bar below to begin your vision check."
+      );
+    };
+
+    function _uSUI() {
+      ['st1', 'st2', 'st3', 'st4', 'st5', 'st6'].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.className = 'stage-step';
+          const baseName = _STAGE_LABELS[idx];
+          if (idx + 1 < _st) {
+            el.classList.add('done');
+            el.innerText = '✅ ' + baseName;
+          } else if (idx + 1 === _st) {
+            el.classList.add('active');
+            el.innerText = '👉 ' + baseName;
+          } else {
+            el.innerText = baseName;
           }
         }
-      } else {
-        matchStatus.textContent = "Live Auto-Lookup";
-        matchStatus.className = "text-[9px] font-mono-code text-slate-500";
+      });
+    }
+
+    function _gE(l, t, b, i, o) {
+      return Math.hypot(l[t].x - l[b].x, l[t].y - l[b].y) / Math.hypot(l[i].x - l[o].x, l[i].y - l[o].y);
+    }
+
+    function _rUV(nB) {
+      const cw = _cBx.clientWidth || 360, ch = _cBx.clientHeight || 118;
+      if (_vfC.width !== cw || _vfC.height !== ch) { _vfC.width = cw; _vfC.height = ch; }
+      const vw = _vEl.videoWidth || 480, vh = _vEl.videoHeight || 640;
+      _vfX.clearRect(0, 0, cw, ch);
+      const sc = Math.max(cw / vw, ch / vh), dW = vw * sc, dH = vh * sc;
+      const oX = (cw - dW) / 2, oY = (ch - dH) * 0.35;
+      _vfX.save(); _vfX.translate(cw, 0); _vfX.scale(-1, 1); _vfX.drawImage(_vEl, oX, oY, dW, dH); _vfX.restore();
+      const cX = cw * 0.5, cY = ch * 0.52;
+      let isL = false, dX = cX, dY = cY;
+      if (nB) {
+        dX = oX + ((1.0 - nB.x) * dW); dY = oY + (nB.y * dH);
+        isL = ((Math.abs(dX - cX) / cw) <= 0.12 && (Math.abs(dY - cY) / ch) <= 0.18);
+        if (isL) { _cPl.classList.add('locked'); _cPl.innerText = "CROSSHAIR LOCKED ✓"; }
+        else {
+          _cPl.classList.remove('locked');
+          _cPl.innerText = dY < cY - (ch * 0.18) ? "LOWER DEVICE / HEAD SLIGHTLY" : dY > cY + (ch * 0.18) ? "RAISE DEVICE TO EYE LEVEL" : "CENTER DOT ON CROSSHAIR";
+        }
+      } else { _cPl.classList.remove('locked'); _cPl.innerText = "CENTER DOT ON CROSSHAIR"; }
+      _vfX.save(); _vfX.lineWidth = 2;
+      _vfX.strokeStyle = isL ? "rgba(74, 222, 128, 0.95)" : "rgba(250, 204, 21, 0.85)";
+      if (!isL) _vfX.setLineDash([6, 5]);
+      _vfX.beginPath(); _vfX.moveTo(cX, 0); _vfX.lineTo(cX, ch); _vfX.stroke();
+      _vfX.beginPath(); _vfX.moveTo(0, cY); _vfX.lineTo(cw, cY); _vfX.stroke();
+      if (nB) {
+        _vfX.setLineDash([]); _vfX.beginPath(); _vfX.arc(dX, dY, 7, 0, Math.PI * 2);
+        _vfX.fillStyle = isL ? "rgba(74, 222, 128, 0.7)" : "rgba(250, 204, 21, 0.6)"; _vfX.fill();
+        _vfX.lineWidth = 2; _vfX.strokeStyle = isL ? "#4ade80" : "#fde047"; _vfX.stroke();
       }
-    });
+      _vfX.restore();
+    }
 
-    geoBtn.addEventListener('click', () => {
-      hideAlert();
-      if (!navigator.geolocation) {
-        showAlert("GPS not supported.");
-        return;
-      }
-
-      geoBtnLabel.textContent = "...";
-      geoBtn.disabled = true;
-
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-
-          if (map) {
-            map.flyTo({ center: [lon, lat], zoom: 12, essential: true });
-            mapMarker.setLngLat([lon, lat]);
-            mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
+    function _onR(res) {
+      if (res.multiFaceLandmarks && res.multiFaceLandmarks.length > 0) {
+        const lm = res.multiFaceLandmarks[0], nB = lm[168] || lm[1];
+        const vw = _vEl.videoWidth || 480, vh = _vEl.videoHeight || 640;
+        _rUV(nB);
+        _sRE = 0.3 * _gE(lm, 159, 145, 133, 33) + 0.7 * _sRE;
+        _sLE = 0.3 * _gE(lm, 386, 374, 362, 263) + 0.7 * _sLE;
+        _cES = _st === 2 ? "Right Covered" : _st === 3 ? "Left Covered" : (_sRE < 0.20 && _sLE >= 0.20) ? "Right Covered" : (_sLE < 0.20 && _sRE >= 0.20) ? "Left Covered" : "Binocular";
+        const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
+        const ipdPx = Math.hypot((lp.x - rp.x) * vw, (lp.y - rp.y) * vh);
+        const nT = lm[168], nBo = lm[2];
+        const nVPx = (nT && nBo) ? Math.hypot((nT.x - nBo.x) * vw, (nT.y - nBo.y) * vh) : 0;
+        if (nVPx > 12) _lNPx = 0.3 * nVPx + 0.7 * _lNPx;
+        if (_st !== 2 && _st !== 3 && ipdPx > 0) {
+          const rCm = ((_K2 * _K1) / ipdPx) / 10;
+          _sCm = _sCm === null ? rCm : (0.25 * rCm) + (0.75 * _sCm);
+          if (_lNPx > 12) _nK = 0.2 * (_sCm * _lNPx) + 0.8 * _nK;
+        } else if ((_st === 2 || _st === 3) && _lNPx > 12) {
+          const mCm = _nK / _lNPx;
+          if (mCm >= 24 && mCm <= 72) _sCm = _sCm === null ? mCm : (0.22 * mCm) + (0.78 * _sCm);
+        }
+        if (_sCm !== null) {
+          _dVl.innerText = `${_sCm.toFixed(1)} cm`;
+          if (_inB) {
+            _sRd.innerText = `Live Dist: ${_sCm.toFixed(1)} cm`;
+            const bSp = document.getElementById('liveBlurBtnCm');
+            if (bSp) bSp.innerText = `${_sCm.toFixed(0)} cm`;
           }
-
-          try {
-            const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
-            const data = await res.json();
-            
-            const detectedZip = data.postcode;
-            if (detectedZip) {
-              const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
-              zipInput.value = cleanZip;
-              clearZipBtn.classList.remove('hidden');
-              const match = resolveHub(cleanZip);
-              if (match) {
-                updateHubUI(match);
-                matchStatus.textContent = `Locked: ${cleanZip}`;
-                matchStatus.className = "text-[9px] font-mono-code text-emerald-400";
-                
-                trackLookup(cleanZip, match, 'GPS');
-                zipInput.blur();
-              }
-            } else {
-              showAlert("Could not extract ZIP. Enter manually.");
-            }
-          } catch (err) {
-            showAlert("Service error. Enter ZIP manually.");
-          } finally {
-            geoBtnLabel.textContent = "GPS";
-            geoBtn.disabled = false;
+          if (_lCm !== null && _st >= 2) {
+            _tLb.innerText = "Target:"; _zVl.innerText = `${_lCm.toFixed(1)} cm`;
+            const ok = Math.abs(_sCm - _lCm) <= 3.5;
+            _zVl.style.color = ok ? "#4ade80" : "#fbbf24"; _cBx.style.borderColor = ok ? "#4ade80" : "#fbbf24";
+          } else {
+            _tLb.innerText = "Target:"; _zVl.innerText = _inB ? "Find Blur" : "35–55 cm";
+            const c = (_sCm >= 35 && _sCm <= 55) ? "#4ade80" : _sCm < 35 ? "#f87171" : "#fbbf24";
+            _zVl.style.color = c; _cBx.style.borderColor = c;
           }
-        },
-        (error) => {
-          showAlert("GPS signal unavailable.");
-          geoBtnLabel.textContent = "GPS";
-          geoBtn.disabled = false;
-        },
-        { timeout: 8000, enableHighAccuracy: true }
-      );
-    });
+        }
+        _eVl.innerText = _cES;
+      } else _rUV(null);
+    }
+
+    const _fM = new FaceMesh({ locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
+    _fM.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+    _fM.onResults(_onR);
+    const _cam = new Camera(_vEl, { onFrame: async () => { await _fM.send({ image: _vEl }); }, width: 640, height: 480 });
+
+    window.startEyesEngine = function() {
+      _0xCalibrateHardware();
+      _uSUI();
+      _cam.start();
+      window._0xSpeak("Tap the blue bar below to begin your vision check.");
+    };
   </script>
 </body>
 </html>
