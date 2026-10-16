@@ -3,14 +3,14 @@
   USPTO PROVISIONAL PATENT APPLICATION NO. 64/174,835
   Terrance Watkins • Patent Pending 64/174,835
   CONFIDENTIAL PROPRIETARY TELEMETRY SYSTEM - UNAUTHORIZED REPRODUCTION PROHIBITED
-  PROJECT EYES v3.71 - BULLETPROOF IOS/MOBILE SPEECH SYNTHESIS FIX + EAS ALERT TONE + FULL BUILD TXT
+  PROJECT EYES v3.72 - PURE NATURAL GEMINI VOICE PROMPTS (NO BEEP) + FULL BUILD TXT
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.71 | Terrance Watkins • Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.72 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
     * {
       box-sizing: border-box; margin: 0; padding: 0;
@@ -307,8 +307,7 @@
       if (!box) return;
       var digits = box.value.replace(/[^0-9]/g, '');
       if (digits.length === 4 && window.btoa(digits) === 'MzIwNg==') {
-        // Unlock user gesture audio authorization immediately on click/pin entry
-        if (typeof window.unlockAudioPipeline === 'function') window.unlockAudioPipeline();
+        if (typeof window.unlockSpeechPipeline === 'function') window.unlockSpeechPipeline();
         document.getElementById('pinVaultOverlay').style.display = 'none';
         if (typeof window.startEyesEngine === 'function') window.startEyesEngine();
       } else if (digits.length >= 4) {
@@ -327,7 +326,7 @@
   <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">🔒 Project Eyes v3.71</div>
+      <div class="vault-title">🔒 Project Eyes v3.72</div>
       <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
       <div class="nda-box">
         <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
@@ -407,7 +406,7 @@
             <div class="report-label">Right Eye (O.D.) Glasses &amp; Contacts</div>
             <div class="report-val" id="repOD">--</div>
             <div class="report-sub" id="rxOD">👓 Glasses: --</div>
-            <div class="report-cl" id="clOD">💧 Contacts: --</div>
+            <div class="report-cl" id="clOS">💧 Contacts: --</div>
           </div>
           <div class="report-item">
             <div class="report-label">Acuity Split (Left / Right)</div>
@@ -437,7 +436,7 @@
       <div>
         <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
         <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.71</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.72</div>
       </div>
       <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
@@ -496,39 +495,32 @@
 
   <script>
     /* =========================================================================
-       AUDIO & SPEECH SUBSYSTEM (IOS & MOBILE AUTOPLAY HARDENING)
-       iOS Safari requires Web Audio and SpeechSynthesis to be unlocked directly
-       inside a touch gesture. Placing speech in a setTimeout causes iOS to kill it.
-       v3.71 unlocks both instantly and keeps speech active across all steps!
+       PURE VOICE SYNTHESIS ENGINE (DIRECT SPEECH - NO BEEPS / NO AUDIO TONES)
+       High-tier neural American female voice matching (Google US English,
+       Neural2-F, Journey-F, Ava, Samantha). Direct instant playback with
+       zero artificial delay or audio oscillator cues.
        ========================================================================= */
-    let _audioCtx = null;
     let _activeVoice = null;
-    let _audioUnlocked = false;
+    let _speechUnlocked = false;
 
-    window.unlockAudioPipeline = function() {
-      if (_audioUnlocked) return;
+    window.unlockSpeechPipeline = function() {
+      if (_speechUnlocked) return;
       try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) {
-          if (!_audioCtx) _audioCtx = new AudioContext();
-          if (_audioCtx.state === 'suspended') _audioCtx.resume();
-        }
         if ('speechSynthesis' in window) {
           window.speechSynthesis.resume();
-          // Prime speech engine with a zero-volume syllable so Safari keeps voice channel active
+          // Prime speech engine with a zero-volume space character so iOS Safari authorizes speech channel
           const primeUtt = new SpeechSynthesisUtterance(" ");
           primeUtt.volume = 0.01;
           window.speechSynthesis.speak(primeUtt);
         }
-        _audioUnlocked = true;
+        _speechUnlocked = true;
       } catch (e) {
-        console.warn("Audio unlock note: ", e);
+        console.warn("Speech unlock notice: ", e);
       }
     };
 
-    // Auto-unlock on any initial screen interaction as backup
-    document.addEventListener('touchstart', window.unlockAudioPipeline, { passive: true, once: true });
-    document.addEventListener('click', window.unlockAudioPipeline, { passive: true, once: true });
+    document.addEventListener('touchstart', window.unlockSpeechPipeline, { passive: true, once: true });
+    document.addEventListener('click', window.unlockSpeechPipeline, { passive: true, once: true });
 
     function _initVoiceEngine() {
       if (!('speechSynthesis' in window)) return;
@@ -536,7 +528,6 @@
         const voices = window.speechSynthesis.getVoices();
         if (!voices || voices.length === 0) return;
 
-        // High priority: smooth natural American female voices (Google, Safari, Neural2, Journey, Ava)
         const preferredMatch = voices.find(v => 
           (v.name.includes("Google US English") || 
            v.name.includes("en-US-Neural2-F") || 
@@ -544,8 +535,8 @@
            v.name.includes("Natural") || 
            v.name.includes("Ava") || 
            v.name.includes("Samantha") || 
-           v.name.includes("Zira") ||
-           v.name.includes("Jenny") ||
+           v.name.includes("Zira") || 
+           v.name.includes("Jenny") || 
            v.name.includes("Siri")) && 
           v.lang.startsWith("en")
         );
@@ -558,75 +549,22 @@
       }
     }
 
-    function _playBroadcastAlertBuzzer(onToneComplete) {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) {
-          if (typeof onToneComplete === 'function') onToneComplete();
-          return;
-        }
-        if (!_audioCtx) _audioCtx = new AudioContext();
-        if (_audioCtx.state === 'suspended') _audioCtx.resume();
-
-        const now = _audioCtx.currentTime;
-        const dur = 0.95; // Crisp, punchy broadcast dual-tone duration
-
-        const masterGain = _audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.001, now);
-        masterGain.gain.linearRampToValueAtTime(0.22, now + 0.03);
-        masterGain.gain.setValueAtTime(0.22, now + dur - 0.04);
-        masterGain.gain.linearRampToValueAtTime(0.001, now + dur);
-        masterGain.connect(_audioCtx.destination);
-
-        const osc1 = _audioCtx.createOscillator();
-        osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(853, now); // EAS Tone 1: 853 Hz
-        osc1.connect(masterGain);
-
-        const osc2 = _audioCtx.createOscillator();
-        osc2.type = 'sine';
-        osc2.frequency.setValueAtTime(960, now); // EAS Tone 2: 960 Hz
-        osc2.connect(masterGain);
-
-        osc1.start(now);
-        osc2.start(now);
-
-        osc1.stop(now + dur);
-        osc2.stop(now + dur);
-
-        // Chain the speech cleanly via oscillator onended so mobile Safari never blocks execution
-        osc1.onended = () => {
-          if (typeof onToneComplete === 'function') {
-            onToneComplete();
-          }
-        };
-      } catch (err) {
-        console.warn("Buzzer fallback trigger: ", err);
-        if (typeof onToneComplete === 'function') onToneComplete();
-      }
-    }
-
     function speakGemini(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       window.speechSynthesis.resume();
 
-      // Ensure voice is prepared immediately in memory
       const utt = new SpeechSynthesisUtterance(text);
       if (_activeVoice) utt.voice = _activeVoice;
       utt.pitch = 1.02; // Warm, smooth, relaxed frequency
-      utt.rate = 0.94;  // Natural conversational rhythm
+      utt.rate = 0.94;  // Natural conversational tempo
       utt.volume = 1.0;
 
-      // Play the emergency broadcast alarm, and speak cleanly the instant the tone resolves
-      _playBroadcastAlertBuzzer(() => {
-        try {
-          window.speechSynthesis.resume();
-          window.speechSynthesis.speak(utt);
-        } catch (err) {
-          console.warn("Voice speech error: ", err);
-        }
-      });
+      try {
+        window.speechSynthesis.speak(utt);
+      } catch (err) {
+        console.warn("Voice speech error: ", err);
+      }
     }
 
     const _vEl = document.getElementById('webcam');
@@ -738,7 +676,7 @@
 
     window._0xGate = function() {
       if (!_wG) return;
-      window.unlockAudioPipeline();
+      window.unlockSpeechPipeline();
       _wG = false; _gBt.style.display = "none";
       if (_st === 1) {
         _inB = true; _bStepIdx = 1; _sCv.style.display = "block";
@@ -761,7 +699,7 @@
     };
 
     window._0xShrinkBlurTarget = function() {
-      window.unlockAudioPipeline();
+      window.unlockSpeechPipeline();
       if (_bStepIdx < _BLUR_STEPS.length - 1) {
         _bStepIdx++;
         const curDen = _BLUR_STEPS[_bStepIdx];
@@ -774,7 +712,7 @@
     };
 
     window._0xLockB = function() {
-      window.unlockAudioPipeline();
+      window.unlockSpeechPipeline();
       _inB = false;
       const lv = _sCm || 46.0;
       const curDen = _BLUR_STEPS[_bStepIdx] || 25;
@@ -793,7 +731,7 @@
         "Tap <span class='coach-highlight'>BLUE BUTTON</span> with your LEFT hand!"
       );
 
-      // Voice prompt: exact centimeter distance, HUD reference, ±5cm buffer with humor
+      // Direct voice prompt: exact distance, HUD visual reference, ±5cm relaxed humor
       speakGemini(`Distance locked at ${roundedDist} centimeters. Make sure you stay right around that distance. Your live distance is displayed right in the top left of your camera view. You only have to stay within five centimeters either way, so don't trip or freeze up like a statue—just stay chill in your chair. Now cover your right eye with your right hand, and tap the blue button to start.`);
 
       _sGP("👉 TAP HERE ONCE YOUR RIGHT EYE IS COVERED WITH YOUR HAND 👈");
@@ -861,7 +799,7 @@
     }
 
     window._0xAns = function(sD) {
-      window.unlockAudioPipeline();
+      window.unlockSpeechPipeline();
       if (sD === 'CANT_SEE') { _fCES(); return; }
       if (sD === _cDir) {
         if (++_lH >= 3) {
@@ -917,7 +855,7 @@
         sp.innerText = w; sp.style.padding = "4px 7px"; sp.style.borderRadius = "5px"; sp.style.cursor = "pointer";
         sp.style.border = idx === 0 ? "2px solid #0284c7" : "1px solid #cbd5e1";
         sp.onclick = () => {
-          window.unlockAudioPipeline();
+          window.unlockSpeechPipeline();
           if (idx !== _wI) return;
           _tS.push(performance.now()); _wI++; _sRd.innerText = `${_wI} / ${_WORDS.length} Words`;
           if (_wI >= _WORDS.length) _sS6();
@@ -948,7 +886,7 @@
         `💧 <span class='coach-highlight'>CONTACTS RX</span>: Left ${osM.shortContacts} | Right ${odM.shortContacts}`,
         "Tap <span class='coach-highlight'>PRINT OFFICIAL RX</span> below to print your prescription!");
 
-      // Final voice wrap-up with credit
+      // Final vocal delivery with official patent credit
       speakGemini(`Your vision assessment is complete. Your glasses prescription is ${osM.shortGlasses} for your left eye, and ${odM.shortGlasses} for your right eye. You can print your complete report below. Brought to you by Terrance Watkins.`);
 
       document.getElementById('repOS').innerText = `${osM.snellen20Ft} (20-Ft Eq)`;
