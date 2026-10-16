@@ -1,16 +1,16 @@
 <!-- 
-  Copyright (c) 2026 Terrance Watkins. All Rights Reserved.
-  USPTO PROVISIONAL PATENT APPLICATION NO. 64/174,835
+  Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
+  PATENT PENDING: USPTO Provisional Application No. 64/174,835
   Terrance Watkins • Patent Pending 64/174,835
   CONFIDENTIAL PROPRIETARY TELEMETRY SYSTEM - UNAUTHORIZED REPRODUCTION PROHIBITED
-  PROJECT EYES v3.64 - PIN 3206 + LAYERS 1, 2 & 3 SECURITY SHIELD
+  PROJECT EYES v3.65 - VOICE-GUIDED ACCESSIBILITY + VISUAL STEP CHECKMARKS + LAYERS 1, 2 & 3 SHIELD
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.64 | Terrance Watkins • Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.65 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
     * {
       box-sizing: border-box; margin: 0; padding: 0;
@@ -67,25 +67,36 @@
     .vault-err { color: #f87171; font-size: 10.5px; font-weight: 800; margin-top: 6px; min-height: 14px; }
     header {
       text-align: center; width: 100%; max-width: 600px;
-      display: flex; align-items: center; justify-content: center; padding: 2px 4px;
+      display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 2px 4px;
     }
     .patent-pill {
       background: rgba(56, 189, 248, 0.14); color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.4); font-size: 9px; font-weight: 900;
-      letter-spacing: 0.5px; padding: 4px 12px; border-radius: 999px; text-transform: uppercase;
+      border: 1px solid rgba(56, 189, 248, 0.4); font-size: 8.5px; font-weight: 900;
+      letter-spacing: 0.4px; padding: 4px 10px; border-radius: 999px; text-transform: uppercase;
+      flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
+    .voice-pill-btn {
+      background: rgba(253, 224, 71, 0.16); color: #fde047;
+      border: 1.5px solid #fde047; font-size: 9px; font-weight: 900;
+      padding: 4px 9px; border-radius: 999px; text-transform: uppercase;
+      cursor: pointer; flex-shrink: 0; display: flex; align-items: center; gap: 4px;
+    }
+    .voice-pill-btn:active { transform: scale(0.95); background: rgba(253, 224, 71, 0.3); }
     .stage-bar { width: 100%; max-width: 600px; display: flex; gap: 4px; flex-shrink: 0; }
     .stage-step {
-      flex: 1; text-align: center; padding: 6px 2px; font-size: 10px; font-weight: 900;
+      flex: 1; text-align: center; padding: 6px 2px; font-size: 9.5px; font-weight: 900;
       background: #111827; color: #94a3b8; border-radius: 7px;
       border: 2px solid #334155; transition: all 0.2s ease;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .stage-step.active {
       background: linear-gradient(135deg, #0284c7, #0369a1);
       color: #fde047; border-color: #fde047;
-      box-shadow: 0 0 10px rgba(253, 224, 71, 0.35); transform: scale(1.02);
+      box-shadow: 0 0 12px rgba(253, 224, 71, 0.5); transform: scale(1.04);
     }
-    .stage-step.done { background: rgba(22, 163, 74, 0.25); color: #4ade80; border-color: #4ade80; }
+    .stage-step.done {
+      background: rgba(22, 163, 74, 0.28); color: #4ade80; border-color: #4ade80;
+    }
     .camera-box {
       position: relative; width: 100%; max-width: 600px; height: 118px;
       border-radius: 10px; overflow: hidden; border: 2px solid #1e293b;
@@ -126,7 +137,7 @@
       text-transform: uppercase; letter-spacing: 0.4px; padding: 4px 8px;
       border-radius: 6px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;
     }
-    .coach-badge-pill { background: #0f172a; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 900; }
+    .coach-badge-pill { background: #0f172a; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 900; cursor: pointer; }
     .coach-list { display: flex; flex-direction: column; gap: 4px; }
     .coach-line {
       font-size: 11.5px; font-weight: 800; color: #ffffff; line-height: 1.25;
@@ -283,7 +294,7 @@
     }
   </style>
 
-  <!-- LAYER 3: ANTI-INSPECT / ANTI-COPY / ENCODED PIN 3206 GUARD -->
+  <!-- LAYER 3: ANTI-INSPECT / ANTI-COPY / FAILSAFE PIN GUARD (SUPPORTS 3206 & 1982) -->
   <script>
     document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
     document.addEventListener('copy', function(e) { e.preventDefault(); });
@@ -301,12 +312,34 @@
       }
     });
 
+    window._lastSpokenPrompt = "Tap the blue bar below to begin your vision check.";
+    window._voiceEnabled = true;
+
+    window._0xSpeak = function(text) {
+      if (text) window._lastSpokenPrompt = text;
+      if (!window._voiceEnabled || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        var utter = new SpeechSynthesisUtterance(window._lastSpokenPrompt);
+        utter.rate = 0.96;
+        utter.pitch = 1.0;
+        utter.volume = 1.0;
+        window.speechSynthesis.speak(utter);
+      } catch (err) {}
+    };
+
+    window._0xReplayVoice = function() {
+      window._voiceEnabled = true;
+      window._0xSpeak(window._lastSpokenPrompt);
+    };
+
     window.checkVaultPin = function() {
       var box = document.getElementById('vaultPinInput');
       var err = document.getElementById('vaultErrMsg');
       if (!box) return;
       var digits = box.value.replace(/[^0-9]/g, '');
-      if (digits.length === 4 && window.btoa(digits) === 'MzIwNg==') {
+      var enc = digits.length === 4 ? window.btoa(digits) : '';
+      if (digits.length === 4 && (enc === 'MzIwNg==' || enc === 'MTk4Mg==')) {
         document.getElementById('pinVaultOverlay').style.display = 'none';
         if (typeof window.startEyesEngine === 'function') window.startEyesEngine();
       } else if (digits.length >= 4) {
@@ -325,12 +358,12 @@
   <!-- PIN VAULT OVERLAY (LAYERS 1 & 2: USPTO PRIORITY + CONFIDENTIAL BETA AGREEMENT) -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">🔒 Project Eyes v3.64</div>
+      <div class="vault-title">🔒 Project Eyes v3.65</div>
       <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
       <div class="nda-box">
         <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
         <div class="nda-text">
-          Protected under USPTO Provisional Patent Application No. <strong>64/174,835</strong> (Inventor: <strong>Terrance Watkins</strong>). By entering your tester PIN and unlocking this system, you agree that this software is strictly confidential and that you will not copy, share, forward, or reverse-engineer any part of this system.
+          Protected under USPTO Provisional Patent Application No. <strong>64/174,835</strong> (Inventor: <strong>Terrance Lamont Watkins</strong>). By entering your tester PIN and unlocking this system, you agree that this software is strictly confidential and that you will not copy, share, forward, or reverse-engineer any part of this system.
         </div>
       </div>
       <div style="font-size: 10.5px; color: #cbd5e1; margin-bottom: 8px; font-weight: 700;">Enter 4-Digit Authorized Tester PIN:</div>
@@ -340,13 +373,15 @@
     </div>
   </div>
 
-  <!-- CENTERED BLUE PATENT PILL HEADER -->
+  <!-- HEADER WITH PATENT PILL + VOICE REPLAY BUTTON -->
   <header>
     <div class="patent-pill" id="hwBadgePill">Terrance Watkins • Patent Pending 64/174,835</div>
+    <button type="button" class="voice-pill-btn" onclick="window._0xReplayVoice()">🔊 Repeat Voice</button>
   </header>
 
+  <!-- 6-STAGE PROGRESS BAR WITH LIVE POINTER & CHECKMARKS -->
   <div class="stage-bar">
-    <div class="stage-step active" id="st1">1. Blur</div>
+    <div class="stage-step active" id="st1">👉 1. Blur</div>
     <div class="stage-step" id="st2">2. Left</div>
     <div class="stage-step" id="st3">3. Right</div>
     <div class="stage-step" id="st4">4. Both</div>
@@ -354,7 +389,7 @@
     <div class="stage-step" id="st6">6. Rx Score</div>
   </div>
 
-  <!-- BOX 1 UNDER THE 6 STEPS: CAMERA BOX (NO NAME) -->
+  <!-- BOX 1 UNDER THE 6 STEPS: CAMERA BOX -->
   <div class="camera-box" id="cameraBox">
     <video id="webcam" autoplay playsinline muted></video>
     <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
@@ -369,20 +404,20 @@
     </div>
   </div>
 
-  <!-- BOX 2 UNDER CAMERA BOX: COACH PANEL (NO NAME) -->
+  <!-- BOX 2 UNDER CAMERA BOX: COACH PANEL -->
   <div class="coach-panel" id="coachPanel">
     <div class="coach-header">
       <span id="coachTitle">⚡ STEP 1 OF 6: GLASSES &amp; CONTACTS RX SETUP</span>
-      <span id="coachBadge" class="coach-badge-pill">STEP 1</span>
+      <span id="coachBadge" class="coach-badge-pill" onclick="window._0xReplayVoice()">🔊 STEP 1</span>
     </div>
     <div class="coach-list" id="coachList">
       <div class="coach-line">1. Put in <span class="coach-highlight">STAND</span> &amp; remove glasses to measure <span class="coach-highlight">LEFT &amp; RIGHT EYE</span>.</div>
       <div class="coach-line">2. Center <span class="coach-highlight">GREEN DOT</span> to calibrate <span class="coach-highlight">GLASSES &amp; CONTACTS RX</span>.</div>
-      <div class="coach-line">3. Tap the <span class="coach-highlight">BIG BLUE BUTTON</span> below to lock chair distance!</div>
+      <div class="coach-line">3. Tap the <span class="coach-highlight">BLUE BAR BELOW</span> to begin your vision check!</div>
     </div>
   </div>
 
-  <!-- BOX 3 UNDER COACH PANEL: OPTOTYPE & RESULTS CARD (NO NAME) -->
+  <!-- BOX 3 UNDER COACH PANEL: OPTOTYPE & RESULTS CARD -->
   <div class="optotype-card">
     <div class="card-header">
       <span id="acuityLabel">Step 1: Glasses &amp; Contacts Rx Calibration</span>
@@ -390,7 +425,7 @@
     </div>
     <div class="optotype-viewport">
       <div id="gatePromptBtn" onclick="window._0xGate()">
-        <div class="gate-main" id="gateMainText">👉 TAP HERE TO LOCK CHAIR DISTANCE 👈</div>
+        <div class="gate-main" id="gateMainText">👉 TAP BLUE BAR BELOW TO BEGIN VISION CHECK 👈</div>
       </div>
       <canvas id="snellenCanvas"></canvas>
       <div id="readingBox">
@@ -432,18 +467,19 @@
     <button class="reset-btn" onclick="window._0xReset()">Reset Check</button>
     <footer>Terrance Watkins • Patent Pending 64/174,835</footer>
   </div>
-  <!-- OFFICIAL PRINTABLE PRESCRIPTION DOCUMENT (WITH YOUR NAME & PATENT PENDING) -->
+
+  <!-- OFFICIAL PRINTABLE PRESCRIPTION DOCUMENT -->
   <div id="printableRxSheet">
     <div class="prx-header">
       <div>
         <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
         <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.64</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Lamont Watkins • Build v3.65</div>
       </div>
       <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
     <div class="prx-meta-grid">
-      <div class="prx-meta-row"><strong>Inventor:</strong> Terrance Watkins</div>
+      <div class="prx-meta-row"><strong>Inventor:</strong> Terrance Lamont Watkins</div>
       <div class="prx-meta-row"><strong>Patent Status:</strong> Patent Pending 64/174,835</div>
       <div class="prx-meta-row"><strong>Locked Calibration Distance:</strong> <span id="prxLockedDist">--</span></div>
       <div class="prx-meta-row"><strong>Measured Blur Horizon:</strong> <span id="prxBlurDist">--</span></div>
@@ -491,7 +527,7 @@
       </div>
     </div>
     <div class="prx-footer-stamp">
-      TERRANCE WATKINS • PATENT PENDING 64/174,835 • COPYRIGHT &copy; 2026 TERRANCE WATKINS. ALL RIGHTS RESERVED.
+      TERRANCE WATKINS • PATENT PENDING 64/174,835 • COPYRIGHT &copy; 2026 TERRANCE LAMONT WATKINS. ALL RIGHTS RESERVED.
     </div>
   </div>
 
@@ -530,6 +566,7 @@
     const _STEPS = [200, 150, 100, 70, 50, 40, 30, 25, 20, 15];
     const _BLUR_STEPS = [35, 30, 25, 20, 15];
     const _WORDS = ["Army", "veteran", "Terence", "Watkins", "built", "this", "vision", "engine."];
+    const _STAGE_LABELS = ["1. Blur", "2. Left", "3. Right", "4. Both", "5. Read", "6. Rx Score"];
 
     let _st = 1, _wG = true, _inB = false, _sI = 0, _bStepIdx = 1;
     let _cD = _STEPS[0], _cDir = 'RIGHT', _lH = 0, _lM = 0;
@@ -553,7 +590,7 @@
     }
 
     function _setC(t, b, l1, l2, l3) {
-      _cTl.innerText = t; _cBg.innerText = b;
+      _cTl.innerText = t; _cBg.innerText = "🔊 " + b;
       _cLs.innerHTML = `<div class="coach-line">1. ${l1}</div><div class="coach-line">2. ${l2}</div><div class="coach-line">3. ${l3}</div>`;
     }
 
@@ -596,11 +633,12 @@
       };
     }
 
-    function _sGP(m) {
+    function _sGP(m, spokenText) {
       _wG = true; _inB = false;
       _sCv.style.display = "none"; _rBx.style.display = "none"; _rpB.style.display = "none";
       _exC.innerHTML = ""; _exC.className = "controls-wrap align-center";
       _gMn.innerText = m; _gBt.style.display = "flex";
+      if (spokenText) window._0xSpeak(spokenText);
     }
 
     window._0xGate = function() {
@@ -612,12 +650,13 @@
         _dTE('RIGHT', _sCm || 44, _BLUR_STEPS[_bStepIdx]);
         _setC(
           "⚡ STEP 1: CALIBRATE GLASSES & CONTACTS BLUR", "BLUR CHECK",
-          "If 'E' is sharp: Tap <span class='coach-highlight'>BLUE BUTTON</span> to shrink it.",
-          "Or <span class='coach-highlight'>LEAN BACK</span> slowly until the 'E' blurs.",
-          "Tap <span class='coach-highlight'>YELLOW BUTTON</span> the moment 'E' blurs to set Base Rx!"
+          "Look in the <span class='coach-highlight'>WHITE BOX</span>. Can you see the direction the 'E' is facing?",
+          "If <span class='coach-highlight'>YES</span>: Click the <span class='coach-highlight'>BLUE BOX</span> to shrink it.",
+          "If <span class='coach-highlight'>NOT</span>: Click the <span class='coach-highlight'>ORANGE BOX</span> to lock your blur point!"
         );
         _exC.className = "controls-wrap align-center";
-        _exC.innerHTML = `<div class="horizon-deck"><button class="horizon-btn-blur" onclick="window._0xLockB()">👀 THE "E" IS BLURRY!<br>TAP TO LOCK (<span id="liveBlurBtnCm">-- cm</span>)</button><button class="horizon-btn-shrink" onclick="window._0xShrinkBlurTarget()">🔍 STILL CLEAR<br>(SHRINK THE "E")</button></div>`;
+        _exC.innerHTML = `<div class="horizon-deck"><button class="horizon-btn-blur" onclick="window._0xLockB()">🟧 CANNOT SEE "E"<br>TAP ORANGE BOX (<span id="liveBlurBtnCm">-- cm</span>)</button><button class="horizon-btn-shrink" onclick="window._0xShrinkBlurTarget()">🟦 YES, I SEE IT<br>(TAP BLUE BOX)</button></div>`;
+        window._0xSpeak("Look in the white box. Can you see the direction the E is facing? If yes, click the blue box. If not, click the orange box.");
       } else if (_st >= 2 && _st <= 4) {
         _sAS();
       } else if (_st === 5) {
@@ -632,6 +671,7 @@
         _cDir = _DIRS[Math.floor(Math.random() * _DIRS.length)];
         _dTE(_cDir, _sCm || 44.0, curDen);
         _aLb.innerText = `Step 1: Shrunk to 20/${curDen}`;
+        window._0xSpeak("Look in the white box. Can you see the direction the E is facing? If yes, click the blue box. If not, click the orange box.");
       } else {
         window._0xLockB();
       }
@@ -651,10 +691,13 @@
       _setC(
         "⚡ STEP 2: MEASURE LEFT EYE (GLASSES & CONTACTS)", "LEFT EYE RX",
         "Stay at <span class='coach-highlight'>Target: " + tS + "</span> to measure <span class='coach-highlight'>LEFT EYE</span>.",
-        "Cover <span class='coach-highlight'>RIGHT EYE</span> with your RIGHT hand.",
-        "Tap <span class='coach-highlight'>BLUE BUTTON</span> with your LEFT hand!"
+        "Cover your <span class='coach-highlight'>RIGHT EYE</span> with your RIGHT hand.",
+        "Tap the <span class='coach-highlight'>BLUE BOX</span> once your right eye is covered!"
       );
-      _sGP("👉 TAP HERE ONCE YOUR RIGHT EYE IS COVERED WITH YOUR HAND 👈");
+      _sGP(
+        "👉 TAP BLUE BOX ONCE YOUR RIGHT EYE IS COVERED 👈",
+        "Tap the blue box once your right eye is covered. That will begin step one of the test."
+      );
     };
 
     function _sAS() {
@@ -664,18 +707,21 @@
       if (_st === 2) {
         _setC("⚡ STEP 2: LEFT EYE GLASSES & CONTACTS RX", "LEFT D-PAD",
           "Keep <span class='coach-highlight'>RIGHT EYE COVERED</span> for Left Eye Rx.",
-          "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to match the 'E'.",
-          "Tap red <span class='coach-highlight'>TOO BLURRY</span> to lock Left Eye Rx!");
+          "Tap the <span class='coach-highlight'>ARROW</span> matching the direction the 'E' points.",
+          "Tap red <span class='coach-highlight'>TOO BLURRY</span> if you can't see it!");
+        window._0xSpeak("Tap the arrow matching the direction the E is facing, or tap Too Blurry.");
       } else if (_st === 3) {
         _setC("⚡ STEP 3: RIGHT EYE GLASSES & CONTACTS RX", "RIGHT D-PAD",
           "Keep <span class='coach-highlight'>LEFT EYE COVERED</span> for Right Eye Rx.",
-          "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to match the 'E'.",
-          "Tap red <span class='coach-highlight'>TOO BLURRY</span> to lock Right Eye Rx!");
+          "Tap the <span class='coach-highlight'>ARROW</span> matching the direction the 'E' points.",
+          "Tap red <span class='coach-highlight'>TOO BLURRY</span> if you can't see it!");
+        window._0xSpeak("Tap the arrow matching the direction the E is facing, or tap Too Blurry.");
       } else {
         _setC("⚡ STEP 4: BOTH EYES BALANCE CHECK", "BOTH EYES OPEN",
           "<span class='coach-highlight'>UNCOVER BOTH EYES</span> & stay at " + dT + " cm.",
-          "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to verify binocular Rx.",
+          "Tap the <span class='coach-highlight'>ARROW</span> matching the direction the 'E' points.",
           "Tap red <span class='coach-highlight'>TOO BLURRY</span> when you can't read it!");
+        window._0xSpeak("With both eyes open, tap the arrow matching the E, or tap Too Blurry.");
       }
       _exC.className = "controls-wrap " + (_st === 2 ? "align-left" : _st === 3 ? "align-right" : "align-center");
       _exC.innerHTML =
@@ -739,23 +785,32 @@
         _st = 3; _uSUI(); _aLb.innerText = "Step 3: Right Eye Calibration"; _sRd.innerText = `L Line: 20/${_osD}`;
         _setC("⚡ STEP 3: MEASURE RIGHT EYE (GLASSES & CONTACTS)", "RIGHT EYE RX",
           "Stay at <span class='coach-highlight'>Target: " + dT + " cm</span> to measure <span class='coach-highlight'>RIGHT EYE</span>.",
-          "Cover <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand.",
-          "Tap <span class='coach-highlight'>BLUE BUTTON</span> with your RIGHT hand!");
-        _sGP("👉 TAP HERE ONCE YOUR LEFT EYE IS COVERED WITH YOUR HAND 👈");
+          "Cover your <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand.",
+          "Tap the <span class='coach-highlight'>BLUE BOX</span> once your left eye is covered!");
+        _sGP(
+          "👉 TAP BLUE BOX ONCE YOUR LEFT EYE IS COVERED 👈",
+          "Then tap the blue box once your left eye is covered."
+        );
       } else if (_st === 3) {
         _st = 4; _uSUI(); _aLb.innerText = "Step 4: Uncover Both Eyes"; _sRd.innerText = `R Line: 20/${_odD}`;
         _setC("⚡ STEP 4: UNCOVER BOTH EYES (BALANCE CHECK)", "BOTH EYES OPEN",
-          "<span class='coach-highlight'>OPEN BOTH EYES</span> at Target: " + dT + " cm.",
+          "<span class='coach-highlight'>UNCOVER BOTH EYES</span> at Target: " + dT + " cm.",
           "Balancing <span class='coach-highlight'>LEFT & RIGHT EYE</span> Glasses + Contacts Rx.",
-          "Tap <span class='coach-highlight'>BLUE BUTTON</span> to test both eyes together!");
-        _sGP("👉 TAP HERE ONCE BOTH EYES ARE UNCOVERED 👈");
+          "Tap the <span class='coach-highlight'>BLUE BOX</span> once you uncover both eyes!");
+        _sGP(
+          "👉 TAP BLUE BOX ONCE YOU UNCOVER BOTH EYES 👈",
+          "Tap the blue box once you uncover both eyes."
+        );
       } else if (_st === 4) {
         _st = 5; _uSUI(); _aLb.innerText = "Step 5: Reading Check"; _sRd.innerText = `O.U. 20/${_ouD}`;
         _setC("⚡ STEP 5: 8-WORD READING TEST", "TAP IN ORDER",
           "Keep <span class='coach-highlight'>BOTH EYES OPEN</span> in your chair.",
           "8 words will appear in the white box below.",
-          "<span class='coach-highlight'>TAP EACH WORD IN ORDER</span> to unlock your Glasses & Contacts Rx!");
-        _sGP("👉 TAP HERE TO SHOW THE 8 WORDS 👈");
+          "<span class='coach-highlight'>TAP EACH WORD IN ORDER</span> to finish the test!");
+        _sGP(
+          "👉 TAP BLUE BOX ONCE READY TO READ & TAP 8 WORDS 👈",
+          "Tap the blue box once you're ready to read and tap 8 words to finish the test."
+        );
       }
     }
 
@@ -763,6 +818,7 @@
       _sCv.style.display = "none"; _exC.innerHTML = ""; _exC.className = "controls-wrap align-center";
       _rBx.style.display = "block"; _aLb.innerText = "Step 5: Tap Words In Order";
       _sRd.innerText = `0 / ${_WORDS.length} Words`; _wCt.innerHTML = ""; _wI = 0; _tS = [performance.now()];
+      window._0xSpeak("Tap each of the 8 words in order from left to right to finish the test.");
       _WORDS.forEach((w, idx) => {
         const sp = document.createElement('span');
         sp.innerText = w; sp.style.padding = "4px 7px"; sp.style.borderRadius = "5px"; sp.style.cursor = "pointer";
@@ -797,6 +853,8 @@
         `👓 <span class='coach-highlight'>GLASSES RX</span>: Left ${osM.shortGlasses} | Right ${odM.shortGlasses}`,
         `💧 <span class='coach-highlight'>CONTACTS RX</span>: Left ${osM.shortContacts} | Right ${odM.shortContacts}`,
         "Tap <span class='coach-highlight'>PRINT OFFICIAL RX</span> below to print your prescription!");
+
+      window._0xSpeak("Vision check complete. Your estimated glasses and contacts results are ready. Tap the blue button at the bottom to print or save your report.");
 
       document.getElementById('repOS').innerText = `${osM.snellen20Ft} (20-Ft Eq)`;
       document.getElementById('rxOS').innerText = osM.glassesStr;
@@ -840,8 +898,11 @@
       _setC("⚡ STEP 1 OF 6: GLASSES & CONTACTS RX SETUP", "STEP 1",
         "Put in <span class='coach-highlight'>STAND</span> & remove glasses to measure <span class='coach-highlight'>LEFT & RIGHT EYE</span>.",
         "Center <span class='coach-highlight'>GREEN DOT</span> to calibrate <span class='coach-highlight'>GLASSES & CONTACTS RX</span>.",
-        "Tap the <span class='coach-highlight'>BIG BLUE BUTTON</span> below to lock chair distance!");
-      _sGP("👉 TAP HERE TO LOCK CHAIR DISTANCE 👈");
+        "Tap the <span class='coach-highlight'>BLUE BAR BELOW</span> to begin your vision check!");
+      _sGP(
+        "👉 TAP BLUE BAR BELOW TO BEGIN VISION CHECK 👈",
+        "Tap the blue bar below to begin your vision check."
+      );
     };
 
     function _uSUI() {
@@ -849,8 +910,16 @@
         const el = document.getElementById(id);
         if (el) {
           el.className = 'stage-step';
-          if (idx + 1 < _st) el.classList.add('done');
-          if (idx + 1 === _st) el.classList.add('active');
+          const baseName = _STAGE_LABELS[idx];
+          if (idx + 1 < _st) {
+            el.classList.add('done');
+            el.innerText = '✅ ' + baseName;
+          } else if (idx + 1 === _st) {
+            el.classList.add('active');
+            el.innerText = '👉 ' + baseName;
+          } else {
+            el.innerText = baseName;
+          }
         }
       });
     }
@@ -940,7 +1009,9 @@
 
     window.startEyesEngine = function() {
       _0xCalibrateHardware();
+      _uSUI();
       _cam.start();
+      window._0xSpeak("Tap the blue bar below to begin your vision check.");
     };
   </script>
 </body>
