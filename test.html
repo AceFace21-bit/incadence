@@ -3,14 +3,14 @@
   USPTO PROVISIONAL PATENT APPLICATION NO. 64/174,835
   Terrance Watkins • Patent Pending 64/174,835
   CONFIDENTIAL PROPRIETARY TELEMETRY SYSTEM - UNAUTHORIZED REPRODUCTION PROHIBITED
-  PROJECT EYES v3.67 - AUDIO CUE BEEP + SMOOTH GEMINI VOICE + FULL BUILD TXT
+  PROJECT EYES v3.68 - BROADCAST WEATHER ALERT DUAL-TONE (853Hz+960Hz) + SMOOTH GEMINI VOICE + FULL BUILD TXT
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.67 | Terrance Watkins • Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.68 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
     * {
       box-sizing: border-box; margin: 0; padding: 0;
@@ -325,7 +325,7 @@
   <!-- PIN VAULT OVERLAY (LAYERS 1 & 2: USPTO PRIORITY + CONFIDENTIAL BETA AGREEMENT) -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">🔒 Project Eyes v3.67</div>
+      <div class="vault-title">🔒 Project Eyes v3.68</div>
       <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
       <div class="nda-box">
         <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
@@ -439,7 +439,7 @@
       <div>
         <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
         <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.67</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.68</div>
       </div>
       <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
@@ -498,14 +498,14 @@
 
   <script>
     /* =========================================================================
-       AUDIO ENGINE: STANDARD HARDWARE-SYNTHESIZED BEEP + GEMINI VOICE
-       Generates a clean 880Hz / 65ms audio cue tone via Web Audio API,
-       followed immediately by the smooth natural Gemini female voice.
+       AUDIO ENGINE: OFFICIAL EAS BROADCAST WEATHER ALERT DUAL-TONE (853 Hz + 960 Hz)
+       Synthesizes simultaneous 853 Hz + 960 Hz harmonic frequencies lasting 1.25 seconds,
+       followed immediately by the smooth Gemini female voice.
        ========================================================================= */
     let _audioCtx = null;
     let _activeVoice = null;
 
-    function _playAudioCueBeep() {
+    function _playBroadcastAlertBuzzer() {
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;
@@ -514,24 +514,36 @@
           _audioCtx.resume();
         }
 
-        const osc = _audioCtx.createOscillator();
-        const gain = _audioCtx.createGain();
+        const now = _audioCtx.currentTime;
+        const dur = 1.25; // 1.25-second sustained broadcast alarm buzz
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(880, _audioCtx.currentTime); // Standard 880 Hz crisp cue beep
-        
-        // Attack & decay envelope for a smooth, punchy medical/tech alert tone
-        gain.gain.setValueAtTime(0.0001, _audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.18, _audioCtx.currentTime + 0.015);
-        gain.gain.exponentialRampToValueAtTime(0.0001, _audioCtx.currentTime + 0.070);
+        // Master Gain
+        const masterGain = _audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.001, now);
+        masterGain.gain.linearRampToValueAtTime(0.24, now + 0.04);
+        masterGain.gain.setValueAtTime(0.24, now + dur - 0.05);
+        masterGain.gain.linearRampToValueAtTime(0.001, now + dur);
+        masterGain.connect(_audioCtx.destination);
 
-        osc.connect(gain);
-        gain.connect(_audioCtx.destination);
+        // Tone 1: 853 Hz (Official FCC EAS Attention Signal Low)
+        const osc1 = _audioCtx.createOscillator();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(853, now);
+        osc1.connect(masterGain);
 
-        osc.start(_audioCtx.currentTime);
-        osc.stop(_audioCtx.currentTime + 0.075);
+        // Tone 2: 960 Hz (Official FCC EAS Attention Signal High)
+        const osc2 = _audioCtx.createOscillator();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(960, now);
+        osc2.connect(masterGain);
+
+        osc1.start(now);
+        osc2.start(now);
+
+        osc1.stop(now + dur);
+        osc2.stop(now + dur);
       } catch (err) {
-        console.warn("Audio cue beep error: ", err);
+        console.warn("Alert buzzer error: ", err);
       }
     }
 
@@ -563,20 +575,20 @@
 
     function speakGemini(text) {
       if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel(); // Flush queue
+      window.speechSynthesis.cancel(); // Stop any pending speech
 
-      // Sound the audio cue beep first
-      _playAudioCueBeep();
+      // Sound the sustained EAS weather alert buzz
+      _playBroadcastAlertBuzzer();
 
-      // Brief pause of 180ms after the beep so the voice speaks smoothly
+      // Delay speech slightly past the 1.25s alert tone so the broadcast sounds distinct and commanding
       setTimeout(() => {
         const utt = new SpeechSynthesisUtterance(text);
         if (_activeVoice) utt.voice = _activeVoice;
-        utt.pitch = 1.02; // Smooth, warm, natural
-        utt.rate = 0.94;  // Conversational rhythm
+        utt.pitch = 1.02; // Warm, smooth, authoritative
+        utt.rate = 0.94;  // Natural cadence
         utt.volume = 1.0;
         window.speechSynthesis.speak(utt);
-      }, 180);
+      }, 1320);
     }
 
     const _vEl = document.getElementById('webcam');
