@@ -124,29 +124,36 @@
   </aside>
 
   <!-- Header -->
+    <!-- Header with Top Build Version Badge & Centered Branding -->
   <header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-2 shrink-0 z-50">
     <div class="max-w-md mx-auto relative flex items-center justify-between">
-      <!-- Centered Forward March Transit Branding -->
-      <div class="flex items-center space-x-2">
-        <div class="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-          <i data-lucide="shield-check" class="w-4 h-4"></i>
-        </div>
-        <div class="text-left">
-          <div class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none">Forward March Transit</div>
-          <span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-0.5">IN CADENCE // VA PITTSBURGH DIVISION</span>
-        </div>
+      <!-- Top Build Version Badge (Left) -->
+      <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>BUILD 2.5 (REV 11)</span>
       </div>
 
-      <!-- Zero-PII Badge -->
+      <!-- CENTERED Forward March Transit & In Cadence Branding -->
+      <div class="flex flex-col items-center justify-center text-center flex-1 px-2">
+        <div class="flex items-center justify-center space-x-1.5">
+          <div class="w-5 h-5 rounded-md bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          </div>
+          <span class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none">Forward March Transit</span>
+        </div>
+        <span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-1 leading-none">IN CADENCE // VA PITTSBURGH DIVISION</span>
+      </div>
+
+      <!-- Zero-PII Badge (Right) -->
       <button 
         id="openZeroPiiBtn" 
         type="button" 
         title="View Security & Zero-PII Compliance Architecture"
         aria-label="View Zero PII security disclosure"
-        class="flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 text-[10px] font-medium text-slate-300 transition shrink-0"
+        class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 text-[10px] font-medium text-slate-300 transition shrink-0 shadow-sm"
       >
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="font-mono-code font-bold">Zero-PII</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <span class="font-mono-code font-bold text-[9px]">Zero-PII</span>
       </button>
     </div>
   </header>
@@ -260,11 +267,11 @@
     <section id="resultCard" class="bg-slate-900 border-2 border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md flex items-center justify-between gap-2">
       <!-- Left Side: Hub Details -->
       <div class="min-w-0 flex-1">
-        <div class="flex items-center space-x-1.5 mb-0.5">
-          <span id="visnBadge" class="text-[10px] font-mono-code text-slate-400 shrink-0 font-bold">VISN 4</span>
+        <div class="flex items-center space-x-1.5 mb-0.5 truncate">
+          <span id="visnBadge" class="text-[10px] font-mono-code text-emerald-400 shrink-0 font-bold uppercase tracking-wider truncate">VA Pittsburgh Healthcare System</span>
           <span class="text-slate-600 text-[10px]">•</span>
-          <span id="hubBadge" class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-emerald-400 truncate">
-            SW Pennsylvania Hub
+          <span id="hubBadge" class="text-[10px] font-mono-code text-slate-400 font-medium truncate">
+            University Drive & Heinz Divisions
           </span>
         </div>
         <h2 id="facilityName" class="text-xs font-extrabold text-slate-100 leading-snug truncate">
@@ -329,7 +336,7 @@
   <!-- Footer & Federal Compliance Disclaimers -->
   <footer class="border-t border-slate-800/90 py-1.5 text-center text-slate-500 text-[8px] font-mono-code px-2 shrink-0 space-y-0.5">
     <div class="text-slate-400 font-bold tracking-wide truncate">
-      DESIGNED &amp; DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH &bull; BUILD 2.5 (REV 09)
+      DESIGNED &amp; DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH &bull; BUILD 2.5 (REV 11)
     </div>
     <div class="text-slate-500 text-[7.5px] leading-tight max-w-sm mx-auto">
       Independent veteran access platform. Not an official VA agency portal. Beneficiary travel subject to 38 CFR Part 70.
@@ -556,10 +563,10 @@
     mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 
     const defaultHub = {
-      badge: "SW Pennsylvania Hub",
-      visn: "VISN 4",
+      badge: "University Drive & Heinz Divisions",
+      visn: "VA Pittsburgh Healthcare System",
       name: "VA Pittsburgh Healthcare System",
-      desc: "University Drive & H.J. Heinz Divisions",
+      desc: "University Drive & H.J. Heinz Campus Catchment",
       phone: "412-360-3620 (Press 1)",
       cleanPhone: "4123603620,1",
       coords: [-79.9600, 40.4444]
@@ -581,33 +588,33 @@
       .addTo(map);
 
     const visnDatabase = {
-      "visn1": { badge: "New England Hub", visn: "VISN 1", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
-      "visn2": { badge: "NY / NJ Metro Hub", visn: "VISN 2", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Catchment", phone: "718-584-9000", cleanPhone: "7185849000", coords: [-73.9004, 40.8677] },
-      "visn4_pgh": { badge: "SW Pennsylvania Hub", visn: "VISN 4", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Divisions", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
-      "visn4_butler": { badge: "Butler Regional Hub", visn: "VISN 4", name: "Butler VA Health Care System", desc: "Butler County Regional Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
-      "visn4_erie": { badge: "NW Pennsylvania Hub", visn: "VISN 4", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
-      "visn4_altoona": { badge: "Central PA Hub", visn: "VISN 4", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
-      "visn4_lebanon": { badge: "South Central PA Hub", visn: "VISN 4", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
-      "visn4_coatesville": { badge: "Brandywine Valley Hub", visn: "VISN 4", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
-      "visn4_wilkes": { badge: "Northeastern PA Hub", visn: "VISN 4", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
-      "visn4_wilmington": { badge: "Delaware Valley Hub", visn: "VISN 4", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
-      "visn4_philly": { badge: "SE Pennsylvania Hub", visn: "VISN 4", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
-      "visn5": { badge: "Capitol Hub", visn: "VISN 5", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0125, 38.9298] },
-      "visn6": { badge: "Mid-Atlantic Hub", visn: "VISN 6", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA", phone: "910-488-2120", cleanPhone: "9104882120", coords: [-78.8872, 35.0805] },
-      "visn7": { badge: "Southeast Hub", visn: "VISN 7", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.3015, 33.7938] },
-      "visn8": { badge: "Sunshine Hub", visn: "VISN 8", name: "James A. Haley Hospital (Tampa)", desc: "Florida & Puerto Rico Regional Catchment", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4278, 28.0592] },
-      "visn9": { badge: "MidSouth Hub", visn: "VISN 9", name: "Tennessee Valley Healthcare", desc: "Tennessee, Kentucky & South IN", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8041, 36.1444] },
-      "visn10": { badge: "Midwest Hub (OH/IN/MI)", visn: "VISN 10", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana & Lower Michigan", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6119, 41.5036] },
-      "visn12": { badge: "Great Lakes Hub", visn: "VISN 12", name: "Jesse Brown VAMC (Chicago)", desc: "Illinois, Wisconsin & Upper MI", phone: "312-569-8387", cleanPhone: "3125698387", coords: [-87.6749, 41.8703] },
-      "visn15": { badge: "Heartland Hub", visn: "VISN 15", name: "Kansas City VA Medical Center", desc: "Missouri, Kansas & South IL", phone: "816-861-4700", cleanPhone: "8168614700", coords: [-94.5222, 39.0494] },
-      "visn16": { badge: "South Central Hub", visn: "VISN 16", name: "Michael E. DeBakey VAMC", desc: "MS, LA, AR & East Texas", phone: "713-791-1414", cleanPhone: "7137911414", coords: [-95.3855, 29.7042] },
-      "visn17": { badge: "Heart of Texas Hub", visn: "VISN 17", name: "Central Texas Veterans Health", desc: "Central, South & West Texas", phone: "254-778-4811", cleanPhone: "2547784811", coords: [-97.3547, 31.0827] },
-      "visn19": { badge: "Rocky Mountain Hub", visn: "VISN 19", name: "Rocky Mountain Regional VAMC", desc: "CO, MT, UT, WY & West KS/NE", phone: "303-399-8020", cleanPhone: "3033998020", coords: [-104.8384, 39.7420] },
-      "visn20": { badge: "Northwest Hub", visn: "VISN 20", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, ID & Alaska", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3101, 47.5583] },
-      "visn21": { badge: "Sierra Pacific Hub", visn: "VISN 21", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii", phone: "415-221-4810", cleanPhone: "4152214810", coords: [-122.5052, 37.7820] },
-      "visn22": { badge: "Desert Pacific Hub", visn: "VISN 22", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4552, 34.0532] },
-      "visn23": { badge: "Midwest Hub (Upper)", visn: "VISN 23", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE", phone: "612-725-2000", cleanPhone: "6127252000", coords: [-93.2081, 44.9015] },
-      "national_fallback": { badge: "National Travel Dispatch", visn: "VA National", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Hotline", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
+      "visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
+      "visn2": { badge: "NY / NJ Metro Region", visn: "James J. Peters VAMC (Bronx)", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Regional Catchment", phone: "718-584-9000", cleanPhone: "7185849000", coords: [-73.9004, 40.8677] },
+      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
+      "visn4_butler": { badge: "Butler Regional Division", visn: "Butler VA Health Care System", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
+      "visn4_erie": { badge: "NW Pennsylvania Division", visn: "Erie VA Medical Center", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
+      "visn4_altoona": { badge: "Central PA Division", visn: "James E. Van Zandt VAMC", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+      "visn4_lebanon": { badge: "South Central PA Division", visn: "Lebanon VA Medical Center", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
+      "visn4_coatesville": { badge: "Brandywine Valley Division", visn: "Coatesville VA Medical Center", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
+      "visn4_wilkes": { badge: "Northeastern PA Division", visn: "Wilkes-Barre VA Medical Center", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
+      "visn4_wilmington": { badge: "Delaware Valley Division", visn: "Wilmington VA Medical Center", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey Catchment", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
+      "visn4_philly": { badge: "SE Pennsylvania Division", visn: "Michael J. Crescenz VAMC", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
+      "visn5": { badge: "Capital Regional Network", visn: "Washington DC VA Medical Center", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA Catchment", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0125, 38.9298] },
+      "visn6": { badge: "Mid-Atlantic Network", visn: "Fayetteville NC VA Medical Center", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA Catchment", phone: "910-488-2120", cleanPhone: "9104882120", coords: [-78.8872, 35.0805] },
+      "visn7": { badge: "Southeast Regional Network", visn: "Atlanta VA Medical Center", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina Catchment", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.3015, 33.7938] },
+      "visn8": { badge: "Sunshine Regional Network", visn: "James A. Haley Hospital (Tampa)", name: "James A. Haley Hospital (Tampa)", desc: "Florida & Puerto Rico Regional Catchment", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4278, 28.0592] },
+      "visn9": { badge: "MidSouth Regional Network", visn: "Tennessee Valley Healthcare", name: "Tennessee Valley Healthcare", desc: "Tennessee, Kentucky & South IN Catchment", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8041, 36.1444] },
+      "visn10": { badge: "Midwest Network (OH/IN/MI)", visn: "Louis Stokes Cleveland VAMC", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana & Lower Michigan Catchment", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6119, 41.5036] },
+      "visn12": { badge: "Great Lakes Network", visn: "Jesse Brown VAMC (Chicago)", name: "Jesse Brown VAMC (Chicago)", desc: "Illinois, Wisconsin & Upper MI Catchment", phone: "312-569-8387", cleanPhone: "3125698387", coords: [-87.6749, 41.8703] },
+      "visn15": { badge: "Heartland Regional Network", visn: "Kansas City VA Medical Center", name: "Kansas City VA Medical Center", desc: "Missouri, Kansas & South IL Catchment", phone: "816-861-4700", cleanPhone: "8168614700", coords: [-94.5222, 39.0494] },
+      "visn16": { badge: "South Central Regional Network", visn: "Michael E. DeBakey VAMC", name: "Michael E. DeBakey VAMC", desc: "MS, LA, AR & East Texas Catchment", phone: "713-791-1414", cleanPhone: "7137911414", coords: [-95.3855, 29.7042] },
+      "visn17": { badge: "Heart of Texas Network", visn: "Central Texas Veterans Health", name: "Central Texas Veterans Health", desc: "Central, South & West Texas Catchment", phone: "254-778-4811", cleanPhone: "2547784811", coords: [-97.3547, 31.0827] },
+      "visn19": { badge: "Rocky Mountain Network", visn: "Rocky Mountain Regional VAMC", name: "Rocky Mountain Regional VAMC", desc: "CO, MT, UT, WY & West KS/NE Catchment", phone: "303-399-8020", cleanPhone: "3033998020", coords: [-104.8384, 39.7420] },
+      "visn20": { badge: "Northwest Regional Network", visn: "VA Puget Sound Healthcare", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, ID & Alaska Catchment", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3101, 47.5583] },
+      "visn21": { badge: "Sierra Pacific Network", visn: "San Francisco VA Health Care", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii Catchment", phone: "415-221-4810", cleanPhone: "4152214810", coords: [-122.5052, 37.7820] },
+      "visn22": { badge: "Desert Pacific Network", visn: "VA Greater Los Angeles Healthcare", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona Catchment", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4552, 34.0532] },
+      "visn23": { badge: "Midwest Regional Network", visn: "Minneapolis VA Health Care", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE Catchment", phone: "612-725-2000", cleanPhone: "6127252000", coords: [-93.2081, 44.9015] },
+      "national_fallback": { badge: "National Dispatch Center", visn: "VA Beneficiary Travel Dispatch", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Beneficiary Travel Hotline", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
     };
 
     const zipInput = document.getElementById('zipInput');
