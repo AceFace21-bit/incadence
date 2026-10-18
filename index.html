@@ -688,7 +688,7 @@
     });
 
     closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
-    modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('modalDismissBtn'));
+    modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
 
     // Dismiss keyboard on outside touch
     document.addEventListener('touchstart', (e) => {
@@ -855,22 +855,28 @@
       executeLookup(cleanVal, 'Manual ZIP');
     });
 
-    // Resilient Fresh-Instance Speech Recognition
+    // Clean Multi-Tap Speech Recognition Engine
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let activeRecognition = null;
-    let isListening = false;
+    let micBusy = false;
 
     function resetMicBtn() {
-      isListening = false;
+      micBusy = false;
       if (voiceZipLabel) voiceZipLabel.textContent = "MIC";
-      if (voiceZipBtn) voiceZipBtn.classList.remove('border-red-500', 'bg-red-950/40');
+      if (voiceZipBtn) {
+        voiceZipBtn.classList.remove('border-red-500', 'bg-red-950/40');
+        voiceZipBtn.classList.add('border-emerald-500/50', 'bg-slate-800');
+      }
       if (micIcon) micIcon.classList.remove('animate-pulse');
     }
 
     function setMicListening() {
-      isListening = true;
+      micBusy = true;
       if (voiceZipLabel) voiceZipLabel.textContent = "REC...";
-      if (voiceZipBtn) voiceZipBtn.classList.add('border-red-500', 'bg-red-950/40');
+      if (voiceZipBtn) {
+        voiceZipBtn.classList.remove('border-emerald-500/50', 'bg-slate-800');
+        voiceZipBtn.classList.add('border-red-500', 'bg-red-950/40');
+      }
       if (micIcon) micIcon.classList.add('animate-pulse');
     }
 
@@ -880,20 +886,18 @@
           e.preventDefault();
           hideAlert();
 
-          // Stop and clear previous instance if still hanging or active
-          if (activeRecognition) {
+          // If currently running, tap acts as an instant cancel/toggle
+          if (activeRecognition || micBusy) {
             try {
-              activeRecognition.abort();
+              if (activeRecognition) activeRecognition.abort();
             } catch (err) {}
             activeRecognition = null;
-          }
-
-          if (isListening) {
             resetMicBtn();
             return;
           }
 
           try {
+            // Instantiate brand-new recognition instance on every tap
             const recognition = new SpeechRecognition();
             activeRecognition = recognition;
             recognition.continuous = false;
@@ -908,19 +912,19 @@
               if (!event.results || !event.results[0] || !event.results[0][0]) return;
               const transcript = event.results[0][0].transcript;
               const spokenDigits = transcript.replace(/\D/g, '').substring(0, 5);
+              
               if (spokenDigits.length >= 3) {
                 zipInput.value = spokenDigits;
                 if (clearZipBtn) clearZipBtn.classList.remove('hidden');
                 executeLookup(spokenDigits, 'Voice Input');
               } else {
-                showAlert(`Heard "${transcript}". Speak a 5-digit ZIP.`);
+                showAlert(`Heard "${transcript}". Try tapping MIC again.`);
               }
             };
 
             recognition.onerror = (e) => {
-              // Ignore benign user abort
               if (e.error !== 'aborted') {
-                showAlert("Mic access error. Type ZIP code.");
+                showAlert("Mic didn't catch that. Tap MIC to retry.");
               }
               resetMicBtn();
               activeRecognition = null;
@@ -933,7 +937,7 @@
 
             recognition.start();
           } catch (err) {
-            showAlert("Could not start microphone. Try again.");
+            showAlert("Tap MIC again to retry.");
             resetMicBtn();
             activeRecognition = null;
           }
