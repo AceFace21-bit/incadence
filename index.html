@@ -178,16 +178,16 @@
       <span class="text-[9px] font-mono-code text-slate-400 uppercase tracking-wider shrink-0 ml-1">VHA Direct</span>
     </div>
 
-    <!-- Input Section with Big Voice-First Mic & GPS Controls -->
+    <!-- Input Section: Streamlined Numeric Keypad & GPS Controls -->
     <section class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md">
       <div class="flex items-center justify-between mb-1.5">
         <label for="zipInput" class="block text-[11px] font-bold uppercase tracking-wider patriot-wave-text">
-          Enter 5-Digit ZIP Code or Speak Aloud
+          Enter 5-Digit ZIP Code
         </label>
         <span id="matchStatus" class="text-[10px] font-mono-code text-slate-400">Live Auto-Lookup</span>
       </div>
 
-      <div class="flex items-center space-x-1.5">
+      <div class="flex items-center space-x-2">
         <!-- Text / Number Pad Input Box -->
         <div class="relative flex-1">
           <input 
@@ -196,7 +196,7 @@
             pattern="[0-9]*" 
             inputmode="numeric" 
             maxlength="5" 
-            placeholder="5-digit ZIP..."
+            placeholder="Enter 5-digit ZIP..."
             class="tactile-btn w-full bg-slate-950 border-2 border-slate-700 focus:border-emerald-400 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-100 placeholder-slate-500 font-mono-code font-bold transition outline-none"
           >
           <button 
@@ -209,24 +209,12 @@
           </button>
         </div>
 
-        <!-- Always-Visible Voice Input Microphone Button -->
-        <button 
-          id="voiceZipBtn"
-          type="button"
-          title="Speak your ZIP code aloud"
-          aria-label="Speak your 5-digit ZIP code aloud"
-          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/50 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5 shrink-0 min-w-[58px]"
-        >
-          <i id="micIcon" data-lucide="mic" class="w-4 h-4 text-emerald-400"></i>
-          <span id="voiceZipLabel" class="font-mono-code font-bold text-[11px]">MIC</span>
-        </button>
-
         <!-- Current Location GPS Button -->
         <button 
           id="geoBtn"
           type="button"
           title="Detect Current Location"
-          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
+          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3.5 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5 shrink-0"
         >
           <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
           <span id="geoBtnLabel" class="font-mono-code font-bold text-[11px]">GPS</span>
@@ -339,10 +327,9 @@
   </main>
 
   <!-- Footer & Federal Compliance Disclaimers -->
-    <!-- Footer & Federal Compliance Disclaimers -->
   <footer class="border-t border-slate-800/90 py-1.5 text-center text-slate-500 text-[8px] font-mono-code px-2 shrink-0 space-y-0.5">
     <div class="text-slate-400 font-bold tracking-wide truncate">
-      DESIGNED &amp; DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH &bull; BUILD 2.4 (REV 08)
+      DESIGNED &amp; DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH &bull; BUILD 2.5 (REV 09)
     </div>
     <div class="text-slate-500 text-[7.5px] leading-tight max-w-sm mx-auto">
       Independent veteran access platform. Not an official VA agency portal. Beneficiary travel subject to 38 CFR Part 70.
@@ -440,7 +427,7 @@
       <div class="space-y-2 text-[11px] text-slate-300 leading-normal overflow-y-auto modal-scroll pr-1 max-h-[48dvh]">
         <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
           <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 1: Enter Your ZIP Code</strong>
-          Type your 5-digit ZIP or tap the microphone to speak it aloud.
+          Type your 5-digit ZIP into the input box or tap GPS.
         </div>
 
         <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
@@ -502,7 +489,6 @@
 
     // Voice Synthesis Prompt Audio Engine
     const instructionsSpeechText = "Welcome to Forward March Transit. To qualify, you must be 30 percent or more service connected, or VA travel authorized. Enter your 5-digit zip code below, and call your transit hub at least 48 hours prior to your appointment.";
-    let audioPlayed = false;
 
     function speakGreeting(customText) {
       if (!('speechSynthesis' in window)) return;
@@ -520,14 +506,10 @@
         }
 
         window.speechSynthesis.speak(utterance);
-        audioPlayed = true;
       } catch (err) {
         console.error("Speech playback error:", err);
       }
     }
-
-    // Note: Auto-first-touch speech removed to avoid locking device microphone on iOS/Android WebKit.
-    // Audio greeting is accessed via the dedicated 'Tap for Spoken Instructions' button.
 
     // Instructions & Modal Handlers
     const instructionsModal = document.getElementById('instructionsModal');
@@ -632,9 +614,6 @@
     const clearZipBtn = document.getElementById('clearZipBtn');
     const geoBtn = document.getElementById('geoBtn');
     const geoBtnLabel = document.getElementById('geoBtnLabel');
-    const voiceZipBtn = document.getElementById('voiceZipBtn');
-    const voiceZipLabel = document.getElementById('voiceZipLabel');
-    const micIcon = document.getElementById('micIcon');
     const matchStatus = document.getElementById('matchStatus');
     const statusAlert = document.getElementById('statusAlert');
     const hubBadge = document.getElementById('hubBadge');
@@ -844,172 +823,6 @@
 
       executeLookup(cleanVal, 'Manual ZIP');
     });
-
-    // Word-to-number converter for speech recognition transcripts
-    const wordDigitMap = {
-      'zero': '0', 'oh': '0', 'o': '0',
-      'one': '1', 'won': '1',
-      'two': '2', 'to': '2', 'too': '2',
-      'three': '3',
-      'four': '4', 'for': '4', 'fore': '4',
-      'five': '5',
-      'six': '6',
-      'seven': '7',
-      'eight': '8', 'ate': '8',
-      'nine': '9'
-    };
-
-    function parseSpokenZip(transcript) {
-      if (!transcript) return '';
-      // First extract directly if native digits already exist
-      const directDigits = transcript.replace(/\D/g, '');
-      if (directDigits.length >= 3) return directDigits.substring(0, 5);
-
-      // Otherwise convert word-form tokens (e.g., "one five two four zero")
-      const tokens = transcript.toLowerCase().split(/\s+|-/);
-      let extracted = '';
-      for (const t of tokens) {
-        const cleanedToken = t.replace(/[^a-z0-9]/g, '');
-        if (wordDigitMap[cleanedToken]) {
-          extracted += wordDigitMap[cleanedToken];
-        } else if (/^\d+$/.test(cleanedToken)) {
-          extracted += cleanedToken;
-        }
-      }
-      return extracted.substring(0, 5);
-    }
-
-    // Persistent Speech Controller (Zero Re-instantiation Race Conditions)
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let persistentRecognition = null;
-    let isListening = false;
-    let accumulatedTranscript = '';
-
-    function resetMicBtn() {
-      isListening = false;
-      if (voiceZipLabel) voiceZipLabel.textContent = "MIC";
-      if (voiceZipBtn) {
-        voiceZipBtn.classList.remove('border-red-500', 'bg-red-950/60');
-        voiceZipBtn.classList.add('border-emerald-500/50', 'bg-slate-800');
-      }
-      if (micIcon) {
-        micIcon.classList.remove('animate-pulse', 'text-red-400');
-        micIcon.classList.add('text-emerald-400');
-      }
-      if (zipInput && zipInput.placeholder === "Listening... speak now") {
-        zipInput.placeholder = "5-digit ZIP...";
-      }
-    }
-
-    function setMicListening() {
-      isListening = true;
-      accumulatedTranscript = '';
-      if (voiceZipLabel) voiceZipLabel.textContent = "REC...";
-      if (voiceZipBtn) {
-        voiceZipBtn.classList.remove('border-emerald-500/50', 'bg-slate-800');
-        voiceZipBtn.classList.add('border-red-500', 'bg-red-950/60');
-      }
-      if (micIcon) {
-        micIcon.classList.remove('text-emerald-400');
-        micIcon.classList.add('animate-pulse', 'text-red-400');
-      }
-      if (zipInput) {
-        zipInput.value = '';
-        zipInput.placeholder = "Listening... speak now";
-      }
-    }
-
-    if (voiceZipBtn) {
-      if (SpeechRecognition) {
-        persistentRecognition = new SpeechRecognition();
-        persistentRecognition.continuous = false;
-        persistentRecognition.interimResults = true;
-        persistentRecognition.lang = 'en-US';
-        persistentRecognition.maxAlternatives = 1;
-
-        persistentRecognition.onstart = () => {
-          setMicListening();
-        };
-
-        persistentRecognition.onresult = (event) => {
-          if (!event.results) return;
-          
-          // Accumulate across all speech segments
-          let interimText = '';
-          for (let i = event.resultIndex; i < event.results.length; ++i) {
-            interimText += event.results[i][0].transcript;
-          }
-          accumulatedTranscript = interimText;
-
-          const parsedDigits = parseSpokenZip(accumulatedTranscript);
-          if (parsedDigits.length > 0) {
-            zipInput.value = parsedDigits;
-            if (clearZipBtn) clearZipBtn.classList.remove('hidden');
-          }
-
-          if (parsedDigits.length === 5) {
-            executeLookup(parsedDigits, 'Voice Input');
-            try { persistentRecognition.stop(); } catch (err) {}
-          }
-        };
-
-        persistentRecognition.onerror = (e) => {
-          if (e.error !== 'aborted' && e.error !== 'no-speech') {
-            showAlert("Mic issue. Please speak clearly or tap to retry.");
-          } else if (e.error === 'no-speech') {
-            showAlert("No speech detected. Tap MIC to retry.");
-          }
-          resetMicBtn();
-        };
-
-        persistentRecognition.onend = () => {
-          const finalDigits = parseSpokenZip(accumulatedTranscript);
-          if (finalDigits.length >= 3) {
-            executeLookup(finalDigits, 'Voice Input');
-          } else if (accumulatedTranscript.length > 0 && finalDigits.length === 0) {
-            showAlert(`Heard "${accumulatedTranscript}". Speak a 5-digit ZIP.`);
-          }
-          resetMicBtn();
-        };
-
-        voiceZipBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          hideAlert();
-
-          // Force-cancel text-to-speech so device mic is 100% free
-          if ('speechSynthesis' in window) {
-            try { window.speechSynthesis.cancel(); } catch (err) {}
-          }
-
-          if (isListening) {
-            try { persistentRecognition.abort(); } catch (err) {}
-            resetMicBtn();
-            return;
-          }
-
-          // Safe 120ms tick allowing iOS CoreAudio hardware to switch to input mode
-          setTimeout(() => {
-            try {
-              persistentRecognition.start();
-            } catch (err) {
-              try {
-                persistentRecognition.abort();
-                setTimeout(() => {
-                  try { persistentRecognition.start(); } catch (e) {}
-                }, 120);
-              } catch (innerErr) {
-                showAlert("Tap MIC to retry.");
-                resetMicBtn();
-              }
-            }
-          }, 120);
-        });
-      } else {
-        voiceZipBtn.addEventListener('click', () => {
-          showAlert("Voice input not supported on this browser. Please type ZIP.");
-        });
-      }
-    }
 
     // Geolocation Resolution
     geoBtn.addEventListener('click', () => {
