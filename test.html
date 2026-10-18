@@ -3,14 +3,14 @@
   USPTO PROVISIONAL PATENT APPLICATION NO. 64/174,835
   Terrance Watkins • Patent Pending 64/174,835
   CONFIDENTIAL PROPRIETARY TELEMETRY SYSTEM - UNAUTHORIZED REPRODUCTION PROHIBITED
-  PROJECT EYES v3.75 - PURE NATURAL GEMINI VOICE PROMPTS (NO BEEP) + FULL BUILD TXT
+  PROJECT EYES v3.76 - PURE NATURAL GEMINI VOICE PROMPTS (NO BEEP) + FULL BUILD TXT
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.75 | Terrance Watkins • Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.76 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
     * {
       box-sizing: border-box; margin: 0; padding: 0;
@@ -326,7 +326,7 @@
   <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">🔒 Project Eyes v3.75</div>
+      <div class="vault-title">🔒 Project Eyes v3.76</div>
       <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
       <div class="nda-box">
         <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
@@ -436,7 +436,7 @@
       <div>
         <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
         <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.75</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.76</div>
       </div>
       <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
@@ -508,7 +508,6 @@
       try {
         if ('speechSynthesis' in window) {
           window.speechSynthesis.resume();
-          // Prime speech engine with a zero-volume space character so iOS Safari authorizes speech channel
           const primeUtt = new SpeechSynthesisUtterance(" ");
           primeUtt.volume = 0.01;
           window.speechSynthesis.speak(primeUtt);
@@ -609,6 +608,7 @@
     let _osHM = 0, _osVM = 0, _odHM = 0, _odVM = 0;
     let _wI = 0, _tS = [], _sCm = null;
     let _sLE = 0.30, _sRE = 0.30, _cES = "Binocular";
+    let _hasSpokenInitialGuidance = false;
 
     function _0xCalibrateHardware() {
       const ua = navigator.userAgent || "";
@@ -688,7 +688,7 @@
           "Or <span class='coach-highlight'>LEAN BACK</span> slowly until the 'E' blurs.",
           "Tap <span class='coach-highlight'>YELLOW BUTTON</span> the moment 'E' blurs to set Base Rx!"
         );
-        speakGemini("Welcome. Place your device in the stand and remove your glasses. Relax in your chair, center the green dot, and let me know the moment the letter E begins to blur.");
+        speakGemini("Place your device in the stand and remove your glasses. Relax in your chair, center the green dot, and let me know the moment the letter E begins to blur.");
         _exC.className = "controls-wrap align-center";
         _exC.innerHTML = `<div class="horizon-deck"><button class="horizon-btn-blur" onclick="window._0xLockB()">👀 THE "E" IS BLURRY!<br>TAP TO LOCK (<span id="liveBlurBtnCm">-- cm</span>)</button><button class="horizon-btn-shrink" onclick="window._0xShrinkBlurTarget()">🔍 STILL CLEAR<br>(SHRINK THE "E")</button></div>`;
       } else if (_st >= 2 && _st <= 4) {
@@ -731,7 +731,6 @@
         "Tap <span class='coach-highlight'>BLUE BUTTON</span> with your LEFT hand!"
       );
 
-      // Direct voice prompt: exact distance, HUD visual reference, ±5cm relaxed humor
       speakGemini(`Distance locked at ${roundedDist} centimeters. Make sure you stay right around that distance. Your live distance is displayed right in the top left of your camera view. You only have to stay within five centimeters either way, so don't trip or freeze up like a statue—just stay chill in your chair. Now cover your right eye with your right hand, and tap the blue button to start.`);
 
       _sGP("👉 TAP HERE ONCE YOUR RIGHT EYE IS COVERED WITH YOUR HAND 👈");
@@ -756,8 +755,8 @@
       } else {
         _setC("⚡ STEP 4: BOTH EYES BALANCE CHECK", "BOTH EYES OPEN",
           "<span class='coach-highlight'>UNCOVER BOTH EYES</span> & stay at " + dT + " cm.",
-          "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to verify binocular Rx.",
-          "Tap red <span class='coach-highlight'>TOO BLURRY</span> when you can't read it!");
+          "Balancing <span class='coach-highlight'>LEFT & RIGHT EYE</span> Glasses + Contacts Rx.",
+          "Tap <span class='coach-highlight'>BLUE BUTTON</span> to test both eyes together!");
         speakGemini("Both eyes open now. Let's see how your eyes lock in and balance out together.");
       }
       _exC.className = "controls-wrap " + (_st === 2 ? "align-left" : _st === 3 ? "align-right" : "align-center");
@@ -886,7 +885,6 @@
         `💧 <span class='coach-highlight'>CONTACTS RX</span>: Left ${osM.shortContacts} | Right ${odM.shortContacts}`,
         "Tap <span class='coach-highlight'>PRINT OFFICIAL RX</span> below to print your prescription!");
 
-      // Final vocal delivery with official patent credit
       speakGemini(`Your vision assessment is complete. Your glasses prescription is ${osM.shortGlasses} for your left eye, and ${odM.shortGlasses} for your right eye. You can print your complete report below. Brought to you by Terrance Watkins.`);
 
       document.getElementById('repOS').innerText = `${osM.snellen20Ft} (20-Ft Eq)`;
@@ -987,6 +985,13 @@
         const lm = res.multiFaceLandmarks[0], nB = lm[168] || lm[1];
         const vw = _vEl.videoWidth || 480, vh = _vEl.videoHeight || 640;
         _rUV(nB);
+
+        // IMMEDIATE VOICE TRIGGER: Fires as soon as camera is active & detects user face
+        if (!_hasSpokenInitialGuidance) {
+          _hasSpokenInitialGuidance = true;
+          speakGemini("Place your face between thirty-five and fifty-five centimeters away from your phone.");
+        }
+
         _sRE = 0.3 * _gE(lm, 159, 145, 133, 33) + 0.7 * _sRE;
         _sLE = 0.3 * _gE(lm, 386, 374, 362, 263) + 0.7 * _sLE;
         _cES = _st === 2 ? "Right Covered" : _st === 3 ? "Left Covered" : (_sRE < 0.20 && _sLE >= 0.20) ? "Right Covered" : (_sLE < 0.20 && _sRE >= 0.20) ? "Left Covered" : "Binocular";
@@ -1029,14 +1034,24 @@
     _fM.onResults(_onR);
     const _cam = new Camera(_vEl, { onFrame: async () => { await _fM.send({ image: _vEl }); }, width: 640, height: 480 });
 
+    // Video stream listener: triggers voice as soon as mobile camera stream starts playing
+    _vEl.addEventListener('playing', () => {
+      if (!_hasSpokenInitialGuidance) {
+        _hasSpokenInitialGuidance = true;
+        setTimeout(() => {
+          speakGemini("Place your face between thirty-five and fifty-five centimeters away from your phone.");
+        }, 300);
+      }
+    }, { once: true });
+
     window.startEyesEngine = function() {
       _initVoiceEngine();
       _0xCalibrateHardware();
-      _cam.start().then(() => {
-        speakGemini("Camera access granted. Go ahead and find your target range between thirty-five and fifty-five centimeters.");
-      }).catch((err) => {
+      try {
+        _cam.start();
+      } catch (err) {
         console.warn("Camera start err:", err);
-      });
+      }
     };
   </script>
 </body>
