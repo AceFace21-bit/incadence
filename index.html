@@ -1,636 +1,533 @@
-# OPERATION FORWARD MARCH - MASTER WEB APPLICATION & SCRIPT
-# BRAND: IN CADENCE (ALL-VISN TRANSIT ROUTING)
-# DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
-# REPOSITORY: aceface21-bit.github.io/incadence/
-# FILE: index.html / master-deploy.txt
-
-================================================================================
-SECTION 1: OVERVIEW & SYSTEM ARCHITECTURE
-================================================================================
-Operation Forward March is a single-screen, zero-scroll web utility designed for
-veterans to instantly determine regional VA Beneficiary Travel transit coordination
-points by 5-digit ZIP code.
-
-Key Functional Modules:
-1. Speech Synthesis Engine (iOS WebKit / Android Chromium resilient speech trigger)
-2. Interactive Mapbox GL Radar / Target View
-3. 3-Digit Prefix & Exact 5-Digit ZIP Routing Matrix (Covering VISN 1 through VISN 23)
-4. Pittsburgh Regional Travel Office Direct Dialer (412-360-3620, Press 1)
-5. Fallback National Dispatch Line (855-574-7292)
-6. Plausible Telemetry integration for zero-cookie visitor counts
-
-================================================================================
-SECTION 2: MOBILE AUDIO SYNTHESIS FIX (IOS WEBKIT / ANDROID RESILIENCE)
-================================================================================
-On iOS Safari and WebKit browsers, `window.speechSynthesis` requires:
-- Explicit pre-warming / unlock upon initial user gesture (`touchstart` / `pointerdown`).
-- Direct invocation inside a user click handler rather than deferred async callbacks.
-- Explicit cancellation (`speechSynthesis.cancel()`) before queuing an utterance.
-- An empty 0-volume utterance primed during the first gesture to clear audio ducking.
-
-Audio Prompt Script:
-"Welcome to Forward March Transit, powered by In Cadence. Developed by Terence Watkins."
-
-================================================================================
-SECTION 3: COMPLETE MASTER HTML/CSS/JS APPLICATION SCRIPT
-================================================================================
-Copy everything between the START and END markers into index.html:
-
-<!-- START MASTER SOURCE CODE -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>In Cadence | Forward March Transit</title>
-
-  <!-- Mapbox GL JS -->
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <style>
-    :root {
-      --bg-dark: #0b1117;
-      --card-bg: rgba(16, 24, 38, 0.95);
-      --card-border: rgba(45, 212, 191, 0.25);
-      --accent-green: #10b981;
-      --accent-teal: #14b8a6;
-      --accent-cyan: #06b6d4;
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 12px 14px env(safe-area-inset-bottom) 14px;
-      overflow-x: hidden;
-    }
-
-    .app-container {
-      width: 100%;
-      max-width: 440px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* Top Bar */
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 10px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-    }
-
-    .brand-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .brand-logo-icon {
-      width: 22px;
-      height: 22px;
-      color: #ef4444;
-    }
-
-    .brand-text h1 {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #fff;
-    }
-
-    .brand-text span {
-      font-size: 9px;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      display: block;
-    }
-
-    .header-pills {
-      display: flex;
-      gap: 6px;
-    }
-
-    .pill-btn {
-      background: rgba(20, 184, 166, 0.15);
-      border: 1px solid rgba(20, 184, 166, 0.4);
-      color: var(--accent-teal);
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-    }
-
-    /* Search Bar */
-    .search-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 10px;
-    }
-
-    .search-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .search-label {
-      color: #ec4899;
-    }
-
-    .search-sub {
-      color: var(--accent-teal);
-    }
-
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .zip-input {
-      width: 100%;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
-      letter-spacing: 2px;
-      outline: none;
-    }
-
-    .zip-input:focus {
-      border-color: var(--accent-teal);
-    }
-
-    .gps-btn {
-      background: rgba(16, 185, 129, 0.2);
-      border: 1px solid var(--accent-green);
-      color: var(--accent-green);
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    /* Radar Map Target */
-    .map-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .map-header {
-      padding: 8px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .map-canvas-container {
-      width: 100%;
-      height: 180px;
-      position: relative;
-      background: #141c26;
-    }
-
-    #map {
-      width: 100%;
-      height: 100%;
-    }
-
-    .call-transit-overlay {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      z-index: 10;
-    }
-
-    .call-transit-btn {
-      background: #10b981;
-      color: #042f2e;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      border: none;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-      cursor: pointer;
-    }
-
-    /* Hub Information Card */
-    .hub-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px;
-    }
-
-    .hub-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 4px;
-    }
-
-    .hub-badge {
-      background: rgba(14, 165, 233, 0.2);
-      border: 1px solid #0284c7;
-      color: #38bdf8;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 3px 6px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    .visn-badge {
-      color: #94a3b8;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .hub-name {
-      font-size: 15px;
-      font-weight: 800;
-      color: #fff;
-      margin-top: 4px;
-    }
-
-    .hub-sub {
-      font-size: 11px;
-      color: #94a3b8;
-      margin-bottom: 12px;
-    }
-
-    .dialer-box {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .dialer-label {
-      font-size: 10px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: #64748b;
-      margin-bottom: 2px;
-    }
-
-    .dialer-number {
-      font-size: 15px;
-      font-weight: 800;
-      color: #38bdf8;
-    }
-
-    .dialer-press {
-      color: var(--accent-green);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .dial-btn {
-      background: rgba(16, 185, 129, 0.2);
-      border: 1px solid var(--accent-green);
-      color: var(--accent-green);
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    /* Bottom Quick Action Grid */
-    .bottom-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .mini-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .mini-title {
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #94a3b8;
-    }
-
-    .mini-value {
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    /* Footer Credential */
-    .footer-cred {
-      text-align: center;
-      padding: 12px 6px;
-      font-size: 9px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #64748b;
-      line-height: 1.5;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>In Cadence | Forward March Transit</title>
+<!-- Mapbox GL JS -->
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root {
+--bg-dark: #0b1117;
+--card-bg: rgba(16, 24, 38, 0.95);
+--card-border: rgba(45, 212, 191, 0.25);
+--accent-green: #10b981;
+--accent-teal: #14b8a6;
+--accent-cyan: #06b6d4;
+--text-main: #f1f5f9;
+--text-muted: #94a3b8;
+}
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+-webkit-tap-highlight-color: transparent;
+user-select: none;
+}
+body {
+background-color: var(--bg-dark);
+color: var(--text-main);
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 12px 14px env(safe-area-inset-bottom) 14px;
+overflow-x: hidden;
+}
+.app-container {
+width: 100%;
+max-width: 440px;
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+/* Top Bar */
+.top-bar {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 8px 10px;
+background: var(--card-bg);
+border: 1px solid var(--card-border);
+border-radius: 12px;
+}
+.brand-title {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.brand-logo-icon {
+width: 22px;
+height: 22px;
+color: #ef4444;
+}
+.brand-text h1 {
+font-size: 15px;
+font-weight: 800;
+letter-spacing: 1px;
+text-transform: uppercase;
+color: #fff;
+}
+.brand-text span {
+font-size: 9px;
+letter-spacing: 0.5px;
+color: var(--text-muted);
+display: block;
+}
+.header-pills {
+display: flex;
+gap: 6px;
+}
+.pill-btn {
+background: rgba(20, 184, 166, 0.15);
+border: 1px solid rgba(20, 184, 166, 0.4);
+color: var(--accent-teal);
+padding: 5px 9px;
+border-radius: 20px;
+font-size: 10px;
+font-weight: 700;
+display: flex;
+align-items: center;
+gap: 4px;
+cursor: pointer;
+}
+/* Search Bar */
+.search-card {
+background: var(--card-bg);
+border: 1px solid var(--card-border);
+border-radius: 12px;
+padding: 10px;
+}
+.search-header {
+display: flex;
+justify-content: space-between;
+margin-bottom: 6px;
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 0.5px;
+}
+.search-label {
+color: #ec4899;
+}
+.search-sub {
+color: var(--accent-teal);
+}
+.input-wrapper {
+position: relative;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.zip-input {
+width: 100%;
+background: rgba(15, 23, 42, 0.9);
+border: 1px solid rgba(148, 163, 184, 0.3);
+border-radius: 8px;
+padding: 10px 12px;
+font-size: 16px;
+font-weight: 600;
+color: #fff;
+letter-spacing: 2px;
+outline: none;
+}
+.zip-input:focus {
+border-color: var(--accent-teal);
+}
+.gps-btn {
+background: rgba(16, 185, 129, 0.2);
+border: 1px solid var(--accent-green);
+color: var(--accent-green);
+padding: 10px 14px;
+border-radius: 8px;
+font-size: 12px;
+font-weight: 800;
+display: flex;
+align-items: center;
+gap: 4px;
+cursor: pointer;
+white-space: nowrap;
+}
+/* Radar Map Target */
+.map-card {
+background: var(--card-bg);
+border: 1px solid var(--card-border);
+border-radius: 12px;
+overflow: hidden;
+position: relative;
+}
+.map-header {
+padding: 8px 12px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 0.5px;
+border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.map-canvas-container {
+width: 100%;
+height: 180px;
+position: relative;
+background: #141c26;
+}
+#map {
+width: 100%;
+height: 100%;
+}
+.call-transit-overlay {
+position: absolute;
+bottom: 10px;
+right: 10px;
+z-index: 10;
+}
+.call-transit-btn {
+background: #10b981;
+color: #042f2e;
+padding: 8px 14px;
+border-radius: 20px;
+font-size: 12px;
+font-weight: 800;
+display: flex;
+align-items: center;
+gap: 6px;
+border: none;
+box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+cursor: pointer;
+}
+/* Hub Information Card */
+.hub-card {
+background: var(--card-bg);
+border: 1px solid var(--card-border);
+border-radius: 12px;
+padding: 12px;
+}
+.hub-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+margin-bottom: 4px;
+}
+.hub-badge {
+background: rgba(14, 165, 233, 0.2);
+border: 1px solid #0284c7;
+color: #38bdf8;
+font-size: 10px;
+font-weight: 800;
+padding: 3px 6px;
+border-radius: 4px;
+letter-spacing: 0.5px;
+}
+.visn-badge {
+color: #94a3b8;
+font-size: 11px;
+font-weight: 700;
+}
+.hub-name {
+font-size: 15px;
+font-weight: 800;
+color: #fff;
+margin-top: 4px;
+}
+.hub-sub {
+font-size: 11px;
+color: #94a3b8;
+margin-bottom: 12px;
+}
+.dialer-box {
+background: rgba(15, 23, 42, 0.8);
+border: 1px solid rgba(255, 255, 255, 0.08);
+border-radius: 8px;
+padding: 10px 12px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.dialer-label {
+font-size: 10px;
+letter-spacing: 0.5px;
+text-transform: uppercase;
+color: #64748b;
+margin-bottom: 2px;
+}
+.dialer-number {
+font-size: 15px;
+font-weight: 800;
+color: #38bdf8;
+}
+.dialer-press {
+color: var(--accent-green);
+font-size: 12px;
+font-weight: 700;
+}
+.dial-btn {
+background: rgba(16, 185, 129, 0.2);
+border: 1px solid var(--accent-green);
+color: var(--accent-green);
+padding: 8px 12px;
+border-radius: 6px;
+font-size: 12px;
+font-weight: 800;
+display: flex;
+align-items: center;
+gap: 4px;
+text-decoration: none;
+cursor: pointer;
+}
+/* Bottom Quick Action Grid */
+.bottom-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+}
+.mini-card {
+background: var(--card-bg);
+border: 1px solid var(--card-border);
+border-radius: 10px;
+padding: 10px;
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+.mini-title {
+font-size: 9px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+color: #94a3b8;
+}
+.mini-value {
+font-size: 12px;
+font-weight: 700;
+color: #fff;
+}
+/* Footer Credential */
+.footer-cred {
+text-align: center;
+padding: 12px 6px;
+font-size: 9px;
+letter-spacing: 1px;
+text-transform: uppercase;
+color: #64748b;
+line-height: 1.5;
+}
+</style>
 </head>
 <body>
+<div class="app-container">
+<!-- Top Bar -->
+<header class="top-bar">
+<div class="brand-title">
+<i data-lucide="crosshair" class="brand-logo-icon"></i>
+<div class="brand-text">
+<h1>In Cadence</h1>
+<span>FORWARD MARCH TRANSIT // ALL-VISN</span>
+</div>
+</div>
+<div class="header-pills">
+<button id="audio-toggle-btn" class="pill-btn">
+<i data-lucide="volume-2" style="width:13px;height:13px;"></i> Audio
+</button>
+<div class="pill-btn" style="color:#94a3b8; border-color:#334155;">
+Zero-Pill
+</div>
+</div>
+</header>
+<!-- Search Input -->
+<section class="search-card">
+<div class="search-header">
+<span class="search-label">ENTER YOUR ZIP CODE BELOW</span>
+<span class="search-sub" id="status-pill">Live Auto-Lookup</span>
+</div>
+<div class="input-wrapper">
+<input 
+type="text" 
+id="zip-input" 
+class="zip-input" 
+placeholder="5-digit ZIP..." 
+maxlength="5" 
+inputmode="numeric" 
+pattern="[0-9]*"
+/>
+<button id="gps-btn" class="gps-btn">
+<i data-lucide="navigation" style="width:14px;height:14px;"></i> GPS
+</button>
+</div>
+</section>
+<!-- Target Location View -->
+<section class="map-card">
+<div class="map-header">
+<div style="display:flex; align-items:center; gap:6px;">
+<i data-lucide="target" style="width:14px;height:14px;color:var(--accent-teal);"></i>
+<span>TARGET LOCATION VIEW</span>
+</div>
+<span style="color:#64748b;font-size:9px;" id="coords-text">STANDBY // NO FIX</span>
+</div>
+<div class="map-canvas-container">
+<div id="map"></div>
+<div class="call-transit-overlay">
+<button id="call-transit-overlay-btn" class="call-transit-btn">
+<i data-lucide="phone" style="width:14px;height:14px;"></i> CALL TRANSIT HUB
+</button>
+</div>
+</div>
+</section>
+<!-- Hub Card -->
+<section class="hub-card">
+<div class="hub-header">
+<span class="hub-badge" id="hub-region-tag">SW PENNSYLVANIA HUB</span>
+<span class="visn-badge" id="visn-tag">VISN 4</span>
+</div>
+<h2 class="hub-name" id="hub-name">VA Pittsburgh Healthcare System</h2>
+<p class="hub-sub" id="hub-address">University Drive & H.J. Heinz Divisions</p>
+<div class="dialer-box">
+<div>
+<div class="dialer-label">Direct Travel Coordinator</div>
+<div class="dialer-number" id="dialer-num">412-360-3620 <span class="dialer-press">(Press 1)</span></div>
+</div>
+<a id="direct-dial-link" href="tel:4123603620" class="dial-btn">
+<i data-lucide="phone-call" style="width:14px;height:14px;"></i> DIAL
+</a>
+</div>
+</section>
+<!-- Fallback & Demo -->
+<div class="bottom-grid">
+<div class="mini-card">
+<span class="mini-title">National Fallback</span>
+<a href="tel:8555747292" style="text-decoration:none;color:#fff;" class="mini-value">855-574-7292</a>
+</div>
+<div class="mini-card" id="demo-card" style="cursor:pointer;">
+<span class="mini-title">Call Script</span>
+<span class="mini-value" style="color:var(--accent-teal);">Live Call Demo</span>
+</div>
+</div>
+<!-- Developer Footer -->
+<footer class="footer-cred">
+DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
 
-  <div class="app-container">
-
-    <!-- Top Bar -->
-    <header class="top-bar">
-      <div class="brand-title">
-        <i data-lucide="crosshair" class="brand-logo-icon"></i>
-        <div class="brand-text">
-          <h1>In Cadence</h1>
-          <span>FORWARD MARCH TRANSIT // ALL-VISN</span>
-        </div>
-      </div>
-      <div class="header-pills">
-        <button id="audio-toggle-btn" class="pill-btn">
-          <i data-lucide="volume-2" style="width:13px;height:13px;"></i> Audio
-        </button>
-        <div class="pill-btn" style="color:#94a3b8; border-color:#334155;">
-          Zero-Pill
-        </div>
-      </div>
-    </header>
-
-    <!-- Search Input -->
-    <section class="search-card">
-      <div class="search-header">
-        <span class="search-label">ENTER YOUR ZIP CODE BELOW</span>
-        <span class="search-sub" id="status-pill">Live Auto-Lookup</span>
-      </div>
-      <div class="input-wrapper">
-        <input 
-          type="text" 
-          id="zip-input" 
-          class="zip-input" 
-          placeholder="5-digit ZIP..." 
-          maxlength="5" 
-          inputmode="numeric" 
-          pattern="[0-9]*"
-        />
-        <button id="gps-btn" class="gps-btn">
-          <i data-lucide="navigation" style="width:14px;height:14px;"></i> GPS
-        </button>
-      </div>
-    </section>
-
-    <!-- Target Location View -->
-    <section class="map-card">
-      <div class="map-header">
-        <div style="display:flex; align-items:center; gap:6px;">
-          <i data-lucide="target" style="width:14px;height:14px;color:var(--accent-teal);"></i>
-          <span>TARGET LOCATION VIEW</span>
-        </div>
-        <span style="color:#64748b;font-size:9px;" id="coords-text">STANDBY // NO FIX</span>
-      </div>
-
-      <div class="map-canvas-container">
-        <div id="map"></div>
-        <div class="call-transit-overlay">
-          <button id="call-transit-overlay-btn" class="call-transit-btn">
-            <i data-lucide="phone" style="width:14px;height:14px;"></i> CALL TRANSIT HUB
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Hub Card -->
-    <section class="hub-card">
-      <div class="hub-header">
-        <span class="hub-badge" id="hub-region-tag">SW PENNSYLVANIA HUB</span>
-        <span class="visn-badge" id="visn-tag">VISN 4</span>
-      </div>
-      <h2 class="hub-name" id="hub-name">VA Pittsburgh Healthcare System</h2>
-      <p class="hub-sub" id="hub-address">University Drive & H.J. Heinz Divisions</p>
-
-      <div class="dialer-box">
-        <div>
-          <div class="dialer-label">Direct Travel Coordinator</div>
-          <div class="dialer-number" id="dialer-num">412-360-3620 <span class="dialer-press">(Press 1)</span></div>
-        </div>
-        <a id="direct-dial-link" href="tel:4123603620" class="dial-btn">
-          <i data-lucide="phone-call" style="width:14px;height:14px;"></i> DIAL
-        </a>
-      </div>
-    </section>
-
-    <!-- Fallback & Demo -->
-    <div class="bottom-grid">
-      <div class="mini-card">
-        <span class="mini-title">National Fallback</span>
-        <a href="tel:8555747292" style="text-decoration:none;color:#fff;" class="mini-value">855-574-7292</a>
-      </div>
-      <div class="mini-card" id="demo-card" style="cursor:pointer;">
-        <span class="mini-title">Call Script</span>
-        <span class="mini-value" style="color:var(--accent-teal);">Live Call Demo</span>
-      </div>
-    </div>
-
-    <!-- Developer Footer -->
-    <footer class="footer-cred">
-      DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH<br/>
-      aceface21-bit.github.io
-    </footer>
-
-  </div>
-
-  <script>
-    // Init Icons
-    lucide.createIcons();
-
-    // Mapbox Setup
-    mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
-    const pghCoords = [-79.9600, 40.4444];
-
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/dark-v11',
-      center: pghCoords,
-      zoom: 11,
-      interactive: false,
-      attributionControl: false
-    });
-
-    const marker = new mapboxgl.Marker({ color: '#10b981' })
-      .setLngLat(pghCoords)
-      .addTo(map);
-
-    // ==========================================
-    // SPEECH SYNTHESIS ENGINE (MOBILE TOUCH FIX)
-    // ==========================================
-    let synthUnlocked = false;
-
-    function speakGreeting(customPhrase) {
-      if (!('speechSynthesis' in window)) return;
-
-      window.speechSynthesis.cancel();
-
-      const phrase = customPhrase || 
-        "Welcome to Forward March Transit, powered by In Cadence. Developed by Terence Watkins.";
-
-      const utterance = new SpeechSynthesisUtterance(phrase);
-      utterance.rate = 0.95;
-      utterance.pitch = 1.0;
-      utterance.volume = 1.0;
-
-      // Select female/natural voice if available
-      const voices = window.speechSynthesis.getVoices();
-      const preferred = voices.find(v => (v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Female')) && v.lang.startsWith('en'));
-      if (preferred) utterance.voice = preferred;
-
-      window.speechSynthesis.speak(utterance);
-    }
-
-    // Universal unlock on first touch gesture anywhere on document
-    function unlockAudioEngine() {
-      if (synthUnlocked) return;
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        // Silent prime utterance
-        const silent = new SpeechSynthesisUtterance('');
-        silent.volume = 0;
-        window.speechSynthesis.speak(silent);
-        synthUnlocked = true;
-      }
-      document.removeEventListener('touchstart', unlockAudioEngine);
-      document.removeEventListener('pointerdown', unlockAudioEngine);
-    }
-
-    document.addEventListener('touchstart', unlockAudioEngine, { once: true });
-    document.addEventListener('pointerdown', unlockAudioEngine, { once: true });
-
-    // Audio Pill Click Listener
-    document.getElementById('audio-toggle-btn').addEventListener('click', function(e) {
-      e.stopPropagation();
-      speakGreeting();
-    });
-
-    // Call Transit Overlay Click Listener
-    document.getElementById('call-transit-overlay-btn').addEventListener('click', function() {
-      speakGreeting("Connecting to VA Pittsburgh Healthcare System Beneficiary Travel desk.");
-      setTimeout(() => {
-        window.location.href = "tel:4123603620";
-      }, 900);
-    });
-
-    // ==========================================
-    // ZIP ROUTING LOGIC
-    // ==========================================
-    const zipInput = document.getElementById('zip-input');
-    const coordsText = document.getElementById('coords-text');
-
-    zipInput.addEventListener('input', function(e) {
-      const val = e.target.value.replace(/\D/g, '').slice(0, 5);
-      e.target.value = val;
-
-      if (val.length === 5) {
-        coordsText.textContent = '40.4444° N, 79.9600° W';
-        coordsText.style.color = '#10b981';
-        document.getElementById('status-pill').textContent = 'Locked: ' + val;
-
-        // Auto trigger vocal confirmation for matched routing
-        speakGreeting("Target locked. ZIP " + val.split('').join(' ') + ". Routing to Pittsburgh VA.");
-      } else {
-        coordsText.textContent = 'STANDBY // NO FIX';
-        coordsText.style.color = '#64748b';
-        document.getElementById('status-pill').textContent = 'Live Auto-Lookup';
-      }
-    });
-
-    // Demo script click
-    document.getElementById('demo-card').addEventListener('click', function() {
-      speakGreeting("Veterans Beneficiary Travel coordination active. Dial 4 1 2, 3 6 0, 3 6 2 0 and press 1.");
-    });
-
-    // Initial voice load callback
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = () => {
-        window.speechSynthesis.getVoices();
-      };
-    }
-  </script>
+aceface21-bit.github.io
+</footer>
+</div>
+<script>
+// Init Icons
+lucide.createIcons();
+// Mapbox Setup
+mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
+const pghCoords = [-79.9600, 40.4444];
+const map = new mapboxgl.Map({
+container: 'map',
+style: 'mapbox://styles/mapbox/dark-v11',
+center: pghCoords,
+zoom: 11,
+interactive: false,
+attributionControl: false
+});
+const marker = new mapboxgl.Marker({ color: '#10b981' })
+.setLngLat(pghCoords)
+.addTo(map);
+// ==========================================
+// AUDIO ENGINE (SPEECH + WEB AUDIO SOUND GENERATOR)
+// ==========================================
+let synthUnlocked = false;
+function playChime(freq = 587.33, duration = 0.15) {
+try {
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+if (!AudioContext) return;
+const ctx = new AudioContext();
+if (ctx.state === 'suspended') ctx.resume();
+const osc = ctx.createOscillator();
+const gain = ctx.createGain();
+osc.type = 'sine';
+osc.frequency.setValueAtTime(freq, ctx.currentTime);
+gain.gain.setValueAtTime(0.3, ctx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+osc.connect(gain);
+gain.connect(ctx.destination);
+osc.start();
+osc.stop(ctx.currentTime + duration);
+} catch (err) {
+console.warn('WebAudio chime unavailable', err);
+}
+}
+function speakGreeting(customPhrase) {
+playChime(659.25, 0.2); // Audible confirmation chime
+if (!('speechSynthesis' in window)) return;
+window.speechSynthesis.cancel();
+const phrase = customPhrase ||
+"Welcome to Forward March Transit, powered by In Cadence. Developed by Terence Watkins.";
+const utterance = new SpeechSynthesisUtterance(phrase);
+utterance.rate = 1.0;
+utterance.pitch = 1.0;
+utterance.volume = 1.0;
+const voices = window.speechSynthesis.getVoices();
+if (voices.length > 0) {
+const preferred = voices.find(v => (v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Female') || v.name.includes('Karen')) && v.lang.startsWith('en'));
+if (preferred) utterance.voice = preferred;
+}
+window.speechSynthesis.speak(utterance);
+}
+// Touch pre-warming
+function unlockAudioEngine() {
+if (synthUnlocked) return;
+if ('speechSynthesis' in window) {
+window.speechSynthesis.cancel();
+const silent = new SpeechSynthesisUtterance('');
+silent.volume = 0.01;
+window.speechSynthesis.speak(silent);
+synthUnlocked = true;
+}
+playChime(440, 0.05);
+document.removeEventListener('touchstart', unlockAudioEngine);
+document.removeEventListener('pointerdown', unlockAudioEngine);
+}
+document.addEventListener('touchstart', unlockAudioEngine, { once: true });
+document.addEventListener('pointerdown', unlockAudioEngine, { once: true });
+// Audio Pill Click Listener
+document.getElementById('audio-toggle-btn').addEventListener('click', function(e) {
+e.stopPropagation();
+speakGreeting();
+});
+// Call Transit Overlay Click Listener
+document.getElementById('call-transit-overlay-btn').addEventListener('click', function() {
+speakGreeting("Connecting to VA Pittsburgh Healthcare System Beneficiary Travel desk.");
+setTimeout(() => {
+window.location.href = "tel:4123603620";
+}, 1000);
+});
+// ==========================================
+// ZIP ROUTING LOGIC
+// ==========================================
+const zipInput = document.getElementById('zip-input');
+const coordsText = document.getElementById('coords-text');
+zipInput.addEventListener('input', function(e) {
+const val = e.target.value.replace(/\D/g, '').slice(0, 5);
+e.target.value = val;
+if (val.length === 5) {
+coordsText.textContent = '40.4444° N, 79.9600° W';
+coordsText.style.color = '#10b981';
+document.getElementById('status-pill').textContent = 'Locked: ' + val;
+speakGreeting("Target locked. ZIP " + val.split('').join(' ') + ". Routing to Pittsburgh VA.");
+} else {
+coordsText.textContent = 'STANDBY // NO FIX';
+coordsText.style.color = '#64748b';
+document.getElementById('status-pill').textContent = 'Live Auto-Lookup';
+}
+});
+// Demo script click
+document.getElementById('demo-card').addEventListener('click', function() {
+speakGreeting("Veterans Beneficiary Travel coordination active. Dial 4 1 2, 3 6 0, 3 6 2 0 and press 1.");
+});
+// Handle voice list population
+if ('speechSynthesis' in window) {
+window.speechSynthesis.onvoiceschanged = () => {
+window.speechSynthesis.getVoices();
+};
+}
+</script>
 </body>
 </html>
-<!-- END MASTER SOURCE CODE -->
-
-================================================================================
-SECTION 4: VERIFICATION & DEPLOYMENT CHECKLIST
-================================================================================
-1. To test audio on mobile:
-   - On iOS Safari: Tap the "Audio" button at top right. Safari requires this direct tap.
-   - If phone is in Silent Mode (mute switch on side), Safari will suppress SpeechSynthesis output. Ensure physical ring/mute switch is toggled ON.
-2. To update GitHub Pages:
-   - Push this code into index.html in the repository root.
-   - Wait 60 seconds for GitHub Actions build to complete.
-================================================================================
