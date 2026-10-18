@@ -99,17 +99,6 @@
       </div>
 
       <div class="flex items-center space-x-1.5">
-        <!-- Audio Welcome Replay Button -->
-        <button 
-          id="audioGreetingBtn" 
-          type="button" 
-          title="Play voice intro"
-          class="flex items-center space-x-1 px-2 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-emerald-500/40 text-[8px] font-bold text-emerald-400 transition"
-        >
-          <i data-lucide="volume-2" class="w-2.5 h-2.5"></i>
-          <span id="audioGreetingLabel">Audio</span>
-        </button>
-
         <div class="flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-[8px] font-medium text-slate-300">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>Zero-PII</span>
@@ -120,6 +109,19 @@
 
   <!-- Main Viewport Dashboard -->
   <main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0">
+
+    <!-- Bold & Centered Voice Instructions Button -->
+    <div class="w-full flex justify-center shrink-0">
+      <button 
+        id="audioGreetingBtn" 
+        type="button" 
+        title="Need help? Click for instructions"
+        class="w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 active:bg-emerald-500/30 border border-emerald-500/40 text-emerald-400 font-bold text-xs uppercase tracking-wider text-center transition shadow-sm"
+      >
+        <i data-lucide="volume-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+        <span id="audioGreetingLabel" class="font-bold text-center">Need help? Click for instructions</span>
+      </button>
+    </div>
 
     <!-- Compact ZIP & Geolocation Input Row -->
     <section class="bg-slate-900/90 border border-slate-800 rounded-lg p-2 shrink-0 shadow-sm">
