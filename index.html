@@ -407,6 +407,68 @@
     </div>
   </div>
 
+  <!-- Instructions & Eligibility Modal Overlay -->
+  <div id="instructionsModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="info" class="w-4 h-4 text-emerald-400"></i>
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-100">Ride Instructions & Eligibility</h3>
+            <span class="text-[8px] text-emerald-400 font-mono-code block">Standard Operating Procedure</span>
+          </div>
+        </div>
+        <button id="closeInstructionsBtn" class="text-slate-400 hover:text-slate-100 p-1" aria-label="Close Instructions">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Eligibility Notice Box -->
+      <div class="p-2.5 rounded-lg bg-emerald-950/30 border border-emerald-500/40 space-y-1">
+        <div class="flex items-center space-x-1.5 text-emerald-400 font-bold text-[10px] uppercase tracking-wider">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 shrink-0"></i>
+          <span>Mandatory Eligibility</span>
+        </div>
+        <p class="text-[10px] text-slate-200 leading-normal">
+          To qualify for VA Beneficiary Travel transit coordination, you must be <strong>30% or more service-connected</strong>, traveling for care of a service-connected condition, or otherwise <strong>VA Travel authorized</strong> (38 CFR Part 70).
+        </p>
+      </div>
+
+      <!-- Step-by-Step Instructions -->
+      <div class="space-y-2 text-[10px] text-slate-300 leading-normal overflow-y-auto modal-scroll pr-1 max-h-[48dvh]">
+        <div class="p-2 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="text-slate-100 uppercase tracking-wider font-mono-code text-[9px] block mb-0.5 text-emerald-400">Step 1: Enter Your ZIP Code</strong>
+          Type your 5-digit ZIP code or tap GPS to automatically lock onto your direct regional VA Travel Coordinator.
+        </div>
+
+        <div class="p-2 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="text-slate-100 uppercase tracking-wider font-mono-code text-slate-100 uppercase tracking-wider font-mono-code text-[9px] block mb-0.5 text-emerald-400">Step 2: 48-Hour Advance Call Rule</strong>
+          Tap the blinking green <strong class="text-slate-100 font-mono-code">CALL TRANSIT HUB</strong> button at least <strong>48 hours before your appointment time</strong>. Same-day morning-of ride requests cannot be booked.
+        </div>
+
+        <div class="p-2 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="text-slate-100 uppercase tracking-wider font-mono-code text-[9px] block mb-0.5 text-emerald-400">Step 3: Have Details Ready</strong>
+          Have your Full Name, Last 4 of your SSN, Date of Birth, and Home of Record pickup address ready for verification.
+        </div>
+
+        <div class="p-2 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="text-slate-100 uppercase tracking-wider font-mono-code text-[9px] block mb-0.5 text-emerald-400">Step 4: Ride Day Text Response</strong>
+          You will receive an automated text. Reply <strong>'1'</strong> when you are ready for pickup going to your clinic appointment, and reply <strong>'2'</strong> when your visit is finished to return home.
+        </div>
+      </div>
+
+      <div class="flex space-x-2 pt-1">
+        <button id="replayInstructionsVoiceBtn" class="flex-1 flex items-center justify-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider border border-emerald-500/30">
+          <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+          <span>Replay Voice</span>
+        </button>
+        <button id="dismissInstructionsBtn" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider">
+          Got It
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Zero-PII Security Architecture Modal -->
   <div id="zeroPiiModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm p-3 flex items-center justify-center">
     <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col shadow-2xl space-y-3">
@@ -436,16 +498,17 @@
   <script>
     lucide.createIcons();
 
-    // Voice Synthesis Prompt Audio Engine - First Touch Trigger
-    const greetingText = "Welcome to Forward March Transit, powered by In Cadence. Enter your zip code below.";
+    // Voice Synthesis Prompt Audio Engine - First Touch & Verbal Instructions
+    const instructionsSpeechText = "Welcome to Forward March Transit, powered by In Cadence. To be eligible for this service, you must be 30 percent or more service-connected, or VA travel authorized. Enter your 5-digit zip code below, and call your coordinator at least 48 hours prior to your appointment time.";
     let audioPlayed = false;
 
-    function speakGreeting() {
+    function speakGreeting(customText) {
       if (!('speechSynthesis' in window)) return;
       try {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(greetingText);
-        utterance.rate = 0.95;
+        const textToSpeak = customText || instructionsSpeechText;
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        utterance.rate = 0.92;
         utterance.pitch = 1.0;
         
         const voices = window.speechSynthesis.getVoices();
@@ -477,11 +540,37 @@
       document.addEventListener(evt, onFirstTouchTrigger, { capture: true, once: true });
     });
 
-    // Manual Replay Audio Button in Header
+    // Instructions & Eligibility Modal Handlers + Voice Playback
+    const instructionsModal = document.getElementById('instructionsModal');
     const audioGreetingBtn = document.getElementById('audioGreetingBtn');
+    const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
+    const dismissInstructionsBtn = document.getElementById('dismissInstructionsBtn');
+    const replayInstructionsVoiceBtn = document.getElementById('replayInstructionsVoiceBtn');
+
     if (audioGreetingBtn) {
       audioGreetingBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (instructionsModal) instructionsModal.classList.remove('hidden');
+        speakGreeting();
+      });
+    }
+
+    if (closeInstructionsBtn && instructionsModal) {
+      closeInstructionsBtn.addEventListener('click', () => {
+        instructionsModal.classList.add('hidden');
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      });
+    }
+
+    if (dismissInstructionsBtn && instructionsModal) {
+      dismissInstructionsBtn.addEventListener('click', () => {
+        instructionsModal.classList.add('hidden');
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      });
+    }
+
+    if (replayInstructionsVoiceBtn) {
+      replayInstructionsVoiceBtn.addEventListener('click', () => {
         speakGreeting();
       });
     }
