@@ -43,6 +43,24 @@
       pointer-events: none;
     }
 
+    /* Call Button Blinking Animation */
+    @keyframes callBtnPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        filter: brightness(1);
+      }
+      50% {
+        transform: scale(1.06);
+        box-shadow: 0 0 18px 4px rgba(52, 211, 153, 0.9);
+        filter: brightness(1.25);
+      }
+    }
+
+    .call-btn-blinking {
+      animation: callBtnPulse 0.8s ease-in-out infinite;
+    }
+
     /* Red, White, & Blue Wave Animation */
     @keyframes patriotWave {
       0% {
@@ -532,6 +550,7 @@
       hideAlert();
       matchStatus.textContent = "Live Auto-Lookup";
       matchStatus.className = "text-[9px] font-mono-code text-slate-500";
+      centerCallBtn.classList.remove('call-btn-blinking');
       updateHubUI(defaultHub);
       zipInput.focus();
     });
@@ -662,15 +681,19 @@
             matchStatus.className = "text-[9px] font-mono-code text-emerald-400";
           }
 
-          // Trigger Plausible custom event and auto-dismiss keyboard on 5th digit
+          // Trigger Plausible custom event, auto-dismiss keyboard, and blink Call Hub button
           if (cleanVal.length === 5) {
             trackLookup(cleanVal, match, 'Manual ZIP');
+            centerCallBtn.classList.add('call-btn-blinking');
             e.target.blur();
+          } else {
+            centerCallBtn.classList.remove('call-btn-blinking');
           }
         }
       } else {
         matchStatus.textContent = "Live Auto-Lookup";
         matchStatus.className = "text-[9px] font-mono-code text-slate-500";
+        centerCallBtn.classList.remove('call-btn-blinking');
       }
     });
 
@@ -711,6 +734,7 @@
                 matchStatus.className = "text-[9px] font-mono-code text-emerald-400";
                 
                 trackLookup(cleanZip, match, 'GPS');
+                centerCallBtn.classList.add('call-btn-blinking');
                 zipInput.blur();
               }
             } else {
