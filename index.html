@@ -1,5 +1,3 @@
-Script
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,6 +68,18 @@ Script
       -webkit-text-fill-color: transparent;
       animation: patriotWave 4s linear infinite;
       display: inline-block;
+    }
+
+    /* Custom thin scrollbar for modal */
+    .modal-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .modal-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .modal-scroll::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 2px;
     }
   </style>
 </head>
@@ -228,9 +238,9 @@ Script
       >
         <div>
           <div class="text-[9px] font-bold uppercase text-slate-200">Call Script</div>
-          <div class="text-[9px] text-slate-400 font-mono-code">5-Step Guide</div>
+          <div class="text-[9px] text-slate-400 font-mono-code">Live Call Demo</div>
         </div>
-        <i data-lucide="help-circle" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1"></i>
+        <i data-lucide="phone-call" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1"></i>
       </button>
     </div>
 
@@ -243,43 +253,94 @@ Script
     </div>
   </footer>
 
-  <!-- Call Script Modal Overlay -->
-  <div id="scriptModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm p-4 flex items-center justify-center">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-4 space-y-3 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+  <!-- Call Script Modal Overlay (Updated Call Simulation Dialogue) -->
+  <div id="scriptModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-3.5 flex flex-col max-h-[90dvh] shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2 shrink-0">
         <div class="flex items-center space-x-2">
           <i data-lucide="phone-outgoing" class="w-4 h-4 text-emerald-400"></i>
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-100">Call Script & Checklist</span>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-100 block leading-tight">Live Call & Text Demo</span>
+            <span class="text-[8px] text-slate-400 font-mono-code block">Mom (Lisa / VA) & Terence (Veteran)</span>
+          </div>
         </div>
         <button id="closeScriptBtn" class="text-slate-400 hover:text-slate-100 p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <div class="space-y-2.5 text-xs text-slate-300">
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-slate-500 mt-0.5">01</span>
-          <p><span class="text-slate-100 font-semibold">Answer:</span> "Hello, Veterans Transportation Service, how can I help you?"</p>
+      <!-- Dialogue Body -->
+      <div class="space-y-2 overflow-y-auto pr-1 my-2 text-[11px] modal-scroll">
+        
+        <!-- Turn 1: Mom -->
+        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">Mom (VA Travel):</span>
+          "VA Travel, Lisa speaking, how may I help you?"
         </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">02</span>
-          <p><span class="text-emerald-400 font-semibold">Identify:</span> State your name and verify you are an eligible veteran.</p>
+
+        <!-- Turn 2: Terence -->
+        <div class="p-2 rounded bg-blue-950/20 border-l-2 border-blue-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Terence (Veteran):</span>
+          "Hi Lisa, I have an upcoming doctor appointment at the VA clinic next Tuesday at 9:00 AM, and I need to schedule a ride."
         </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">03</span>
-          <p><span class="text-emerald-400 font-semibold">Request:</span> State you need a rideshare scheduled for your VA appointment.</p>
+
+        <!-- Turn 3: Mom -->
+        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">Mom (VA Travel):</span>
+          "Sure, can I get your full name and your last four or your birth date?"
         </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">04</span>
-          <p><span class="text-emerald-400 font-semibold">Details:</span> Provide appointment date/time or ask them to check the clinic record.</p>
+
+        <!-- Turn 4: Terence -->
+        <div class="p-2 rounded bg-blue-950/20 border-l-2 border-blue-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Terence (Veteran):</span>
+          "Terence Watkins, my last four is 1-2-3-4 and my date of birth is 3rd December 1982."
         </div>
-        <div class="flex items-start space-x-2">
-          <span class="font-mono-code text-[10px] font-bold text-emerald-400 mt-0.5">05</span>
-          <p><span class="text-emerald-400 font-semibold">Confirm:</span> State your physical pickup address and verify return transport.</p>
+
+        <!-- Turn 5: Mom -->
+        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">Mom (VA Travel):</span>
+          "Got you right here. Pickup is at your home of record address at 1234 VA Drive Lane, Anytown, Any State, 00000. Is that address correct?"
         </div>
+
+        <!-- Turn 6: Terence -->
+        <div class="p-2 rounded bg-blue-950/20 border-l-2 border-blue-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Terence (Veteran):</span>
+          "Yes, that's correct."
+        </div>
+
+        <!-- Turn 7: Mom -->
+        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">Mom (VA Travel):</span>
+          "Perfect. You called with plenty of time—just remember, you always need to call at least 48 hours before your appointment time, because rides cannot be booked the morning of. You are all set for a round trip."
+        </div>
+
+        <!-- Turn 8: Terence -->
+        <div class="p-2 rounded bg-blue-950/20 border-l-2 border-blue-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Terence (Veteran):</span>
+          "Understood, 48 hours in advance. How does the pickup work on Tuesday?"
+        </div>
+
+        <!-- Turn 9: Mom -->
+        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">Mom (VA Travel):</span>
+          "You'll receive an automated text either the evening before or right after midnight. You don't have to type anything into the Uber app—just reply '1' whenever you are ready for pickup going to your appointment, and reply '2' when your visit is finished to head back home."
+        </div>
+
+        <!-- Turn 10: Terence -->
+        <div class="p-2 rounded bg-blue-950/20 border-l-2 border-blue-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Terence (Veteran):</span>
+          "That makes it completely painless. Thank you so much, Lisa!"
+        </div>
+
+        <!-- Turn 11: Mom -->
+        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
+          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">Mom (VA Travel):</span>
+          "You're all set! Have a wonderful day!"
+        </div>
+
       </div>
 
-      <button id="modalDismissBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider mt-2 border border-slate-700">
+      <button id="modalDismissBtn" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider mt-1 border border-slate-700">
         Close Script
       </button>
     </div>
