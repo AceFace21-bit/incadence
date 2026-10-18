@@ -123,14 +123,13 @@
     </div>
   </aside>
 
-  <!-- Header -->
-    <!-- Header with Top Build Version Badge & Centered Branding -->
+  <!-- Header with Top Build Version Badge & Centered Branding -->
   <header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-2 shrink-0 z-50">
     <div class="max-w-md mx-auto relative flex items-center justify-between">
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 2.5 (REV 13)</span>
+        <span>BUILD 2.5 (REV 14)</span>
       </div>
 
       <!-- CENTERED Forward March Transit & In Cadence Branding -->
@@ -148,8 +147,8 @@
       <button 
         id="openZeroPiiBtn" 
         type="button" 
-        title="View Security & Zero-PII Compliance Architecture"
-        aria-label="View Zero PII security disclosure"
+        title="View Security & Zero-PII Compliance Architecture" 
+        aria-label="View Zero PII security disclosure" 
         class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 text-[10px] font-medium text-slate-300 transition shrink-0 shadow-sm"
       >
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
@@ -166,7 +165,7 @@
       <button 
         id="audioGreetingBtn" 
         type="button" 
-        title="Need help? Click for spoken instructions"
+        title="Need help? Click for spoken instructions" 
         class="tactile-btn w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 active:bg-emerald-500/35 border-2 border-emerald-500/50 text-emerald-300 font-bold text-xs uppercase tracking-wider text-center transition shadow-md"
       >
         <i data-lucide="volume-2" class="w-5 h-5 text-emerald-400 shrink-0"></i>
@@ -185,7 +184,7 @@
       <span class="text-[9px] font-mono-code text-slate-400 uppercase tracking-wider shrink-0 ml-1">VHA Direct</span>
     </div>
 
-    <!-- Input Section: Streamlined Numeric Keypad & GPS Controls -->
+    <!-- Input Section: Streamlined Numeric Keypad, Voice Mic & GPS Controls -->
     <section class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md">
       <div class="flex items-center justify-between mb-1.5">
         <label for="zipInput" class="block text-[11px] font-bold uppercase tracking-wider patriot-wave-text">
@@ -203,25 +202,37 @@
             pattern="[0-9]*" 
             inputmode="numeric" 
             maxlength="5" 
-            placeholder="Enter 5-digit ZIP..."
+            placeholder="Enter 5-digit ZIP..." 
             class="tactile-btn w-full bg-slate-950 border-2 border-slate-700 focus:border-emerald-400 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-100 placeholder-slate-500 font-mono-code font-bold transition outline-none"
           >
           <button 
             type="button" 
             id="clearZipBtn" 
-            aria-label="Clear ZIP code input"
+            aria-label="Clear ZIP code input" 
             class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
           >
             <i data-lucide="x" class="w-4 h-4"></i>
           </button>
         </div>
 
+        <!-- One-Tap Mic Voice Input Button -->
+        <button 
+          id="micBtn"
+          type="button"
+          title="Speak ZIP Code Aloud"
+          aria-label="Speak ZIP code aloud"
+          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
+        >
+          <i data-lucide="mic" id="micIcon" class="w-4 h-4 text-emerald-400"></i>
+          <span id="micBtnLabel" class="font-mono-code font-bold text-[11px]">VOICE</span>
+        </button>
+
         <!-- Current Location GPS Button -->
         <button 
-          id="geoBtn"
-          type="button"
-          title="Detect Current Location"
-          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3.5 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5 shrink-0"
+          id="geoBtn" 
+          type="button" 
+          title="Detect Current Location" 
+          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
         >
           <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
           <span id="geoBtnLabel" class="font-mono-code font-bold text-[11px]">GPS</span>
@@ -287,7 +298,7 @@
         id="readFacilityBtn" 
         type="button" 
         title="Read facility details aloud" 
-        aria-label="Read facility name and phone number aloud"
+        aria-label="Read facility name and phone number aloud" 
         class="tactile-btn p-2 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-slate-700 text-emerald-400 shrink-0 flex items-center justify-center"
       >
         <i data-lucide="volume-2" class="w-5 h-5"></i>
@@ -434,7 +445,7 @@
       <div class="space-y-2 text-[11px] text-slate-300 leading-normal overflow-y-auto modal-scroll pr-1 max-h-[48dvh]">
         <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
           <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 1: Enter Your ZIP Code</strong>
-          Type your 5-digit ZIP into the input box or tap GPS.
+          Type your 5-digit ZIP into the input box, tap Voice, or tap GPS.
         </div>
 
         <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
@@ -619,6 +630,9 @@
 
     const zipInput = document.getElementById('zipInput');
     const clearZipBtn = document.getElementById('clearZipBtn');
+    const micBtn = document.getElementById('micBtn');
+    const micBtnLabel = document.getElementById('micBtnLabel');
+    const micIcon = document.getElementById('micIcon');
     const geoBtn = document.getElementById('geoBtn');
     const geoBtnLabel = document.getElementById('geoBtnLabel');
     const matchStatus = document.getElementById('matchStatus');
@@ -768,7 +782,7 @@
       const callUri = "tel:" + data.cleanPhone;
       centerCallBtn.href = callUri;
       
-      const isFallback = (data.visn === "VA National");
+      const isFallback = (data.visn === "VA Beneficiary Travel Dispatch" || data.badge === "National Dispatch Center");
       centerCallText.textContent = isFallback ? "CALL DISPATCH" : "CALL TRANSIT HUB";
 
       if (map && data.coords) {
@@ -792,7 +806,7 @@
         const match = resolveHub(cleanVal);
         if (match) {
           updateHubUI(match);
-          if (match.visn === "VA National") {
+          if (match.badge === "National Dispatch Center") {
             matchStatus.textContent = "National Dispatch";
             matchStatus.className = "text-[10px] font-mono-code text-amber-400 font-bold";
           } else {
@@ -830,6 +844,55 @@
 
       executeLookup(cleanVal, 'Manual ZIP');
     });
+
+    // Voice-First Speech-to-Text Input (Web Speech API)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition && micBtn) {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      micBtn.addEventListener('click', () => {
+        hideAlert();
+        try {
+          recognition.start();
+          micBtnLabel.textContent = "REC...";
+          micBtn.classList.add('border-emerald-400', 'bg-emerald-950/60');
+        } catch (err) {
+          recognition.stop();
+          micBtnLabel.textContent = "VOICE";
+          micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
+        }
+      });
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        const numbersOnly = transcript.replace(/\D/g, '');
+        if (numbersOnly.length >= 5) {
+          const zip = numbersOnly.substring(0, 5);
+          zipInput.value = zip;
+          clearZipBtn.classList.remove('hidden');
+          executeLookup(zip, 'Voice Input');
+        } else {
+          showAlert("Could not recognize 5-digit ZIP: " + transcript);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        showAlert("Voice input error. Try manual keypad.");
+        micBtnLabel.textContent = "VOICE";
+        micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
+      };
+
+      recognition.onend = () => {
+        micBtnLabel.textContent = "VOICE";
+        micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
+      };
+    } else if (micBtn) {
+      micBtn.classList.add('opacity-50');
+      micBtn.title = "Voice recognition not supported on this browser";
+    }
 
     // Geolocation Resolution
     geoBtn.addEventListener('click', () => {
