@@ -362,52 +362,60 @@
   <script>
     lucide.createIcons();
 
-    // Voice Synthesis Prompt Audio Engine
+    // Voice Synthesis Prompt Audio Engine - First Touch Trigger
     const greetingText = "Welcome to Forward March Transit, powered by In Cadence. Enter your zip code below.";
-    let hasPlayedAudio = false;
+    let audioPlayed = false;
 
-    function playWelcomeGreeting() {
+    function speakGreeting() {
       if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel(); // Stop any pending utterances
-      
-      const utterance = new SpeechSynthesisUtterance(greetingText);
-      utterance.rate = 0.95;  // Calm, natural cadence
-      utterance.pitch = 1.0;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(greetingText);
+        utterance.rate = 0.95;
+        utterance.pitch = 1.0;
+        
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.lang.startsWith("en")));
+          if (naturalVoice) utterance.voice = naturalVoice;
+        }
 
-      // Select natural English voice if available
-      const voices = window.speechSynthesis.getVoices();
-      const preferredVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.lang.startsWith("en")));
-      if (preferredVoice) utterance.voice = preferredVoice;
-
-      window.speechSynthesis.speak(utterance);
-      hasPlayedAudio = true;
+        window.speechSynthesis.speak(utterance);
+        audioPlayed = true;
+      } catch (err) {
+        console.error("Speech playback error:", err);
+      }
     }
 
-    // Modern browsers require a user gesture (tap/click/scroll/key) to allow audio output
-    function triggerFirstInteractionAudio() {
-      if (!hasPlayedAudio) {
-        playWelcomeGreeting();
-        ['pointerdown', 'keydown', 'touchstart'].forEach(evt => {
-          window.removeEventListener(evt, triggerFirstInteractionAudio);
+    // Fire immediately on the very first touch or click anywhere on screen
+    function onFirstTouchTrigger() {
+      if (!audioPlayed) {
+        speakGreeting();
+        // Remove all listeners immediately
+        ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click'].forEach(evt => {
+          document.removeEventListener(evt, onFirstTouchTrigger, true);
         });
       }
     }
 
-    ['pointerdown', 'keydown', 'touchstart'].forEach(evt => {
-      window.addEventListener(evt, triggerFirstInteractionAudio, { once: true });
+    // Capture phase listeners ensure execution before any button or input consumes the event
+    ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click'].forEach(evt => {
+      document.addEventListener(evt, onFirstTouchTrigger, { capture: true, once: true });
     });
 
     // Manual Replay Audio Button in Header
     const audioGreetingBtn = document.getElementById('audioGreetingBtn');
-    audioGreetingBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      playWelcomeGreeting();
-    });
+    if (audioGreetingBtn) {
+      audioGreetingBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        speakGreeting();
+      });
+    }
 
-    // Ensure voices are loaded for Chrome/Android
+    // Prime voices on load
     if ('speechSynthesis' in window) {
       window.speechSynthesis.onvoiceschanged = () => {
-        // Voices ready
+        window.speechSynthesis.getVoices();
       };
     }
 
