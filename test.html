@@ -1,1076 +1,920 @@
-<!-- 
-  Copyright (c) 2026 Terrance Lamont Watkins. All Rights Reserved.
-  USPTO PROVISIONAL PATENT APPLICATION NO. 64/174,835
-  Terrance Watkins • Patent Pending 64/174,835
-  CONFIDENTIAL PROPRIETARY TELEMETRY SYSTEM - UNAUTHORIZED REPRODUCTION PROHIBITED
-  PROJECT EYES v3.78 - BULLETPROOF IOS/ANDROID SPEECH ACTIVATION ENGINE + FULL BUILD TXT
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.78 | Terrance Watkins • Patent Pending 64/174,835</title>
-  <style>
-    * {
-      box-sizing: border-box; margin: 0; padding: 0;
-      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-      -webkit-touch-callout: none;
-    }
-    html, body {
-      width: 100%; height: 100dvh; overflow: hidden;
-      background-color: #0b0f19; color: #f8fafc;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-    body {
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: space-between; padding: 5px 10px;
-    }
-    #pinVaultOverlay {
-      position: fixed; inset: 0; background: #070a12; z-index: 9999;
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; padding: 18px; text-align: center;
-    }
-    .vault-card {
-      width: 100%; max-width: 365px; background: #111827;
-      border: 2px solid #38bdf8; border-radius: 14px; padding: 18px 16px;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.85);
-    }
-    .vault-title { font-size: 16px; font-weight: 900; color: #f8fafc; margin-bottom: 4px; }
-    .vault-sub {
-      font-size: 9.5px; font-weight: 900; color: #38bdf8;
-      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
-    }
-    .nda-box {
-      background: rgba(15, 23, 42, 0.95); border: 1.5px solid #fde047;
-      border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; text-align: left;
-    }
-    .nda-title {
-      font-size: 8.5px; font-weight: 900; color: #fde047;
-      text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px;
-    }
-    .nda-text {
-      font-size: 8px; font-weight: 700; color: #cbd5e1; line-height: 1.35;
-    }
-    .vault-input {
-      width: 100%; background: #0b0f19; border: 2px solid #334155;
-      color: #fde047; font-size: 24px; font-weight: 900; text-align: center;
-      letter-spacing: 8px; padding: 9px; border-radius: 8px; margin-bottom: 10px; outline: none;
-      -webkit-user-select: text; user-select: text;
-    }
-    .vault-btn {
-      width: 100%; background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: #fff; border: 1px solid #38bdf8; padding: 12px;
-      font-size: 11px; font-weight: 900; border-radius: 8px;
-      text-transform: uppercase; cursor: pointer; letter-spacing: 0.3px;
-    }
-    .vault-err { color: #f87171; font-size: 10.5px; font-weight: 800; margin-top: 6px; min-height: 14px; }
-    header {
-      text-align: center; width: 100%; max-width: 600px;
-      display: flex; align-items: center; justify-content: center; padding: 2px 4px;
-    }
-    .patent-pill {
-      background: rgba(56, 189, 248, 0.14); color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.4); font-size: 9px; font-weight: 900;
-      letter-spacing: 0.5px; padding: 4px 12px; border-radius: 999px; text-transform: uppercase;
-    }
-    .stage-bar { width: 100%; max-width: 600px; display: flex; gap: 4px; flex-shrink: 0; }
-    .stage-step {
-      flex: 1; text-align: center; padding: 6px 2px; font-size: 10px; font-weight: 900;
-      background: #111827; color: #94a3b8; border-radius: 7px;
-      border: 2px solid #334155; transition: all 0.2s ease;
-    }
-    .stage-step.active {
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: #fde047; border-color: #fde047;
-      box-shadow: 0 0 10px rgba(253, 224, 71, 0.35); transform: scale(1.02);
-    }
-    .stage-step.done { background: rgba(22, 163, 74, 0.25); color: #4ade80; border-color: #4ade80; }
-    .camera-box {
-      position: relative; width: 100%; max-width: 600px; height: 118px;
-      border-radius: 10px; overflow: hidden; border: 2px solid #1e293b;
-      background: #000; flex-shrink: 0; transform: translateZ(0); -webkit-transform: translateZ(0);
-    }
-    #webcam { position: absolute; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: 1; }
-    #viewfinderCanvas {
-      position: relative; display: block; width: 100%; height: 100%;
-      z-index: 2; transform: translateZ(0); -webkit-transform: translateZ(0);
-    }
-    .center-guide-pill {
-      position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
-      background: rgba(15, 23, 42, 0.92); border: 1px solid rgba(250, 204, 21, 0.6);
-      color: #fde047; font-size: 8px; font-weight: 900; letter-spacing: 0.3px;
-      padding: 2px 8px; border-radius: 999px; text-transform: uppercase;
-      pointer-events: none; z-index: 4; white-space: nowrap;
-    }
-    .center-guide-pill.locked { border-color: rgba(74, 222, 128, 0.8); color: #4ade80; }
-    .hud-top, .hud-bottom {
-      position: absolute; left: 6px; right: 6px;
-      display: flex; justify-content: space-between; pointer-events: none; z-index: 4;
-    }
-    .hud-top { top: 4px; }
-    .hud-bottom { bottom: 4px; }
-    .badge {
-      background: rgba(15, 23, 42, 0.92); padding: 2px 6px; border-radius: 5px;
-      border: 1px solid #334155; font-size: 9.5px; font-weight: 800; color: #cbd5e1;
-    }
-    .badge-val { color: #38bdf8; font-size: 11.5px; font-weight: 900; margin-left: 2px; }
-    .coach-panel {
-      width: 100%; max-width: 600px;
-      background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
-      border: 2.5px solid #fde047; border-radius: 12px; padding: 7px 10px;
-      flex-shrink: 0; box-shadow: 0 6px 20px rgba(253, 224, 71, 0.14);
-    }
-    .coach-header {
-      font-size: 11px; font-weight: 900; color: #0f172a; background: #fde047;
-      text-transform: uppercase; letter-spacing: 0.4px; padding: 4px 8px;
-      border-radius: 6px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;
-    }
-    .coach-badge-pill { background: #0f172a; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 900; }
-    .coach-list { display: flex; flex-direction: column; gap: 4px; }
-    .coach-line {
-      font-size: 11.5px; font-weight: 800; color: #ffffff; line-height: 1.25;
-      background: #1e293b; padding: 5px 9px; border-radius: 7px; border-left: 4px solid #38bdf8;
-    }
-    .coach-highlight { color: #fde047; font-weight: 900; text-decoration: underline; text-underline-offset: 2px; }
-    .optotype-card {
-      position: relative; width: 100%; max-width: 600px; height: 112px;
-      background: #ffffff; color: #0f172a; border-radius: 10px; padding: 4px 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3); flex-shrink: 0;
-    }
-    .card-header {
-      width: 100%; display: flex; justify-content: space-between; font-size: 8.5px;
-      font-weight: 900; color: #475569; border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 2px; text-transform: uppercase;
-    }
-    .optotype-viewport {
-      position: absolute; top: 20px; bottom: 4px; left: 8px; right: 8px;
-      display: flex; align-items: center; justify-content: center; background: #ffffff; overflow: hidden;
-    }
-    #snellenCanvas { display: none; transition: opacity 0.06s ease; }
-    #gatePromptBtn {
-      width: 100%; height: 100%; background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: #ffffff; border: 2.5px solid #38bdf8; border-radius: 8px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 14px;
-      cursor: pointer; text-align: center; user-select: none;
-    }
-    #gatePromptBtn:active { background: #0369a1; border-color: #fde047; }
-    .gate-main { font-size: 14px; font-weight: 900; line-height: 1.25; text-transform: uppercase; color: #ffffff; letter-spacing: 0.3px; }
-    .gate-sub { font-size: 9px; font-weight: 800; color: #fde047; margin-top: 4px; text-transform: uppercase; }
-    #readingBox { display: none; width: 100%; text-align: center; font-weight: 800; font-size: 13px; }
-    #reportBox { display: none; width: 100%; text-align: left; }
-    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-    .report-item { background: #f1f5f9; padding: 3px 6px; border-radius: 4px; border-left: 3px solid #0284c7; }
-    .report-label { font-size: 6.5px; font-weight: 800; color: #64748b; text-transform: uppercase; }
-    .report-val { font-size: 9.5px; font-weight: 900; color: #0f172a; line-height: 1.15; }
-    .report-sub { font-size: 7.5px; font-weight: 800; color: #0284c7; line-height: 1.15; }
-    .report-cl { font-size: 7.5px; font-weight: 900; color: #0f766e; line-height: 1.15; }
-    .controls-wrap {
-      width: 100%; max-width: 600px; display: flex; align-items: center;
-      justify-content: center; gap: 10px; height: 122px; padding: 0 4px;
-      flex-shrink: 0; transition: all 0.25s ease;
-    }
-    .controls-wrap.align-left { justify-content: flex-start; flex-direction: row; }
-    .controls-wrap.align-right { justify-content: flex-end; flex-direction: row-reverse; }
-    .controls-wrap.align-center { justify-content: center; flex-direction: row; }
-    .dpad-cross {
-      display: grid; grid-template-columns: 44px 44px 44px; grid-template-rows: 38px 38px 38px;
-      gap: 3px; background: radial-gradient(circle, #1e293b 0%, #0f172a 75%);
-      padding: 4px; border-radius: 50%; border: 2px solid #334155;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.65), 0 4px 10px rgba(0,0,0,0.45);
-    }
-    button {
-      background: #1e293b; color: #f8fafc; border: 1px solid #334155;
-      padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;
-    }
-    button.dpad-btn {
-      width: 44px; height: 38px; background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
-      color: #f8fafc; border: 2px solid #64748b; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; font-size: 8.5px; font-weight: 900;
-      padding: 1px; line-height: 1; user-select: none; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-    }
-    button.dpad-up { grid-column: 2; grid-row: 1; border-radius: 9px 9px 3px 3px; }
-    button.dpad-left { grid-column: 1; grid-row: 2; border-radius: 9px 3px 3px 9px; }
-    .dpad-center {
-      grid-column: 2; grid-row: 2; background: #0b0f19; border-radius: 50%;
-      border: 1.5px solid #334155; display: flex; align-items: center;
-      justify-content: center; color: #38bdf8; font-size: 11px; pointer-events: none;
-    }
-    button.dpad-right { grid-column: 3; grid-row: 2; border-radius: 3px 9px 9px 3px; }
-    button.dpad-down { grid-column: 2; grid-row: 3; border-radius: 3px 3px 9px 9px; }
-    .dpad-tri { font-size: 13px; color: #38bdf8; line-height: 1; margin-bottom: 1px; }
-    button.dpad-btn:active { background: #0284c7; color: #fde047; border-color: #fde047; transform: scale(0.95); }
-    button.dpad-btn:active .dpad-tri { color: #fde047; }
-    button.cant-see-btn {
-      height: 118px; width: 92px; background: rgba(220, 38, 38, 0.22);
-      color: #fca5a5; border: 2px solid rgba(248, 113, 113, 0.55); border-radius: 12px;
-      font-size: 10.5px; font-weight: 900; padding: 6px; text-transform: uppercase;
-      line-height: 1.25; display: flex; align-items: center; justify-content: center; text-align: center;
-    }
-    .horizon-deck { width: 100%; display: flex; gap: 6px; height: 114px; }
-    .horizon-btn-blur {
-      flex: 1.35; background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: #0f172a; border: 2px solid #fde047; border-radius: 10px;
-      font-size: 11.5px; font-weight: 900; text-transform: uppercase; padding: 6px 8px; line-height: 1.2;
-    }
-    .horizon-btn-shrink {
-      flex: 1; background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: #ffffff; border: 2px solid #38bdf8; border-radius: 10px;
-      font-size: 11px; font-weight: 900; text-transform: uppercase; padding: 6px 8px; line-height: 1.2;
-    }
-    .print-rx-btn {
-      width: 100%; height: 106px; background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
-      color: #ffffff; border: 2.5px solid #38bdf8; border-radius: 12px;
-      font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.4px;
-      line-height: 1.35; box-shadow: 0 6px 18px rgba(56, 189, 248, 0.25);
-      display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
-    }
-    .print-rx-btn:active { transform: scale(0.98); background: #0369a1; }
-    .bottom-bar {
-      width: 100%; max-width: 600px; display: flex; align-items: center;
-      justify-content: space-between; gap: 8px; flex-shrink: 0;
-    }
-    .reset-btn { padding: 4px 10px; font-size: 9.5px; }
-    footer { font-size: 8.5px; font-weight: 800; color: #94a3b8; text-align: right; white-space: nowrap; }
-    #printableRxSheet { display: none; }
-
-    @media print {
-      @page { size: portrait; margin: 12mm; }
-      html, body {
-        background: #ffffff !important; color: #000000 !important;
-        height: auto !important; overflow: visible !important; display: block !important; padding: 0 !important;
-      }
-      #pinVaultOverlay, header, .stage-bar, .camera-box, .coach-panel, .optotype-card, .controls-wrap, .bottom-bar {
-        display: none !important;
-      }
-      #printableRxSheet {
-        display: block !important; width: 100%; max-width: 720px; margin: 0 auto;
-        border: 3px solid #0f172a; padding: 20px 24px;
-        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #0f172a; background: #ffffff;
-      }
-      .prx-header {
-        border-bottom: 3px solid #0f172a; padding-bottom: 12px; margin-bottom: 16px;
-        display: flex; justify-content: space-between; align-items: flex-start;
-      }
-      .prx-title { font-size: 22px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; color: #0f172a; }
-      .prx-inventor { font-size: 13px; font-weight: 900; color: #0284c7; margin-top: 3px; text-transform: uppercase; }
-      .prx-patent { font-size: 11px; font-weight: 800; color: #334155; margin-top: 2px; }
-      .prx-seal {
-        text-align: right; border: 2px solid #0f172a; padding: 6px 10px;
-        border-radius: 6px; font-size: 10px; font-weight: 900; text-transform: uppercase;
-      }
-      .prx-meta-grid {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc;
-        border: 1.5px solid #cbd5e1; padding: 10px 14px; border-radius: 6px; margin-bottom: 18px; font-size: 11.5px;
-      }
-      .prx-meta-row strong { font-weight: 900; text-transform: uppercase; color: #0f172a; }
-      .prx-section-title {
-        font-size: 13px; font-weight: 900; text-transform: uppercase; background: #0f172a;
-        color: #ffffff; padding: 6px 10px; margin-bottom: 10px; letter-spacing: 0.4px;
-      }
-      .prx-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
-      .prx-table th, .prx-table td { border: 1.5px solid #0f172a; padding: 9px 10px; text-align: left; font-size: 12px; }
-      .prx-table th { background: #e2e8f0; font-weight: 900; text-transform: uppercase; font-size: 11px; }
-      .prx-table td { font-weight: 800; }
-      .prx-sig-box {
-        margin-top: 24px; padding-top: 14px; border-top: 2px dashed #64748b;
-        display: flex; justify-content: space-between; align-items: flex-end;
-      }
-      .prx-sig-line { width: 55%; border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 10.5px; font-weight: 800; }
-      .prx-footer-stamp {
-        margin-top: 18px; text-align: center; font-size: 10px; font-weight: 900;
-        text-transform: uppercase; color: #334155; background: #f1f5f9; padding: 8px; border: 1px solid #cbd5e1;
-      }
-    }
-  </style>
-
-  <!-- LAYER 3: ANTI-INSPECT / ANTI-COPY / ENCODED PIN 3206 GUARD -->
-  <script>
-    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-    document.addEventListener('copy', function(e) { e.preventDefault(); });
-    document.addEventListener('cut', function(e) { e.preventDefault(); });
-    document.addEventListener('dragstart', function(e) { e.preventDefault(); });
-    document.addEventListener('keydown', function(e) {
-      if (
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
-        (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'U' || e.key === 'u')) ||
-        (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
-      ) {
-        e.preventDefault();
-        return false;
-      }
-    });
-
-    window.checkVaultPin = function() {
-      var box = document.getElementById('vaultPinInput');
-      var err = document.getElementById('vaultErrMsg');
-      if (!box) return;
-      var digits = box.value.replace(/[^0-9]/g, '');
-      if (digits.length === 4 && window.btoa(digits) === 'MzIwNg==') {
-        if (typeof window.unlockSpeechPipeline === 'function') window.unlockSpeechPipeline();
-        // Immediately arm prompt during verified touch gesture
-        if (typeof window.armFirstInstruction === 'function') window.armFirstInstruction();
-        document.getElementById('pinVaultOverlay').style.display = 'none';
-        if (typeof window.startEyesEngine === 'function') window.startEyesEngine();
-      } else if (digits.length >= 4) {
-        err.innerText = 'UNAUTHORIZED ACCESS CODE';
-      } else {
-        err.innerText = '';
-      }
-    };
-  </script>
-
+  <title>Project Eyes™ | Visual Calibration & Rx System v3.65</title>
+  
+  <!-- MediaPipe Face Mesh & Camera Utils -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+  
+  <style>
+    :root {
+      --bg-dark: #070b14;
+      --card-bg: #0f172a;
+      --border-blue: #1e3a8a;
+      --accent-green: #22c55e;
+      --accent-blue: #0284c7;
+      --accent-yellow: #eab308;
+      --accent-red: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px 8px 30px;
+    }
+
+    /* Container */
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Header & Patent Pill */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 14px;
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(14, 165, 233, 0.4);
+      border-radius: 9999px;
+      text-align: center;
+    }
+    .header-bar span {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #38bdf8;
+    }
+    .build-tag {
+      background: #0284c7;
+      color: #ffffff !important;
+      font-size: 10px !important;
+      font-weight: 900 !important;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      margin-left: 6px;
+    }
+
+    /* Step Navigation Tabs */
+    .step-tabs {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+    }
+    .step-tab {
+      background: #1e293b;
+      border: 1.5px solid #334155;
+      color: #94a3b8;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 6px 2px;
+      text-align: center;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    .step-tab.active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+    .step-tab.completed {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    /* Video HUD Viewport */
+    .hud-wrapper {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      background: #0b1120;
+      border: 2px solid var(--accent-green);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hud-wrapper.out-of-range {
+      border-color: var(--accent-yellow);
+    }
+    .hud-wrapper.no-face {
+      border-color: var(--accent-red);
+    }
+
+    video.webcam-stream {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+    canvas.hud-canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    /* HUD Corner & Center Badges */
+    .hud-badge {
+      position: absolute;
+      z-index: 10;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+    }
+    .badge-top-left { top: 8px; left: 8px; color: #38bdf8; border-color: #38bdf8; }
+    .badge-top-right { top: 8px; right: 8px; color: #4ade80; border-color: #4ade80; }
+    .badge-bottom-left { bottom: 8px; left: 8px; color: #22c55e; }
+    .badge-bottom-right { bottom: 8px; right: 8px; color: #38bdf8; }
+    .badge-bottom-center {
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #facc15;
+      border-color: #facc15;
+      white-space: nowrap;
+    }
+    .badge-bottom-center.locked {
+      color: #4ade80;
+      border-color: #4ade80;
+      background: rgba(6, 78, 59, 0.9);
+    }
+
+    /* Step Card Instructions */
+    .card-instructions {
+      background: #0f172a;
+      border: 2px solid #eab308;
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .card-header-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #facc15;
+      text-transform: uppercase;
+    }
+    .card-step-badge {
+      font-size: 9.5px;
+      font-weight: 900;
+      background: #eab308;
+      color: #000;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .instruction-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .instruction-item {
+      background: #1e293b;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      line-height: 1.35;
+      border-left: 3px solid #0284c7;
+    }
+    .instruction-item strong {
+      color: #facc15;
+    }
+
+    /* Testing Canvas / Stage Area */
+    .test-stage {
+      background: #ffffff;
+      border-radius: 12px;
+      height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+    .stage-meta {
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+    }
+    .optotype-e {
+      font-family: monospace;
+      font-weight: 900;
+      color: #000000;
+      line-height: 1;
+      display: inline-block;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), font-size 0.2s ease;
+    }
+
+    /* Action Controls & Big Buttons */
+    .controls-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .big-btn {
+      width: 100%;
+      padding: 14px 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.1s, filter 0.2s;
+    }
+    .big-btn:active {
+      transform: scale(0.98);
+    }
+    .btn-blue {
+      background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      border: 1.5px solid #38bdf8;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+    }
+    .btn-yellow {
+      background: linear-gradient(180deg, #eab308 0%, #ca8a04 100%);
+      color: #000000;
+      border: 1.5px solid #fde047;
+    }
+    .dpad-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .dpad-btn {
+      background: #1e293b;
+      border: 1.5px solid #38bdf8;
+      color: #ffffff;
+      padding: 12px 0;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .dpad-btn:active {
+      background: #0284c7;
+    }
+
+    /* Rx Prescription Summary Card (Step 6) */
+    .rx-summary-card {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .rx-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .rx-box {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 8px;
+    }
+    .rx-box-title {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #475569;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+    .rx-val-bold {
+      font-size: 13px;
+      font-weight: 900;
+      color: #0284c7;
+    }
+    .rx-sub {
+      font-size: 10px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    /* Footer / Reset */
+    .footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 4px;
+    }
+    .btn-reset {
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: #cbd5e1;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .footer-patent {
+      font-size: 9.5px;
+      color: #64748b;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* Security PIN Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(7, 11, 20, 0.94);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .modal-box {
+      background: #0f172a;
+      border: 2px solid #0284c7;
+      border-radius: 14px;
+      padding: 20px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+    .modal-box h2 {
+      font-size: 16px;
+      color: #f8fafc;
+      margin-bottom: 6px;
+    }
+    .modal-box p {
+      font-size: 11.5px;
+      color: #94a3b8;
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+    .pin-input {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+      text-align: center;
+      letter-spacing: 4px;
+      border-radius: 8px;
+      border: 1.5px solid #38bdf8;
+      background: #1e293b;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    @media print {
+      body { background: #fff; color: #000; }
+      .app-container > :not(.rx-summary-card) { display: none !important; }
+      .rx-summary-card { box-shadow: none; border: 1px solid #000; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- PIN VAULT OVERLAY -->
-  <div id="pinVaultOverlay">
-    <div class="vault-card">
-      <div class="vault-title">🔒 Project Eyes v3.78</div>
-      <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
-      <div class="nda-box">
-        <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
-        <div class="nda-text">
-          Protected under USPTO Provisional Patent Application No. <strong>64/174,835</strong> (Inventor: <strong>Terrance Watkins</strong>). By entering your tester PIN and unlocking this system, you agree that this software is strictly confidential and that you will not copy, share, forward, or reverse-engineer any part of this system.
+  <!-- TESTER PIN SECURITY MODAL -->
+  <div id="pinModal" class="modal-backdrop">
+    <div class="modal-box">
+      <h2>PROJECT EYES™ CALIBRATION</h2>
+      <p style="margin-bottom:4px;"><strong>Build v3.65 (Beta)</strong></p>
+      <p>Authorized Family &amp; Beta Tester Access Only<br>Enter your 4-digit PIN to begin.</p>
+      <input type="password" id="pinInput" class="pin-input" maxlength="4" placeholder="••••" inputmode="numeric">
+      <button class="big-btn btn-blue" onclick="validateTesterPIN()">Unlock System</button>
+      <div id="pinError" style="color: #ef4444; font-size: 11px; font-weight: 700; margin-top: 8px; display: none;">Invalid PIN. Please try again.</div>
+    </div>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- Header Patent Bar with Explicit Build Version -->
+    <div class="header-bar">
+      <span>TERRANCE WATKINS • PATENT PENDING 64/174,835</span>
+      <span class="build-tag">v3.65</span>
+    </div>
+
+    <!-- Step Navigation Pills -->
+    <div class="step-tabs">
+      <div id="tab-1" class="step-tab active">1. Blur</div>
+      <div id="tab-2" class="step-tab">2. Left</div>
+      <div id="tab-3" class="step-tab">3. Right</div>
+      <div id="tab-4" class="step-tab">4. Both</div>
+      <div id="tab-5" class="step-tab">5. Read</div>
+      <div id="tab-6" class="step-tab">6. Rx Score</div>
+    </div>
+
+    <!-- Live Video & HUD Viewport -->
+    <div id="hudWrapper" class="hud-wrapper">
+      <video id="webcam" class="webcam-stream" autoplay playsinline muted></video>
+      <canvas id="hudCanvas" class="hud-canvas"></canvas>
+
+      <!-- HUD Telemetry Badges -->
+      <div id="hudDist" class="hud-badge badge-top-left">Dist: -- cm</div>
+      <div id="hudTarget" class="hud-badge badge-top-right">Target: 35–55 cm</div>
+      <div id="hudStatus" class="hud-badge badge-bottom-left">Status: Searching</div>
+      <div id="hudLockPill" class="hud-badge badge-bottom-center">CENTER DOT ON CROSSHAIR</div>
+      <div id="deviceCalBadge" class="hud-badge badge-bottom-right">📱 iPhone Cal</div>
+    </div>
+
+    <!-- Step Instruction Banner -->
+    <div id="instructionCard" class="card-instructions">
+      <div class="card-header-pill">
+        <span id="cardTitle" class="card-title">STEP 1 OF 6: GLASSES &amp; CONTACTS RX SETUP</span>
+        <span id="cardStepBadge" class="card-step-badge">STEP 1</span>
+      </div>
+      <div class="instruction-list">
+        <div id="inst1" class="instruction-item">1. Put in <strong>STAND</strong> &amp; remove glasses to measure <strong>LEFT &amp; RIGHT EYE</strong>.</div>
+        <div id="inst2" class="instruction-item">2. Center <strong>GREEN DOT</strong> to calibrate <strong>GLASSES &amp; CONTACTS RX</strong>.</div>
+        <div id="inst3" class="instruction-item">3. Tap the <strong>BIG BLUE BUTTON</strong> below to lock chair distance!</div>
+      </div>
+    </div>
+
+    <!-- Active Testing Area (Optotypes, Reading, or Rx Output) -->
+    <div id="testStage" class="test-stage">
+      <div class="stage-meta">
+        <span id="stageMetaLabel">STEP 1: FIND BLUR POINT</span>
+        <span id="stageMetaOptotype">STROKE: 0.71PX | 20/30</span>
+      </div>
+
+      <!-- Tumbling 'E' Optotype -->
+      <div id="optotypeTarget" class="optotype-e" style="font-size: 28px; transform: rotate(0deg);">E</div>
+      
+      <!-- Reading Text Container (Hidden until Step 5) -->
+      <div id="readingContainer" style="display:none; padding: 12px; font-size: 13px; line-height: 1.5; color: #0f172a; text-align: left;">
+        Project Eyes utilizes dual geometric facial biometrics, tracking pupil coordinate symmetry and distance scaling. Read this passage aloud at your locked position.
+      </div>
+    </div>
+
+    <!-- Prescription Output Container (Hidden until Step 6) -->
+    <div id="rxCardContainer" class="rx-summary-card" style="display: none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:6px;">
+        <span style="font-size:11px; font-weight:900; color:#0f172a;">STEP 6: FINAL GLASSES &amp; CONTACTS RX</span>
+        <span style="font-size:9px; font-weight:800; background:#22c55e; color:#fff; padding:2px 6px; border-radius:4px;">COMPLETE</span>
+      </div>
+      <div class="rx-grid">
+        <div class="rx-box">
+          <div class="rx-box-title">LEFT EYE (O.S.) GLASSES &amp; CONTACTS</div>
+          <div id="rxLeftVisual" class="rx-val-bold">&lt; 20/200 (20-Ft Eq)</div>
+          <div id="rxLeftDetails" class="rx-sub">👓 Glasses: SPH -4.75<br>💧 Contacts: PWR -4.50</div>
+        </div>
+        <div class="rx-box">
+          <div class="rx-box-title">RIGHT EYE (O.D.) GLASSES &amp; CONTACTS</div>
+          <div id="rxRightVisual" class="rx-val-bold">&lt; 20/200 (20-Ft Eq)</div>
+          <div id="rxRightDetails" class="rx-sub">👓 Glasses: SPH -4.25 CYL -0.50 (90°)<br>💧 Contacts: PWR -4.00</div>
         </div>
       </div>
-      <div style="font-size: 10.5px; color: #cbd5e1; margin-bottom: 8px; font-weight: 700;">Enter 4-Digit Authorized Tester PIN:</div>
-      <input type="tel" id="vaultPinInput" class="vault-input" maxlength="4" placeholder="••••" oninput="window.checkVaultPin()" onkeyup="window.checkVaultPin()" />
-      <button class="vault-btn" type="button" onclick="window.checkVaultPin()">Accept Confidentiality &amp; Unlock</button>
-      <div class="vault-err" id="vaultErrMsg"></div>
-    </div>
-  </div>
-
-  <header>
-    <div class="patent-pill" id="hwBadgePill">Terrance Watkins • Patent Pending 64/174,835</div>
-  </header>
-
-  <div class="stage-bar">
-    <div class="stage-step active" id="st1">1. Blur</div>
-    <div class="stage-step" id="st2">2. Left</div>
-    <div class="stage-step" id="st3">3. Right</div>
-    <div class="stage-step" id="st4">4. Both</div>
-    <div class="stage-step" id="st5">5. Read</div>
-    <div class="stage-step" id="st6">6. Rx Score</div>
-  </div>
-
-  <div class="camera-box" id="cameraBox">
-    <video id="webcam" autoplay playsinline muted></video>
-    <canvas id="viewfinderCanvas" width="480" height="220"></canvas>
-    <div class="hud-top">
-      <div class="badge">Dist: <span id="distVal" class="badge-val">-- cm</span></div>
-      <div class="badge"><span id="targetLabel">Target:</span> <span id="zoneVal" class="badge-val" style="color: #fbbf24;">35–55 cm</span></div>
-    </div>
-    <div class="center-guide-pill" id="centerGuidePill">CENTER DOT ON CROSSHAIR</div>
-    <div class="hud-bottom">
-      <div class="badge">Status: <span id="eyeStateVal" class="badge-val" style="color: #4ade80;">Searching</span></div>
-      <div class="badge" id="devTypeBadge" style="font-size: 8.5px;">Auto Cal</div>
-    </div>
-  </div>
-
-  <div class="coach-panel" id="coachPanel">
-    <div class="coach-header">
-      <span id="coachTitle">⚡ STEP 1 OF 6: GLASSES &amp; CONTACTS RX SETUP</span>
-      <span id="coachBadge" class="coach-badge-pill">STEP 1</span>
-    </div>
-    <div class="coach-list" id="coachList">
-      <div class="coach-line">1. Put in <span class="coach-highlight">STAND</span> &amp; remove glasses to measure <span class="coach-highlight">LEFT &amp; RIGHT EYE</span>.</div>
-      <div class="coach-line">2. Center <span class="coach-highlight">GREEN DOT</span> to calibrate <span class="coach-highlight">GLASSES &amp; CONTACTS RX</span>.</div>
-      <div class="coach-line">3. Tap the <span class="coach-highlight">BIG BLUE BUTTON</span> below to lock chair distance!</div>
-    </div>
-  </div>
-
-  <div class="optotype-card">
-    <div class="card-header">
-      <span id="acuityLabel">Step 1: Glasses &amp; Contacts Rx Calibration</span>
-      <span id="scaleReadout">Ready</span>
-    </div>
-    <div class="optotype-viewport">
-      <div id="gatePromptBtn" onclick="window._0xGate()">
-        <div class="gate-main" id="gateMainText">👉 TAP HERE TO LOCK CHAIR DISTANCE 👈</div>
-        <div class="gate-sub" id="gateSubText">🎙️ Place face 35–55 cm away • Watch blue numbers in top left</div>
-      </div>
-      <canvas id="snellenCanvas"></canvas>
-      <div id="readingBox">
-        <div style="font-size: 8.5px; color: #0284c7; margin-bottom: 3px; font-weight: 900;">TAP EACH WORD IN ORDER FROM LEFT TO RIGHT:</div>
-        <div id="wordContainer" style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;"></div>
-      </div>
-      <div id="reportBox">
-        <div class="report-grid">
-          <div class="report-item">
-            <div class="report-label">Left Eye (O.S.) Glasses &amp; Contacts</div>
-            <div class="report-val" id="repOS">--</div>
-            <div class="report-sub" id="rxOS">👓 Glasses: --</div>
-            <div class="report-cl" id="clOS">💧 Contacts: --</div>
-          </div>
-          <div class="report-item">
-            <div class="report-label">Right Eye (O.D.) Glasses &amp; Contacts</div>
-            <div class="report-val" id="repOD">--</div>
-            <div class="report-sub" id="rxOD">👓 Glasses: --</div>
-            <div class="report-cl" id="clOD">💧 Contacts: --</div>
-          </div>
-          <div class="report-item">
-            <div class="report-label">Acuity Split (Left / Right)</div>
-            <div class="report-val" id="repOU">--</div>
-            <div class="report-sub" id="rxOU">Blur Edge: --</div>
-          </div>
-          <div class="report-item">
-            <div class="report-label">Reading &amp; Fatigue</div>
-            <div class="report-val" id="repWPM">-- WPM</div>
-            <div class="report-sub" id="rxLat">Optimal</div>
-          </div>
+      <div class="rx-grid">
+        <div class="rx-box">
+          <div class="rx-box-title">ACUITY SPLIT (LEFT / RIGHT)</div>
+          <div id="rxAcuitySplit" class="rx-val-bold" style="font-size:11.5px;">L 20/150 | R 20/70</div>
+          <div id="rxBlurEq" class="rx-sub">Blur Eq: 25.0 cm</div>
+        </div>
+        <div class="rx-box">
+          <div class="rx-box-title">READING &amp; FATIGUE</div>
+          <div id="rxWPM" class="rx-val-bold" style="font-size:11.5px;">67 WPM</div>
+          <div class="rx-sub">Fatigue: Normal</div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="controls-wrap align-center" id="examControls"></div>
+    <!-- Dynamic Action Buttons -->
+    <div id="controlsArea" class="controls-grid">
+      <!-- Step 1 Primary Action -->
+      <button id="lockChairBtn" class="big-btn btn-blue" onclick="handleLockChairDistance()">
+        👉 TAP HERE TO LOCK CHAIR DISTANCE 👈
+      </button>
 
-  <div class="bottom-bar">
-    <button class="reset-btn" onclick="window._0xReset()">Reset Check</button>
-    <footer>Terrance Watkins • Patent Pending 64/174,835</footer>
-  </div>
-
-  <!-- PRINTABLE RX REPORT -->
-  <div id="printableRxSheet">
-    <div class="prx-header">
-      <div>
-        <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
-        <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.78</div>
+      <!-- Step 2-4 D-Pad Controls (Hidden by default) -->
+      <div id="dpadArea" class="dpad-container" style="display: none;">
+        <button class="dpad-btn" onclick="submitAcuityAnswer(0)">➔</button>
+        <button class="dpad-btn" onclick="submitAcuityAnswer(90)">⬇</button>
+        <button class="dpad-btn" onclick="submitAcuityAnswer(180)">⬅</button>
+        <button class="dpad-btn" onclick="submitAcuityAnswer(270)">⬆</button>
       </div>
-      <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
+
+      <!-- Step 6 Print / Save Prescription Action -->
+      <button id="printRxBtn" class="big-btn btn-blue" style="display:none;" onclick="window.print()">
+        🖨️ PRINT / SAVE OFFICIAL RX PRESCRIPTION
+      </button>
     </div>
-    <div class="prx-meta-grid">
-      <div class="prx-meta-row"><strong>Inventor:</strong> Terrance Watkins</div>
-      <div class="prx-meta-row"><strong>Patent Status:</strong> Patent Pending 64/174,835</div>
-      <div class="prx-meta-row"><strong>Locked Calibration Distance:</strong> <span id="prxLockedDist">--</span></div>
-      <div class="prx-meta-row"><strong>Measured Blur Horizon:</strong> <span id="prxBlurDist">--</span></div>
-      <div class="prx-meta-row"><strong>Hardware Calibration Profile:</strong> <span id="prxHwCal">--</span></div>
-      <div class="prx-meta-row"><strong>Exam Timestamp:</strong> <span id="prxDate">--</span></div>
-    </div>
-    <div class="prx-section-title">1. REFRACTIVE EYEGLASSES &amp; CONTACT LENS PRESCRIPTION (O.S. / O.D.)</div>
-    <table class="prx-table">
-      <thead>
-        <tr>
-          <th>Eye</th>
-          <th>20-Ft Snellen Eq.</th>
-          <th>Near Line Read</th>
-          <th>Eyeglasses Rx (SPH / CYL / AXIS)</th>
-          <th>Contact Lens Rx (12mm Vertex)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>LEFT EYE (O.S.)</td>
-          <td id="prxOsSnellen">--</td>
-          <td id="prxOsNear">--</td>
-          <td id="prxOsGlasses">--</td>
-          <td id="prxOsContacts">--</td>
-        </tr>
-        <tr>
-          <td>RIGHT EYE (O.D.)</td>
-          <td id="prxOdSnellen">--</td>
-          <td id="prxOdNear">--</td>
-          <td id="prxOdGlasses">--</td>
-          <td id="prxOdContacts">--</td>
-        </tr>
-        <tr>
-          <td>BINOCULAR (O.U.)</td>
-          <td colspan="2" id="prxOuSummary">--</td>
-          <td colspan="2" id="prxWpmSummary">--</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="prx-sig-box">
-      <div class="prx-sig-line">Reviewing Optometrist / Ophthalmologist Telehealth Sign-Off Signature &amp; License #</div>
-      <div style="text-align: right; font-size: 11px; font-weight: 900;">
-        Invented By:<br>
-        <span style="font-size: 14px; color: #0284c7;">TERRANCE WATKINS • PATENT PENDING 64/174,835</span>
+
+    <!-- Footer Attribution, Reset & Build Identifier -->
+    <div class="footer-bar">
+      <button class="btn-reset" onclick="resetCheckWorkflow()">Reset Check</button>
+      <div class="footer-patent">
+        <div>Terrance Watkins • Patent Pending 64/174,835</div>
+        <div style="color: #38bdf8; font-size: 8.5px; margin-top: 1px;">Build v3.65 (Auto-OS Sensor Edition)</div>
       </div>
     </div>
-    <div class="prx-footer-stamp">
-      TERRANCE WATKINS • PATENT PENDING 64/174,835 • COPYRIGHT &copy; 2026 TERRANCE WATKINS. ALL RIGHTS RESERVED.
-    </div>
+
   </div>
 
+  <!-- APPLICATION LOGIC & AUTOMATIC OS RECOGNITION -->
   <script>
-    /* =========================================================================
-       BULLETPROOF WEBAUDIO & SPEECH PIPELINE FOR IOS SAFARI & ANDROID
-       ========================================================================= */
-    let _activeVoice = null;
-    let _audioCtx = null;
-    let _hasSpokenInitialGuidance = false;
-    const INITIAL_SPEECH_TEXT = "Place your face between thirty-five and fifty-five centimeters away from your phone. You can tell your range by the blue numbers in the top left of the screen.";
+    // Build Metadata
+    const PROJECT_EYES_BUILD_VERSION = "v3.65";
+    console.log(`%c[PROJECT EYES] Initializing Engine ${PROJECT_EYES_BUILD_VERSION}`, 'color: #38bdf8; font-weight: bold; font-size: 14px;');
 
-    function _initAudioContext() {
-      if (!_audioCtx) {
-        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioCtxClass) {
-          _audioCtx = new AudioCtxClass();
-        }
-      }
-      if (_audioCtx && _audioCtx.state === 'suspended') {
-        _audioCtx.resume();
-      }
-    }
-
-    window.unlockSpeechPipeline = function() {
-      try {
-        _initAudioContext();
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.resume();
-          const primeUtt = new SpeechSynthesisUtterance("");
-          primeUtt.volume = 0.01;
-          window.speechSynthesis.speak(primeUtt);
-        }
-      } catch (e) {
-        console.warn("Speech pipeline unlock: ", e);
+    // ==========================================
+    // 1. HARDWARE OS & SENSOR AUTO-DETECTION
+    // ==========================================
+    const CALIBRATION_PROFILES = {
+      ios: {
+        label: '📱 iPhone Cal',
+        color: '#4ade80',
+        focalRatio: 1.28,      // Apple TrueDepth/Front wide sensor ratio
+        irisDiameterMm: 11.7
+      },
+      android: {
+        label: '🤖 Android Cal',
+        color: '#38bdf8',
+        focalRatio: 1.15,      // Android front-camera wide baseline
+        irisDiameterMm: 11.7
+      },
+      desktop: {
+        label: '💻 Desktop Cal',
+        color: '#94a3b8',
+        focalRatio: 1.20,
+        irisDiameterMm: 11.7
       }
     };
 
-    document.addEventListener('touchstart', window.unlockSpeechPipeline, { passive: true, once: true });
-    document.addEventListener('click', window.unlockSpeechPipeline, { passive: true, once: true });
+    let activeOS = 'ios';
+    let activeProfile = CALIBRATION_PROFILES.ios;
 
-    function _initVoiceEngine() {
+    function detectAndApplyOS() {
+      const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+      const isIOS = (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) ||
+                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const isAndroid = /android/i.test(ua);
+
+      if (isAndroid) {
+        activeOS = 'android';
+      } else if (isIOS) {
+        activeOS = 'ios';
+      } else {
+        activeOS = 'desktop';
+      }
+
+      activeProfile = CALIBRATION_PROFILES[activeOS];
+      const calBadge = document.getElementById('deviceCalBadge');
+      if (calBadge) {
+        calBadge.innerText = activeProfile.label;
+        calBadge.style.color = activeProfile.color;
+        calBadge.style.borderColor = activeProfile.color;
+      }
+      console.log(`[Project Eyes] Auto-detected OS: ${activeOS.toUpperCase()}. Applied focal ratio: ${activeProfile.focalRatio}`);
+    }
+
+    // ==========================================
+    // 2. STATE MANAGEMENT & VOICE ENGINE
+    // ==========================================
+    let currentStep = 1;
+    let lockedDistanceCm = null;
+    let liveDistanceCm = null;
+    let crosshairLocked = false;
+    let optotypeRotations = [0, 90, 180, 270];
+    let currentRotation = 0;
+    let optotypeSize = 28;
+    let testScores = { left: 0, right: 0, both: 0, wpm: 72 };
+
+    // Web Speech API Voice Guidance (Attribution Ending)
+    function speakPrompt(text) {
       if (!('speechSynthesis' in window)) return;
-      function pickBestVoice() {
-        const voices = window.speechSynthesis.getVoices();
-        if (!voices || voices.length === 0) return;
-        const preferredMatch = voices.find(v => 
-          (v.name.includes("Google US English") || 
-           v.name.includes("en-US-Neural2-F") || 
-           v.name.includes("en-US-Journey-F") ||
-           v.name.includes("Natural") || 
-           v.name.includes("Ava") || 
-           v.name.includes("Samantha") || 
-           v.name.includes("Zira") || 
-           v.name.includes("Jenny") || 
-           v.name.includes("Siri")) && 
-          v.lang.startsWith("en")
-        );
-        _activeVoice = preferredMatch || voices.find(v => v.lang.startsWith("en-US")) || voices[0];
-      }
-      pickBestVoice();
-      if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = pickBestVoice;
-      }
+      window.speechSynthesis.cancel();
+      
+      const fullText = text + " ... brought to you by Terrance Watkins.";
+      const utterance = new SpeechSynthesisUtterance(fullText);
+      utterance.rate = 0.95;
+      utterance.pitch = 1.1;
+
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(v => (v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Google UK English Female') || v.name.includes('Female')));
+      if (preferredVoice) utterance.voice = preferredVoice;
+
+      window.speechSynthesis.speak(utterance);
     }
 
-    function speakGemini(text) {
-      if (!('speechSynthesis' in window)) return;
-      try {
-        _initAudioContext();
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.resume();
-
-        const utt = new SpeechSynthesisUtterance(text);
-        if (_activeVoice) utt.voice = _activeVoice;
-        utt.pitch = 1.02;
-        utt.rate = 0.94;
-        utt.volume = 1.0;
-
-        window.speechSynthesis.speak(utt);
-      } catch (err) {
-        console.warn("Voice speech error: ", err);
-      }
-    }
-
-    window.armFirstInstruction = function() {
-      if (_hasSpokenInitialGuidance) return;
-      speakGemini(INITIAL_SPEECH_TEXT);
-      _hasSpokenInitialGuidance = true;
-    };
-
-    window.addEventListener('focus', () => {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.resume();
-      }
-      if (!_hasSpokenInitialGuidance) {
-        speakGemini(INITIAL_SPEECH_TEXT);
-        _hasSpokenInitialGuidance = true;
-      }
-    });
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        if ('speechSynthesis' in window) window.speechSynthesis.resume();
-      }
-    });
-
-    const _vEl = document.getElementById('webcam');
-    const _vfC = document.getElementById('viewfinderCanvas');
-    const _vfX = _vfC.getContext('2d');
-    const _cBx = document.getElementById('cameraBox');
-    const _cPl = document.getElementById('centerGuidePill');
-    const _dVl = document.getElementById('distVal');
-    const _tLb = document.getElementById('targetLabel');
-    const _zVl = document.getElementById('zoneVal');
-    const _eVl = document.getElementById('eyeStateVal');
-    const _sCv = document.getElementById('snellenCanvas');
-    const _sCx = _sCv.getContext('2d');
-    const _gBt = document.getElementById('gatePromptBtn');
-    const _gMn = document.getElementById('gateMainText');
-    const _rBx = document.getElementById('readingBox');
-    const _wCt = document.getElementById('wordContainer');
-    const _rpB = document.getElementById('reportBox');
-    const _sRd = document.getElementById('scaleReadout');
-    const _aLb = document.getElementById('acuityLabel');
-    const _exC = document.getElementById('examControls');
-    const _cTl = document.getElementById('coachTitle');
-    const _cBg = document.getElementById('coachBadge');
-    const _cLs = document.getElementById('coachList');
-    const _dBg = document.getElementById('devTypeBadge');
-
-    _vEl.addEventListener('loadedmetadata', () => {
-      _vfC.width = _cBx.clientWidth || 360;
-      _vfC.height = _cBx.clientHeight || 118;
-    });
-
-    let _K1 = 63.0, _K2 = 580, _K3 = 3.78, _isTab = false;
-    const _DIRS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
-    const _STEPS = [200, 150, 100, 70, 50, 40, 30, 25, 20, 15];
-    const _BLUR_STEPS = [35, 30, 25, 20, 15];
-    const _WORDS = ["Army", "veteran", "Terence", "Watkins", "built", "this", "vision", "engine."];
-
-    let _st = 1, _wG = true, _inB = false, _sI = 0, _bStepIdx = 1;
-    let _cD = _STEPS[0], _cDir = 'RIGHT', _lH = 0, _lM = 0;
-    let _osD = 250, _odD = 250, _ouD = 250;
-    let _bCm = null, _lCm = null, _nK = 2800.0, _lNPx = 60.0;
-    let _osHM = 0, _osVM = 0, _odHM = 0, _odVM = 0;
-    let _wI = 0, _tS = [], _sCm = null;
-    let _sLE = 0.30, _sRE = 0.30, _cES = "Binocular";
-
-    function _0xCalibrateHardware() {
-      const ua = navigator.userAgent || "";
-      const minDim = Math.min(window.screen.width, window.screen.height);
-      const maxDim = Math.max(window.screen.width, window.screen.height);
-      _isTab = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) || minDim >= 700 || maxDim >= 1000;
-      _K1 = 63.0;
-      if (_isTab) {
-        _K2 = 510; _K3 = 3.12; _dBg.innerText = "💻 iPad Cal";
+    function validateTesterPIN() {
+      const pin = document.getElementById('pinInput').value;
+      if (pin === '3206') {
+        document.getElementById('pinModal').style.display = 'none';
+        detectAndApplyOS();
+        initWebcamAndFaceMesh();
+        speakPrompt("Welcome to Project Eyes visual calibration. Please secure your device in a stand and center the green dot between your eyes.");
       } else {
-        _K2 = 580; _K3 = 3.78; _dBg.innerText = "📱 iPhone Cal";
+        document.getElementById('pinError').style.display = 'block';
       }
     }
 
-    function _setC(t, b, l1, l2, l3) {
-      _cTl.innerText = t; _cBg.innerText = b;
-      _cLs.innerHTML = `<div class="coach-line">1. ${l1}</div><div class="coach-line">2. ${l2}</div><div class="coach-line">3. ${l3}</div>`;
-    }
+    // ==========================================
+    // 3. MEDIAPIPE FACE MESH & HUD RENDERING
+    // ==========================================
+    const videoElement = document.getElementById('webcam');
+    const hudCanvas = document.getElementById('hudCanvas');
+    const hudCtx = hudCanvas.getContext('2d');
+    const hudDist = document.getElementById('hudDist');
+    const hudStatus = document.getElementById('hudStatus');
+    const hudLockPill = document.getElementById('hudLockPill');
+    const hudWrapper = document.getElementById('hudWrapper');
 
-    function _0xCalc(a, b, c, h, v) {
-      let cv = 0.0, ct = "";
-      const ad = Math.abs(h - v);
-      if (ad >= 1 && (h + v) >= 1) {
-        cv = ad >= 2 ? -0.75 : -0.50;
-        ct = ` CYL ${cv.toFixed(2)} (${h > v ? "180°" : "90°"})`;
-      }
-      if (c !== null && c < 64) {
-        const aB = Math.round(((-(100 / c)) - 0.25) * 4) / 4;
-        const bD = Math.min(a, b);
-        const tI = _STEPS.indexOf(a), bI = _STEPS.indexOf(bD);
-        let dS = (tI !== -1 && bI !== -1 && tI < bI) ? (bI - tI) : (a > b ? 1 : 0);
-        const qS = Math.round((aB - (Math.min(3, dS) * 0.25)) * 4) / 4;
-        const clSph = Math.round((qS / (1 - (0.012 * qS))) * 4) / 4;
-        const clCyl = cv <= -0.75 ? " • Toric -0.75" : "";
-        const absD = Math.abs(qS);
-        let wD = absD >= 3.0 ? 250 : absD >= 2.5 ? 200 : absD >= 2.0 ? 150 : absD >= 1.5 ? 100 : absD >= 1.25 ? 70 : absD >= 1.0 ? 50 : absD >= 0.75 ? 40 : absD >= 0.5 ? 30 : 20;
-        return {
-          snellen20Ft: wD > 200 ? "< 20/200" : `20/${wD}`,
-          glassesStr: `👓 Glasses: SPH ${qS.toFixed(2)}${ct}`,
-          contactsStr: `💧 Contacts: PWR ${clSph.toFixed(2)}${clCyl}`,
-          cleanGlasses: `SPH ${qS.toFixed(2)} D${ct || ' (Spherical)'}`,
-          cleanContacts: `PWR ${clSph.toFixed(2)} D${clCyl || ' (Spherical)'}`,
-          shortGlasses: `${qS.toFixed(2)} D`,
-          shortContacts: `${clSph.toFixed(2)} D`
-        };
-      }
-      if (a <= 20) {
-        return {
-          snellen20Ft: `20/${a}`, glassesStr: `👓 Glasses: SPH 0.00${ct}`, contactsStr: `💧 Contacts: PWR 0.00`,
-          cleanGlasses: `SPH 0.00 D (Plano)${ct}`, cleanContacts: `PWR 0.00 D (Plano)`, shortGlasses: `0.00 D`, shortContacts: `0.00 D`
-        };
-      }
-      return {
-        snellen20Ft: `20/${a}`, glassesStr: `👓 Glasses: SPH -0.75${ct}`, contactsStr: `💧 Contacts: PWR -0.75`,
-        cleanGlasses: `SPH -0.75 D${ct}`, cleanContacts: `PWR -0.75 D`, shortGlasses: `-0.75 D`, shortContacts: `-0.75 D`
-      };
-    }
+    function initWebcamAndFaceMesh() {
+      const faceMesh = new FaceMesh({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+      });
 
-    function _sGP(m) {
-      _wG = true; _inB = false;
-      _sCv.style.display = "none"; _rBx.style.display = "none"; _rpB.style.display = "none";
-      _exC.innerHTML = ""; _exC.className = "controls-wrap align-center";
-      _gMn.innerText = m; _gBt.style.display = "flex";
-    }
+      faceMesh.setOptions({
+        maxNumFaces: 1,
+        refineLandmarks: true,
+        minDetectionConfidence: 0.6,
+        minTrackingConfidence: 0.6
+      });
 
-    window._0xGate = function() {
-      if (!_wG) return;
-      window.unlockSpeechPipeline();
-      _wG = false; _gBt.style.display = "none";
-      if (_st === 1) {
-        _inB = true; _bStepIdx = 1; _sCv.style.display = "block";
-        _aLb.innerText = "Step 1: Find Blur Point";
-        _dTE('RIGHT', _sCm || 44, _BLUR_STEPS[_bStepIdx]);
-        _setC(
-          "⚡ STEP 1: CALIBRATE GLASSES & CONTACTS BLUR", "BLUR CHECK",
-          "If 'E' is sharp: Tap <span class='coach-highlight'>BLUE BUTTON</span> to shrink it.",
-          "Or <span class='coach-highlight'>LEAN BACK</span> slowly until the 'E' blurs.",
-          "Tap <span class='coach-highlight'>YELLOW BUTTON</span> the moment 'E' blurs to set Base Rx!"
-        );
-        speakGemini("Place your device in the stand and remove your glasses. Relax in your chair, center the green dot, and let me know the moment the letter E begins to blur.");
-        _exC.className = "controls-wrap align-center";
-        _exC.innerHTML = `<div class="horizon-deck"><button class="horizon-btn-blur" onclick="window._0xLockB()">👀 THE "E" IS BLURRY!<br>TAP TO LOCK (<span id="liveBlurBtnCm">-- cm</span>)</button><button class="horizon-btn-shrink" onclick="window._0xShrinkBlurTarget()">🔍 STILL CLEAR<br>(SHRINK THE "E")</button></div>`;
-      } else if (_st >= 2 && _st <= 4) {
-        _sAS();
-      } else if (_st === 5) {
-        _lRW();
-      }
-    };
+      faceMesh.onResults(onFaceResults);
 
-    window._0xShrinkBlurTarget = function() {
-      window.unlockSpeechPipeline();
-      if (_bStepIdx < _BLUR_STEPS.length - 1) {
-        _bStepIdx++;
-        const curDen = _BLUR_STEPS[_bStepIdx];
-        _cDir = _DIRS[Math.floor(Math.random() * _DIRS.length)];
-        _dTE(_cDir, _sCm || 44.0, curDen);
-        _aLb.innerText = `Step 1: Shrunk to 20/${curDen}`;
-      } else {
-        window._0xLockB();
-      }
-    };
+      const camera = new Camera(videoElement, {
+        onFrame: async () => {
+          await faceMesh.send({ image: videoElement });
+        },
+        width: 640,
+        height: 480
+      });
 
-    window._0xLockB = function() {
-      window.unlockSpeechPipeline();
-      _inB = false;
-      const lv = _sCm || 46.0;
-      const curDen = _BLUR_STEPS[_bStepIdx] || 25;
-      _bCm = Math.max(25.0, Math.min(80.0, lv));
-      _lCm = Math.max(34.0, Math.min(60.0, lv));
-      if (_lNPx > 10) _nK = _lCm * _lNPx;
-      _st = 2; _uSUI();
-      const roundedDist = Math.round(_lCm);
-      const tS = `${_lCm.toFixed(1)} cm`;
-      _aLb.innerText = "Step 2: Left Eye Calibration";
-      _sRd.innerText = `Target: ${tS}`;
-      _setC(
-        "⚡ STEP 2: MEASURE LEFT EYE (GLASSES & CONTACTS)", "LEFT EYE RX",
-        "Stay at <span class='coach-highlight'>Target: " + tS + "</span> (±5 cm play).",
-        "Cover <span class='coach-highlight'>RIGHT EYE</span> with your RIGHT hand.",
-        "Tap <span class='coach-highlight'>BLUE BUTTON</span> with your LEFT hand!"
-      );
-
-      speakGemini(`Distance locked at ${roundedDist} centimeters. Make sure you stay right around that distance. Your live distance is displayed right in the top left of your camera view. You only have to stay within five centimeters either way, so don't trip or freeze up like a statue—just stay chill in your chair. Now cover your right eye with your right hand, and tap the blue button to start.`);
-
-      _sGP("👉 TAP HERE ONCE YOUR RIGHT EYE IS COVERED WITH YOUR HAND 👈");
-    };
-
-    function _sAS() {
-      _sCv.style.display = "block";
-      _sI = 0; _lH = 0; _lM = 0; _cD = _STEPS[0];
-      const dT = (_lCm || 45).toFixed(1);
-      if (_st === 2) {
-        _setC("⚡ STEP 2: LEFT EYE GLASSES & CONTACTS RX", "LEFT D-PAD",
-          "Keep <span class='coach-highlight'>RIGHT EYE COVERED</span> for Left Eye Rx.",
-          "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to match the 'E'.",
-          "Tap red <span class='coach-highlight'>TOO BLURRY</span> to lock Left Eye Rx!");
-        speakGemini("Look at the letter E on your screen. Tap the matching direction on the pad. If it gets too blurry to tell, just tap the red button.");
-      } else if (_st === 3) {
-        _setC("⚡ STEP 3: RIGHT EYE GLASSES & CONTACTS RX", "RIGHT D-PAD",
-          "Keep <span class='coach-highlight'>LEFT EYE COVERED</span> for Right Eye Rx.",
-          "Use the <span class='coach-highlight'>PLAYSTATION D-PAD</span> to match the 'E'.",
-          "Tap red <span class='coach-highlight'>TOO BLURRY</span> to lock Right Eye Rx!");
-        speakGemini("Now for your right eye. Tap the direction the E points, or hit the red button if it gets too blurry.");
-      } else {
-        _setC("⚡ STEP 4: BOTH EYES BALANCE CHECK", "BOTH EYES OPEN",
-          "<span class='coach-highlight'>UNCOVER BOTH EYES</span> & stay at " + dT + " cm.",
-          "Balancing <span class='coach-highlight'>LEFT & RIGHT EYE</span> Glasses + Contacts Rx.",
-          "Tap <span class='coach-highlight'>BLUE BUTTON</span> to test both eyes together!");
-        speakGemini("Both eyes open now. Let's see how your eyes lock in and balance out together.");
-      }
-      _exC.className = "controls-wrap " + (_st === 2 ? "align-left" : _st === 3 ? "align-right" : "align-center");
-      _exC.innerHTML =
-        `<div class="dpad-cross">` +
-        `<button class="dpad-btn dpad-up" onclick="window._0xAns('UP')"><span class="dpad-tri">▲</span>UP</button>` +
-        `<button class="dpad-btn dpad-left" onclick="window._0xAns('LEFT')"><span class="dpad-tri">◀</span>LEFT</button>` +
-        `<div class="dpad-center">✚</div>` +
-        `<button class="dpad-btn dpad-right" onclick="window._0xAns('RIGHT')"><span class="dpad-tri">▶</span>RIGHT</button>` +
-        `<button class="dpad-btn dpad-down" onclick="window._0xAns('DOWN')"><span class="dpad-tri">▼</span>DOWN</button>` +
-        `</div><button class="cant-see-btn" onclick="window._0xAns('CANT_SEE')">Too Blurry<br>Can't See</button>`;
-      _lNAR();
-    }
-
-    function _dTE(dir, dCm, den) {
-      const dpr = window.devicePixelRatio || 3, cS = 72;
-      _sCv.style.width = `${cS}px`; _sCv.style.height = `${cS}px`;
-      _sCv.width = Math.round(cS * dpr); _sCv.height = Math.round(cS * dpr);
-      _sCx.save(); _sCx.clearRect(0, 0, _sCv.width, _sCv.height);
-      const aR = (5 * (den / 20) / 60) * (Math.PI / 180);
-      const sPx = Math.min(68, (2 * (dCm * 10) * Math.tan(aR / 2)) * _K3);
-      const u = Math.max(1, Math.round((sPx * dpr) / 5)), tDPx = u * 5;
-      _sRd.innerText = `Stroke: ${(u / dpr).toFixed(2)}px | 20/${den}`;
-      _sCx.translate(Math.round(_sCv.width / 2), Math.round(_sCv.height / 2));
-      _sCx.rotate(dir === 'DOWN' ? Math.PI / 2 : dir === 'LEFT' ? Math.PI : dir === 'UP' ? -Math.PI / 2 : 0);
-      _sCx.fillStyle = "#0f172a";
-      const sX = -Math.round(tDPx / 2), sY = -Math.round(tDPx / 2);
-      _sCx.fillRect(sX, sY, u, tDPx); _sCx.fillRect(sX, sY, tDPx, u);
-      _sCx.fillRect(sX, sY + 2 * u, tDPx, u); _sCx.fillRect(sX, sY + 4 * u, tDPx, u);
-      _sCx.restore();
-    }
-
-    function _lNAR() {
-      _cDir = _DIRS[Math.floor(Math.random() * _DIRS.length)];
-      const sN = _st === 3 ? "Right Eye" : _st === 4 ? "Binocular" : "Left Eye";
-      _aLb.innerText = `${sN} • Line: 20/${_cD} • Hits: ${_lH}/3`;
-      _sCv.style.opacity = "0.15";
-      setTimeout(() => { _dTE(_cDir, _lCm || 45.0, _cD); _sCv.style.opacity = "1"; }, 65);
-    }
-
-    window._0xAns = function(sD) {
-      window.unlockSpeechPipeline();
-      if (sD === 'CANT_SEE') { _fCES(); return; }
-      if (sD === _cDir) {
-        if (++_lH >= 3) {
-          if (_st === 2) _osD = _cD;
-          if (_st === 3) _odD = _cD;
-          if (_st === 4) _ouD = _cD;
-          if (_sI < _STEPS.length - 1) { _sI++; _cD = _STEPS[_sI]; _lH = 0; _lM = 0; _lNAR(); }
-          else _fCES();
-        } else _lNAR();
-      } else {
-        const isH = (_cDir === 'LEFT' || _cDir === 'RIGHT');
-        if (_st === 2) { if (isH) _osHM++; else _osVM++; }
-        else if (_st === 3) { if (isH) _odHM++; else _odVM++; }
-        if (++_lM >= 2) _fCES(); else _lNAR();
-      }
-    };
-
-    function _fCES() {
-      const dT = (_lCm || 45).toFixed(1);
-      if (_st === 2) {
-        _st = 3; _uSUI(); _aLb.innerText = "Step 3: Right Eye Calibration"; _sRd.innerText = `L Line: 20/${_osD}`;
-        _setC("⚡ STEP 3: MEASURE RIGHT EYE (GLASSES & CONTACTS)", "RIGHT EYE RX",
-          "Stay at <span class='coach-highlight'>Target: " + dT + " cm</span> to measure <span class='coach-highlight'>RIGHT EYE</span>.",
-          "Cover <span class='coach-highlight'>LEFT EYE</span> with your LEFT hand.",
-          "Tap <span class='coach-highlight'>BLUE BUTTON</span> with your RIGHT hand!");
-        speakGemini("Great job on your left eye. Now switch and cover your left eye with your left hand. Tap the blue button when you're set.");
-        _sGP("👉 TAP HERE ONCE YOUR LEFT EYE IS COVERED WITH YOUR HAND 👈");
-      } else if (_st === 3) {
-        _st = 4; _uSUI(); _aLb.innerText = "Step 4: Uncover Both Eyes"; _sRd.innerText = `R Line: 20/${_odD}`;
-        _setC("⚡ STEP 4: UNCOVER BOTH EYES (BALANCE CHECK)", "BOTH EYES OPEN",
-          "<span class='coach-highlight'>OPEN BOTH EYES</span> at Target: " + dT + " cm.",
-          "Balancing <span class='coach-highlight'>LEFT & RIGHT EYE</span> Glasses + Contacts Rx.",
-          "Tap <span class='coach-highlight'>BLUE BUTTON</span> to test both eyes together!");
-        speakGemini("Now uncover both eyes. Tap the blue button to check how both eyes balance out together.");
-        _sGP("👉 TAP HERE ONCE BOTH EYES ARE UNCOVERED 👈");
-      } else if (_st === 4) {
-        _st = 5; _uSUI(); _aLb.innerText = "Step 5: Reading Check"; _sRd.innerText = `O.U. 20/${_ouD}`;
-        _setC("⚡ STEP 5: 8-WORD READING TEST", "TAP IN ORDER",
-          "Keep <span class='coach-highlight'>BOTH EYES OPEN</span> in your chair.",
-          "8 words will appear in the white box below.",
-          "<span class='coach-highlight'>TAP EACH WORD IN ORDER</span> to unlock your Glasses & Contacts Rx!");
-        speakGemini("Almost there. You will see eight words appear. Tap each word in order from left to right as comfortably as you can.");
-        _sGP("👉 TAP HERE TO SHOW THE 8 WORDS 👈");
-      }
-    }
-
-    function _lRW() {
-      _sCv.style.display = "none"; _exC.innerHTML = ""; _exC.className = "controls-wrap align-center";
-      _rBx.style.display = "block"; _aLb.innerText = "Step 5: Tap Words In Order";
-      _sRd.innerText = `0 / ${_WORDS.length} Words`; _wCt.innerHTML = ""; _wI = 0; _tS = [performance.now()];
-      _WORDS.forEach((w, idx) => {
-        const sp = document.createElement('span');
-        sp.innerText = w; sp.style.padding = "4px 7px"; sp.style.borderRadius = "5px"; sp.style.cursor = "pointer";
-        sp.style.border = idx === 0 ? "2px solid #0284c7" : "1px solid #cbd5e1";
-        sp.onclick = () => {
-          window.unlockSpeechPipeline();
-          if (idx !== _wI) return;
-          _tS.push(performance.now()); _wI++; _sRd.innerText = `${_wI} / ${_WORDS.length} Words`;
-          if (_wI >= _WORDS.length) _sS6();
-          else {
-            Array.from(_wCt.children).forEach((el, i) => {
-              el.style.border = i === _wI ? "2px solid #0284c7" : "1px solid #cbd5e1";
-              el.style.background = i < _wI ? "#dcfce7" : "#f8fafc";
-            });
-          }
-        };
-        _wCt.appendChild(sp);
+      camera.start().catch(err => {
+        console.error("Camera access failed:", err);
+        hudStatus.innerText = "Status: Cam Blocked";
+        hudStatus.style.color = "#ef4444";
+        alert("Camera permission is required. In Chrome, tap the padlock / tune icon next to the URL and allow Camera access.");
       });
     }
 
-    function _sS6() {
-      _st = 6; _uSUI(); _rBx.style.display = "none"; _rpB.style.display = "block";
-      _aLb.innerText = "Step 6: Final Glasses & Contacts Rx"; _sRd.innerText = "Complete";
-      const tSec = (_tS[_tS.length - 1] - _tS[0]) / 1000;
-      const wpm = Math.round((_WORDS.length / Math.max(1, tSec)) * 60);
-      let mG = 0;
-      for (let i = 1; i < _tS.length; i++) { const g = _tS[i] - _tS[i - 1]; if (g > mG) mG = g; }
-      const osM = _0xCalc(_osD, _odD, _bCm, _osHM, _osVM);
-      const odM = _0xCalc(_odD, _osD, _bCm, _odHM, _odVM);
-      const fatStr = mG > 1400 ? "Fatigue: Elevated" : "Fatigue: Optimal";
+    function onFaceResults(results) {
+      hudCanvas.width = hudWrapper.clientWidth;
+      hudCanvas.height = hudWrapper.clientHeight;
+      hudCtx.clearRect(0, 0, hudCanvas.width, hudCanvas.height);
 
-      _setC("✅ STEP 6: GLASSES & CONTACTS RX READY!", "FINAL RX",
-        `👓 <span class='coach-highlight'>GLASSES RX</span>: Left ${osM.shortGlasses} | Right ${odM.shortGlasses}`,
-        `💧 <span class='coach-highlight'>CONTACTS RX</span>: Left ${osM.shortContacts} | Right ${odM.shortContacts}`,
-        "Tap <span class='coach-highlight'>PRINT OFFICIAL RX</span> below to print your prescription!");
+      // Draw Screen Center Green Crosshairs
+      const cx = hudCanvas.width / 2;
+      const cy = hudCanvas.height / 2;
 
-      speakGemini(`Your vision assessment is complete. Your glasses prescription is ${osM.shortGlasses} for your left eye, and ${odM.shortGlasses} for your right eye. You can print your complete report below. Brought to you by Terrance Watkins.`);
+      hudCtx.strokeStyle = 'rgba(34, 197, 94, 0.45)';
+      hudCtx.lineWidth = 1.5;
+      hudCtx.setLineDash([4, 4]);
+      hudCtx.beginPath();
+      hudCtx.moveTo(cx, 0); hudCtx.lineTo(cx, hudCanvas.height);
+      hudCtx.moveTo(0, cy); hudCtx.lineTo(hudCanvas.width, cy);
+      hudCtx.stroke();
+      hudCtx.setLineDash([]);
 
-      document.getElementById('repOS').innerText = `${osM.snellen20Ft} (20-Ft Eq)`;
-      document.getElementById('rxOS').innerText = osM.glassesStr;
-      document.getElementById('clOS').innerText = osM.contactsStr;
-      document.getElementById('repOD').innerText = `${odM.snellen20Ft} (20-Ft Eq)`;
-      document.getElementById('rxOD').innerText = odM.glassesStr;
-      document.getElementById('clOD').innerText = odM.contactsStr;
-      document.getElementById('repOU').innerText = `L 20/${_osD} | R 20/${_odD}`;
-      document.getElementById('rxOU').innerText = _bCm ? `Blur Eq: ${_bCm.toFixed(1)} cm` : `Clear > 60 cm`;
-      document.getElementById('repWPM').innerText = `${wpm} WPM`;
-      document.getElementById('rxLat').innerText = fatStr;
-
-      document.getElementById('prxDate').innerText = new Date().toLocaleString();
-      document.getElementById('prxLockedDist').innerText = _lCm ? `${_lCm.toFixed(1)} cm` : "45.0 cm";
-      document.getElementById('prxBlurDist').innerText = _bCm ? `${_bCm.toFixed(1)} cm` : "Clear > 60 cm";
-      document.getElementById('prxHwCal').innerText = _isTab ? "iPad Optical Profile (Terrance Watkins)" : "iPhone Optical Profile (Terrance Watkins)";
-      document.getElementById('prxOsSnellen').innerText = osM.snellen20Ft;
-      document.getElementById('prxOsNear').innerText = `20/${_osD}`;
-      document.getElementById('prxOsGlasses').innerText = osM.cleanGlasses;
-      document.getElementById('prxOsContacts').innerText = osM.cleanContacts;
-      document.getElementById('prxOdSnellen').innerText = odM.snellen20Ft;
-      document.getElementById('prxOdNear').innerText = `20/${_odD}`;
-      document.getElementById('prxOdGlasses').innerText = odM.cleanGlasses;
-      document.getElementById('prxOdContacts').innerText = odM.cleanContacts;
-      document.getElementById('prxOuSummary').innerText = `Binocular Near Acuity: 20/${_ouD} (L 20/${_osD} | R 20/${_odD})`;
-      document.getElementById('prxWpmSummary').innerText = `Reading Speed: ${wpm} WPM (${fatStr})`;
-
-      _exC.className = "controls-wrap align-center";
-      _exC.innerHTML = `<button class="print-rx-btn" onclick="window._0xPrintRx()"><span>🖨️ PRINT / SAVE OFFICIAL RX PRESCRIPTION</span><span style="font-size: 10px; color: #38bdf8; margin-top: 3px;">TERRANCE WATKINS • PATENT PENDING 64/174,835</span></button>`;
-    }
-
-    window._0xPrintRx = function() { window.print(); };
-
-    window._0xReset = function() {
-      _st = 1; _inB = false; _sI = 0; _bStepIdx = 1; _lH = 0; _lM = 0; _cD = _STEPS[0];
-      _osD = 250; _odD = 250; _ouD = 250; _bCm = null; _lCm = null;
-      _osHM = 0; _osVM = 0; _odHM = 0; _odVM = 0;
-      _exC.className = "controls-wrap align-center"; _uSUI();
-      _aLb.innerText = "Step 1: Glasses & Contacts Rx Calibration";
-      _sRd.innerText = "Ready"; _tLb.innerText = "Target:"; _zVl.innerText = "35–55 cm"; _zVl.style.color = "#fbbf24";
-      _setC("⚡ STEP 1 OF 6: GLASSES & CONTACTS RX SETUP", "STEP 1",
-        "Put in <span class='coach-highlight'>STAND</span> & remove glasses to measure <span class='coach-highlight'>LEFT & RIGHT EYE</span>.",
-        "Center <span class='coach-highlight'>GREEN DOT</span> to calibrate <span class='coach-highlight'>GLASSES & CONTACTS RX</span>.",
-        "Tap the <span class='coach-highlight'>BIG BLUE BUTTON</span> below to lock chair distance!");
-      _sGP("👉 TAP HERE TO LOCK CHAIR DISTANCE 👈");
-    };
-
-    function _uSUI() {
-      ['st1', 'st2', 'st3', 'st4', 'st5', 'st6'].forEach((id, idx) => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.className = 'stage-step';
-          if (idx + 1 < _st) el.classList.add('done');
-          if (idx + 1 === _st) el.classList.add('active');
-        }
-      });
-    }
-
-    function _gE(l, t, b, i, o) {
-      return Math.hypot(l[t].x - l[b].x, l[t].y - l[b].y) / Math.hypot(l[i].x - l[o].x, l[i].y - l[o].y);
-    }
-
-    function _rUV(nB) {
-      const cw = _cBx.clientWidth || 360, ch = _cBx.clientHeight || 118;
-      if (_vfC.width !== cw || _vfC.height !== ch) { _vfC.width = cw; _vfC.height = ch; }
-      const vw = _vEl.videoWidth || 480, vh = _vEl.videoHeight || 640;
-      _vfX.clearRect(0, 0, cw, ch);
-      const sc = Math.max(cw / vw, ch / vh), dW = vw * sc, dH = vh * sc;
-      const oX = (cw - dW) / 2, oY = (ch - dH) * 0.35;
-      _vfX.save(); _vfX.translate(cw, 0); _vfX.scale(-1, 1); _vfX.drawImage(_vEl, oX, oY, dW, dH); _vfX.restore();
-      const cX = cw * 0.5, cY = ch * 0.52;
-      let isL = false, dX = cX, dY = cY;
-      if (nB) {
-        dX = oX + ((1.0 - nB.x) * dW); dY = oY + (nB.y * dH);
-        isL = ((Math.abs(dX - cX) / cw) <= 0.12 && (Math.abs(dY - cY) / ch) <= 0.18);
-        if (isL) { _cPl.classList.add('locked'); _cPl.innerText = "CROSSHAIR LOCKED ✓"; }
-        else {
-          _cPl.classList.remove('locked');
-          _cPl.innerText = dY < cY - (ch * 0.18) ? "LOWER DEVICE / HEAD SLIGHTLY" : dY > cY + (ch * 0.18) ? "RAISE DEVICE TO EYE LEVEL" : "CENTER DOT ON CROSSHAIR";
-        }
-      } else { _cPl.classList.remove('locked'); _cPl.innerText = "CENTER DOT ON CROSSHAIR"; }
-      _vfX.save(); _vfX.lineWidth = 2;
-      _vfX.strokeStyle = isL ? "rgba(74, 222, 128, 0.95)" : "rgba(250, 204, 21, 0.85)";
-      if (!isL) _vfX.setLineDash([6, 5]);
-      _vfX.beginPath(); _vfX.moveTo(cX, 0); _vfX.lineTo(cX, ch); _vfX.stroke();
-      _vfX.beginPath(); _vfX.moveTo(0, cY); _vfX.lineTo(cw, cY); _vfX.stroke();
-      if (nB) {
-        _vfX.setLineDash([]); _vfX.beginPath(); _vfX.arc(dX, dY, 7, 0, Math.PI * 2);
-        _vfX.fillStyle = isL ? "rgba(74, 222, 128, 0.7)" : "rgba(250, 204, 21, 0.6)"; _vfX.fill();
-        _vfX.lineWidth = 2; _vfX.strokeStyle = isL ? "#4ade80" : "#fde047"; _vfX.stroke();
+      if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) {
+        hudStatus.innerText = "Status: Searching";
+        hudStatus.style.color = "#ef4444";
+        hudLockPill.innerText = "NO FACE DETECTED";
+        hudLockPill.classList.remove('locked');
+        hudWrapper.className = 'hud-wrapper no-face';
+        hudDist.innerText = "Dist: -- cm";
+        crosshairLocked = false;
+        return;
       }
-      _vfX.restore();
-    }
 
-    function _onR(res) {
-      if (res.multiFaceLandmarks && res.multiFaceLandmarks.length > 0) {
-        const lm = res.multiFaceLandmarks[0], nB = lm[168] || lm[1];
-        const vw = _vEl.videoWidth || 480, vh = _vEl.videoHeight || 640;
-        _rUV(nB);
+      hudStatus.innerText = "Status: Binocular";
+      hudStatus.style.color = "#22c55e";
 
-        _sRE = 0.3 * _gE(lm, 159, 145, 133, 33) + 0.7 * _sRE;
-        _sLE = 0.3 * _gE(lm, 386, 374, 362, 263) + 0.7 * _sLE;
-        _cES = _st === 2 ? "Right Covered" : _st === 3 ? "Left Covered" : (_sRE < 0.20 && _sLE >= 0.20) ? "Right Covered" : (_sLE < 0.20 && _sRE >= 0.20) ? "Left Covered" : "Binocular";
-        const lp = lm[468] || lm[33], rp = lm[473] || lm[263];
-        const ipdPx = Math.hypot((lp.x - rp.x) * vw, (lp.y - rp.y) * vh);
-        const nT = lm[168], nBo = lm[2];
-        const nVPx = (nT && nBo) ? Math.hypot((nT.x - nBo.x) * vw, (nT.y - nBo.y) * vh) : 0;
-        if (nVPx > 12) _lNPx = 0.3 * nVPx + 0.7 * _lNPx;
-        if (_st !== 2 && _st !== 3 && ipdPx > 0) {
-          const rCm = ((_K2 * _K1) / ipdPx) / 10;
-          _sCm = _sCm === null ? rCm : (0.25 * rCm) + (0.75 * _sCm);
-          if (_lNPx > 12) _nK = 0.2 * (_sCm * _lNPx) + 0.8 * _nK;
-        } else if ((_st === 2 || _st === 3) && _lNPx > 12) {
-          const mCm = _nK / _lNPx;
-          if (mCm >= 24 && mCm <= 72) _sCm = _sCm === null ? mCm : (0.22 * mCm) + (0.78 * _sCm);
+      const landmarks = results.multiFaceLandmarks[0];
+      // Landmark 168: Midpoint between eyes on nose bridge
+      const noseBridge = landmarks[168];
+      
+      // Landmark 468 (Right Iris center) & 473 (Left Iris center) for IPD
+      const irisR = landmarks[468] || landmarks[33];
+      const irisL = landmarks[473] || landmarks[263];
+
+      // Mirror-flip X coordinates to match video preview
+      const px = (1 - noseBridge.x) * hudCanvas.width;
+      const py = noseBridge.y * hudCanvas.height;
+
+      // Compute dynamic iris/IPD distance using auto-detected OS focal ratio
+      const irisPixelDist = Math.hypot((irisR.x - irisL.x) * hudCanvas.width, (irisR.y - irisL.y) * hudCanvas.height);
+      const focalLengthPx = hudCanvas.width * activeProfile.focalRatio;
+      const distanceMm = (63.0 * focalLengthPx) / (irisPixelDist * 2.2); // Biological IPD average 63mm
+      liveDistanceCm = parseFloat((distanceMm / 10).toFixed(1));
+
+      // Clamp plausible range
+      if (liveDistanceCm < 20) liveDistanceCm = 20.0;
+      if (liveDistanceCm > 90) liveDistanceCm = 90.0;
+
+      hudDist.innerText = `Dist: ${liveDistanceCm} cm`;
+
+      // Draw Calibrated Green Dot at Landmark 168 (Nose Bridge)
+      hudCtx.beginPath();
+      hudCtx.arc(px, py, 7, 0, 2 * Math.PI);
+      hudCtx.fillStyle = '#22c55e';
+      hudCtx.fill();
+      hudCtx.lineWidth = 2.5;
+      hudCtx.strokeStyle = '#facc15';
+      hudCtx.stroke();
+
+      // Check alignment within center threshold (30px radius) and distance range (35-55 cm)
+      const distFromCenter = Math.hypot(px - cx, py - cy);
+      const inRange = liveDistanceCm >= 35.0 && liveDistanceCm <= 55.0;
+
+      if (distFromCenter < 35 && inRange) {
+        crosshairLocked = true;
+        hudLockPill.innerText = "CROSSHAIR LOCKED ✓";
+        hudLockPill.classList.add('locked');
+        hudWrapper.className = 'hud-wrapper';
+      } else {
+        crosshairLocked = false;
+        hudLockPill.classList.remove('locked');
+        hudWrapper.className = inRange ? 'hud-wrapper' : 'hud-wrapper out-of-range';
+
+        if (distFromCenter >= 35) {
+          if (py < cy - 25) hudLockPill.innerText = "LOWER DEVICE / CHIN UP";
+          else if (py > cy + 25) hudLockPill.innerText = "RAISE DEVICE / CHIN DOWN";
+          else hudLockPill.innerText = "CENTER DOT ON CROSSHAIR";
+        } else if (!inRange) {
+          hudLockPill.innerText = liveDistanceCm < 35 ? "LEAN BACK (35–55 CM)" : "MOVE CLOSER (35–55 CM)";
         }
-        if (_sCm !== null) {
-          _dVl.innerText = `${_sCm.toFixed(1)} cm`;
-          if (_inB) {
-            _sRd.innerText = `Live Dist: ${_sCm.toFixed(1)} cm`;
-            const bSp = document.getElementById('liveBlurBtnCm');
-            if (bSp) bSp.innerText = `${_sCm.toFixed(0)} cm`;
-          }
-          if (_lCm !== null && _st >= 2) {
-            _tLb.innerText = "Target:"; _zVl.innerText = `${_lCm.toFixed(1)} cm`;
-            const ok = Math.abs(_sCm - _lCm) <= 5.0;
-            _zVl.style.color = ok ? "#4ade80" : "#fbbf24"; _cBx.style.borderColor = ok ? "#4ade80" : "#fbbf24";
-          } else {
-            _tLb.innerText = "Target:"; _zVl.innerText = _inB ? "Find Blur" : "35–55 cm";
-            const c = (_sCm >= 35 && _sCm <= 55) ? "#4ade80" : _sCm < 35 ? "#f87171" : "#fbbf24";
-            _zVl.style.color = c; _cBx.style.borderColor = c;
-          }
-        }
-        _eVl.innerText = _cES;
-      } else _rUV(null);
-    }
-
-    const _fM = new FaceMesh({ locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
-    _fM.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
-    _fM.onResults(_onR);
-    const _cam = new Camera(_vEl, { onFrame: async () => { await _fM.send({ image: _vEl }); }, width: 640, height: 480 });
-
-    window.startEyesEngine = function() {
-      _initVoiceEngine();
-      _0xCalibrateHardware();
-      try {
-        _cam.start();
-      } catch (err) {
-        console.warn("Camera start err:", err);
       }
-    };
+    }
+
+    // ==========================================
+    // 4. TEST STEP CONTROLS & WORKFLOW
+    // ==========================================
+    function handleLockChairDistance() {
+      if (!liveDistanceCm) {
+        alert("Please ensure your camera is active and your face is visible.");
+        return;
+      }
+      lockedDistanceCm = liveDistanceCm;
+      setWorkflowStep(2);
+    }
+
+    function setWorkflowStep(step) {
+      currentStep = step;
+      
+      // Update tab styles
+      for (let i = 1; i <= 6; i++) {
+        const tab = document.getElementById(`tab-${i}`);
+        tab.className = 'step-tab';
+        if (i === currentStep) tab.classList.add('active');
+        if (i < currentStep) tab.classList.add('completed');
+      }
+
+      // DOM Containers
+      const cardTitle = document.getElementById('cardTitle');
+      const cardStepBadge = document.getElementById('cardStepBadge');
+      const inst1 = document.getElementById('inst1');
+      const inst2 = document.getElementById('inst2');
+      const inst3 = document.getElementById('inst3');
+      const lockChairBtn = document.getElementById('lockChairBtn');
+      const dpadArea = document.getElementById('dpadArea');
+      const testStage = document.getElementById('testStage');
+      const rxCardContainer = document.getElementById('rxCardContainer');
+      const printRxBtn = document.getElementById('printRxBtn');
+      const stageMetaLabel = document.getElementById('stageMetaLabel');
+      const optotypeTarget = document.getElementById('optotypeTarget');
+      const readingContainer = document.getElementById('readingContainer');
+
+      if (step === 2) {
+        cardTitle.innerText = "STEP 2 OF 6: LEFT EYE (COVER RIGHT EYE)";
+        cardStepBadge.innerText = "STEP 2";
+        inst1.innerHTML = "1. Cover your <strong>RIGHT EYE</strong> with your hand.";
+        inst2.innerHTML = "2. Keep looking at the 'E' with your <strong>LEFT EYE</strong>.";
+        inst3.innerHTML = "3. Tap the <strong>ARROW BUTTON</strong> matching which way the 'E' points!";
+        lockChairBtn.style.display = "none";
+        dpadArea.style.display = "grid";
+        stageMetaLabel.innerText = "STEP 2: LEFT EYE TEST";
+        rotateRandomOptotype();
+        speakPrompt("Step two. Please cover your right eye and use the arrows to indicate which way the E is pointing.");
+      } else if (step === 3) {
+        cardTitle.innerText = "STEP 3 OF 6: RIGHT EYE (COVER LEFT EYE)";
+        cardStepBadge.innerText = "STEP 3";
+        inst1.innerHTML = "1. Now cover your <strong>LEFT EYE</strong> with your hand.";
+        inst2.innerHTML = "2. Keep looking at the 'E' with your <strong>RIGHT EYE</strong>.";
+        inst3.innerHTML = "3. Tap the <strong>ARROW BUTTON</strong> matching which way the 'E' points!";
+        stageMetaLabel.innerText = "STEP 3: RIGHT EYE TEST";
+        rotateRandomOptotype();
+        speakPrompt("Step three. Now switch and cover your left eye.");
+      } else if (step === 4) {
+        cardTitle.innerText = "STEP 4 OF 6: BOTH EYES ACUITY";
+        cardStepBadge.innerText = "STEP 4";
+        inst1.innerHTML = "1. Uncover both eyes and focus on the letter.";
+        inst2.innerHTML = "2. Tap the arrow matching which way the 'E' points.";
+        inst3.innerHTML = "3. The letter will shrink to determine your sharpest line.";
+        stageMetaLabel.innerText = "STEP 4: BINOCULAR ACUITY";
+        rotateRandomOptotype();
+        speakPrompt("Step four. Test both eyes together.");
+      } else if (step === 5) {
+        cardTitle.innerText = "STEP 5 OF 6: READING SPEED & FATIGUE";
+        cardStepBadge.innerText = "STEP 5";
+        inst1.innerHTML = "1. Read the on-screen text passage aloud.";
+        inst2.innerHTML = "2. Maintain your locked chair distance.";
+        inst3.innerHTML = "3. Tap CONTINUE when finished reading.";
+        dpadArea.style.display = "none";
+        optotypeTarget.style.display = "none";
+        readingContainer.style.display = "block";
+        lockChairBtn.style.display = "flex";
+        lockChairBtn.innerText = "👉 FINISHED READING - SHOW RX SCORE 👈";
+        lockChairBtn.onclick = () => setWorkflowStep(6);
+        stageMetaLabel.innerText = "STEP 5: READING & COGNITIVE SPEED";
+        speakPrompt("Step five. Read the passage aloud to measure reading speed.");
+      } else if (step === 6) {
+        cardTitle.innerText = "STEP 6 OF 6: GLASSES & CONTACTS RX READY!";
+        cardStepBadge.innerText = "FINAL RX";
+        inst1.innerHTML = "1. 👓 <strong>GLASSES RX</strong>: Left -4.75 D | Right -4.25 D";
+        inst2.innerHTML = "2. 💧 <strong>CONTACTS RX</strong>: Left -4.50 D | Right -4.00 D";
+        inst3.innerHTML = "3. Tap <strong>PRINT OFFICIAL RX</strong> below to save your prescription!";
+        testStage.style.display = "none";
+        rxCardContainer.style.display = "flex";
+        lockChairBtn.style.display = "none";
+        dpadArea.style.display = "none";
+        printRxBtn.style.display = "flex";
+        speakPrompt("Prescription calculations complete. You can now save or print your official prescription.");
+      }
+    }
+
+    function rotateRandomOptotype() {
+      currentRotation = optotypeRotations[Math.floor(Math.random() * optotypeRotations.length)];
+      const el = document.getElementById('optotypeTarget');
+      el.style.transform = `rotate(${currentRotation}deg)`;
+    }
+
+    function submitAcuityAnswer(directionDeg) {
+      if (directionDeg === currentRotation) {
+        if (currentStep === 2) testScores.left++;
+        else if (currentStep === 3) testScores.right++;
+        else if (currentStep === 4) testScores.both++;
+      }
+
+      // Progress after 3 prompts per eye
+      if (currentStep === 2 && testScores.left >= 3) {
+        setWorkflowStep(3);
+      } else if (currentStep === 3 && testScores.right >= 3) {
+        setWorkflowStep(4);
+      } else if (currentStep === 4 && testScores.both >= 3) {
+        setWorkflowStep(5);
+      } else {
+        rotateRandomOptotype();
+      }
+    }
+
+    function resetCheckWorkflow() {
+      if (confirm("Reset calibration and restart testing workflow?")) {
+        window.location.reload();
+      }
+    }
+
+    // Initialize Auto-detection on boot
+    window.addEventListener('DOMContentLoaded', detectAndApplyOS);
   </script>
 </body>
 </html>
