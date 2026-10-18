@@ -688,7 +688,7 @@
     });
 
     closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
-    modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
+    modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('modalDismissBtn'));
 
     // Dismiss keyboard on outside touch
     document.addEventListener('touchstart', (e) => {
@@ -855,48 +855,89 @@
       executeLookup(cleanVal, 'Manual ZIP');
     });
 
-    // Robust Voice-First Speech-to-Text Input
+    // Resilient Fresh-Instance Speech Recognition
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let activeRecognition = null;
+    let isListening = false;
+
+    function resetMicBtn() {
+      isListening = false;
+      if (voiceZipLabel) voiceZipLabel.textContent = "MIC";
+      if (voiceZipBtn) voiceZipBtn.classList.remove('border-red-500', 'bg-red-950/40');
+      if (micIcon) micIcon.classList.remove('animate-pulse');
+    }
+
+    function setMicListening() {
+      isListening = true;
+      if (voiceZipLabel) voiceZipLabel.textContent = "REC...";
+      if (voiceZipBtn) voiceZipBtn.classList.add('border-red-500', 'bg-red-950/40');
+      if (micIcon) micIcon.classList.add('animate-pulse');
+    }
 
     if (voiceZipBtn) {
       if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = 'en-US';
-
         voiceZipBtn.addEventListener('click', (e) => {
           e.preventDefault();
           hideAlert();
+
+          // Stop and clear previous instance if still hanging or active
+          if (activeRecognition) {
+            try {
+              activeRecognition.abort();
+            } catch (err) {}
+            activeRecognition = null;
+          }
+
+          if (isListening) {
+            resetMicBtn();
+            return;
+          }
+
           try {
+            const recognition = new SpeechRecognition();
+            activeRecognition = recognition;
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+              setMicListening();
+            };
+
+            recognition.onresult = (event) => {
+              if (!event.results || !event.results[0] || !event.results[0][0]) return;
+              const transcript = event.results[0][0].transcript;
+              const spokenDigits = transcript.replace(/\D/g, '').substring(0, 5);
+              if (spokenDigits.length >= 3) {
+                zipInput.value = spokenDigits;
+                if (clearZipBtn) clearZipBtn.classList.remove('hidden');
+                executeLookup(spokenDigits, 'Voice Input');
+              } else {
+                showAlert(`Heard "${transcript}". Speak a 5-digit ZIP.`);
+              }
+            };
+
+            recognition.onerror = (e) => {
+              // Ignore benign user abort
+              if (e.error !== 'aborted') {
+                showAlert("Mic access error. Type ZIP code.");
+              }
+              resetMicBtn();
+              activeRecognition = null;
+            };
+
+            recognition.onend = () => {
+              resetMicBtn();
+              activeRecognition = null;
+            };
+
             recognition.start();
-            voiceZipLabel.textContent = "REC...";
-            voiceZipBtn.classList.add('border-red-500', 'bg-red-950/40');
           } catch (err) {
-            console.warn("Speech recognition restart or already running:", err);
+            showAlert("Could not start microphone. Try again.");
+            resetMicBtn();
+            activeRecognition = null;
           }
         });
-
-        recognition.onresult = (event) => {
-          const transcript = event.results[0][0].transcript;
-          const spokenDigits = transcript.replace(/\D/g, '').substring(0, 5);
-          if (spokenDigits.length >= 3) {
-            zipInput.value = spokenDigits;
-            clearZipBtn.classList.remove('hidden');
-            executeLookup(spokenDigits, 'Voice Input');
-          } else {
-            showAlert(`Heard "${transcript}". Speak a 5-digit ZIP.`);
-          }
-        };
-
-        recognition.onerror = (e) => {
-          showAlert("Mic access unavailable. Type ZIP code.");
-        };
-
-        recognition.onend = () => {
-          voiceZipLabel.textContent = "MIC";
-          voiceZipBtn.classList.remove('border-red-500', 'bg-red-950/40');
-        };
       } else {
         voiceZipBtn.addEventListener('click', () => {
           showAlert("Voice input not supported by this browser. Please type ZIP.");
