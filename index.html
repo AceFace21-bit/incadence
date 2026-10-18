@@ -233,18 +233,14 @@
       </div>
 
       <div class="py-1 px-2 rounded bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-        <div class="truncate mr-2">
+        <div class="truncate">
           <div class="text-[8px] uppercase font-mono-code tracking-wider text-slate-400">Direct Travel Coordinator</div>
           <div id="facilityPhone" class="text-[11px] font-bold text-emerald-400 font-mono-code truncate">412-360-3620 (Press 1)</div>
         </div>
-        <a 
-          id="callBtn" 
-          href="tel:4123603620,1" 
-          class="plausible-event-name=Dialer+Click bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-emerald-500/40 text-emerald-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-wider flex items-center space-x-1 shrink-0"
-        >
-          <i data-lucide="phone" class="w-2.5 h-2.5"></i>
-          <span>Dial</span>
-        </a>
+        <div class="text-[9px] font-mono-code text-slate-500 uppercase tracking-wider shrink-0 flex items-center space-x-1">
+          <i data-lucide="phone" class="w-2.5 h-2.5 text-slate-400"></i>
+          <span>Coordination Line</span>
+        </div>
       </div>
     </section>
 
@@ -508,7 +504,7 @@
     const facilityName = document.getElementById('facilityName');
     const facilityAddress = document.getElementById('facilityAddress');
     const facilityPhone = document.getElementById('facilityPhone');
-    const callBtn = document.getElementById('callBtn');
+    const callBtn = document.getElementById('callBtn'); // Optional / retired duplicate
     const centerCallBtn = document.getElementById('centerCallBtn');
     const centerCallText = document.getElementById('centerCallText');
     const fallbackCallBtn = document.getElementById('fallbackCallBtn');
@@ -585,7 +581,7 @@
 
     // Attach programmatic click listeners for Dialer Click telemetry
     centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
-    callBtn.addEventListener('click', () => trackDialerClick('Micro-Card Dial Button', activeHub));
+    if (callBtn) callBtn.addEventListener('click', () => trackDialerClick('Micro-Card Dial Button', activeHub));
     fallbackCallBtn.addEventListener('click', () => trackDialerClick('National Fallback Dial Button', visnDatabase.national_fallback));
 
     function resolveHub(zip) {
@@ -634,7 +630,7 @@
       facilityPhone.textContent = data.phone;
       
       const callUri = "tel:" + data.cleanPhone;
-      callBtn.href = callUri;
+      if (callBtn) callBtn.href = callUri;
       centerCallBtn.href = callUri;
       
       const isFallback = (data.visn === "VA National");
