@@ -3,14 +3,14 @@
   USPTO PROVISIONAL PATENT APPLICATION NO. 64/174,835
   Terrance Watkins • Patent Pending 64/174,835
   CONFIDENTIAL PROPRIETARY TELEMETRY SYSTEM - UNAUTHORIZED REPRODUCTION PROHIBITED
-  PROJECT EYES v3.77 - BULLETPROOF IOS/ANDROID SPEECH ACTIVATION ENGINE + FULL BUILD TXT
+  PROJECT EYES v3.78 - BULLETPROOF IOS/ANDROID SPEECH ACTIVATION ENGINE + FULL BUILD TXT
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.77 | Terrance Watkins • Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.78 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
     * {
       box-sizing: border-box; margin: 0; padding: 0;
@@ -309,7 +309,7 @@
       var digits = box.value.replace(/[^0-9]/g, '');
       if (digits.length === 4 && window.btoa(digits) === 'MzIwNg==') {
         if (typeof window.unlockSpeechPipeline === 'function') window.unlockSpeechPipeline();
-        // Immediately arm first spoken instruction during this verified touch gesture
+        // Immediately arm prompt during verified touch gesture
         if (typeof window.armFirstInstruction === 'function') window.armFirstInstruction();
         document.getElementById('pinVaultOverlay').style.display = 'none';
         if (typeof window.startEyesEngine === 'function') window.startEyesEngine();
@@ -329,7 +329,7 @@
   <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">🔒 Project Eyes v3.77</div>
+      <div class="vault-title">🔒 Project Eyes v3.78</div>
       <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
       <div class="nda-box">
         <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
@@ -391,7 +391,7 @@
     <div class="optotype-viewport">
       <div id="gatePromptBtn" onclick="window._0xGate()">
         <div class="gate-main" id="gateMainText">👉 TAP HERE TO LOCK CHAIR DISTANCE 👈</div>
-        <div class="gate-sub" id="gateSubText">🎙️ Place face 35–55 cm away from phone</div>
+        <div class="gate-sub" id="gateSubText">🎙️ Place face 35–55 cm away • Watch blue numbers in top left</div>
       </div>
       <canvas id="snellenCanvas"></canvas>
       <div id="readingBox">
@@ -440,7 +440,7 @@
       <div>
         <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
         <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.77</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.78</div>
       </div>
       <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
@@ -500,14 +500,11 @@
   <script>
     /* =========================================================================
        BULLETPROOF WEBAUDIO & SPEECH PIPELINE FOR IOS SAFARI & ANDROID
-       iOS WebKit requires an audio context to be created and resumed during
-       the synchronous touch event. We prime it on PIN entry and automatically
-       resume it as soon as the native camera dialog dismisses!
        ========================================================================= */
     let _activeVoice = null;
     let _audioCtx = null;
     let _hasSpokenInitialGuidance = false;
-    const INITIAL_SPEECH_TEXT = "Place your face between thirty-five and fifty-five centimeters away from your phone.";
+    const INITIAL_SPEECH_TEXT = "Place your face between thirty-five and fifty-five centimeters away from your phone. You can tell your range by the blue numbers in the top left of the screen.";
 
     function _initAudioContext() {
       if (!_audioCtx) {
@@ -526,7 +523,6 @@
         _initAudioContext();
         if ('speechSynthesis' in window) {
           window.speechSynthesis.resume();
-          // Prime with an audible-to-browser micro utterance
           const primeUtt = new SpeechSynthesisUtterance("");
           primeUtt.volume = 0.01;
           window.speechSynthesis.speak(primeUtt);
@@ -583,15 +579,12 @@
       }
     }
 
-    // Arm instruction so it triggers the instant iOS native permission dialog drops
     window.armFirstInstruction = function() {
       if (_hasSpokenInitialGuidance) return;
-      // Start utterance while still inside the user gesture
       speakGemini(INITIAL_SPEECH_TEXT);
       _hasSpokenInitialGuidance = true;
     };
 
-    // When returning from iOS native permission popup ("Allow"), window regains focus
     window.addEventListener('focus', () => {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.resume();
