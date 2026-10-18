@@ -215,7 +215,7 @@
           type="button"
           title="Speak your ZIP code aloud"
           aria-label="Speak your 5-digit ZIP code aloud"
-          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/50 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0 min-w-[54px]"
+          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/50 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5 shrink-0 min-w-[58px]"
         >
           <i id="micIcon" data-lucide="mic" class="w-4 h-4 text-emerald-400"></i>
           <span id="voiceZipLabel" class="font-mono-code font-bold text-[11px]">MIC</span>
@@ -763,7 +763,7 @@
       if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
 
       if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
+      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visn6;
       if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
       if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
       if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
@@ -855,29 +855,76 @@
       executeLookup(cleanVal, 'Manual ZIP');
     });
 
-    // Clean Multi-Tap Speech Recognition Engine
+    // Word-to-number converter for speech recognition transcripts
+    const wordDigitMap = {
+      'zero': '0', 'oh': '0', 'o': '0',
+      'one': '1', 'won': '1',
+      'two': '2', 'to': '2', 'too': '2',
+      'three': '3',
+      'four': '4', 'for': '4', 'fore': '4',
+      'five': '5',
+      'six': '6',
+      'seven': '7',
+      'eight': '8', 'ate': '8',
+      'nine': '9'
+    };
+
+    function parseSpokenZip(transcript) {
+      if (!transcript) return '';
+      // First extract directly if native digits already exist
+      const directDigits = transcript.replace(/\D/g, '');
+      if (directDigits.length >= 3) return directDigits.substring(0, 5);
+
+      // Otherwise convert word-form tokens (e.g., "one five two four zero")
+      const tokens = transcript.toLowerCase().split(/\s+|-/);
+      let extracted = '';
+      for (const t of tokens) {
+        const cleanedToken = t.replace(/[^a-z0-9]/g, '');
+        if (wordDigitMap[cleanedToken]) {
+          extracted += wordDigitMap[cleanedToken];
+        } else if (/^\d+$/.test(cleanedToken)) {
+          extracted += cleanedToken;
+        }
+      }
+      return extracted.substring(0, 5);
+    }
+
+    // Speech-to-Text Input with Audio Session Unlocking & Live Visual Progress
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let activeRecognition = null;
-    let micBusy = false;
+    let micActive = false;
 
     function resetMicBtn() {
-      micBusy = false;
+      micActive = false;
       if (voiceZipLabel) voiceZipLabel.textContent = "MIC";
       if (voiceZipBtn) {
-        voiceZipBtn.classList.remove('border-red-500', 'bg-red-950/40');
+        voiceZipBtn.classList.remove('border-red-500', 'bg-red-950/60');
         voiceZipBtn.classList.add('border-emerald-500/50', 'bg-slate-800');
       }
-      if (micIcon) micIcon.classList.remove('animate-pulse');
+      if (micIcon) {
+        micIcon.classList.remove('animate-pulse', 'text-red-400');
+        micIcon.classList.add('text-emerald-400');
+      }
+      if (zipInput && zipInput.placeholder === "Listening... speak now") {
+        zipInput.placeholder = "5-digit ZIP...";
+      }
     }
 
     function setMicListening() {
-      micBusy = true;
+      micActive = true;
       if (voiceZipLabel) voiceZipLabel.textContent = "REC...";
       if (voiceZipBtn) {
         voiceZipBtn.classList.remove('border-emerald-500/50', 'bg-slate-800');
-        voiceZipBtn.classList.add('border-red-500', 'bg-red-950/40');
+        voiceZipBtn.classList.add('border-red-500', 'bg-red-950/60');
       }
-      if (micIcon) micIcon.classList.add('animate-pulse');
+      if (micIcon) {
+        micIcon.classList.remove('text-emerald-400');
+        micIcon.classList.add('animate-pulse', 'text-red-400');
+      }
+      if (zipInput) {
+        zipInput.value = '';
+        zipInput.placeholder = "Listening... speak now";
+      }
     }
 
     if (voiceZipBtn) {
@@ -886,8 +933,13 @@
           e.preventDefault();
           hideAlert();
 
-          // If currently running, tap acts as an instant cancel/toggle
-          if (activeRecognition || micBusy) {
+          // CRITICAL iOS WebKit Requirement: Cancel any pending speech synthesis audio route
+          if ('speechSynthesis' in window) {
+            try { window.speechSynthesis.cancel(); } catch (err) {}
+          }
+
+          // Toggle off if already listening
+          if (activeRecognition || micActive) {
             try {
               if (activeRecognition) activeRecognition.abort();
             } catch (err) {}
@@ -897,34 +949,42 @@
           }
 
           try {
-            // Instantiate brand-new recognition instance on every tap
             const recognition = new SpeechRecognition();
             activeRecognition = recognition;
             recognition.continuous = false;
-            recognition.interimResults = false;
+            recognition.interimResults = true; // Enables live real-time feedback
             recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1;
 
             recognition.onstart = () => {
               setMicListening();
             };
 
             recognition.onresult = (event) => {
-              if (!event.results || !event.results[0] || !event.results[0][0]) return;
-              const transcript = event.results[0][0].transcript;
-              const spokenDigits = transcript.replace(/\D/g, '').substring(0, 5);
-              
-              if (spokenDigits.length >= 3) {
-                zipInput.value = spokenDigits;
+              if (!event.results || !event.results[0]) return;
+              const result = event.results[0];
+              const transcript = result[0].transcript;
+              const parsedDigits = parseSpokenZip(transcript);
+
+              if (parsedDigits.length > 0) {
+                zipInput.value = parsedDigits;
                 if (clearZipBtn) clearZipBtn.classList.remove('hidden');
-                executeLookup(spokenDigits, 'Voice Input');
-              } else {
-                showAlert(`Heard "${transcript}". Try tapping MIC again.`);
+              }
+
+              if (result.isFinal) {
+                if (parsedDigits.length >= 3) {
+                  executeLookup(parsedDigits, 'Voice Input');
+                } else {
+                  showAlert(`Heard "${transcript}". Speak a 5-digit ZIP code.`);
+                }
               }
             };
 
             recognition.onerror = (e) => {
-              if (e.error !== 'aborted') {
-                showAlert("Mic didn't catch that. Tap MIC to retry.");
+              if (e.error !== 'aborted' && e.error !== 'no-speech') {
+                showAlert(`Mic notice: ${e.error || 'Please speak clearly'}. Tap to retry.`);
+              } else if (e.error === 'no-speech') {
+                showAlert("Didn't catch any speech. Tap MIC to retry.");
               }
               resetMicBtn();
               activeRecognition = null;
@@ -937,7 +997,8 @@
 
             recognition.start();
           } catch (err) {
-            showAlert("Tap MIC again to retry.");
+            console.error("Mic start exception:", err);
+            showAlert("Could not access mic. Tap again.");
             resetMicBtn();
             activeRecognition = null;
           }
