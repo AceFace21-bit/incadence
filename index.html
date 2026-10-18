@@ -1,533 +1,703 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<title>In Cadence | Forward March Transit</title>
-<!-- Mapbox GL JS -->
-<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-<!-- Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-:root {
---bg-dark: #0b1117;
---card-bg: rgba(16, 24, 38, 0.95);
---card-border: rgba(45, 212, 191, 0.25);
---accent-green: #10b981;
---accent-teal: #14b8a6;
---accent-cyan: #06b6d4;
---text-main: #f1f5f9;
---text-muted: #94a3b8;
-}
-* {
-box-sizing: border-box;
-margin: 0;
-padding: 0;
--webkit-tap-highlight-color: transparent;
-user-select: none;
-}
-body {
-background-color: var(--bg-dark);
-color: var(--text-main);
-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-align-items: center;
-padding: 12px 14px env(safe-area-inset-bottom) 14px;
-overflow-x: hidden;
-}
-.app-container {
-width: 100%;
-max-width: 440px;
-display: flex;
-flex-direction: column;
-gap: 12px;
-}
-/* Top Bar */
-.top-bar {
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 8px 10px;
-background: var(--card-bg);
-border: 1px solid var(--card-border);
-border-radius: 12px;
-}
-.brand-title {
-display: flex;
-align-items: center;
-gap: 8px;
-}
-.brand-logo-icon {
-width: 22px;
-height: 22px;
-color: #ef4444;
-}
-.brand-text h1 {
-font-size: 15px;
-font-weight: 800;
-letter-spacing: 1px;
-text-transform: uppercase;
-color: #fff;
-}
-.brand-text span {
-font-size: 9px;
-letter-spacing: 0.5px;
-color: var(--text-muted);
-display: block;
-}
-.header-pills {
-display: flex;
-gap: 6px;
-}
-.pill-btn {
-background: rgba(20, 184, 166, 0.15);
-border: 1px solid rgba(20, 184, 166, 0.4);
-color: var(--accent-teal);
-padding: 5px 9px;
-border-radius: 20px;
-font-size: 10px;
-font-weight: 700;
-display: flex;
-align-items: center;
-gap: 4px;
-cursor: pointer;
-}
-/* Search Bar */
-.search-card {
-background: var(--card-bg);
-border: 1px solid var(--card-border);
-border-radius: 12px;
-padding: 10px;
-}
-.search-header {
-display: flex;
-justify-content: space-between;
-margin-bottom: 6px;
-font-size: 11px;
-font-weight: 700;
-letter-spacing: 0.5px;
-}
-.search-label {
-color: #ec4899;
-}
-.search-sub {
-color: var(--accent-teal);
-}
-.input-wrapper {
-position: relative;
-display: flex;
-align-items: center;
-gap: 8px;
-}
-.zip-input {
-width: 100%;
-background: rgba(15, 23, 42, 0.9);
-border: 1px solid rgba(148, 163, 184, 0.3);
-border-radius: 8px;
-padding: 10px 12px;
-font-size: 16px;
-font-weight: 600;
-color: #fff;
-letter-spacing: 2px;
-outline: none;
-}
-.zip-input:focus {
-border-color: var(--accent-teal);
-}
-.gps-btn {
-background: rgba(16, 185, 129, 0.2);
-border: 1px solid var(--accent-green);
-color: var(--accent-green);
-padding: 10px 14px;
-border-radius: 8px;
-font-size: 12px;
-font-weight: 800;
-display: flex;
-align-items: center;
-gap: 4px;
-cursor: pointer;
-white-space: nowrap;
-}
-/* Radar Map Target */
-.map-card {
-background: var(--card-bg);
-border: 1px solid var(--card-border);
-border-radius: 12px;
-overflow: hidden;
-position: relative;
-}
-.map-header {
-padding: 8px 12px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-font-size: 11px;
-font-weight: 700;
-letter-spacing: 0.5px;
-border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-.map-canvas-container {
-width: 100%;
-height: 180px;
-position: relative;
-background: #141c26;
-}
-#map {
-width: 100%;
-height: 100%;
-}
-.call-transit-overlay {
-position: absolute;
-bottom: 10px;
-right: 10px;
-z-index: 10;
-}
-.call-transit-btn {
-background: #10b981;
-color: #042f2e;
-padding: 8px 14px;
-border-radius: 20px;
-font-size: 12px;
-font-weight: 800;
-display: flex;
-align-items: center;
-gap: 6px;
-border: none;
-box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-cursor: pointer;
-}
-/* Hub Information Card */
-.hub-card {
-background: var(--card-bg);
-border: 1px solid var(--card-border);
-border-radius: 12px;
-padding: 12px;
-}
-.hub-header {
-display: flex;
-justify-content: space-between;
-align-items: flex-start;
-margin-bottom: 4px;
-}
-.hub-badge {
-background: rgba(14, 165, 233, 0.2);
-border: 1px solid #0284c7;
-color: #38bdf8;
-font-size: 10px;
-font-weight: 800;
-padding: 3px 6px;
-border-radius: 4px;
-letter-spacing: 0.5px;
-}
-.visn-badge {
-color: #94a3b8;
-font-size: 11px;
-font-weight: 700;
-}
-.hub-name {
-font-size: 15px;
-font-weight: 800;
-color: #fff;
-margin-top: 4px;
-}
-.hub-sub {
-font-size: 11px;
-color: #94a3b8;
-margin-bottom: 12px;
-}
-.dialer-box {
-background: rgba(15, 23, 42, 0.8);
-border: 1px solid rgba(255, 255, 255, 0.08);
-border-radius: 8px;
-padding: 10px 12px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-}
-.dialer-label {
-font-size: 10px;
-letter-spacing: 0.5px;
-text-transform: uppercase;
-color: #64748b;
-margin-bottom: 2px;
-}
-.dialer-number {
-font-size: 15px;
-font-weight: 800;
-color: #38bdf8;
-}
-.dialer-press {
-color: var(--accent-green);
-font-size: 12px;
-font-weight: 700;
-}
-.dial-btn {
-background: rgba(16, 185, 129, 0.2);
-border: 1px solid var(--accent-green);
-color: var(--accent-green);
-padding: 8px 12px;
-border-radius: 6px;
-font-size: 12px;
-font-weight: 800;
-display: flex;
-align-items: center;
-gap: 4px;
-text-decoration: none;
-cursor: pointer;
-}
-/* Bottom Quick Action Grid */
-.bottom-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 10px;
-}
-.mini-card {
-background: var(--card-bg);
-border: 1px solid var(--card-border);
-border-radius: 10px;
-padding: 10px;
-display: flex;
-flex-direction: column;
-gap: 4px;
-}
-.mini-title {
-font-size: 9px;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-color: #94a3b8;
-}
-.mini-value {
-font-size: 12px;
-font-weight: 700;
-color: #fff;
-}
-/* Footer Credential */
-.footer-cred {
-text-align: center;
-padding: 12px 6px;
-font-size: 9px;
-letter-spacing: 1px;
-text-transform: uppercase;
-color: #64748b;
-line-height: 1.5;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>In Cadence | Forward March Transit</title>
+
+  <!-- Leaflet CSS & JS (Free, No API Key, Reliable dark tiles) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0b1117;
+      --card-bg: rgba(16, 24, 38, 0.95);
+      --card-border: rgba(45, 212, 191, 0.25);
+      --accent-green: #10b981;
+      --accent-teal: #14b8a6;
+      --accent-cyan: #06b6d4;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 14px env(safe-area-inset-bottom) 14px;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-logo-icon {
+      width: 22px;
+      height: 22px;
+      color: #ef4444;
+    }
+
+    .brand-text h1 {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .brand-text span {
+      font-size: 9px;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .header-pills {
+      display: flex;
+      gap: 6px;
+    }
+
+    .pill-btn {
+      background: rgba(20, 184, 166, 0.15);
+      border: 1px solid rgba(20, 184, 166, 0.4);
+      color: var(--accent-teal);
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    /* Search Bar */
+    .search-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .search-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .search-label {
+      color: #ec4899;
+    }
+
+    .search-sub {
+      color: var(--accent-teal);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .zip-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 2px;
+      outline: none;
+    }
+
+    .zip-input:focus {
+      border-color: var(--accent-teal);
+    }
+
+    .gps-btn {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* Radar Map Target */
+    .map-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .map-header {
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .map-canvas-container {
+      width: 100%;
+      height: 180px;
+      position: relative;
+      background: #141c26;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .call-transit-overlay {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      z-index: 1000;
+    }
+
+    .call-transit-btn {
+      background: #10b981;
+      color: #042f2e;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      cursor: pointer;
+    }
+
+    /* Hub Information Card */
+    .hub-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .hub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+    }
+
+    .hub-badge {
+      background: rgba(14, 165, 233, 0.2);
+      border: 1px solid #0284c7;
+      color: #38bdf8;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .visn-badge {
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .hub-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 4px;
+    }
+
+    .hub-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+
+    .dialer-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dialer-label {
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 2px;
+    }
+
+    .dialer-number {
+      font-size: 15px;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+
+    .dialer-press {
+      color: var(--accent-green);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .dial-btn {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Bottom Quick Action Grid */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .mini-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mini-title {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+    }
+
+    .mini-value {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* Footer Credential */
+    .footer-cred {
+      text-align: center;
+      padding: 12px 6px;
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #64748b;
+      line-height: 1.5;
+    }
+  </style>
 </head>
 <body>
-<div class="app-container">
-<!-- Top Bar -->
-<header class="top-bar">
-<div class="brand-title">
-<i data-lucide="crosshair" class="brand-logo-icon"></i>
-<div class="brand-text">
-<h1>In Cadence</h1>
-<span>FORWARD MARCH TRANSIT // ALL-VISN</span>
-</div>
-</div>
-<div class="header-pills">
-<button id="audio-toggle-btn" class="pill-btn">
-<i data-lucide="volume-2" style="width:13px;height:13px;"></i> Audio
-</button>
-<div class="pill-btn" style="color:#94a3b8; border-color:#334155;">
-Zero-Pill
-</div>
-</div>
-</header>
-<!-- Search Input -->
-<section class="search-card">
-<div class="search-header">
-<span class="search-label">ENTER YOUR ZIP CODE BELOW</span>
-<span class="search-sub" id="status-pill">Live Auto-Lookup</span>
-</div>
-<div class="input-wrapper">
-<input 
-type="text" 
-id="zip-input" 
-class="zip-input" 
-placeholder="5-digit ZIP..." 
-maxlength="5" 
-inputmode="numeric" 
-pattern="[0-9]*"
-/>
-<button id="gps-btn" class="gps-btn">
-<i data-lucide="navigation" style="width:14px;height:14px;"></i> GPS
-</button>
-</div>
-</section>
-<!-- Target Location View -->
-<section class="map-card">
-<div class="map-header">
-<div style="display:flex; align-items:center; gap:6px;">
-<i data-lucide="target" style="width:14px;height:14px;color:var(--accent-teal);"></i>
-<span>TARGET LOCATION VIEW</span>
-</div>
-<span style="color:#64748b;font-size:9px;" id="coords-text">STANDBY // NO FIX</span>
-</div>
-<div class="map-canvas-container">
-<div id="map"></div>
-<div class="call-transit-overlay">
-<button id="call-transit-overlay-btn" class="call-transit-btn">
-<i data-lucide="phone" style="width:14px;height:14px;"></i> CALL TRANSIT HUB
-</button>
-</div>
-</div>
-</section>
-<!-- Hub Card -->
-<section class="hub-card">
-<div class="hub-header">
-<span class="hub-badge" id="hub-region-tag">SW PENNSYLVANIA HUB</span>
-<span class="visn-badge" id="visn-tag">VISN 4</span>
-</div>
-<h2 class="hub-name" id="hub-name">VA Pittsburgh Healthcare System</h2>
-<p class="hub-sub" id="hub-address">University Drive & H.J. Heinz Divisions</p>
-<div class="dialer-box">
-<div>
-<div class="dialer-label">Direct Travel Coordinator</div>
-<div class="dialer-number" id="dialer-num">412-360-3620 <span class="dialer-press">(Press 1)</span></div>
-</div>
-<a id="direct-dial-link" href="tel:4123603620" class="dial-btn">
-<i data-lucide="phone-call" style="width:14px;height:14px;"></i> DIAL
-</a>
-</div>
-</section>
-<!-- Fallback & Demo -->
-<div class="bottom-grid">
-<div class="mini-card">
-<span class="mini-title">National Fallback</span>
-<a href="tel:8555747292" style="text-decoration:none;color:#fff;" class="mini-value">855-574-7292</a>
-</div>
-<div class="mini-card" id="demo-card" style="cursor:pointer;">
-<span class="mini-title">Call Script</span>
-<span class="mini-value" style="color:var(--accent-teal);">Live Call Demo</span>
-</div>
-</div>
-<!-- Developer Footer -->
-<footer class="footer-cred">
-DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
 
-aceface21-bit.github.io
-</footer>
-</div>
-<script>
-// Init Icons
-lucide.createIcons();
-// Mapbox Setup
-mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
-const pghCoords = [-79.9600, 40.4444];
-const map = new mapboxgl.Map({
-container: 'map',
-style: 'mapbox://styles/mapbox/dark-v11',
-center: pghCoords,
-zoom: 11,
-interactive: false,
-attributionControl: false
-});
-const marker = new mapboxgl.Marker({ color: '#10b981' })
-.setLngLat(pghCoords)
-.addTo(map);
-// ==========================================
-// AUDIO ENGINE (SPEECH + WEB AUDIO SOUND GENERATOR)
-// ==========================================
-let synthUnlocked = false;
-function playChime(freq = 587.33, duration = 0.15) {
-try {
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-if (!AudioContext) return;
-const ctx = new AudioContext();
-if (ctx.state === 'suspended') ctx.resume();
-const osc = ctx.createOscillator();
-const gain = ctx.createGain();
-osc.type = 'sine';
-osc.frequency.setValueAtTime(freq, ctx.currentTime);
-gain.gain.setValueAtTime(0.3, ctx.currentTime);
-gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-osc.connect(gain);
-gain.connect(ctx.destination);
-osc.start();
-osc.stop(ctx.currentTime + duration);
-} catch (err) {
-console.warn('WebAudio chime unavailable', err);
-}
-}
-function speakGreeting(customPhrase) {
-playChime(659.25, 0.2); // Audible confirmation chime
-if (!('speechSynthesis' in window)) return;
-window.speechSynthesis.cancel();
-const phrase = customPhrase ||
-"Welcome to Forward March Transit, powered by In Cadence. Developed by Terence Watkins.";
-const utterance = new SpeechSynthesisUtterance(phrase);
-utterance.rate = 1.0;
-utterance.pitch = 1.0;
-utterance.volume = 1.0;
-const voices = window.speechSynthesis.getVoices();
-if (voices.length > 0) {
-const preferred = voices.find(v => (v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Female') || v.name.includes('Karen')) && v.lang.startsWith('en'));
-if (preferred) utterance.voice = preferred;
-}
-window.speechSynthesis.speak(utterance);
-}
-// Touch pre-warming
-function unlockAudioEngine() {
-if (synthUnlocked) return;
-if ('speechSynthesis' in window) {
-window.speechSynthesis.cancel();
-const silent = new SpeechSynthesisUtterance('');
-silent.volume = 0.01;
-window.speechSynthesis.speak(silent);
-synthUnlocked = true;
-}
-playChime(440, 0.05);
-document.removeEventListener('touchstart', unlockAudioEngine);
-document.removeEventListener('pointerdown', unlockAudioEngine);
-}
-document.addEventListener('touchstart', unlockAudioEngine, { once: true });
-document.addEventListener('pointerdown', unlockAudioEngine, { once: true });
-// Audio Pill Click Listener
-document.getElementById('audio-toggle-btn').addEventListener('click', function(e) {
-e.stopPropagation();
-speakGreeting();
-});
-// Call Transit Overlay Click Listener
-document.getElementById('call-transit-overlay-btn').addEventListener('click', function() {
-speakGreeting("Connecting to VA Pittsburgh Healthcare System Beneficiary Travel desk.");
-setTimeout(() => {
-window.location.href = "tel:4123603620";
-}, 1000);
-});
-// ==========================================
-// ZIP ROUTING LOGIC
-// ==========================================
-const zipInput = document.getElementById('zip-input');
-const coordsText = document.getElementById('coords-text');
-zipInput.addEventListener('input', function(e) {
-const val = e.target.value.replace(/\D/g, '').slice(0, 5);
-e.target.value = val;
-if (val.length === 5) {
-coordsText.textContent = '40.4444° N, 79.9600° W';
-coordsText.style.color = '#10b981';
-document.getElementById('status-pill').textContent = 'Locked: ' + val;
-speakGreeting("Target locked. ZIP " + val.split('').join(' ') + ". Routing to Pittsburgh VA.");
-} else {
-coordsText.textContent = 'STANDBY // NO FIX';
-coordsText.style.color = '#64748b';
-document.getElementById('status-pill').textContent = 'Live Auto-Lookup';
-}
-});
-// Demo script click
-document.getElementById('demo-card').addEventListener('click', function() {
-speakGreeting("Veterans Beneficiary Travel coordination active. Dial 4 1 2, 3 6 0, 3 6 2 0 and press 1.");
-});
-// Handle voice list population
-if ('speechSynthesis' in window) {
-window.speechSynthesis.onvoiceschanged = () => {
-window.speechSynthesis.getVoices();
-};
-}
-</script>
+  <div class="app-container">
+
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="brand-title">
+        <i data-lucide="crosshair" class="brand-logo-icon"></i>
+        <div class="brand-text">
+          <h1>In Cadence</h1>
+          <span>FORWARD MARCH TRANSIT // ALL-VISN</span>
+        </div>
+      </div>
+      <div class="header-pills">
+        <button id="audio-toggle-btn" class="pill-btn">
+          <i data-lucide="volume-2" style="width:13px;height:13px;"></i> Audio
+        </button>
+        <div class="pill-btn" style="color:#94a3b8; border-color:#334155;">
+          Zero-Pill
+        </div>
+      </div>
+    </header>
+
+    <!-- Search Input -->
+    <section class="search-card">
+      <div class="search-header">
+        <span class="search-label">ENTER YOUR ZIP CODE BELOW</span>
+        <span class="search-sub" id="status-pill">Live Auto-Lookup</span>
+      </div>
+      <div class="input-wrapper">
+        <input 
+          type="text" 
+          id="zip-input" 
+          class="zip-input" 
+          placeholder="5-digit ZIP..." 
+          maxlength="5" 
+          inputmode="numeric" 
+          pattern="[0-9]*"
+        />
+        <button id="gps-btn" class="gps-btn">
+          <i data-lucide="navigation" style="width:14px;height:14px;"></i> GPS
+        </button>
+      </div>
+    </section>
+
+    <!-- Target Location View -->
+    <section class="map-card">
+      <div class="map-header">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <i data-lucide="target" style="width:14px;height:14px;color:var(--accent-teal);"></i>
+          <span>TARGET LOCATION VIEW</span>
+        </div>
+        <span style="color:#64748b;font-size:9px;" id="coords-text">STANDBY // NO FIX</span>
+      </div>
+
+      <div class="map-canvas-container">
+        <div id="map"></div>
+        <div class="call-transit-overlay">
+          <button id="call-transit-overlay-btn" class="call-transit-btn">
+            <i data-lucide="phone" style="width:14px;height:14px;"></i> CALL TRANSIT HUB
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hub Card -->
+    <section class="hub-card">
+      <div class="hub-header">
+        <span class="hub-badge" id="hub-region-tag">SW PENNSYLVANIA HUB</span>
+        <span class="visn-badge" id="visn-tag">VISN 4</span>
+      </div>
+      <h2 class="hub-name" id="hub-name">VA Pittsburgh Healthcare System</h2>
+      <p class="hub-sub" id="hub-address">University Drive & H.J. Heinz Divisions</p>
+
+      <div class="dialer-box">
+        <div>
+          <div class="dialer-label">Direct Travel Coordinator</div>
+          <div class="dialer-number" id="dialer-num">412-360-3620 <span class="dialer-press">(Press 1)</span></div>
+        </div>
+        <a id="direct-dial-link" href="tel:4123603620" class="dial-btn">
+          <i data-lucide="phone-call" style="width:14px;height:14px;"></i> DIAL
+        </a>
+      </div>
+    </section>
+
+    <!-- Fallback & Demo -->
+    <div class="bottom-grid">
+      <div class="mini-card">
+        <span class="mini-title">National Fallback</span>
+        <a href="tel:8555747292" style="text-decoration:none;color:#fff;" class="mini-value">855-574-7292</a>
+      </div>
+      <div class="mini-card" id="demo-card" style="cursor:pointer;">
+        <span class="mini-title">Call Script</span>
+        <span class="mini-value" style="color:var(--accent-teal);">Live Call Demo</span>
+      </div>
+    </div>
+
+    <!-- Developer Footer -->
+    <footer class="footer-cred">
+      DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH<br/>
+      aceface21-bit.github.io
+    </footer>
+
+  </div>
+
+  <script>
+    // Init Icons
+    lucide.createIcons();
+
+    // ==========================================
+    // LEAFLET OPENSTREETMAP (ALWAYS LOADS RELIABLY)
+    // ==========================================
+    let map = L.map('map', {
+      zoomControl: false,
+      attributionControl: false
+    }).setView([40.4444, -79.9600], 11);
+
+    // CartoDB Dark Matter tiles (free, reliable dark theme, no token needed)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      subdomains: 'abcd'
+    }).addTo(map);
+
+    // Custom Glowing Green Marker
+    const radarIcon = L.divIcon({
+      className: 'radar-marker',
+      html: '<div style="width:16px;height:16px;background:#10b981;border:2px solid #fff;border-radius:50%;box-shadow:0 0 10px #10b981;"></div>',
+      iconSize: [16, 16],
+      iconAnchor: [8, 8]
+    });
+
+    let currentMarker = L.marker([40.4444, -79.9600], { icon: radarIcon }).addTo(map);
+
+    // Invalidate map size after load to prevent grey/blank tiles
+    setTimeout(() => { map.invalidateSize(); }, 300);
+
+    // ==========================================
+    // VISN ROUTING DATABASE
+    // ==========================================
+    const DEFAULT_HUB = {
+      region: "SW PENNSYLVANIA HUB",
+      visn: "VISN 4",
+      facility: "VA Pittsburgh Healthcare System",
+      sub: "University Drive & H.J. Heinz Divisions",
+      phone: "412-360-3620",
+      phoneRaw: "4123603620",
+      press: "(Press 1)",
+      coords: [40.4444, -79.9600],
+      coordText: "40.4444° N, 79.9600° W",
+      speechName: "Pittsburgh VA"
+    };
+
+    const VISN_PREFIX_MAP = {
+      // 900-935: Greater Los Angeles / Southern CA (VISN 22)
+      "900": { region: "GREATER LOS ANGELES HUB", visn: "VISN 22", facility: "VA Greater Los Angeles Healthcare System", sub: "West LA Medical Center // Wilshire Blvd", phone: "310-478-3711", phoneRaw: "3104783711", press: "(Ext. 41250)", coords: [34.0537, -118.4552], coordText: "34.0537° N, 118.4552° W", speechName: "Greater Los Angeles VA" },
+      "902": { region: "GREATER LOS ANGELES HUB", visn: "VISN 22", facility: "VA Greater Los Angeles Healthcare System", sub: "West LA Medical Center // Wilshire Blvd", phone: "310-478-3711", phoneRaw: "3104783711", press: "(Ext. 41250)", coords: [34.0537, -118.4552], coordText: "34.0537° N, 118.4552° W", speechName: "Greater Los Angeles VA" },
+      "904": { region: "GREATER LOS ANGELES HUB", visn: "VISN 22", facility: "VA Greater Los Angeles Healthcare System", sub: "West LA Medical Center // Wilshire Blvd", phone: "310-478-3711", phoneRaw: "3104783711", press: "(Ext. 41250)", coords: [34.0537, -118.4552], coordText: "34.0537° N, 118.4552° W", speechName: "Greater Los Angeles VA" },
+      "913": { region: "SEPULVEDA / LA HUB", visn: "VISN 22", facility: "Sepulveda VA Ambulatory Care Center", sub: "San Fernando Valley Division", phone: "818-891-7711", phoneRaw: "8188917711", press: "(Press 2)", coords: [34.2415, -118.4687], coordText: "34.2415° N, 118.4687° W", speechName: "Sepulveda VA" },
+      "921": { region: "SAN DIEGO HUB", visn: "VISN 22", facility: "VA San Diego Healthcare System", sub: "Jennifer Moreno VA Medical Center", phone: "858-552-8585", phoneRaw: "8585528585", press: "(Ext. 7050)", coords: [32.8752, -117.2343], coordText: "32.8752° N, 117.2343° W", speechName: "San Diego VA" },
+      "941": { region: "SAN FRANCISCO HUB", visn: "VISN 21", facility: "San Francisco VA Medical Center", sub: "4150 Clement St Division", phone: "415-221-4810", phoneRaw: "4152214810", press: "(Ext. 22800)", coords: [37.7824, -122.5050], coordText: "37.7824° N, 122.5050° W", speechName: "San Francisco VA" },
+
+      // PA (VISN 4)
+      "150": DEFAULT_HUB,
+      "151": DEFAULT_HUB,
+      "152": DEFAULT_HUB,
+      "153": DEFAULT_HUB,
+      "154": DEFAULT_HUB,
+      "156": DEFAULT_HUB,
+      "165": { region: "NW PENNSYLVANIA HUB", visn: "VISN 4", facility: "Erie VA Medical Center", sub: "38th Street Boulevard", phone: "814-868-8661", phoneRaw: "8148688661", press: "(Press 1)", coords: [42.0967, -80.0558], coordText: "42.0967° N, 80.0558° W", speechName: "Erie VA" },
+      "166": { region: "CENTRAL PENNSYLVANIA HUB", visn: "VISN 4", facility: "James E. Van Zandt VA Medical Center", sub: "Altoona Division", phone: "814-943-8164", phoneRaw: "8149438164", press: "(Ext. 7100)", coords: [40.5054, -78.3976], coordText: "40.5054° N, 78.3976° W", speechName: "Altoona VA" },
+      "191": { region: "SE PENNSYLVANIA HUB", visn: "VISN 4", facility: "Corporal Michael J. Crescenz VA Medical Center", sub: "Philadelphia Division", phone: "215-823-5800", phoneRaw: "2158235800", press: "(Press 1)", coords: [39.9482, -75.1979], coordText: "39.9482° N, 75.1979° W", speechName: "Philadelphia VA" }
+    };
+
+    function getHubForZip(zip) {
+      const p3 = zip.slice(0, 3);
+      if (VISN_PREFIX_MAP[p3]) {
+        return VISN_PREFIX_MAP[p3];
+      }
+      // National Fallback Default
+      return {
+        region: "NATIONAL VETERAN DISPATCH",
+        visn: "VISN ROUTING FALLBACK",
+        facility: "VA Beneficiary Travel Dispatch",
+        sub: "National Routing & Toll-Free Coordination",
+        phone: "855-574-7292",
+        phoneRaw: "8555747292",
+        press: "(Toll Free)",
+        coords: [38.8951, -77.0364],
+        coordText: "38.8951° N, 77.0364° W",
+        speechName: "National VA Travel line"
+      };
+    }
+
+    let activeHub = DEFAULT_HUB;
+
+    function applyHub(hub, zip) {
+      activeHub = hub;
+      document.getElementById('hub-region-tag').textContent = hub.region;
+      document.getElementById('visn-tag').textContent = hub.visn;
+      document.getElementById('hub-name').textContent = hub.facility;
+      document.getElementById('hub-address').textContent = hub.sub;
+      document.getElementById('dialer-num').innerHTML = `${hub.phone} <span class="dialer-press">${hub.press}</span>`;
+      document.getElementById('direct-dial-link').href = `tel:${hub.phoneRaw}`;
+      document.getElementById('coords-text').textContent = hub.coordText;
+      document.getElementById('coords-text').style.color = '#10b981';
+
+      // Pan Map & Update Marker
+      map.setView(hub.coords, 11);
+      currentMarker.setLatLng(hub.coords);
+      setTimeout(() => { map.invalidateSize(); }, 150);
+
+      // Voice routing confirmation
+      speakGreeting(`Target locked. ZIP ${zip.split('').join(' ')}. Routing to ${hub.speechName}.`);
+    }
+
+    // ==========================================
+    // AUDIO ENGINE (ROBUST WEB AUDIO + SPEECH)
+    // ==========================================
+    let synthUnlocked = false;
+
+    function playChime(freq = 587.33, duration = 0.15) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (err) {}
+    }
+
+    function speakGreeting(customPhrase) {
+      playChime(659.25, 0.2);
+
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+
+      const phrase = customPhrase || 
+        "Welcome to Forward March Transit, powered by In Cadence. Developed by Terence Watkins.";
+
+      const utterance = new SpeechSynthesisUtterance(phrase);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        const preferred = voices.find(v => (v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Female')) && v.lang.startsWith('en'));
+        if (preferred) utterance.voice = preferred;
+      }
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function unlockAudioEngine() {
+      if (synthUnlocked) return;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const silent = new SpeechSynthesisUtterance('');
+        silent.volume = 0.01;
+        window.speechSynthesis.speak(silent);
+        synthUnlocked = true;
+      }
+      playChime(440, 0.05);
+      document.removeEventListener('touchstart', unlockAudioEngine);
+      document.removeEventListener('pointerdown', unlockAudioEngine);
+    }
+
+    document.addEventListener('touchstart', unlockAudioEngine, { once: true });
+    document.addEventListener('pointerdown', unlockAudioEngine, { once: true });
+
+    document.getElementById('audio-toggle-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      speakGreeting();
+    });
+
+    document.getElementById('call-transit-overlay-btn').addEventListener('click', function() {
+      speakGreeting(`Connecting to ${activeHub.facility} Beneficiary Travel desk.`);
+      setTimeout(() => {
+        window.location.href = `tel:${activeHub.phoneRaw}`;
+      }, 950);
+    });
+
+    // ==========================================
+    // DYNAMIC ZIP LOOKUP
+    // ==========================================
+    const zipInput = document.getElementById('zip-input');
+
+    zipInput.addEventListener('input', function(e) {
+      const val = e.target.value.replace(/\D/g, '').slice(0, 5);
+      e.target.value = val;
+
+      if (val.length === 5) {
+        document.getElementById('status-pill').textContent = 'Locked: ' + val;
+        const matchedHub = getHubForZip(val);
+        applyHub(matchedHub, val);
+      } else {
+        document.getElementById('status-pill').textContent = 'Live Auto-Lookup';
+        document.getElementById('coords-text').textContent = 'STANDBY // NO FIX';
+        document.getElementById('coords-text').style.color = '#64748b';
+      }
+    });
+
+    // GPS Auto-detect
+    document.getElementById('gps-btn').addEventListener('click', function() {
+      if (!navigator.geolocation) return;
+      document.getElementById('status-pill').textContent = 'Acquiring GPS...';
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        map.setView([lat, lng], 12);
+        currentMarker.setLatLng([lat, lng]);
+        document.getElementById('coords-text').textContent = `${lat.toFixed(4)}° N, ${Math.abs(lng).toFixed(4)}° W`;
+        document.getElementById('coords-text').style.color = '#10b981';
+        document.getElementById('status-pill').textContent = 'GPS Locked';
+        speakGreeting("Position locked via GPS coordinates.");
+      }, () => {
+        document.getElementById('status-pill').textContent = 'GPS Unavailable';
+      });
+    });
+
+    // Call demo card
+    document.getElementById('demo-card').addEventListener('click', function() {
+      speakGreeting(`Veterans Beneficiary Travel desk active. Dial ${activeHub.phone.split('').join(' ')}.`);
+    });
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
+    }
+  </script>
 </body>
 </html>
