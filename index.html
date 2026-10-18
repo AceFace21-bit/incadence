@@ -43,7 +43,17 @@
       pointer-events: none;
     }
 
-    /* Call Button Blinking Animation */
+    /* Tactile Big Button Styles */
+    .tactile-btn {
+      min-height: 48px;
+      touch-action: manipulation;
+      transition: transform 0.08s ease, background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .tactile-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Call Button Pulse Animation */
     @keyframes callBtnPulse {
       0%, 100% {
         transform: scale(1);
@@ -51,24 +61,20 @@
         filter: brightness(1);
       }
       50% {
-        transform: scale(1.06);
-        box-shadow: 0 0 18px 4px rgba(52, 211, 153, 0.9);
-        filter: brightness(1.25);
+        transform: scale(1.05);
+        box-shadow: 0 0 20px 4px rgba(52, 211, 153, 0.85);
+        filter: brightness(1.2);
       }
     }
 
     .call-btn-blinking {
-      animation: callBtnPulse 0.8s ease-in-out infinite;
+      animation: callBtnPulse 0.9s ease-in-out infinite;
     }
 
-    /* Red, White, & Blue Wave Animation */
+    /* High-Visibility Gradient Header */
     @keyframes patriotWave {
-      0% {
-        background-position: 0% center;
-      }
-      100% {
-        background-position: 200% center;
-      }
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
     }
 
     .patriot-wave-text {
@@ -76,7 +82,7 @@
         90deg, 
         #ef4444 0%, 
         #f8fafc 25%, 
-        #3b82f6 50%, 
+        #38bdf8 50%, 
         #ef4444 75%, 
         #f8fafc 100%
       );
@@ -88,59 +94,59 @@
       display: inline-block;
     }
 
-    /* Custom thin scrollbar for modal */
+    /* Modal Scrollbars */
     .modal-scroll::-webkit-scrollbar {
-      width: 4px;
+      width: 5px;
     }
     .modal-scroll::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, 0.8);
     }
     .modal-scroll::-webkit-scrollbar-thumb {
       background: #334155;
-      border-radius: 2px;
+      border-radius: 3px;
     }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 h-[100dvh] w-screen overflow-hidden flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-slate-950 select-none">
 
   <!-- Veterans Crisis Line Mandatory Header -->
-  <aside class="bg-red-950/80 border-b border-red-800/60 px-3 py-1 text-center shrink-0 z-50">
-    <div class="max-w-md mx-auto flex items-center justify-between text-[9px] font-mono-code text-red-200">
-      <div class="flex items-center space-x-1.5 truncate">
-        <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping"></span>
-        <span class="font-bold tracking-wider uppercase text-red-100">Crisis Support:</span>
-        <span class="truncate">Dial 988, then Press 1</span>
+  <aside class="bg-red-950/90 border-b border-red-800/80 px-3 py-1.5 text-center shrink-0 z-50">
+    <div class="max-w-md mx-auto flex items-center justify-between text-[11px] font-mono-code text-red-200">
+      <div class="flex items-center space-x-2 truncate">
+        <span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span>
+        <span class="font-bold tracking-wider uppercase text-red-100">Crisis Hotline:</span>
+        <span class="truncate">Dial 988, Press 1</span>
       </div>
-      <a href="tel:988,1" class="text-red-300 hover:text-white font-bold underline shrink-0 ml-2" aria-label="Call Veterans Crisis Line 988 Press 1">
+      <a href="tel:988,1" class="text-white bg-red-800/80 hover:bg-red-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider shrink-0 ml-2 border border-red-600" aria-label="Call Veterans Crisis Line 988 Press 1">
         Call 988 &bull; 1
       </a>
     </div>
   </aside>
 
   <!-- Header -->
-  <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur px-3 py-2 shrink-0 z-50">
-    <div class="max-w-md mx-auto relative flex items-center justify-center">
+  <header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-2 shrink-0 z-50">
+    <div class="max-w-md mx-auto relative flex items-center justify-between">
       <!-- Centered Forward March Transit Branding -->
-      <div class="flex flex-col items-center justify-center text-center">
-        <div class="flex items-center justify-center space-x-1.5">
-          <div class="w-5 h-5 rounded bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-            <i data-lucide="shield-check" class="w-3 h-3"></i>
-          </div>
-          <span class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none">Forward March Transit</span>
+      <div class="flex items-center space-x-2">
+        <div class="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
         </div>
-        <span class="text-[8px] text-emerald-400 font-mono-code tracking-wide block mt-0.5">IN CADENCE // ALL-VISN</span>
+        <div class="text-left">
+          <div class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none">Forward March Transit</div>
+          <span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-0.5">IN CADENCE // VA PITTSBURGH DIVISION</span>
+        </div>
       </div>
 
-      <!-- Zero-PII Badge Anchored to Right (Clickable Compliance Disclosure) -->
+      <!-- Zero-PII Badge -->
       <button 
         id="openZeroPiiBtn" 
         type="button" 
         title="View Security & Zero-PII Compliance Architecture"
         aria-label="View Zero PII security disclosure"
-        class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[8px] font-medium text-slate-300 transition"
+        class="flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 text-[10px] font-medium text-slate-300 transition shrink-0"
       >
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>Zero-PII</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-mono-code font-bold">Zero-PII</span>
       </button>
     </div>
   </header>
@@ -148,40 +154,41 @@
   <!-- Main Viewport Dashboard -->
   <main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0">
 
-    <!-- Bold & Centered Voice Instructions Button -->
-    <div class="w-full flex justify-center shrink-0">
+    <!-- Big Button Voice Instructions Companion -->
+    <div class="w-full shrink-0">
       <button 
         id="audioGreetingBtn" 
         type="button" 
-        title="Need help? Click for instructions"
-        class="w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 active:bg-emerald-500/30 border border-emerald-500/40 text-emerald-400 font-bold text-xs uppercase tracking-wider text-center transition shadow-sm"
+        title="Need help? Click for spoken instructions"
+        class="tactile-btn w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 active:bg-emerald-500/35 border-2 border-emerald-500/50 text-emerald-300 font-bold text-xs uppercase tracking-wider text-center transition shadow-md"
       >
-        <i data-lucide="volume-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-        <span id="audioGreetingLabel" class="font-bold text-center">Need help? Click for instructions</span>
+        <i data-lucide="volume-2" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+        <span id="audioGreetingLabel" class="font-bold text-xs">Tap for Spoken Instructions</span>
       </button>
     </div>
 
     <!-- VA Travel Eligibility Notice Banner -->
-    <div class="px-2.5 py-1.5 rounded-lg bg-emerald-950/30 border border-emerald-500/30 flex items-center justify-between text-[9px] shrink-0">
+    <div class="px-2.5 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between text-[10px] shrink-0">
       <div class="flex items-center space-x-1.5 truncate">
-        <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
-        <span class="text-slate-300 font-medium truncate">
-          <strong class="text-emerald-400 font-bold uppercase tracking-wider">Eligibility:</strong> 30%+ Service-Connected or VA Travel Authorized
+        <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+        <span class="text-slate-200 font-medium truncate">
+          <strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
         </span>
       </div>
-      <span class="text-[8px] font-mono-code text-slate-400 uppercase tracking-wider shrink-0 ml-1">VHA Direct</span>
+      <span class="text-[9px] font-mono-code text-slate-400 uppercase tracking-wider shrink-0 ml-1">VHA Direct</span>
     </div>
 
-    <!-- Compact ZIP & Geolocation Input Row -->
-    <section class="bg-slate-900/90 border border-slate-800 rounded-lg p-2 shrink-0 shadow-sm">
-      <div class="flex items-center justify-between mb-1">
-        <label for="zipInput" class="block text-[10px] font-bold uppercase tracking-wider patriot-wave-text">
-          Enter your zip code below
+    <!-- Input Section with Big Voice-First Mic & GPS Controls -->
+    <section class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md">
+      <div class="flex items-center justify-between mb-1.5">
+        <label for="zipInput" class="block text-[11px] font-bold uppercase tracking-wider patriot-wave-text">
+          Enter 5-Digit ZIP Code or Speak Aloud
         </label>
-        <span id="matchStatus" class="text-[9px] font-mono-code text-slate-500">Live Auto-Lookup</span>
+        <span id="matchStatus" class="text-[10px] font-mono-code text-slate-400">Live Auto-Lookup</span>
       </div>
 
-      <div class="flex space-x-1.5">
+      <div class="flex items-center space-x-1.5">
+        <!-- Text / Number Pad Input Box -->
         <div class="relative flex-1">
           <input 
             type="text" 
@@ -190,35 +197,51 @@
             inputmode="numeric" 
             maxlength="5" 
             placeholder="5-digit ZIP..."
-            class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 rounded-md pl-2.5 pr-8 py-1.5 text-xs text-slate-100 placeholder-slate-500 font-mono-code transition outline-none"
+            class="tactile-btn w-full bg-slate-950 border-2 border-slate-700 focus:border-emerald-400 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-100 placeholder-slate-500 font-mono-code font-bold transition outline-none"
           >
           <button 
             type="button" 
             id="clearZipBtn" 
-            class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 active:text-white p-0.5"
+            aria-label="Clear ZIP code input"
+            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
           >
-            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            <i data-lucide="x" class="w-4 h-4"></i>
           </button>
         </div>
+
+        <!-- Always-Visible Voice Input Microphone Button -->
+        <button 
+          id="voiceZipBtn"
+          type="button"
+          title="Speak your ZIP code aloud"
+          aria-label="Speak your 5-digit ZIP code aloud"
+          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/50 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0 min-w-[54px]"
+        >
+          <i id="micIcon" data-lucide="mic" class="w-4 h-4 text-emerald-400"></i>
+          <span id="voiceZipLabel" class="font-mono-code font-bold text-[11px]">MIC</span>
+        </button>
+
+        <!-- Current Location GPS Button -->
         <button 
           id="geoBtn"
+          type="button"
           title="Detect Current Location"
-          class="bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold px-2.5 py-1.5 rounded-md text-[10px] uppercase tracking-wider flex items-center space-x-1 transition shrink-0"
+          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
         >
-          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span id="geoBtnLabel">GPS</span>
+          <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
+          <span id="geoBtnLabel" class="font-mono-code font-bold text-[11px]">GPS</span>
         </button>
       </div>
 
-      <div id="statusAlert" class="hidden text-[10px] py-1 px-2 mt-1 rounded bg-amber-500/10 border border-amber-500/20 text-amber-300"></div>
+      <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
     </section>
 
     <!-- Tactical Target Map -->
-    <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative flex-1 min-h-[140px] max-h-[220px] shadow-sm flex flex-col">
-      <div class="px-2.5 py-1 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/70 shrink-0">
+    <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative flex-1 min-h-[140px] max-h-[220px] shadow-md flex flex-col">
+      <div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/80 shrink-0">
         <div class="flex items-center space-x-1.5">
-          <i data-lucide="radar" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-300">Target Location View</span>
+          <i data-lucide="radar" class="w-4 h-4 text-emerald-400"></i>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-200">Pittsburgh Division Radar View</span>
         </div>
         <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">STANDBY // NO FIX</span>
       </div>
@@ -231,238 +254,216 @@
           <div class="w-16 h-16 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
         </div>
 
-        <!-- Primary Call Button Anchored to Bottom Right -->
+        <!-- Big Primary Call Button Anchored to Map -->
         <div class="absolute bottom-2 right-2 pointer-events-none z-10">
           <a 
             id="centerCallBtn" 
             href="tel:4123603620,1" 
-            class="plausible-event-name=Dialer+Click pointer-events-auto shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-md font-extrabold uppercase tracking-wider flex items-center space-x-1.5 transition transform active:scale-95 border border-emerald-300/60"
+            class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-2 border-2 border-emerald-200"
           >
-            <i data-lucide="phone-call" class="w-3.5 h-3.5 fill-slate-950"></i>
-            <span id="centerCallText" class="text-[10px] font-mono-code tracking-wide">CALL TRANSIT HUB</span>
+            <i data-lucide="phone-call" class="w-4 h-4 fill-slate-950"></i>
+            <span id="centerCallText" class="text-xs font-mono-code tracking-wide">CALL TRANSIT HUB</span>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- Facility Result Micro-Card (Single Neat Line Layout) -->
-    <section id="resultCard" class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 shrink-0 shadow-sm flex items-center justify-between gap-2">
-      <!-- Left Side: Facility Name & Catchment Badges -->
+    <!-- Facility Result Micro-Card with Dedicated Read Aloud Speaker -->
+    <section id="resultCard" class="bg-slate-900 border-2 border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md flex items-center justify-between gap-2">
+      <!-- Left Side: Hub Details -->
       <div class="min-w-0 flex-1">
         <div class="flex items-center space-x-1.5 mb-0.5">
-          <span id="visnBadge" class="text-[9px] font-mono-code text-slate-400 shrink-0">VISN 4</span>
-          <span class="text-slate-600 text-[8px]">•</span>
-          <span id="hubBadge" class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-emerald-400 truncate">
+          <span id="visnBadge" class="text-[10px] font-mono-code text-slate-400 shrink-0 font-bold">VISN 4</span>
+          <span class="text-slate-600 text-[10px]">•</span>
+          <span id="hubBadge" class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-emerald-400 truncate">
             SW Pennsylvania Hub
           </span>
         </div>
-        <h2 id="facilityName" class="text-xs font-bold text-slate-100 leading-tight truncate">
+        <h2 id="facilityName" class="text-xs font-extrabold text-slate-100 leading-snug truncate">
           VA Pittsburgh Healthcare System
         </h2>
-        <p id="facilityAddress" class="text-[9px] text-slate-400 truncate hidden">
+        <p id="facilityAddress" class="text-[10px] text-slate-400 truncate">
           University Drive & H.J. Heinz Divisions
         </p>
       </div>
 
-      <!-- Right Side: Direct Travel Coordinator Number -->
-      <div class="text-right shrink-0 pl-2 border-l border-slate-800/80">
-        <div class="text-[8px] uppercase font-mono-code tracking-wider text-slate-400">Travel Coordinator</div>
+      <!-- Center Audio Read-Aloud Button -->
+      <button 
+        id="readFacilityBtn" 
+        type="button" 
+        title="Read facility details aloud" 
+        aria-label="Read facility name and phone number aloud"
+        class="tactile-btn p-2 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-slate-700 text-emerald-400 shrink-0 flex items-center justify-center"
+      >
+        <i data-lucide="volume-2" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Right Side: Contact Extension -->
+      <div class="text-right shrink-0 pl-2 border-l border-slate-800">
+        <div class="text-[9px] uppercase font-mono-code tracking-wider text-slate-400 font-bold">Travel Desk</div>
         <div id="facilityPhone" class="text-xs font-bold text-emerald-400 font-mono-code whitespace-nowrap">
           412-360-3620 (Press 1)
         </div>
       </div>
     </section>
 
-    <!-- Streamlined Secondary Actions & Modal Trigger -->
-    <div class="grid grid-cols-2 gap-1.5 shrink-0">
-      <!-- Nationwide Dispatch Dial -->
+    <!-- Linear Secondary Actions -->
+    <div class="grid grid-cols-2 gap-2 shrink-0">
+      <!-- Direct Bypass Fallback Link -->
       <a 
-        id="fallbackCallBtn"
+        id="fallbackCallBtn" 
         href="tel:8555747292" 
-        class="plausible-event-name=Dialer+Click bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition"
+        class="plausible-event-name=Dialer+Click tactile-btn bg-slate-900 border-2 border-slate-800 hover:border-emerald-500/50 p-2.5 rounded-lg flex items-center justify-between transition"
       >
         <div class="truncate">
-          <div class="text-[9px] font-bold uppercase text-slate-200">National Fallback</div>
-          <div class="text-[9px] font-mono-code text-emerald-400">855-574-7292</div>
+          <div class="text-[10px] font-extrabold uppercase text-slate-200">National Dispatch</div>
+          <div class="text-[10px] font-mono-code text-emerald-400 font-bold">855-574-7292</div>
         </div>
-        <i data-lucide="phone-forwarded" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1"></i>
+        <i data-lucide="phone-forwarded" class="w-4 h-4 text-emerald-400 shrink-0 ml-1"></i>
       </a>
 
-      <!-- Call Script Trigger Button (Tagged for Goal 3) -->
+      <!-- Call Script Modal Trigger -->
       <button 
         id="openScriptBtn" 
         type="button" 
-        class="plausible-event-name=Call+Script+Opened bg-slate-900 border border-slate-800 hover:border-emerald-500/40 p-2 rounded-lg flex items-center justify-between transition text-left"
+        class="plausible-event-name=Call+Script+Opened tactile-btn bg-slate-900 border-2 border-slate-800 hover:border-emerald-500/50 p-2.5 rounded-lg flex items-center justify-between transition text-left"
       >
         <div>
-          <div class="text-[9px] font-bold uppercase text-slate-200">Call Script</div>
-          <div class="text-[9px] text-slate-400 font-mono-code">Live Call Demo</div>
+          <div class="text-[10px] font-extrabold uppercase text-slate-200">Call Script</div>
+          <div class="text-[10px] text-slate-400 font-mono-code">Step-By-Step Dialogue</div>
         </div>
-        <i data-lucide="phone-call" class="w-3.5 h-3.5 text-emerald-400 shrink-0 ml-1"></i>
+        <i data-lucide="phone-call" class="w-4 h-4 text-emerald-400 shrink-0 ml-1"></i>
       </button>
     </div>
 
   </main>
 
   <!-- Footer & Federal Compliance Disclaimers -->
-  <footer class="border-t border-slate-800/80 py-1.5 text-center text-slate-500 text-[7.5px] font-mono-code px-2 shrink-0 space-y-0.5">
-    <div class="text-slate-400 font-semibold tracking-wide truncate">
-      DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
+  <footer class="border-t border-slate-800/90 py-1.5 text-center text-slate-500 text-[8px] font-mono-code px-2 shrink-0 space-y-0.5">
+    <div class="text-slate-400 font-bold tracking-wide truncate">
+      DESIGNED &amp; DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
     </div>
-    <div class="text-slate-500 text-[7px] leading-tight max-w-sm mx-auto">
-      Independent veteran access platform. Not an official VA agency portal. For medical emergencies, call 911. Beneficiary travel subject to 38 CFR Part 70.
+    <div class="text-slate-500 text-[7.5px] leading-tight max-w-sm mx-auto">
+      Independent veteran access platform. Not an official VA agency portal. Beneficiary travel subject to 38 CFR Part 70.
     </div>
   </footer>
 
-  <!-- Call Script Modal Overlay (Updated Call Simulation Dialogue) -->
-  <div id="scriptModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm p-3 flex items-center justify-center">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-3.5 flex flex-col max-h-[90dvh] shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2 shrink-0">
+  <!-- Step-by-Step Call Dialogue Modal -->
+  <div id="scriptModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-3.5 flex flex-col max-h-[90dvh] shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 shrink-0">
         <div class="flex items-center space-x-2">
-          <i data-lucide="phone-outgoing" class="w-4 h-4 text-emerald-400"></i>
+          <i data-lucide="phone-outgoing" class="w-5 h-5 text-emerald-400"></i>
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-100 block leading-tight">Live Call & Text Demo</span>
-            <span class="text-[8px] text-slate-400 font-mono-code block">VA Travel & Veteran // Standard Booking Script</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-100 block leading-tight">Travel Coordinator Script</span>
+            <span class="text-[9px] text-slate-400 font-mono-code block">Standard 48-Hour Booking Protocol</span>
           </div>
         </div>
-        <button id="closeScriptBtn" class="text-slate-400 hover:text-slate-100 p-1">
-          <i data-lucide="x" class="w-4 h-4"></i>
+        <button id="closeScriptBtn" class="text-slate-400 hover:text-slate-100 p-1.5" aria-label="Close Call Script">
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
       <!-- Dialogue Body -->
-      <div class="space-y-2 overflow-y-auto pr-1 my-2 text-[11px] modal-scroll">
+      <div class="space-y-2 overflow-y-auto pr-1 my-2 text-[12px] modal-scroll">
         
-        <!-- Turn 1: VA Travel -->
-        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
+        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
           "VA Travel, how may I help you?"
         </div>
 
-        <!-- Turn 2: Veteran -->
-        <div class="p-2 rounded bg-blue-950/20 border-l-2 border-blue-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Veteran:</span>
+        <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">You Say:</span>
           "Hi, I have an upcoming doctor appointment at the VA clinic next Tuesday at 9:00 AM, and I need to schedule a ride."
         </div>
 
-        <!-- Turn 3: VA Travel -->
-        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
+        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
           "Sure, can I get your full name and your last four or your birth date?"
         </div>
 
-        <!-- Turn 4: Veteran -->
-        <div class="p-2 rounded bg-blue-950/20 border-l-2 border-blue-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Veteran:</span>
-          "My last four is 1-2-3-4 and my date of birth is 3rd December 1982."
+        <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">You Say:</span>
+          "My last four is [Your 4 Digits] and my date of birth is [Your Birthdate]."
         </div>
 
-        <!-- Turn 5: VA Travel -->
-        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
-          "Got you right here. Pickup is at your home of record address at 1234 VA Drive Lane, Anytown, Any State, 00000. Is that address correct?"
+        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
+          "Got you right here. Pickup is at your home of record address. You called with plenty of time—always call at least 48 hours in advance."
         </div>
 
-        <!-- Turn 6: Veteran -->
-        <div class="p-2 rounded bg-blue-950/20 border-l-2 border-blue-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Veteran:</span>
-          "Yes, that's correct."
+        <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">You Say:</span>
+          "Understood. How does the text pickup work on the day of my appointment?"
         </div>
 
-        <!-- Turn 7: VA Travel -->
-        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
-          "Perfect. You called with plenty of time—just remember, you always need to call at least 48 hours before your appointment time, because rides cannot be booked the morning of. You are all set for a round trip."
-        </div>
-
-        <!-- Turn 8: Veteran -->
-        <div class="p-2 rounded bg-blue-950/20 border-l-2 border-blue-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Veteran:</span>
-          "Understood, 48 hours in advance. How does the pickup work on Tuesday?"
-        </div>
-
-        <!-- Turn 9: VA Travel -->
-        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
-          "You'll receive an automated text either the evening before or right after midnight. You don't have to type anything into the Uber app—just reply '1' whenever you are ready for pickup going to your appointment, and reply '2' when your visit is finished to head back home."
-        </div>
-
-        <!-- Turn 10: Veteran -->
-        <div class="p-2 rounded bg-blue-950/20 border-l-2 border-blue-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">Veteran:</span>
-          "That makes it completely painless. Thank you so much!"
-        </div>
-
-        <!-- Turn 11: VA Travel -->
-        <div class="p-2 rounded bg-pink-950/20 border-l-2 border-pink-500 text-slate-200">
-          <span class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
-          "You're all set! Have a wonderful day!"
+        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
+          "You'll receive an automated text. Reply '1' when you are ready to be picked up to go to your clinic, and reply '2' when your appointment is done to head home."
         </div>
 
       </div>
 
-      <button id="modalDismissBtn" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider mt-1 border border-slate-700">
+      <button id="modalDismissBtn" class="tactile-btn w-full shrink-0 bg-slate-800 hover:bg-slate-700 text-slate-200 py-2 rounded-lg text-xs font-bold uppercase tracking-wider border border-slate-700">
         Close Script
       </button>
     </div>
   </div>
 
-  <!-- Instructions & Eligibility Modal Overlay -->
-  <div id="instructionsModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm p-3 flex items-center justify-center">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3">
+  <!-- Instructions & Eligibility Modal -->
+  <div id="instructionsModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3">
       <div class="flex items-center justify-between border-b border-slate-800 pb-2">
         <div class="flex items-center space-x-2">
-          <i data-lucide="info" class="w-4 h-4 text-emerald-400"></i>
+          <i data-lucide="info" class="w-5 h-5 text-emerald-400"></i>
           <div>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-100">Ride Instructions & Eligibility</h3>
-            <span class="text-[8px] text-emerald-400 font-mono-code block">Standard Operating Procedure</span>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-100">Ride Instructions &amp; Eligibility</h3>
+            <span class="text-[9px] text-emerald-400 font-mono-code block">Standard Operating Procedure</span>
           </div>
         </div>
         <button id="closeInstructionsBtn" class="text-slate-400 hover:text-slate-100 p-1" aria-label="Close Instructions">
-          <i data-lucide="x" class="w-4 h-4"></i>
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <!-- Eligibility Notice Box -->
       <div class="p-2.5 rounded-lg bg-emerald-950/30 border border-emerald-500/40 space-y-1">
-        <div class="flex items-center space-x-1.5 text-emerald-400 font-bold text-[10px] uppercase tracking-wider">
-          <i data-lucide="shield-check" class="w-3.5 h-3.5 shrink-0"></i>
-          <span>Mandatory Eligibility</span>
+        <div class="flex items-center space-x-1.5 text-emerald-400 font-bold text-[11px] uppercase tracking-wider">
+          <i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i>
+          <span>Eligibility Verification</span>
         </div>
-        <p class="text-[10px] text-slate-200 leading-normal">
+        <p class="text-[11px] text-slate-200 leading-normal">
           To qualify for VA Beneficiary Travel transit coordination, you must be <strong>30% or more service-connected</strong>, traveling for care of a service-connected condition, or otherwise <strong>VA Travel authorized</strong> (38 CFR Part 70).
         </p>
       </div>
 
-      <!-- Step-by-Step Instructions -->
-      <div class="space-y-2 text-[10px] text-slate-300 leading-normal overflow-y-auto modal-scroll pr-1 max-h-[48dvh]">
-        <div class="p-2 rounded bg-slate-950/60 border border-slate-800">
-          <strong class="text-slate-100 uppercase tracking-wider font-mono-code text-[9px] block mb-0.5 text-emerald-400">Step 1: Enter Your ZIP Code</strong>
-          Type your 5-digit ZIP code or tap GPS to automatically lock onto your direct regional VA Travel Coordinator.
+      <div class="space-y-2 text-[11px] text-slate-300 leading-normal overflow-y-auto modal-scroll pr-1 max-h-[48dvh]">
+        <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 1: Enter Your ZIP Code</strong>
+          Type your 5-digit ZIP or tap the microphone to speak it aloud.
         </div>
 
-        <div class="p-2 rounded bg-slate-950/60 border border-slate-800">
-          <strong class="text-slate-100 uppercase tracking-wider font-mono-code text-slate-100 uppercase tracking-wider font-mono-code text-[9px] block mb-0.5 text-emerald-400">Step 2: 48-Hour Advance Call Rule</strong>
-          Tap the blinking green <strong class="text-slate-100 font-mono-code">CALL TRANSIT HUB</strong> button at least <strong>48 hours before your appointment time</strong>. Same-day morning-of ride requests cannot be booked.
+        <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 2: 48-Hour Advance Call Rule</strong>
+          Tap the green <strong class="text-slate-100 font-mono-code">CALL TRANSIT HUB</strong> button at least <strong>48 hours before your appointment</strong>.
         </div>
 
-        <div class="p-2 rounded bg-slate-950/60 border border-slate-800">
-          <strong class="text-slate-100 uppercase tracking-wider font-mono-code text-[9px] block mb-0.5 text-emerald-400">Step 3: Have Details Ready</strong>
-          Have your Full Name, Last 4 of your SSN, Date of Birth, and Home of Record pickup address ready for verification.
+        <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 3: Have Details Ready</strong>
+          Have your Full Name, Last 4 SSN, and Home of Record pickup address ready for verification.
         </div>
 
-        <div class="p-2 rounded bg-slate-950/60 border border-slate-800">
-          <strong class="text-slate-100 uppercase tracking-wider font-mono-code text-[9px] block mb-0.5 text-emerald-400">Step 4: Ride Day Text Response</strong>
-          You will receive an automated text. Reply <strong>'1'</strong> when you are ready for pickup going to your clinic appointment, and reply <strong>'2'</strong> when your visit is finished to return home.
+        <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 4: Ride Day Text Reply</strong>
+          Reply <strong>'1'</strong> to the automated text when ready for pickup, and reply <strong>'2'</strong> when your clinic visit is done.
         </div>
       </div>
 
       <div class="flex space-x-2 pt-1">
-        <button id="replayInstructionsVoiceBtn" class="flex-1 flex items-center justify-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider border border-emerald-500/30">
-          <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+        <button id="replayInstructionsVoiceBtn" class="tactile-btn flex-1 flex items-center justify-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 py-2 rounded-lg text-xs font-bold uppercase tracking-wider border border-emerald-500/30">
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
           <span>Replay Voice</span>
         </button>
-        <button id="dismissInstructionsBtn" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider">
+        <button id="dismissInstructionsBtn" class="tactile-btn flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 py-2 rounded-lg text-xs font-bold uppercase tracking-wider">
           Got It
         </button>
       </div>
@@ -470,26 +471,26 @@
   </div>
 
   <!-- Zero-PII Security Architecture Modal -->
-  <div id="zeroPiiModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm p-3 flex items-center justify-center">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col shadow-2xl space-y-3">
+  <div id="zeroPiiModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col shadow-2xl space-y-3">
       <div class="flex items-center justify-between border-b border-slate-800 pb-2">
         <div class="flex items-center space-x-2">
-          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+          <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
           <div>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-100">Zero-PII Architecture</h3>
-            <span class="text-[8px] text-emerald-400 font-mono-code block">Client-Side Security Posture</span>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-100">Zero-PII Compliance</h3>
+            <span class="text-[9px] text-emerald-400 font-mono-code block">Client-Side Architecture</span>
           </div>
         </div>
         <button id="closeZeroPiiBtn" class="text-slate-400 hover:text-slate-100 p-1" aria-label="Close Security Modal">
-          <i data-lucide="x" class="w-4 h-4"></i>
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
-      <div class="text-[10px] text-slate-300 space-y-2 leading-relaxed">
-        <p><strong>1. Zero Data Logging:</strong> No veteran names, Social Security Numbers, phone numbers, or health records are transmitted, logged, or stored on any server.</p>
-        <p><strong>2. Local Browser Resolution:</strong> ZIP code lookups and routing execute 100% inside your local device browser session.</p>
-        <p><strong>3. Zero HIPAA / FedRAMP Burden:</strong> By never handling Protected Health Information (PHI), this platform completely eliminates third-party data breach risk.</p>
+      <div class="text-[11px] text-slate-300 space-y-2 leading-relaxed">
+        <p><strong>1. Zero Data Logging:</strong> No names, Social Security Numbers, or health details are collected or stored.</p>
+        <p><strong>2. Local Browser Execution:</strong> Route lookups run entirely in the veteran's device memory.</p>
+        <p><strong>3. Zero Breach Exposure:</strong> Fully compliant with VA security standards by never collecting Protected Health Information (PHI).</p>
       </div>
-      <button id="dismissZeroPiiBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider border border-slate-700">
+      <button id="dismissZeroPiiBtn" class="tactile-btn w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-2 rounded-lg text-xs font-bold uppercase tracking-wider border border-slate-700">
         Acknowledged
       </button>
     </div>
@@ -498,8 +499,8 @@
   <script>
     lucide.createIcons();
 
-    // Voice Synthesis Prompt Audio Engine - First Touch & Verbal Instructions
-    const instructionsSpeechText = "Welcome to Forward March Transit, powered by In Cadence. To be eligible for this service, you must be 30 percent or more service-connected, or VA travel authorized. Enter your 5-digit zip code below, and call your coordinator at least 48 hours prior to your appointment time.";
+    // Voice Synthesis Prompt Audio Engine
+    const instructionsSpeechText = "Welcome to Forward March Transit. To qualify, you must be 30 percent or more service connected, or VA travel authorized. Enter your 5-digit zip code below, and call your transit hub at least 48 hours prior to your appointment.";
     let audioPlayed = false;
 
     function speakGreeting(customText) {
@@ -508,7 +509,7 @@
         window.speechSynthesis.cancel();
         const textToSpeak = customText || instructionsSpeechText;
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.rate = 0.92;
+        utterance.rate = 0.90;
         utterance.pitch = 1.0;
         
         const voices = window.speechSynthesis.getVoices();
@@ -524,23 +525,21 @@
       }
     }
 
-    // Fire immediately on the very first touch or click anywhere on screen
+    // First touch greeting trigger
     function onFirstTouchTrigger() {
       if (!audioPlayed) {
         speakGreeting();
-        // Remove all listeners immediately
         ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click'].forEach(evt => {
           document.removeEventListener(evt, onFirstTouchTrigger, true);
         });
       }
     }
 
-    // Capture phase listeners ensure execution before any button or input consumes the event
     ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click'].forEach(evt => {
       document.addEventListener(evt, onFirstTouchTrigger, { capture: true, once: true });
     });
 
-    // Instructions & Eligibility Modal Handlers + Voice Playback
+    // Instructions & Modal Handlers
     const instructionsModal = document.getElementById('instructionsModal');
     const audioGreetingBtn = document.getElementById('audioGreetingBtn');
     const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
@@ -575,14 +574,13 @@
       });
     }
 
-    // Prime voices on load
     if ('speechSynthesis' in window) {
       window.speechSynthesis.onvoiceschanged = () => {
         window.speechSynthesis.getVoices();
       };
     }
 
-    // Split Mapbox token segments to prevent automated scanner block
+    // Split Mapbox token segments
     mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 
     const defaultHub = {
@@ -637,13 +635,16 @@
       "visn21": { badge: "Sierra Pacific Hub", visn: "VISN 21", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii", phone: "415-221-4810", cleanPhone: "4152214810", coords: [-122.5052, 37.7820] },
       "visn22": { badge: "Desert Pacific Hub", visn: "VISN 22", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4552, 34.0532] },
       "visn23": { badge: "Midwest Hub (Upper)", visn: "VISN 23", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE", phone: "612-725-2000", cleanPhone: "6127252000", coords: [-93.2081, 44.9015] },
-      "national_fallback": { badge: "National Travel Coordination", visn: "VA National", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Help Desk Line", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
+      "national_fallback": { badge: "National Travel Dispatch", visn: "VA National", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Hotline", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
     };
 
     const zipInput = document.getElementById('zipInput');
     const clearZipBtn = document.getElementById('clearZipBtn');
     const geoBtn = document.getElementById('geoBtn');
     const geoBtnLabel = document.getElementById('geoBtnLabel');
+    const voiceZipBtn = document.getElementById('voiceZipBtn');
+    const voiceZipLabel = document.getElementById('voiceZipLabel');
+    const micIcon = document.getElementById('micIcon');
     const matchStatus = document.getElementById('matchStatus');
     const statusAlert = document.getElementById('statusAlert');
     const hubBadge = document.getElementById('hubBadge');
@@ -651,19 +652,18 @@
     const facilityName = document.getElementById('facilityName');
     const facilityAddress = document.getElementById('facilityAddress');
     const facilityPhone = document.getElementById('facilityPhone');
-    const callBtn = document.getElementById('callBtn'); // Optional / retired duplicate
+    const readFacilityBtn = document.getElementById('readFacilityBtn');
     const centerCallBtn = document.getElementById('centerCallBtn');
     const centerCallText = document.getElementById('centerCallText');
     const fallbackCallBtn = document.getElementById('fallbackCallBtn');
     const mapCoordinates = document.getElementById('mapCoordinates');
 
-    // Modal elements
+    // Modals
     const scriptModal = document.getElementById('scriptModal');
     const openScriptBtn = document.getElementById('openScriptBtn');
     const closeScriptBtn = document.getElementById('closeScriptBtn');
     const modalDismissBtn = document.getElementById('modalDismissBtn');
 
-    // Zero-PII Compliance Modal Handlers
     const zeroPiiModal = document.getElementById('zeroPiiModal');
     const openZeroPiiBtn = document.getElementById('openZeroPiiBtn');
     const closeZeroPiiBtn = document.getElementById('closeZeroPiiBtn');
@@ -675,7 +675,6 @@
       dismissZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.add('hidden'));
     }
 
-    // Goal 3: Plausible 'Call Script Opened' Telemetry
     openScriptBtn.addEventListener('click', () => {
       scriptModal.classList.remove('hidden');
       if (typeof window.plausible === 'function') {
@@ -691,26 +690,31 @@
     closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
     modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
 
-    // Dismiss number pad if tapping outside input field or clear button
+    // Dismiss keyboard on outside touch
     document.addEventListener('touchstart', (e) => {
       if (document.activeElement === zipInput && e.target !== zipInput && e.target !== clearZipBtn && !clearZipBtn.contains(e.target)) {
         zipInput.blur();
       }
     });
 
-    // Clear ZIP input handler
+    // Dedicated Facility Read-Aloud Engine
+    readFacilityBtn.addEventListener('click', () => {
+      if (!activeHub) return;
+      const textToRead = `${activeHub.name}. ${activeHub.desc}. Travel coordinator phone number is ${activeHub.phone}.`;
+      speakGreeting(textToRead);
+    });
+
     clearZipBtn.addEventListener('click', () => {
       zipInput.value = '';
       clearZipBtn.classList.add('hidden');
       hideAlert();
       matchStatus.textContent = "Live Auto-Lookup";
-      matchStatus.className = "text-[9px] font-mono-code text-slate-500";
+      matchStatus.className = "text-[10px] font-mono-code text-slate-400";
       centerCallBtn.classList.remove('call-btn-blinking');
       updateHubUI(defaultHub);
       zipInput.focus();
     });
 
-    // Goal 1: Plausible 'Hub Search' Telemetry
     function trackLookup(zip, matchData, method) {
       if (typeof window.plausible === 'function' && matchData) {
         window.plausible('Hub Search', {
@@ -724,7 +728,6 @@
       }
     }
 
-    // Goal 2: Plausible 'Dialer Click' Telemetry
     function trackDialerClick(buttonType, targetHub) {
       if (typeof window.plausible === 'function' && targetHub) {
         window.plausible('Dialer Click', {
@@ -738,9 +741,7 @@
       }
     }
 
-    // Attach programmatic click listeners for Dialer Click telemetry
     centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
-    if (callBtn) callBtn.addEventListener('click', () => trackDialerClick('Micro-Card Dial Button', activeHub));
     fallbackCallBtn.addEventListener('click', () => trackDialerClick('National Fallback Dial Button', visnDatabase.national_fallback));
 
     function resolveHub(zip) {
@@ -750,7 +751,7 @@
       if (p >= 10 && p <= 69) return visnDatabase.visn1;
       if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
 
-      // VISN 4 Audited
+      // VISN 4 Complete Resolution Table
       if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
       if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
       if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
@@ -789,7 +790,6 @@
       facilityPhone.textContent = data.phone;
       
       const callUri = "tel:" + data.cleanPhone;
-      if (callBtn) callBtn.href = callUri;
       centerCallBtn.href = callUri;
       
       const isFallback = (data.visn === "VA National");
@@ -811,6 +811,34 @@
       statusAlert.classList.add('hidden');
     }
 
+    function executeLookup(cleanVal, method) {
+      if (cleanVal.length >= 3) {
+        const match = resolveHub(cleanVal);
+        if (match) {
+          updateHubUI(match);
+          if (match.visn === "VA National") {
+            matchStatus.textContent = "National Dispatch";
+            matchStatus.className = "text-[10px] font-mono-code text-amber-400 font-bold";
+          } else {
+            matchStatus.textContent = cleanVal.length === 5 ? "Locked (Exact)" : "Searching Region...";
+            matchStatus.className = "text-[10px] font-mono-code text-emerald-400 font-bold";
+          }
+
+          if (cleanVal.length === 5) {
+            trackLookup(cleanVal, match, method);
+            centerCallBtn.classList.add('call-btn-blinking');
+            zipInput.blur();
+          } else {
+            centerCallBtn.classList.remove('call-btn-blinking');
+          }
+        }
+      } else {
+        matchStatus.textContent = "Live Auto-Lookup";
+        matchStatus.className = "text-[10px] font-mono-code text-slate-400";
+        centerCallBtn.classList.remove('call-btn-blinking');
+      }
+    }
+
     zipInput.addEventListener('input', (e) => {
       hideAlert();
       const cleanVal = e.target.value.replace(/\D/g, '');
@@ -824,34 +852,59 @@
         clearZipBtn.classList.add('hidden');
       }
 
-      if (cleanVal.length >= 3) {
-        const match = resolveHub(cleanVal);
-        if (match) {
-          updateHubUI(match);
-          if (match.visn === "VA National") {
-            matchStatus.textContent = "National Dispatch";
-            matchStatus.className = "text-[9px] font-mono-code text-amber-400";
-          } else {
-            matchStatus.textContent = cleanVal.length === 5 ? "Locked (Exact)" : "Searching Region...";
-            matchStatus.className = "text-[9px] font-mono-code text-emerald-400";
-          }
-
-          // Trigger Plausible custom event, auto-dismiss keyboard, and blink Call Hub button
-          if (cleanVal.length === 5) {
-            trackLookup(cleanVal, match, 'Manual ZIP');
-            centerCallBtn.classList.add('call-btn-blinking');
-            e.target.blur();
-          } else {
-            centerCallBtn.classList.remove('call-btn-blinking');
-          }
-        }
-      } else {
-        matchStatus.textContent = "Live Auto-Lookup";
-        matchStatus.className = "text-[9px] font-mono-code text-slate-500";
-        centerCallBtn.classList.remove('call-btn-blinking');
-      }
+      executeLookup(cleanVal, 'Manual ZIP');
     });
 
+    // Robust Voice-First Speech-to-Text Input
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (voiceZipBtn) {
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        voiceZipBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          hideAlert();
+          try {
+            recognition.start();
+            voiceZipLabel.textContent = "REC...";
+            voiceZipBtn.classList.add('border-red-500', 'bg-red-950/40');
+          } catch (err) {
+            console.warn("Speech recognition restart or already running:", err);
+          }
+        });
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          const spokenDigits = transcript.replace(/\D/g, '').substring(0, 5);
+          if (spokenDigits.length >= 3) {
+            zipInput.value = spokenDigits;
+            clearZipBtn.classList.remove('hidden');
+            executeLookup(spokenDigits, 'Voice Input');
+          } else {
+            showAlert(`Heard "${transcript}". Speak a 5-digit ZIP.`);
+          }
+        };
+
+        recognition.onerror = (e) => {
+          showAlert("Mic access unavailable. Type ZIP code.");
+        };
+
+        recognition.onend = () => {
+          voiceZipLabel.textContent = "MIC";
+          voiceZipBtn.classList.remove('border-red-500', 'bg-red-950/40');
+        };
+      } else {
+        voiceZipBtn.addEventListener('click', () => {
+          showAlert("Voice input not supported by this browser. Please type ZIP.");
+        });
+      }
+    }
+
+    // Geolocation Resolution
     geoBtn.addEventListener('click', () => {
       hideAlert();
       if (!navigator.geolocation) {
@@ -882,18 +935,9 @@
               const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
               zipInput.value = cleanZip;
               clearZipBtn.classList.remove('hidden');
-              const match = resolveHub(cleanZip);
-              if (match) {
-                updateHubUI(match);
-                matchStatus.textContent = `Locked: ${cleanZip}`;
-                matchStatus.className = "text-[9px] font-mono-code text-emerald-400";
-                
-                trackLookup(cleanZip, match, 'GPS');
-                centerCallBtn.classList.add('call-btn-blinking');
-                zipInput.blur();
-              }
+              executeLookup(cleanZip, 'GPS');
             } else {
-              showAlert("Could not extract ZIP. Enter manually.");
+              showAlert("Could not detect ZIP. Enter manually.");
             }
           } catch (err) {
             showAlert("Service error. Enter ZIP manually.");
