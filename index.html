@@ -214,32 +214,30 @@
       </div>
     </section>
 
-    <!-- Facility Result Micro-Card -->
-    <section id="resultCard" class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 space-y-1.5 shadow-sm">
-      <div class="flex items-center justify-between">
-        <span id="hubBadge" class="text-[9px] font-mono-code font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 truncate max-w-[200px]">
-          SW Pennsylvania Hub
-        </span>
-        <span id="visnBadge" class="text-[10px] text-slate-400 font-mono-code shrink-0">VISN 4</span>
-      </div>
-
-      <div>
+    <!-- Facility Result Micro-Card (Single Neat Line Layout) -->
+    <section id="resultCard" class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 shrink-0 shadow-sm flex items-center justify-between gap-2">
+      <!-- Left Side: Facility Name & Catchment Badges -->
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center space-x-1.5 mb-0.5">
+          <span id="visnBadge" class="text-[9px] font-mono-code text-slate-400 shrink-0">VISN 4</span>
+          <span class="text-slate-600 text-[8px]">•</span>
+          <span id="hubBadge" class="text-[9px] font-mono-code font-bold uppercase tracking-wider text-emerald-400 truncate">
+            SW Pennsylvania Hub
+          </span>
+        </div>
         <h2 id="facilityName" class="text-xs font-bold text-slate-100 leading-tight truncate">
           VA Pittsburgh Healthcare System
         </h2>
-        <p id="facilityAddress" class="text-[10px] text-slate-400 truncate">
+        <p id="facilityAddress" class="text-[9px] text-slate-400 truncate hidden">
           University Drive & H.J. Heinz Divisions
         </p>
       </div>
 
-      <div class="py-1 px-2 rounded bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-        <div class="truncate">
-          <div class="text-[8px] uppercase font-mono-code tracking-wider text-slate-400">Direct Travel Coordinator</div>
-          <div id="facilityPhone" class="text-[11px] font-bold text-emerald-400 font-mono-code truncate">412-360-3620 (Press 1)</div>
-        </div>
-        <div class="text-[9px] font-mono-code text-slate-500 uppercase tracking-wider shrink-0 flex items-center space-x-1">
-          <i data-lucide="phone" class="w-2.5 h-2.5 text-slate-400"></i>
-          <span>Coordination Line</span>
+      <!-- Right Side: Direct Travel Coordinator Number -->
+      <div class="text-right shrink-0 pl-2 border-l border-slate-800/80">
+        <div class="text-[8px] uppercase font-mono-code tracking-wider text-slate-400">Travel Coordinator</div>
+        <div id="facilityPhone" class="text-xs font-bold text-emerald-400 font-mono-code whitespace-nowrap">
+          412-360-3620 (Press 1)
         </div>
       </div>
     </section>
