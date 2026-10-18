@@ -3,14 +3,14 @@
   USPTO PROVISIONAL PATENT APPLICATION NO. 64/174,835
   Terrance Watkins • Patent Pending 64/174,835
   CONFIDENTIAL PROPRIETARY TELEMETRY SYSTEM - UNAUTHORIZED REPRODUCTION PROHIBITED
-  PROJECT EYES v3.76 - PURE NATURAL GEMINI VOICE PROMPTS (NO BEEP) + FULL BUILD TXT
+  PROJECT EYES v3.77 - BULLETPROOF IOS/ANDROID SPEECH ACTIVATION ENGINE + FULL BUILD TXT
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Project Eyes v3.76 | Terrance Watkins • Patent Pending 64/174,835</title>
+  <title>Project Eyes v3.77 | Terrance Watkins • Patent Pending 64/174,835</title>
   <style>
     * {
       box-sizing: border-box; margin: 0; padding: 0;
@@ -151,11 +151,12 @@
     #gatePromptBtn {
       width: 100%; height: 100%; background: linear-gradient(135deg, #0284c7, #0369a1);
       color: #ffffff; border: 2.5px solid #38bdf8; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; padding: 8px 14px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 14px;
       cursor: pointer; text-align: center; user-select: none;
     }
     #gatePromptBtn:active { background: #0369a1; border-color: #fde047; }
-    .gate-main { font-size: 15px; font-weight: 900; line-height: 1.25; text-transform: uppercase; color: #ffffff; letter-spacing: 0.3px; }
+    .gate-main { font-size: 14px; font-weight: 900; line-height: 1.25; text-transform: uppercase; color: #ffffff; letter-spacing: 0.3px; }
+    .gate-sub { font-size: 9px; font-weight: 800; color: #fde047; margin-top: 4px; text-transform: uppercase; }
     #readingBox { display: none; width: 100%; text-align: center; font-weight: 800; font-size: 13px; }
     #reportBox { display: none; width: 100%; text-align: left; }
     .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
@@ -308,6 +309,8 @@
       var digits = box.value.replace(/[^0-9]/g, '');
       if (digits.length === 4 && window.btoa(digits) === 'MzIwNg==') {
         if (typeof window.unlockSpeechPipeline === 'function') window.unlockSpeechPipeline();
+        // Immediately arm first spoken instruction during this verified touch gesture
+        if (typeof window.armFirstInstruction === 'function') window.armFirstInstruction();
         document.getElementById('pinVaultOverlay').style.display = 'none';
         if (typeof window.startEyesEngine === 'function') window.startEyesEngine();
       } else if (digits.length >= 4) {
@@ -326,7 +329,7 @@
   <!-- PIN VAULT OVERLAY -->
   <div id="pinVaultOverlay">
     <div class="vault-card">
-      <div class="vault-title">🔒 Project Eyes v3.76</div>
+      <div class="vault-title">🔒 Project Eyes v3.77</div>
       <div class="vault-sub">Terrance Watkins • Patent Pending 64/174,835</div>
       <div class="nda-box">
         <div class="nda-title">🛡️ LAYER 1 &amp; 2 CONFIDENTIAL PROTOTYPE NOTICE</div>
@@ -388,6 +391,7 @@
     <div class="optotype-viewport">
       <div id="gatePromptBtn" onclick="window._0xGate()">
         <div class="gate-main" id="gateMainText">👉 TAP HERE TO LOCK CHAIR DISTANCE 👈</div>
+        <div class="gate-sub" id="gateSubText">🎙️ Place face 35–55 cm away from phone</div>
       </div>
       <canvas id="snellenCanvas"></canvas>
       <div id="readingBox">
@@ -436,7 +440,7 @@
       <div>
         <div class="prx-title">PROJECT EYES™ OFFICIAL VISION RX REPORT</div>
         <div class="prx-inventor">TERRANCE WATKINS • PATENT PENDING 64/174,835</div>
-        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.76</div>
+        <div class="prx-patent">Inventor &amp; System Architect: Terrance Watkins • Build v3.77</div>
       </div>
       <div class="prx-seal">TERRANCE WATKINS<br>PATENT PENDING<br>64/174,835</div>
     </div>
@@ -495,26 +499,40 @@
 
   <script>
     /* =========================================================================
-       PURE VOICE SYNTHESIS ENGINE (DIRECT SPEECH - NO BEEPS / NO AUDIO TONES)
-       High-tier neural American female voice matching (Google US English,
-       Neural2-F, Journey-F, Ava, Samantha). Direct instant playback with
-       zero artificial delay or audio oscillator cues.
+       BULLETPROOF WEBAUDIO & SPEECH PIPELINE FOR IOS SAFARI & ANDROID
+       iOS WebKit requires an audio context to be created and resumed during
+       the synchronous touch event. We prime it on PIN entry and automatically
+       resume it as soon as the native camera dialog dismisses!
        ========================================================================= */
     let _activeVoice = null;
-    let _speechUnlocked = false;
+    let _audioCtx = null;
+    let _hasSpokenInitialGuidance = false;
+    const INITIAL_SPEECH_TEXT = "Place your face between thirty-five and fifty-five centimeters away from your phone.";
+
+    function _initAudioContext() {
+      if (!_audioCtx) {
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtxClass) {
+          _audioCtx = new AudioCtxClass();
+        }
+      }
+      if (_audioCtx && _audioCtx.state === 'suspended') {
+        _audioCtx.resume();
+      }
+    }
 
     window.unlockSpeechPipeline = function() {
-      if (_speechUnlocked) return;
       try {
+        _initAudioContext();
         if ('speechSynthesis' in window) {
           window.speechSynthesis.resume();
-          const primeUtt = new SpeechSynthesisUtterance(" ");
+          // Prime with an audible-to-browser micro utterance
+          const primeUtt = new SpeechSynthesisUtterance("");
           primeUtt.volume = 0.01;
           window.speechSynthesis.speak(primeUtt);
         }
-        _speechUnlocked = true;
       } catch (e) {
-        console.warn("Speech unlock notice: ", e);
+        console.warn("Speech pipeline unlock: ", e);
       }
     };
 
@@ -526,7 +544,6 @@
       function pickBestVoice() {
         const voices = window.speechSynthesis.getVoices();
         if (!voices || voices.length === 0) return;
-
         const preferredMatch = voices.find(v => 
           (v.name.includes("Google US English") || 
            v.name.includes("en-US-Neural2-F") || 
@@ -539,7 +556,6 @@
            v.name.includes("Siri")) && 
           v.lang.startsWith("en")
         );
-
         _activeVoice = preferredMatch || voices.find(v => v.lang.startsWith("en-US")) || voices[0];
       }
       pickBestVoice();
@@ -550,21 +566,47 @@
 
     function speakGemini(text) {
       if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.resume();
-
-      const utt = new SpeechSynthesisUtterance(text);
-      if (_activeVoice) utt.voice = _activeVoice;
-      utt.pitch = 1.02; // Warm, smooth, relaxed frequency
-      utt.rate = 0.94;  // Natural conversational tempo
-      utt.volume = 1.0;
-
       try {
+        _initAudioContext();
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.resume();
+
+        const utt = new SpeechSynthesisUtterance(text);
+        if (_activeVoice) utt.voice = _activeVoice;
+        utt.pitch = 1.02;
+        utt.rate = 0.94;
+        utt.volume = 1.0;
+
         window.speechSynthesis.speak(utt);
       } catch (err) {
         console.warn("Voice speech error: ", err);
       }
     }
+
+    // Arm instruction so it triggers the instant iOS native permission dialog drops
+    window.armFirstInstruction = function() {
+      if (_hasSpokenInitialGuidance) return;
+      // Start utterance while still inside the user gesture
+      speakGemini(INITIAL_SPEECH_TEXT);
+      _hasSpokenInitialGuidance = true;
+    };
+
+    // When returning from iOS native permission popup ("Allow"), window regains focus
+    window.addEventListener('focus', () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.resume();
+      }
+      if (!_hasSpokenInitialGuidance) {
+        speakGemini(INITIAL_SPEECH_TEXT);
+        _hasSpokenInitialGuidance = true;
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        if ('speechSynthesis' in window) window.speechSynthesis.resume();
+      }
+    });
 
     const _vEl = document.getElementById('webcam');
     const _vfC = document.getElementById('viewfinderCanvas');
@@ -608,7 +650,6 @@
     let _osHM = 0, _osVM = 0, _odHM = 0, _odVM = 0;
     let _wI = 0, _tS = [], _sCm = null;
     let _sLE = 0.30, _sRE = 0.30, _cES = "Binocular";
-    let _hasSpokenInitialGuidance = false;
 
     function _0xCalibrateHardware() {
       const ua = navigator.userAgent || "";
@@ -986,12 +1027,6 @@
         const vw = _vEl.videoWidth || 480, vh = _vEl.videoHeight || 640;
         _rUV(nB);
 
-        // IMMEDIATE VOICE TRIGGER: Fires as soon as camera is active & detects user face
-        if (!_hasSpokenInitialGuidance) {
-          _hasSpokenInitialGuidance = true;
-          speakGemini("Place your face between thirty-five and fifty-five centimeters away from your phone.");
-        }
-
         _sRE = 0.3 * _gE(lm, 159, 145, 133, 33) + 0.7 * _sRE;
         _sLE = 0.3 * _gE(lm, 386, 374, 362, 263) + 0.7 * _sLE;
         _cES = _st === 2 ? "Right Covered" : _st === 3 ? "Left Covered" : (_sRE < 0.20 && _sLE >= 0.20) ? "Right Covered" : (_sLE < 0.20 && _sRE >= 0.20) ? "Left Covered" : "Binocular";
@@ -1017,7 +1052,7 @@
           }
           if (_lCm !== null && _st >= 2) {
             _tLb.innerText = "Target:"; _zVl.innerText = `${_lCm.toFixed(1)} cm`;
-            const ok = Math.abs(_sCm - _lCm) <= 5.0; // 5 cm play buffer
+            const ok = Math.abs(_sCm - _lCm) <= 5.0;
             _zVl.style.color = ok ? "#4ade80" : "#fbbf24"; _cBx.style.borderColor = ok ? "#4ade80" : "#fbbf24";
           } else {
             _tLb.innerText = "Target:"; _zVl.innerText = _inB ? "Find Blur" : "35–55 cm";
@@ -1033,16 +1068,6 @@
     _fM.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
     _fM.onResults(_onR);
     const _cam = new Camera(_vEl, { onFrame: async () => { await _fM.send({ image: _vEl }); }, width: 640, height: 480 });
-
-    // Video stream listener: triggers voice as soon as mobile camera stream starts playing
-    _vEl.addEventListener('playing', () => {
-      if (!_hasSpokenInitialGuidance) {
-        _hasSpokenInitialGuidance = true;
-        setTimeout(() => {
-          speakGemini("Place your face between thirty-five and fifty-five centimeters away from your phone.");
-        }, 300);
-      }
-    }, { once: true });
 
     window.startEyesEngine = function() {
       _initVoiceEngine();
