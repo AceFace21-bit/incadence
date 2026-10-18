@@ -362,57 +362,75 @@
   <script>
     lucide.createIcons();
 
-    // Voice Synthesis Prompt Audio Engine - First Touch Trigger
+    // Voice Synthesis Prompt Audio Engine - Bulletproof iOS/Mobile First-Touch
     const greetingText = "Welcome to Forward March Transit, powered by In Cadence. Enter your zip code below.";
     let audioPlayed = false;
 
     function speakGreeting() {
-      if (!('speechSynthesis' in window)) return;
+      if (audioPlayed || !('speechSynthesis' in window)) return;
+      audioPlayed = true;
+
       try {
-        window.speechSynthesis.cancel();
+        // Resume engine if paused by mobile OS
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+
         const utterance = new SpeechSynthesisUtterance(greetingText);
         utterance.rate = 0.95;
         utterance.pitch = 1.0;
-        
+        utterance.volume = 1.0;
+        utterance.lang = 'en-US';
+
         const voices = window.speechSynthesis.getVoices();
-        if (voices.length > 0) {
-          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.lang.startsWith("en")));
+        if (voices && voices.length > 0) {
+          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || (v.lang && v.lang.startsWith("en"))));
           if (naturalVoice) utterance.voice = naturalVoice;
         }
 
+        // Do NOT call cancel() right before speak() on iOS - it drops the utterance!
         window.speechSynthesis.speak(utterance);
-        audioPlayed = true;
       } catch (err) {
         console.error("Speech playback error:", err);
       }
     }
 
-    // Fire immediately on the very first touch or click anywhere on screen
-    function onFirstTouchTrigger() {
-      if (!audioPlayed) {
-        speakGreeting();
-        // Remove all listeners immediately
-        ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click'].forEach(evt => {
-          document.removeEventListener(evt, onFirstTouchTrigger, true);
-        });
-      }
+    function initFirstTouchAudio() {
+      const handleFirstAction = function(e) {
+        if (!audioPlayed) {
+          speakGreeting();
+          ['touchstart', 'touchend', 'pointerdown', 'click', 'focus'].forEach(evt => {
+            window.removeEventListener(evt, handleFirstAction, true);
+            document.removeEventListener(evt, handleFirstAction, true);
+          });
+        }
+      };
+
+      ['touchstart', 'touchend', 'pointerdown', 'click', 'focus'].forEach(evt => {
+        window.addEventListener(evt, handleFirstAction, { capture: true, passive: true });
+        document.addEventListener(evt, handleFirstAction, { capture: true, passive: true });
+      });
     }
 
-    // Capture phase listeners ensure execution before any button or input consumes the event
-    ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click'].forEach(evt => {
-      document.addEventListener(evt, onFirstTouchTrigger, { capture: true, once: true });
-    });
+    initFirstTouchAudio();
+
+    // Also bind directly to zipInput focus/touchstart so focusing the keyboard immediately triggers speech
+    const zipInputElement = document.getElementById('zipInput');
+    if (zipInputElement) {
+      zipInputElement.addEventListener('focus', () => { if (!audioPlayed) speakGreeting(); }, { once: true });
+      zipInputElement.addEventListener('touchstart', () => { if (!audioPlayed) speakGreeting(); }, { once: true });
+    }
 
     // Manual Replay Audio Button in Header
     const audioGreetingBtn = document.getElementById('audioGreetingBtn');
     if (audioGreetingBtn) {
       audioGreetingBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        audioPlayed = false;
         speakGreeting();
       });
     }
 
-    // Prime voices on load
     if ('speechSynthesis' in window) {
       window.speechSynthesis.onvoiceschanged = () => {
         window.speechSynthesis.getVoices();
