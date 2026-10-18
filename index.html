@@ -129,7 +129,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 2.5 (REV 18)</span>
+        <span>BUILD 2.5 (REV 19)</span>
       </div>
 
       <!-- CENTERED Forward March Transit & In Cadence Branding -->
@@ -268,7 +268,7 @@
             class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-2 border-2 border-emerald-200"
           >
             <i data-lucide="phone-call" class="w-4 h-4 fill-slate-950"></i>
-            <span id="centerCallText" class="text-xs font-mono-code tracking-wide">CALL TRANSIT HUB</span>
+            <span id="centerCallText" class="text-xs font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
           </a>
         </div>
       </div>
@@ -786,7 +786,7 @@
       centerCallBtn.href = callUri;
       
       const isFallback = (data.visn === "VA Beneficiary Travel Dispatch" || data.badge === "National Dispatch Center");
-      centerCallText.textContent = isFallback ? "CALL DISPATCH" : "CALL TRANSIT HUB";
+      centerCallText.textContent = isFallback ? "CALL DISPATCH" : "CALL TRAVEL COORDINATOR";
       if (radarHeaderLabel) {
         radarHeaderLabel.textContent = isFallback ? "National Dispatch Radar View" : `${data.name} Radar View`;
       }
