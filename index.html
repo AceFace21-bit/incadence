@@ -129,7 +129,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 2.5 (REV 21)</span>
+        <span>BUILD 2.6 (REV 22)</span>
       </div>
 
       <!-- CENTERED Forward March Transit & In Cadence Branding -->
@@ -188,16 +188,16 @@
         <button 
           id="textRequirementBtn" 
           type="button" 
-          class="text-left text-slate-200 font-medium truncate hover:text-white transition"
+          class="text-left text-slate-200 font-medium truncate hover:text-white transition" 
           title="Click to view full qualification guidelines"
         >
           <strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
         </button>
       </div>
       <button 
-        id="badgeRequirementBtn"
+        id="badgeRequirementBtn" 
         type="button" 
-        class="text-[9px] font-mono-code text-emerald-400 hover:text-emerald-300 underline uppercase tracking-wider shrink-0 ml-1"
+        class="text-[9px] font-mono-code text-emerald-400 hover:text-emerald-300 underline uppercase tracking-wider shrink-0 ml-1" 
         title="View VHA travel authorization criteria"
       >
         VHA Details
@@ -237,10 +237,10 @@
 
         <!-- One-Tap Mic Voice Input Button -->
         <button 
-          id="micBtn"
-          type="button"
-          title="Speak ZIP Code Aloud"
-          aria-label="Speak ZIP code aloud"
+          id="micBtn" 
+          type="button" 
+          title="Speak ZIP Code Aloud" 
+          aria-label="Speak ZIP code aloud" 
           class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
         >
           <i data-lucide="mic" id="micIcon" class="w-4 h-4 text-emerald-400"></i>
@@ -394,38 +394,48 @@
       <div class="space-y-2 overflow-y-auto pr-1 my-2 text-[12px] modal-scroll">
         
         <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel Coordinator:</span>
           "VA Travel, how may I help you?"
         </div>
 
         <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">You Say:</span>
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">You Say (Veteran):</span>
           "Hi, I have an upcoming doctor appointment at the VA clinic next Tuesday at 9:00 AM, and I need to schedule a ride."
         </div>
 
         <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel Coordinator:</span>
           "Sure, can I get your full name and your last four or your birth date?"
         </div>
 
         <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">You Say:</span>
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">You Say (Veteran):</span>
           "My last four is [Your 4 Digits] and my date of birth is [Your Birthdate]."
         </div>
 
         <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
-          "Got you right here. Pickup is at your home of record address. You called with plenty of time—always call at least 48 hours in advance."
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel Coordinator:</span>
+          "Got you right here. Pickup is at your home of record address. You called with plenty of time—always call at least 48 hours in advance so we can reserve your ride."
         </div>
 
         <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">You Say:</span>
-          "Understood. How does the text pickup work on the day of my appointment?"
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">You Say (Veteran):</span>
+          "Understood, 48 hours in advance. How does the text pickup work on the day of my appointment?"
         </div>
 
         <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel:</span>
-          "You'll receive an automated text. Reply '1' when you are ready to be picked up to go to your clinic, and reply '2' when your appointment is done to head home."
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel Coordinator:</span>
+          "You'll receive an automated text either the evening before or morning of. You don't have to type anything into an app—just reply '1' when you are ready to be picked up to go to your clinic, and reply '2' when your appointment is done to head home."
+        </div>
+
+        <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">You Say (Veteran):</span>
+          "That makes it completely painless. Thank you so much!"
+        </div>
+
+        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">VA Travel Coordinator:</span>
+          "You're all set! Have a wonderful day!"
         </div>
 
       </div>
