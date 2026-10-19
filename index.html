@@ -129,7 +129,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 2.6 (REV 22)</span>
+        <span>BUILD 2.8 (REV 24)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -562,7 +562,7 @@
       <div class="space-y-2 text-[11px] text-slate-300 leading-normal overflow-y-auto modal-scroll pr-1 max-h-[48dvh]">
         <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
           <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 1: Enter Your ZIP Code</strong>
-          Type your 5-digit ZIP into the input box on this screen, tap Voice to speak it, or tap GPS.
+          Enter your five-digit zip code on the previous screen, or use the Voice / GPS buttons.
         </div>
 
         <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
@@ -623,7 +623,7 @@
     lucide.createIcons();
 
     // Voice Synthesis Prompt Audio Engine
-    const instructionsSpeechText = "Welcome to Forward March Transit, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized. Enter your 5-digit zip code in the search box on this screen, and call your transit hub at least 48 hours prior to your appointment.";
+    const instructionsSpeechText = "Welcome to Forward March Transit, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized. Enter your five-digit zip code on the previous screen, and call your transit coordinator at least 48 hours before your appointment.";
 
     function speakGreeting(customText) {
       if (!('speechSynthesis' in window)) return;
