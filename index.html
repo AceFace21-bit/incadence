@@ -2,11 +2,11 @@
 ================================================================================
 FORWARD MARCH TRANSIT // IN CADENCE
 Build Version: 3.4
-Revision: 34
+Revision: 33
 Release: Complete Production Master (VISN 1-23 Nationwide + Granular VISN 4 Deep Map)
 Architecture: Pure Client-Side Stateless Routing (Zero-PII / Zero-PHI)
 Telephony: Direct Native tel: protocol triggers
-Visual Core: Mapbox GL JS (Original Tactical Dark Mode)
+Visual Core: Mapbox GL JS (Integrated Satellite Streets & Tactical Dark Switcher)
 Speech Engine: Web Speech Synthesis API (Tactile Audio Readout & Toast Feedback)
 ================================================================================
 -->
@@ -15,7 +15,7 @@ Speech Engine: Web Speech Synthesis API (Tactile Audio Readout & Toast Feedback)
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Forward March Transit // In Cadence (v3.4-rev34)</title>
+  <title>Forward March Transit // In Cadence (v3.4-rev33)</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -75,7 +75,7 @@ Speech Engine: Web Speech Synthesis API (Tactile Audio Readout & Toast Feedback)
     </div>
     <div class="flex items-center gap-3">
       <span class="text-[11px] text-red-300 hidden md:inline">24/7 Free & Confidential Veteran Support</span>
-      <span class="text-[10px] text-slate-400 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800">Build 3.4 // Rev 34</span>
+      <span class="text-[10px] text-slate-400 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800">Build 3.4 // Rev 33</span>
     </div>
   </header>
 
@@ -91,13 +91,17 @@ Speech Engine: Web Speech Synthesis API (Tactile Audio Readout & Toast Feedback)
       <div class="text-center sm:text-left">
         <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center justify-center sm:justify-start gap-2">
           <span>FORWARD MARCH TRANSIT</span>
-          <span class="text-xs px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-700 font-mono">v3.4-rev34</span>
+          <span class="text-xs px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-700 font-mono">v3.4-rev33</span>
         </h1>
         <p class="text-xs text-slate-400 font-medium">In Cadence // VA Beneficiary Travel Dispatch Navigator</p>
       </div>
 
       <!-- Action & View Controls -->
       <div class="flex items-center gap-2">
+        <button id="toggleMapStyleBtn" class="px-3.5 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 shadow-sm transition flex items-center gap-1.5">
+          <span>🛰️</span>
+          <span id="styleBtnLabel">Dark View</span>
+        </button>
         <button id="openDemoScriptBtn" class="px-3.5 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 shadow-sm transition">
           📋 Pilot Pitch Script
         </button>
@@ -180,10 +184,10 @@ Speech Engine: Web Speech Synthesis API (Tactile Audio Readout & Toast Feedback)
     <div class="relative w-full h-[440px] sm:h-[500px] rounded-xl overflow-hidden border border-slate-800 shadow-2xl">
       <div id="map" class="w-full h-full"></div>
       
-      <!-- Map Status Badge -->
+      <!-- Style Badge -->
       <div class="absolute bottom-3 left-3 bg-slate-950/85 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-800 text-[11px] text-slate-300 font-mono z-10 flex items-center gap-2 shadow-md">
         <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-        <span>VISN 4 Active Dispatch Area</span>
+        <span id="activeStyleIndicator">Map Mode: Satellite Streets (v12)</span>
       </div>
 
       <!-- Quick Reset View Button -->
@@ -278,7 +282,7 @@ Speech Engine: Web Speech Synthesis API (Tactile Audio Readout & Toast Feedback)
 
   <!-- Footer with Developer Credit & Version Metadata -->
   <footer class="bg-slate-950 border-t border-slate-900 py-4 px-4 text-center text-xs text-slate-500">
-    <p>Forward March Transit // In Cadence • Developed by Terence Watkins • Build 3.4 (Rev 34)</p>
+    <p>Forward March Transit // In Cadence • Developed by Terence Watkins • Build 3.4 (Rev 33)</p>
     <p class="mt-1 text-[11px] text-slate-600">Zero-PII Architecture • Dedicated to U.S. Military Veterans</p>
   </footer>
 
@@ -291,14 +295,16 @@ Speech Engine: Web Speech Synthesis API (Tactile Audio Readout & Toast Feedback)
     const urlParams = new URLSearchParams(window.location.search);
     mapboxgl.accessToken = urlParams.get('mapbox_token') || 'pk.' + ['eyJ1IjoibGl2aW5nYXJ0aXN0IiwiYSI6ImNtMXJraWhmdTBjOGkyam40c21pOTR0a2oifQ', 'o_t1E24Z5FjT52p2587NzA'].join('.');
 
+    const SATELLITE_STYLE = 'mapbox://styles/mapbox/satellite-streets-v12';
     const DARK_STYLE = 'mapbox://styles/mapbox/dark-v11';
+    let currentMapStyle = SATELLITE_STYLE;
 
     const DEFAULT_CENTER = [-79.9576, 40.4442]; // VAPHS University Drive
     const DEFAULT_ZOOM = 11.5;
 
     const map = new mapboxgl.Map({
       container: 'map',
-      style: DARK_STYLE,
+      style: currentMapStyle,
       center: DEFAULT_CENTER,
       zoom: DEFAULT_ZOOM,
       pitch: 20
@@ -1028,7 +1034,28 @@ Speech Engine: Web Speech Synthesis API (Tactile Audio Readout & Toast Feedback)
       renderMarker(DEFAULT_CENTER[0], DEFAULT_CENTER[1], 'VA Pittsburgh Healthcare System (University Drive)');
     });
 
+    // -------------------------------------------------------------
+    // Satellite / Tactical Dark Mode Toggle
+    // -------------------------------------------------------------
+    const toggleStyleBtn = document.getElementById('toggleMapStyleBtn');
+    const styleBtnLabel = document.getElementById('styleBtnLabel');
+    const activeStyleIndicator = document.getElementById('activeStyleIndicator');
 
+    toggleStyleBtn.addEventListener('click', () => {
+      if (currentMapStyle === SATELLITE_STYLE) {
+        currentMapStyle = DARK_STYLE;
+        map.setStyle(DARK_STYLE);
+        styleBtnLabel.textContent = 'Satellite View';
+        toggleStyleBtn.firstElementChild.textContent = '🗺️';
+        activeStyleIndicator.textContent = 'Map Mode: Tactical Dark (v11)';
+      } else {
+        currentMapStyle = SATELLITE_STYLE;
+        map.setStyle(SATELLITE_STYLE);
+        styleBtnLabel.textContent = 'Dark View';
+        toggleStyleBtn.firstElementChild.textContent = '🛰️';
+        activeStyleIndicator.textContent = 'Map Mode: Satellite Streets (v12)';
+      }
+    });
 
     // Reset center button
     document.getElementById('resetMapCenterBtn').addEventListener('click', () => {
