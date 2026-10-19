@@ -1,3 +1,9 @@
+<!-- ========================================================================== -->
+<!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
+<!-- BUILD VERSION: BUILD 3.2 (REV 28) - PRODUCTION MASTER                     -->
+<!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
+<!-- DATE: OCTOBER 18, 2026                                                    -->
+<!-- ========================================================================== -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -129,7 +135,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 2.9 (REV 25)</span>
+        <span>BUILD 3.2 (REV 28)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -156,6 +162,12 @@
       </button>
     </div>
   </header>
+
+  <!-- Live Audio Announcement Toast Banner -->
+  <div id="voiceToast" class="hidden bg-emerald-950/95 border-b border-emerald-500/60 px-3 py-1.5 text-center text-xs font-mono-code font-bold text-emerald-300 z-50 flex items-center justify-center space-x-2 shadow-lg">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+    <span id="voiceToastText">Announcing VA Healthcare Hub...</span>
+  </div>
 
   <!-- Main Viewport Dashboard -->
   <main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0">
@@ -625,25 +637,59 @@
     // Voice Synthesis Prompt Audio Engine
     const instructionsSpeechText = "Welcome to Forward March Transit, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized. Enter your five-digit zip code on the previous screen, and call your transit coordinator at least 48 hours before your appointment.";
 
+    let activeUtterance = null;
+
     function speakGreeting(customText) {
       if (!('speechSynthesis' in window)) return;
       try {
         window.speechSynthesis.cancel();
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+        
         const textToSpeak = customText || instructionsSpeechText;
-        const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.rate = 0.90;
-        utterance.pitch = 1.0;
+        activeUtterance = new SpeechSynthesisUtterance(textToSpeak);
+        activeUtterance.rate = 0.92;
+        activeUtterance.pitch = 1.0;
+        activeUtterance.lang = 'en-US';
+        activeUtterance.volume = 1.0;
         
         const voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
-          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang.startsWith("en")));
-          if (naturalVoice) utterance.voice = naturalVoice;
+          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang === "en-US" || v.lang.startsWith("en")));
+          if (naturalVoice) activeUtterance.voice = naturalVoice;
         }
 
-        window.speechSynthesis.speak(utterance);
+        activeUtterance.onstart = () => {
+          showVoiceToast("🔊 " + (activeHub ? activeHub.name : textToSpeak.substring(0, 35)));
+        };
+        activeUtterance.onend = () => {
+          hideVoiceToast();
+          activeUtterance = null;
+        };
+        activeUtterance.onerror = (e) => {
+          console.warn("Speech synthesis notice:", e);
+          hideVoiceToast();
+          activeUtterance = null;
+        };
+
+        window.speechSynthesis.speak(activeUtterance);
       } catch (err) {
         console.error("Speech playback error:", err);
       }
+    }
+
+    function showVoiceToast(msg) {
+      const t = document.getElementById('voiceToast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.remove('hidden');
+      }
+    }
+
+    function hideVoiceToast() {
+      const t = document.getElementById('voiceToast');
+      if (t) t.classList.add('hidden');
     }
 
     // Detailed Eligibility Modal Handlers
@@ -1006,6 +1052,17 @@
 
       micBtn.addEventListener('click', () => {
         hideAlert();
+        
+        // UNLOCK mobile audio channel during user gesture
+        if ('speechSynthesis' in window) {
+          try {
+            window.speechSynthesis.resume();
+            const primer = new SpeechSynthesisUtterance(' ');
+            primer.volume = 0.01;
+            window.speechSynthesis.speak(primer);
+          } catch(e) {}
+        }
+
         try {
           recognition.start();
           micBtnLabel.textContent = "REC...";
@@ -1026,11 +1083,22 @@
           clearZipBtn.classList.remove('hidden');
           executeLookup(zip, 'Voice Input');
 
-          // Voice audio readback response loop
+          // 1. Stop recognition so hardware releases the mic
+          try { recognition.stop(); } catch (e) {}
+          micBtnLabel.textContent = "VOICE";
+          micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
+
+          // 2. Resolve hub and verbalize location
           const matchedHub = resolveHub(zip);
           if (matchedHub) {
             const spokenPhone = matchedHub.phone.replace(/ Ext /gi, ' extension ');
             const spokenReply = `${matchedHub.name}. Phone number ${spokenPhone}. Click the blinking button if you would like to make the call.`;
+            
+            // Highlight the speak button and trigger voice readout
+            readFacilityBtn.classList.add('animate-bounce');
+            setTimeout(() => { readFacilityBtn.classList.remove('animate-bounce'); }, 2000);
+
+            // Execute speech synthesis
             speakGreeting(spokenReply);
           }
         } else {
