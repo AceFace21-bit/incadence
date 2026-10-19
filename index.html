@@ -129,7 +129,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 2.8 (REV 24)</span>
+        <span>BUILD 2.9 (REV 25)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -1025,6 +1025,14 @@
           zipInput.value = zip;
           clearZipBtn.classList.remove('hidden');
           executeLookup(zip, 'Voice Input');
+
+          // Voice audio readback response loop
+          const matchedHub = resolveHub(zip);
+          if (matchedHub) {
+            const spokenPhone = matchedHub.phone.replace(/ Ext /gi, ' extension ');
+            const spokenReply = `${matchedHub.name}. Phone number ${spokenPhone}. Click the blinking button if you would like to make the call.`;
+            speakGreeting(spokenReply);
+          }
         } else {
           showAlert("Could not recognize 5-digit ZIP: " + transcript);
         }
