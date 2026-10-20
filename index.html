@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 31) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 32) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -125,7 +125,7 @@ Call 988 • 1
 <!-- Top Build Version Badge (Left) -->
 <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>BUILD 3.5 (REV 31)</span>
+<span>BUILD 3.5 (REV 32)</span>
 </div>
 <!-- Centered Platform Branding -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-2">
@@ -252,18 +252,18 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 </div>
 <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
 </section>
-<!-- Radar Target Map with Direct Interactive Dial Anchor -->
-<section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative flex-1 min-h-[170px] max-h-[240px] shadow-md flex flex-col">
-<div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/80 shrink-0 z-10">
+<!-- Radar Target Map with Explicit Non-Collapsing Viewport -->
+<section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative shrink-0 shadow-md flex flex-col">
+<div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/90 shrink-0 z-10">
 <div class="flex items-center space-x-1.5">
 <i data-lucide="radar" class="w-4 h-4 text-emerald-400"></i>
 <span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-200">Nationwide VISN Radar View</span>
 </div>
 <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">39.8283° N, 98.5795° W</span>
 </div>
-<div class="relative w-full flex-1 min-h-[130px] bg-slate-950 overflow-hidden">
-<!-- Explicit inset-0 positioning for Mapbox WebGL viewport rendering -->
-<div id="map" class="absolute inset-0 w-full h-full"></div>
+<!-- Guaranteed height container prevents iOS 0px layout collapse -->
+<div class="relative w-full h-[190px] min-h-[190px] bg-slate-950 overflow-hidden">
+<div id="map" class="absolute inset-0 w-full h-full bg-slate-950"></div>
 <!-- Center Radar Crosshair Reticle -->
 <div class="radar-crosshair w-28 h-28 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center">
 <div class="w-16 h-16 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
@@ -681,7 +681,7 @@ window.speechSynthesis.getVoices();
 }
 // Split Mapbox token segments
 mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
-// CONTINENTAL USA DEAD CENTER GEOGRAPHIC REFERENCE (LEBANON, KS)
+// DEAD CENTER USA GEOGRAPHIC COORDINATES & CONTINENTAL OVERVIEW ZOOM
 const US_CENTER_LNG_LAT = [-98.5795, 39.8283];
 const US_COAST_TO_COAST_ZOOM = 3.2;
 const defaultHub = {
@@ -694,16 +694,47 @@ cleanPhone: "4123603620,1",
 coords: [-79.9600, 40.4444]
 };
 let activeHub = defaultHub;
-// Initialize map with responsive settings
-const map = new mapboxgl.Map({
+// High-contrast, zero-auth Dark Tile Layer Fallback Style Specification
+const darkTileFallbackStyle = {
+version: 8,
+sources: {
+'dark-tiles': {
+type: 'raster',
+tiles: [
+'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+'https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png'
+],
+tileSize: 256,
+attribution: '© OpenStreetMap contributors © CARTO'
+}
+},
+layers: [
+{
+id: 'dark-tiles-layer',
+type: 'raster',
+source: 'dark-tiles',
+minzoom: 0,
+maxzoom: 20
+}
+]
+};
+// Initialize Map with Dark Tile Architecture
+let map;
+try {
+map = new mapboxgl.Map({
 container: 'map',
-style: 'mapbox://styles/mapbox/dark-v11',
+style: darkTileFallbackStyle,
 center: US_CENTER_LNG_LAT,
 zoom: US_COAST_TO_COAST_ZOOM,
 attributionControl: false,
 renderWorldCopies: false
 });
 map.addControl(new mapboxgl.AttributionControl({ compact: true }));
+} catch (err) {
+console.error("Map initialization exception:", err);
+}
 const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
 .setLngLat(US_CENTER_LNG_LAT)
 .addTo(map);
@@ -711,20 +742,16 @@ const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
 map.on('load', () => {
 map.resize();
 });
-// Handle viewport changes or tab active transitions
+// Window & Viewport Handlers
 window.addEventListener('resize', () => {
 if (map) map.resize();
 });
 setTimeout(() => {
 if (map) map.resize();
-}, 300);
-// Fallback if custom dark-v11 ever encounters network restrictions
-map.on('error', (e) => {
-console.warn("Mapbox style or layer notice:", e);
-if (e && e.error && e.error.status === 401) {
-console.error("Mapbox Token scope issue. Verify domain access on mapbox.com dashboard.");
-}
-});
+}, 250);
+setTimeout(() => {
+if (map) map.resize();
+}, 800);
 // Complete Nationwide & Regional VISN Routing Database
 const visnDatabase = {
 "visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
@@ -823,6 +850,7 @@ matchStatus.textContent = "Live Auto-Lookup";
 matchStatus.className = "text-[10px] font-mono-code text-slate-400";
 centerCallBtn.classList.remove('call-btn-blinking');
 // Reset back to nationwide USA center overview
+if (map) {
 map.flyTo({
 center: US_CENTER_LNG_LAT,
 zoom: US_COAST_TO_COAST_ZOOM,
@@ -830,6 +858,7 @@ speed: 1.2,
 essential: true
 });
 mapMarker.setLngLat(US_CENTER_LNG_LAT);
+}
 mapCoordinates.textContent = ⁠39.8283° N, 98.5795° W⁠;
 radarHeaderLabel.textContent = "Nationwide VISN Radar View";
 zipInput.focus();
