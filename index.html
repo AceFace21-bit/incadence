@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.6 (REV 55) - PRODUCTION MASTER                      -->
+<!-- BUILD VERSION: BUILD 3.7 (REV 56) - PRODUCTION MASTER                      -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
 <!-- DATE: OCTOBER 20, 2026                                                     -->
 <!-- ========================================================================== -->
@@ -181,7 +181,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.6 (REV 55)</span>
+        <span>BUILD 3.7 (REV 56)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -851,13 +851,6 @@
     });
 
     // 3. 5-VISN COLOR-CODED REGIONS OVERLAY (VISN 1-5 Official VA 5-District Color Palette)
-    // Official VA 5-VISN Color Palette:
-    // VISN 1 (Red/Coral): #ef4444
-    // VISN 2 (Orange/Amber): #f97316
-    // VISN 3 (Green): #22c55e
-    // VISN 4 (Purple): #a855f7
-    // VISN 5 (Blue): #3b82f6
-
     const visn5GeoColors = {
       "VISN 1": "#ef4444",
       "VISN 2": "#f97316",
@@ -866,7 +859,6 @@
       "VISN 5": "#3b82f6"
     };
 
-    // State to 5-VISN Mapping
     const stateToVisn5Map = {
       "CT": "VISN 1", "DC": "VISN 1", "DE": "VISN 1", "ME": "VISN 1", "MD": "VISN 1", "MA": "VISN 1", "NH": "VISN 1", "NJ": "VISN 1", "NY": "VISN 1", "PA": "VISN 1", "RI": "VISN 1", "VT": "VISN 1", "WV": "VISN 1",
       "AL": "VISN 2", "FL": "VISN 2", "GA": "VISN 2", "NC": "VISN 2", "PR": "VISN 2", "SC": "VISN 2", "VI": "VISN 2", "VA": "VISN 2",
@@ -901,16 +893,13 @@
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
 
-    // Load GeoJSON and color-code by 5-VISN standard
     fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
       .then(res => res.json())
       .then(data => {
         visn5GeoJsonLayer = L.geoJSON(data, {
           style: (feature) => {
-            // Find state abbreviation or name
             const props = feature.properties || {};
             const stName = props.NAME || props.STUSPS || props.abbreviation || "";
-            // Map full names to 2-letter codes if needed, or lookup directly
             const visnKey = stateToVisn5Map[stName] || "VISN 4";
             const col = visn5GeoColors[visnKey] || "#a855f7";
             return {
@@ -925,7 +914,6 @@
       })
       .catch(() => {});
 
-    // Dynamic zoom handler: switches seamlessly between 5-VISN Color Map and Local Streets
     map.on('zoomend', () => {
       const z = map.getZoom();
       if (z >= 12) {
@@ -939,7 +927,6 @@
       }
     });
 
-    // Custom Glowing Green Radar Marker Icon
     const radarIcon = L.divIcon({
       className: 'radar-marker-pin',
       html: '<div style="width: 14px; height: 14px; background: #10b981; border: 2px solid #ffffff; border-radius: 50%; box-shadow: 0 0 12px #10b981;"></div>',
@@ -949,7 +936,6 @@
 
     const marker = L.marker([US_CENTER_LAT, US_CENTER_LNG], { icon: radarIcon }).addTo(map);
 
-    // Dynamic Tactical VA Destination Label Callout (Binds to Marker)
     function updateMarkerCallout(hub) {
       if (!hub || !hub.name) return;
       const popupHtml = `
@@ -972,7 +958,6 @@
     setTimeout(() => { map.invalidateSize(); }, 600);
     window.addEventListener('resize', () => { map.invalidateSize(); });
 
-    // Complete Nationwide & Regional VISN Routing Database
     const visnDatabase = {
       "visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
       "visn2": { badge: "NY / NJ Metro Region", visn: "James J. Peters VAMC (Bronx)", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Regional Catchment", phone: "718-584-9000", cleanPhone: "7185849000", lat: 40.8677, lng: -73.9004 },
@@ -1165,7 +1150,8 @@
             matchStatus.textContent = "National Dispatch";
             matchStatus.className = "text-[10px] font-mono-code text-amber-400 font-bold";
           } else {
-            matchStatus.textContent = cleanVal.length === 5 ? "Locked (Exact)" : "Searching Region...";
+            // Replaced "Locked (Exact)" with "Region Verified" per user specification
+            matchStatus.textContent = cleanVal.length === 5 ? "Region Verified" : "Searching Region...";
             matchStatus.className = "text-[10px] font-mono-code text-emerald-400 font-bold";
           }
 
