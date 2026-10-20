@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 48) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 49) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -96,7 +96,7 @@
 
     /* Clean Dark Map Container Styling */
     .leaflet-container {
-      background: #18191b !important;
+      background: #090d16 !important;
       outline: none;
     }
     .leaflet-control-attribution {
@@ -113,13 +113,13 @@
       background: transparent;
       border: none;
       box-shadow: none;
-      color: #7dd3fc;
+      color: #38bdf8;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px;
+      font-size: 9px;
       font-weight: 800;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      text-shadow: 0 0 4px #000, 0 1px 2px #000;
+      text-shadow: 0 0 4px #000, 0 1px 3px #000;
       pointer-events: none;
       white-space: nowrap;
     }
@@ -181,7 +181,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 48)</span>
+        <span>BUILD 3.5 (REV 49)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -837,81 +837,15 @@
       attributionControl: false
     });
 
-    // 1. CLEAN DARK BASE LAYER (Esri Dark Gray Base)
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    // 1. BASE LAYER: Dark Matter CartoDB Basemap (Crisp, High-Contrast, Zero Key Required)
+    L.tileLayer('https://a.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png', {
       maxZoom: 19
     }).addTo(map);
 
-    // 2. DYNAMIC STREETS LAYER: Only enabled when zoomed into facility (Zoom >= 13)
-    // Eliminates all beige interstate lines from nationwide/regional view!
-    const streetLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
-      minZoom: 13,
-      maxZoom: 19,
-      zIndex: 300
-    });
+    // 2. VECTOR STATE LINES & STATE NAMES OVERLAY
+    let stateBordersLayer = null;
+    const stateLabelsGroup = L.layerGroup().addTo(map);
 
-    // 3. COMPLETE US STATE BORDERS: Vivid Royal Blue (#0284c7)
-    const usStatesGeoJSON = {
-      "type": "FeatureCollection",
-      "features": [
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-124.7,48.4],[-124.5,46.3],[-124.0,42.0],[-124.4,40.4],[-120.5,34.4],[-117.1,32.5],[-114.7,32.7],[-114.6,35.0],[-114.0,36.0],[-114.0,42.0],[-111.0,42.0],[-111.0,41.0],[-109.0,41.0],[-109.0,37.0],[-114.0,37.0],[-114.0,36.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-114.0,42.0],[-117.0,42.0],[-117.0,46.0],[-116.0,46.0],[-116.0,49.0],[-117.0,49.0],[-123.0,49.0],[-124.7,48.4]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-124.0,42.0],[-117.0,42.0],[-117.0,46.0],[-124.5,46.3]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-120.0,42.0],[-120.0,39.0],[-114.6,35.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-114.0,42.0],[-111.0,42.0],[-111.0,44.5],[-116.0,46.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-116.0,49.0],[-104.0,49.0],[-104.0,45.0],[-111.0,45.0],[-111.0,44.5]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-111.0,45.0],[-104.0,45.0],[-104.0,41.0],[-111.0,41.0],[-111.0,45.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-114.0,37.0],[-109.0,37.0],[-109.0,41.0],[-111.0,41.0],[-111.0,42.0],[-114.0,42.0],[-114.0,37.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-114.7,32.7],[-109.0,32.7],[-109.0,37.0],[-114.0,37.0],[-114.6,35.0],[-114.7,32.7]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-109.0,37.0],[-109.0,31.3],[-106.5,31.8],[-103.0,32.0],[-103.0,36.5],[-109.0,36.5],[-109.0,37.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-109.0,37.0],[-102.0,37.0],[-102.0,41.0],[-109.0,41.0],[-109.0,37.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-104.0,49.0],[-97.0,49.0],[-97.0,46.0],[-104.0,46.0],[-104.0,49.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-104.0,46.0],[-96.5,46.0],[-96.5,43.5],[-104.0,43.5],[-104.0,46.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-104.0,43.0],[-96.0,43.0],[-95.5,40.0],[-102.0,40.0],[-102.0,41.0],[-104.0,41.0],[-104.0,43.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-102.0,40.0],[-95.3,40.0],[-94.6,37.0],[-102.0,37.0],[-102.0,40.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-103.0,36.5],[-100.0,36.5],[-100.0,37.0],[-94.6,37.0],[-94.4,33.6],[-100.0,34.5],[-103.0,34.5],[-103.0,36.5]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-106.5,31.8],[-103.0,32.0],[-103.0,36.5],[-100.0,36.5],[-100.0,34.5],[-94.4,33.6],[-94.0,30.0],[-93.8,29.7],[-97.0,26.0],[-106.5,31.8]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-97.0,49.0],[-95.0,49.4],[-95.0,47.0],[-89.5,48.0],[-92.0,46.7],[-92.0,43.5],[-96.5,43.5],[-97.0,46.0],[-97.0,49.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-96.5,43.5],[-91.2,43.5],[-90.4,42.5],[-91.4,40.4],[-95.8,40.6],[-96.5,43.5]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-95.8,40.6],[-91.7,40.6],[-91.4,40.4],[-89.5,37.0],[-89.5,36.0],[-94.6,36.0],[-94.6,37.0],[-95.5,40.0],[-95.8,40.6]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-94.6,36.5],[-89.6,36.5],[-90.0,35.0],[-91.0,33.0],[-94.0,33.0],[-94.6,36.5]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-94.0,33.0],[-91.0,33.0],[-91.0,31.0],[-89.7,30.2],[-93.8,29.7],[-94.0,33.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-92.8,46.7],[-90.4,46.7],[-87.0,45.3],[-87.8,42.5],[-90.5,42.5],[-92.8,46.7]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-90.5,42.5],[-87.8,42.5],[-87.5,37.5],[-89.2,37.0],[-91.4,40.4],[-90.5,42.5]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-89.0,48.0],[-84.0,46.5],[-82.5,43.0],[-83.5,41.7],[-84.8,41.7],[-86.8,41.7],[-87.0,45.3],[-89.0,48.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-87.5,41.7],[-84.8,41.7],[-84.8,39.1],[-88.0,37.8],[-87.5,41.7]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-84.8,41.7],[-80.5,42.0],[-80.5,40.6],[-82.6,38.4],[-84.8,39.1],[-84.8,41.7]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-89.2,37.0],[-84.8,39.1],[-82.6,38.4],[-82.0,36.6],[-89.5,36.6],[-89.2,37.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-90.0,36.5],[-81.7,36.6],[-84.3,35.0],[-90.0,35.0],[-90.0,36.5]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-91.0,35.0],[-88.2,35.0],[-88.2,30.2],[-91.5,30.2],[-91.0,35.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-88.2,35.0],[-85.6,35.0],[-85.0,31.0],[-87.5,30.3],[-88.2,30.2],[-88.2,35.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-85.6,35.0],[-83.1,35.0],[-81.0,32.0],[-81.4,30.7],[-85.0,31.0],[-85.6,35.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-87.5,31.0],[-85.0,31.0],[-81.4,30.7],[-80.0,25.0],[-81.8,24.5],[-83.0,29.0],[-87.5,30.3],[-87.5,31.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-83.1,35.0],[-82.0,36.6],[-78.5,36.6],[-75.5,35.2],[-78.5,33.8],[-81.0,32.0],[-83.1,35.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-83.3,35.0],[-81.0,35.0],[-78.5,33.8],[-80.8,32.0],[-83.3,35.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-82.6,38.4],[-80.5,40.6],[-80.5,39.7],[-77.7,39.7],[-77.7,39.2],[-75.5,38.0],[-75.5,36.6],[-82.0,36.6],[-82.6,38.4]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-80.5,42.3],[-80.5,39.7],[-75.0,39.7],[-74.7,41.4],[-79.8,42.0],[-80.5,42.3]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-79.8,42.0],[-74.7,41.4],[-73.5,41.0],[-73.5,45.0],[-75.0,45.0],[-79.0,43.6],[-79.8,42.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-75.5,41.4],[-74.0,41.0],[-74.0,39.0],[-75.5,39.7],[-75.5,41.4]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-75.8,39.8],[-75.0,39.8],[-75.0,38.4],[-75.8,38.4],[-75.8,39.8]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-73.5,42.0],[-73.5,41.0],[-71.8,41.3],[-71.8,42.0],[-73.5,42.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-71.8,42.0],[-71.1,41.5],[-71.4,41.1],[-71.8,41.3],[-71.8,42.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-73.5,42.9],[-70.8,42.9],[-69.9,41.7],[-71.1,41.5],[-73.5,42.0],[-73.5,42.9]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-73.4,45.0],[-71.5,45.0],[-72.5,42.7],[-73.4,42.7],[-73.4,45.0]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-72.5,45.3],[-71.0,45.3],[-70.7,43.0],[-72.5,42.7],[-72.5,45.3]]}},
-        {"type":"Feature","geometry":{"type":"LineString","coordinates":[[-71.0,45.3],[-67.0,47.4],[-67.0,44.5],[-70.7,43.0],[-71.0,45.3]]}}
-      ]
-    };
-
-    L.geoJSON(usStatesGeoJSON, {
-      style: {
-        color: '#0284c7', // Vivid royal blue
-        weight: 2.2,
-        opacity: 0.95
-      }
-    }).addTo(map);
-
-    // 4. US STATE NAMES: Clean Centroid Labels
     const stateLabels = [
       { name: "WA", lat: 47.4, lng: -120.5 },
       { name: "OR", lat: 43.8, lng: -120.6 },
@@ -961,7 +895,6 @@
       { name: "MD", lat: 39.0, lng: -76.6 }
     ];
 
-    const stateLabelsGroup = L.layerGroup();
     stateLabels.forEach(s => {
       const lblIcon = L.divIcon({
         className: 'state-name-label',
@@ -971,16 +904,30 @@
       });
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
-    stateLabelsGroup.addTo(map);
 
-    // Zoom listener: shows state names on wide views, shows local streets on tight facility view
+    // High-resolution real US State vector borders
+    fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
+      .then(res => res.json())
+      .then(data => {
+        stateBordersLayer = L.geoJSON(data, {
+          style: {
+            color: '#0284c7', // True vivid blue
+            weight: 2.2,
+            opacity: 0.9,
+            fillOpacity: 0
+          }
+        }).addTo(map);
+      })
+      .catch(() => {});
+
+    // Dynamic zoom visibility handler: hides state overlays when focusing into city/street level
     map.on('zoomend', () => {
       const z = map.getZoom();
-      if (z >= 13) {
-        if (!map.hasLayer(streetLayer)) map.addLayer(streetLayer);
+      if (z >= 11) {
+        if (stateBordersLayer && map.hasLayer(stateBordersLayer)) map.removeLayer(stateBordersLayer);
         if (map.hasLayer(stateLabelsGroup)) map.removeLayer(stateLabelsGroup);
       } else {
-        if (map.hasLayer(streetLayer)) map.removeLayer(streetLayer);
+        if (stateBordersLayer && !map.hasLayer(stateBordersLayer)) map.addLayer(stateBordersLayer);
         if (!map.hasLayer(stateLabelsGroup)) map.addLayer(stateLabelsGroup);
       }
     });
@@ -1221,8 +1168,8 @@
       }
 
       if (fly && data.lat && data.lng) {
-        // High-clarity hospital campus zoom (level 16.5) reveals crisp streets around the VA hospital
-        map.flyTo([data.lat, data.lng], isFallback ? 5 : 16.5, { duration: 1.4 });
+        // High-clarity hospital campus zoom (level 16) with all street & building names
+        map.flyTo([data.lat, data.lng], isFallback ? 5 : 16, { duration: 1.4 });
         marker.setLatLng([data.lat, data.lng]);
         updateMarkerCallout(data);
         mapCoordinates.textContent = `${data.lat.toFixed(4)}° N, ${Math.abs(data.lng).toFixed(4)}° W`;
@@ -1378,7 +1325,7 @@
           const lon = position.coords.longitude;
 
           if (map) {
-            map.flyTo([lat, lon], 16.5, { duration: 1.4 });
+            map.flyTo([lat, lon], 16, { duration: 1.4 });
             marker.setLatLng([lat, lon]);
             mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
           }
