@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 53) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 54) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -119,7 +119,7 @@
       font-weight: 800;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      text-shadow: 0 0 4px #000, 0 1px 3px #000, 0 0 8px rgba(0, 0, 0, 0.9);
+      text-shadow: 0 0 4px #000, 0 1px 3px #000, 0 0 8px rgba(0, 0, 0, 0.95);
       pointer-events: none;
       white-space: nowrap;
     }
@@ -181,7 +181,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 53)</span>
+        <span>BUILD 3.5 (REV 54)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -648,7 +648,7 @@
           <i data-lucide="volume-2" class="w-4 h-4"></i>
           <span>Replay Voice</span>
         </button>
-        <button id="dismissInstructionsBtn" class="tactile-btn flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 py-2 rounded-lg text-xs font-bold uppercase tracking-wider">
+        <button id="dismissInstructionsBtn" class="tactile-btn flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 py-2 rounded-lg text-xs font-bold uppercase tracking-wider border border-slate-700">
           Got It
         </button>
       </div>
@@ -850,7 +850,7 @@
       zIndex: 350
     });
 
-    // 3. VECTOR STATE BOUNDARIES: Precision High-Resolution GeoJSON (Clean Blue #0284c7)
+    // 3. VECTOR STATE BOUNDARIES: Precision High-Resolution GeoJSON (Clean Tactical Red #ef4444)
     let stateBordersLayer = null;
     const stateLabelsGroup = L.layerGroup().addTo(map);
 
@@ -913,13 +913,13 @@
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
 
-    // High-Resolution Smooth US State GeoJSON Boundaries
+    // High-Resolution Precision US State Boundaries in Tactical Red (#ef4444)
     fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
       .then(res => res.json())
       .then(data => {
         stateBordersLayer = L.geoJSON(data, {
           style: {
-            color: '#0284c7', // Smooth, crisp state-line blue
+            color: '#ef4444', // Clean tactical bright red
             weight: 1.8,
             opacity: 0.95,
             fillOpacity: 0
