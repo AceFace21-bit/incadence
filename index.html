@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 52) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 53) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -40,7 +40,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
-      z-index: 400;
+      z-index: 10;
     }
 
     /* Tactile Big Button Styles */
@@ -108,18 +108,18 @@
       vector-effect: non-scaling-stroke;
     }
 
-    /* State Name Radar Labels */
+    /* State Name Radar Labels: Pure White High-Contrast Typography */
     .state-name-label {
       background: transparent;
       border: none;
       box-shadow: none;
-      color: #38bdf8;
+      color: #ffffff !important;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 8px;
+      font-size: 8.5px;
       font-weight: 800;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      text-shadow: 0 0 4px #000, 0 1px 3px #000;
+      text-shadow: 0 0 4px #000, 0 1px 3px #000, 0 0 8px rgba(0, 0, 0, 0.9);
       pointer-events: none;
       white-space: nowrap;
     }
@@ -162,7 +162,7 @@
 <body class="bg-slate-950 text-slate-100 h-[100dvh] w-screen overflow-hidden flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-slate-950 select-none">
 
   <!-- Veterans Crisis Line Mandatory Header -->
-  <aside class="bg-red-950/90 border-b border-red-800/80 px-3 py-1.5 text-center shrink-0 z-50">
+  <aside class="bg-red-950/90 border-b border-red-800/80 px-3 py-1.5 text-center shrink-0 z-40">
     <div class="max-w-md mx-auto flex items-center justify-between text-[11px] font-mono-code text-red-200">
       <div class="flex items-center space-x-2 truncate">
         <span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span>
@@ -176,12 +176,12 @@
   </aside>
 
   <!-- Header with Auto-Incremented Build Badge & Centered Platform Branding -->
-  <header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-2 shrink-0 z-50">
+  <header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-2 shrink-0 z-40">
     <div class="max-w-md mx-auto relative flex items-center justify-between">
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 52)</span>
+        <span>BUILD 3.5 (REV 53)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -210,13 +210,13 @@
   </header>
 
   <!-- Live Audio Announcement Toast Banner -->
-  <div id="voiceToast" class="hidden bg-emerald-950/95 border-b border-emerald-500/60 px-3 py-1.5 text-center text-xs font-mono-code font-bold text-emerald-300 z-50 flex items-center justify-center space-x-2 shadow-lg">
+  <div id="voiceToast" class="hidden bg-emerald-950/95 border-b border-emerald-500/60 px-3 py-1.5 text-center text-xs font-mono-code font-bold text-emerald-300 z-40 flex items-center justify-center space-x-2 shadow-lg">
     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
     <span id="voiceToastText">Announcing VA Healthcare Hub...</span>
   </div>
 
   <!-- Main Viewport Dashboard -->
-  <main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0">
+  <main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0 relative z-10">
 
     <!-- Primary Instruction Companion Action Button -->
     <div class="w-full shrink-0">
@@ -320,8 +320,8 @@
       <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
     </section>
 
-    <!-- Radar Target Map with Direct Interactive Dial Anchor -->
-    <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative flex-1 min-h-[160px] max-h-[240px] shadow-md flex flex-col">
+    <!-- Radar Target Map with Contained z-index Viewport -->
+    <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative flex-1 min-h-[160px] max-h-[240px] shadow-md flex flex-col z-0">
       <div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/80 shrink-0 z-10">
         <div class="flex items-center space-x-1.5">
           <i data-lucide="radar" class="w-4 h-4 text-emerald-400"></i>
@@ -332,7 +332,7 @@
       
       <div class="relative w-full flex-1 bg-slate-950" style="min-height: 150px;">
         <!-- Leaflet Map Container -->
-        <div id="map" class="absolute inset-0 w-full h-full" style="height: 100%; width: 100%;"></div>
+        <div id="map" class="absolute inset-0 w-full h-full z-0" style="height: 100%; width: 100%;"></div>
 
         <!-- Center Radar Crosshair Reticle -->
         <div class="radar-crosshair w-28 h-28 rounded-full border border-emerald-500/30 flex items-center justify-center pointer-events-none">
@@ -340,7 +340,7 @@
         </div>
 
         <!-- Big Primary Dial Action Button Anchored on Radar -->
-        <div class="absolute bottom-2 right-2 pointer-events-none z-[500]">
+        <div class="absolute bottom-2 right-2 pointer-events-none z-20">
           <a 
             id="centerCallBtn" 
             href="tel:4123603620,1" 
@@ -423,7 +423,7 @@
   </main>
 
   <!-- Footer & Federal Disclaimers -->
-  <footer class="border-t border-slate-800/90 py-1.5 text-center text-slate-500 text-[8px] font-mono-code px-2 shrink-0 space-y-0.5">
+  <footer class="border-t border-slate-800/90 py-1.5 text-center text-slate-500 text-[8px] font-mono-code px-2 shrink-0 space-y-0.5 z-40">
     <div class="text-slate-400 font-bold tracking-wide truncate">
       DESIGNED &amp; DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
     </div>
@@ -432,9 +432,9 @@
     </div>
   </footer>
 
-  <!-- Step-by-Step Call Dialogue Modal (Matches Pitch Demo Brief) -->
-  <div id="scriptModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
-    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-3.5 flex flex-col max-h-[90dvh] shadow-2xl">
+  <!-- Step-by-Step Call Dialogue Modal (Highest z-index 99999 + Full Solid Backdrop) -->
+  <div id="scriptModal" class="hidden fixed inset-0 z-[99999] bg-slate-950/95 backdrop-blur-md p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-3.5 flex flex-col max-h-[90dvh] shadow-2xl relative z-10">
       <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 shrink-0">
         <div class="flex items-center space-x-2">
           <i data-lucide="phone-outgoing" class="w-5 h-5 text-emerald-400"></i>
@@ -454,57 +454,57 @@
       <!-- Dialogue Body Matching Exactly to Executive Brief & Pilot Proposal -->
       <div class="space-y-2 overflow-y-auto pr-1 my-2 text-[12px] modal-scroll">
         
-        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
           &ldquo;VA Travel, Lisa speaking, how may I help you?&rdquo;
         </div>
 
-        <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
+        <div class="p-2.5 rounded bg-blue-950/40 border-l-4 border-blue-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">TERENCE (VETERAN):</span>
           &ldquo;Hi Lisa, I have an upcoming doctor appointment at the VA clinic next Tuesday at 9:00 AM, and I need to schedule a ride.&rdquo;
         </div>
 
-        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
           &ldquo;Sure, can I get your full name and your last four or your birth date?&rdquo;
         </div>
 
-        <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
+        <div class="p-2.5 rounded bg-blue-950/40 border-l-4 border-blue-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">TERENCE (VETERAN):</span>
           &ldquo;Terence Watkins, my last four is 1-2-3-4 and my date of birth is 3rd December 1982.&rdquo;
         </div>
 
-        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
           &ldquo;Got you right here. Pickup is at your home of record address at 1234 VA Drive Lane, Anytown, Any State, 00000. Is that address correct?&rdquo;
         </div>
 
-        <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
+        <div class="p-2.5 rounded bg-blue-950/40 border-l-4 border-blue-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">TERENCE (VETERAN):</span>
           &ldquo;Yes, that&rsquo;s correct.&rdquo;
         </div>
 
-        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
           &ldquo;Perfect. You called with plenty of time&mdash;just remember, you always need to call at least 48 hours before your appointment time, because rides cannot be booked the morning of. You are all set for a round trip.&rdquo;
         </div>
 
-        <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
+        <div class="p-2.5 rounded bg-blue-950/40 border-l-4 border-blue-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">TERENCE (VETERAN):</span>
           &ldquo;Understood, 48 hours in advance. How does the pickup work on Tuesday?&rdquo;
         </div>
 
-        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
           &ldquo;You&rsquo;ll receive an automated text either the evening before or right after midnight. You don&rsquo;t have to type anything into the Uber app&mdash;just reply &lsquo;1&rsquo; whenever you are ready for pickup going to your appointment, and reply &lsquo;2&rsquo; when your visit is finished to head back home.&rdquo;
         </div>
 
-        <div class="p-2.5 rounded bg-blue-950/30 border-l-4 border-blue-500 text-slate-200">
+        <div class="p-2.5 rounded bg-blue-950/40 border-l-4 border-blue-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">TERENCE (VETERAN):</span>
           &ldquo;That makes it completely painless. Thank you so much, Lisa!&rdquo;
         </div>
 
-        <div class="p-2.5 rounded bg-pink-950/30 border-l-4 border-pink-500 text-slate-200">
+        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
           <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
           &ldquo;You&rsquo;re all set! Have a wonderful day!&rdquo;
         </div>
@@ -517,9 +517,9 @@
     </div>
   </div>
 
-  <!-- Detailed VA Travel Qualification & Eligibility Modal -->
-  <div id="eligibilityDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
-    <div class="bg-slate-900 border-2 border-emerald-500/60 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3">
+  <!-- Detailed VA Travel Qualification & Eligibility Modal (Highest z-index 99999) -->
+  <div id="eligibilityDetailModal" class="hidden fixed inset-0 z-[99999] bg-slate-950/95 backdrop-blur-md p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border-2 border-emerald-500/60 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3 relative z-10">
       <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 shrink-0">
         <div class="flex items-center space-x-2">
           <div class="w-6 h-6 rounded-md bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400">
@@ -595,9 +595,9 @@
     </div>
   </div>
 
-  <!-- Instructions & Eligibility Modal -->
-  <div id="instructionsModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
-    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3">
+  <!-- Instructions & Eligibility Modal (Highest z-index 99999) -->
+  <div id="instructionsModal" class="hidden fixed inset-0 z-[99999] bg-slate-950/95 backdrop-blur-md p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3 relative z-10">
       <div class="flex items-center justify-between border-b border-slate-800 pb-2">
         <div class="flex items-center space-x-2">
           <i data-lucide="info" class="w-5 h-5 text-emerald-400"></i>
@@ -655,9 +655,9 @@
     </div>
   </div>
 
-  <!-- Zero-PII Security Architecture Modal -->
-  <div id="zeroPiiModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
-    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col shadow-2xl space-y-3">
+  <!-- Zero-PII Security Architecture Modal (Highest z-index 99999) -->
+  <div id="zeroPiiModal" class="hidden fixed inset-0 z-[99999] bg-slate-950/95 backdrop-blur-md p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col shadow-2xl space-y-3 relative z-10">
       <div class="flex items-center justify-between border-b border-slate-800 pb-2">
         <div class="flex items-center space-x-2">
           <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
