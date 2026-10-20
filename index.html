@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                         -->
-<!-- BUILD VERSION: BUILD 3.6 (REV 56) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.6 (REV 57) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
 <!-- DATE: OCTOBER 20, 2026                                                     -->
 <!-- DEPLOYMENT TARGET: GITHUB PAGES (aceface21-bit.github.io)                  -->
@@ -220,7 +220,7 @@
           <div class="vu-bar"></div>
           <div class="vu-bar"></div>
         </div>
-        <span>BUILD 3.6 (REV 56)</span>
+        <span>BUILD 3.6 (REV 57)</span>
       </div>
 
       <!-- Centered Platform Branding with Acoustic Tiny Desk Warmth -->
@@ -231,7 +231,7 @@
           </div>
           <span class="font-display font-black tracking-wider text-xs uppercase text-stone-100 leading-none">Forward March Transit</span>
         </div>
-        <span class="text-[9px] text-amber-400/90 font-mono-code tracking-wider block mt-1 leading-none">CLINICAL NO-SHOW PREVENT // VISN 1 &amp; NATIONWIDE</span>
+        <span class="text-[9px] text-amber-400/90 font-mono-code tracking-wider block mt-1 leading-none">CLINICAL NO-SHOW PREVENT // 5-DISTRICT VHA MAP</span>
       </div>
 
       <!-- Zero-PII Security Architecture Trigger (Right) -->
@@ -356,7 +356,7 @@
         </button>
       </div>
 
-      <!-- Quick VISN 1 Preset Demonstration Chips for the Chief Pitch -->
+      <!-- Quick Preset Demonstration Chips for VISN 1 Pitch & Regional Testing -->
       <div class="mt-2 pt-2 border-t border-amber-950/60 flex items-center space-x-1.5 overflow-x-auto">
         <span class="text-[9px] font-mono-code text-stone-400 uppercase shrink-0">Demo Hubs:</span>
         <button type="button" onclick="setZipExample('02130')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">02130 (Boston)</button>
@@ -869,7 +869,7 @@
     const US_CENTER_LNG = -98.5795;
     const US_COAST_TO_COAST_ZOOM = 3.2;
 
-    // Pitch Focus Hub: VISN 1 (VA Boston Healthcare System)
+    // Default Hub Landing (VISN 1 Boston Healthcare System for Chief Pitch)
     const defaultHub = {
       badge: "Jamaica Plain & West Roxbury",
       visn: "VA Boston Healthcare System",
@@ -908,6 +908,12 @@
     let stateBordersLayer = null;
     const stateLabelsGroup = L.layerGroup().addTo(map);
 
+    // Official VHA 5-District Color Grouping Matching department.va.gov:
+    // Region 1 (Red / Crimson): North Atlantic (ME, NH, VT, MA, RI, CT, NY, NJ, PA, DE, MD, DC, WV)
+    // Region 2 (Orange): Southeast (VA, NC, SC, GA, FL, AL, PR, VI)
+    // Region 3 (Green): Midwest (OH, MI, IN, IL, WI, MN, IA, ND, SD, KY, TN)
+    // Region 4 (Purple): Continental / South Central (TX, OK, AR, LA, MS, MO, KS, NE, CO, NM, UT, WY)
+    // Region 5 (Blue): Pacific / West (WA, OR, CA, NV, ID, MT, AZ, AK, HI)
     const stateDistricts = {
       'CT': 1, 'DC': 1, 'DE': 1, 'ME': 1, 'MD': 1, 'MA': 1, 'NH': 1, 'NJ': 1, 'NY': 1, 'PA': 1, 'RI': 1, 'VT': 1, 'WV': 1,
       'AL': 2, 'FL': 2, 'GA': 2, 'NC': 2, 'PR': 2, 'SC': 2, 'VI': 2, 'VA': 2,
@@ -917,7 +923,7 @@
     };
 
     const districtColors = {
-      1: '#ef4444', // Red (North Atlantic - VISN 1 & 4)
+      1: '#ef4444', // Red (North Atlantic)
       2: '#f97316', // Orange (Southeast)
       3: '#10b981', // Green (Midwest)
       4: '#a855f7', // Purple (Continental)
