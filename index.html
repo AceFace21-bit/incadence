@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 44) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 45) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -94,13 +94,18 @@
       display: inline-block;
     }
 
-    /* Option 2 Clean Charcoal Dark Container */
+    /* Clean Dark Map Container Styling */
     .leaflet-container {
-      background: #242424 !important;
+      background: #1e1e1e !important;
       outline: none;
     }
     .leaflet-control-attribution {
       display: none !important;
+    }
+
+    /* Vector SVG Crisp Stroke Styles */
+    path.leaflet-interactive {
+      vector-effect: non-scaling-stroke;
     }
 
     /* Tactile Glowing VA Destination Callout Banner */
@@ -160,7 +165,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 44)</span>
+        <span>BUILD 3.5 (REV 45)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -685,7 +690,7 @@
         
         const voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
-          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang === "en-US" || v.lang.startsWith("en")));
+          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.lang === "en-US" || v.lang.startsWith("en")));
           if (naturalVoice) activeUtterance.voice = naturalVoice;
         }
 
@@ -816,27 +821,28 @@
       attributionControl: false
     });
 
-    // 1. BASE LAYER: Clean Esri Dark Gray Canvas (High-contrast, zero key, zero watermark)
+    // 1. BASE LAYER: Clean Esri Dark Gray Base
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 16
     }).addTo(map);
 
-    // 2. VECTOR STATE LINES: Fast Direct Vector GeoJSON (Always Visible, 100% Crisp Cyan)
+    // 2. VECTOR STATE LINES: Direct High-Contrast Cyan Vector Overlay (Always Crisp & Visible)
+    let statesVectorLayer = null;
     fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
       .then(res => res.json())
       .then(data => {
-        L.geoJSON(data, {
+        statesVectorLayer = L.geoJSON(data, {
           style: {
             color: '#38bdf8',
-            weight: 1.4,
-            opacity: 0.85,
+            weight: 1.5,
+            opacity: 0.9,
             fillOpacity: 0
           }
         }).addTo(map);
       })
       .catch(() => {});
 
-    // 3. ZERO-KEY STREET & LABELS OVERLAY: Official Esri World Reference Layer (Streets, Cities, Neighborhoods)
+    // 3. ZERO-KEY STREET & REFERENCE LABELS: Official Esri World Transportation Reference
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 19,
       zIndex: 350
@@ -1078,7 +1084,7 @@
       }
 
       if (fly && data.lat && data.lng) {
-        map.flyTo([data.lat, data.lng], isFallback ? 5 : 14, { duration: 1.4 });
+        map.flyTo([data.lat, data.lng], isFallback ? 5 : 15, { duration: 1.4 });
         marker.setLatLng([data.lat, data.lng]);
         updateMarkerCallout(data);
         mapCoordinates.textContent = `${data.lat.toFixed(4)}° N, ${Math.abs(data.lng).toFixed(4)}° W`;
@@ -1234,7 +1240,7 @@
           const lon = position.coords.longitude;
 
           if (map) {
-            map.flyTo([lat, lon], 14, { duration: 1.4 });
+            map.flyTo([lat, lon], 15, { duration: 1.4 });
             marker.setLatLng([lat, lon]);
             mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
           }
