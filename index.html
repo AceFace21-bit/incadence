@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 41) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 42) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -94,18 +94,13 @@
       display: inline-block;
     }
 
-    /* Tactical Dark Styling */
+    /* Tactical Dark Container Styling */
     .leaflet-container {
-      background: #111827 !important;
+      background: #18191b !important;
       outline: none;
     }
     .leaflet-control-attribution {
       display: none !important;
-    }
-
-    /* Crisp High-Contrast Reference Label Styling */
-    .leaflet-pane.leaflet-overlay-pane {
-      z-index: 350;
     }
 
     /* Destination Callout Badge */
@@ -165,7 +160,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 41)</span>
+        <span>BUILD 3.5 (REV 42)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -821,15 +816,25 @@
       attributionControl: false
     });
 
-    // 1. BASE LAYER: Dark Gray Canvas Base
+    // 1. BASE LAYER: Dark Gray Canvas
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 16
     }).addTo(map);
 
-    // 2. REFERENCE OVERLAY LAYER: Crisp State Lines, County Borders, Highways, Major Streets & City Names
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 16,
-      pane: 'overlayPane'
+    // 2. STATE LINES LAYER: Official US Census Bureau State Boundaries (Crisp White Outlines)
+    const stateLinesLayer = L.tileLayer.wms('https://tigerweb.geo.census.gov/arcgis/services/TIGERweb/State_County/MapServer/WMSServer', {
+      layers: 'States',
+      format: 'image/png',
+      transparent: true,
+      zIndex: 250,
+      opacity: 0.8
+    }).addTo(map);
+
+    // 3. STREET NAMES & NEIGHBORHOODS OVERLAY (CartoDB Dark Only-Labels - 100% Free, Zero Key Needed)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      subdomains: 'abcd',
+      zIndex: 350
     }).addTo(map);
 
     // Custom Glowing Green Radar Marker Icon
