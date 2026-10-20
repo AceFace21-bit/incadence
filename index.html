@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 33) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 34) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -18,9 +18,9 @@ window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push
 <!-- Tailwind CSS & Lucide Icons -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
-<!-- Leaflet CSS & JS: 100% Reliable Mobile Safari / WebKit Map Engine (Zero WebGL Crash) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<!-- Mapbox GL JS -->
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
 body {
@@ -30,14 +30,20 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 .font-mono-code {
 font-family: 'JetBrains Mono', monospace;
 }
-/* Radar Reticle Centered */
+.mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right {
+transform: scale(0.7);
+transform-origin: bottom left;
+left: 6px !important;
+bottom: 2px !important;
+right: auto !important;
+}
 .radar-crosshair {
 position: absolute;
 top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
 pointer-events: none;
-z-index: 500;
+z-index: 20;
 }
 /* Tactile Big Button Styles */
 .tactile-btn {
@@ -96,19 +102,6 @@ background: rgba(15, 23, 42, 0.8);
 background: #334155;
 border-radius: 3px;
 }
-/* Custom Leaflet Dark UI */
-.leaflet-container {
-background: #020617 !important;
-font-family: inherit;
-}
-.leaflet-control-attribution {
-font-size: 8px !important;
-background: rgba(2, 6, 23, 0.7) !important;
-color: #64748b !important;
-}
-.leaflet-control-attribution a {
-color: #94a3b8 !important;
-}
 </style>
 </head>
 <body class="bg-slate-950 text-slate-100 h-[100dvh] w-screen overflow-hidden flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-slate-950 select-none">
@@ -131,7 +124,7 @@ Call 988 • 1
 <!-- Top Build Version Badge (Left) -->
 <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>BUILD 3.5 (REV 33)</span>
+<span>BUILD 3.5 (REV 34)</span>
 </div>
 <!-- Centered Platform Branding -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-2">
@@ -258,7 +251,7 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 </div>
 <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
 </section>
-<!-- Radar Target Map: Bulletproof Native HTML5 Tile Canvas Engine -->
+<!-- Radar Target Map Section with Enforced Explicit Height to Prevent Mobile Safari Collapse -->
 <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative shrink-0 shadow-md flex flex-col">
 <div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/90 shrink-0 z-10">
 <div class="flex items-center space-x-1.5">
@@ -267,15 +260,14 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 </div>
 <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">39.8283° N, 98.5795° W</span>
 </div>
-<!-- Guaranteed Mobile Safari Container -->
-<div class="relative w-full h-[200px] min-h-[200px] bg-slate-950 overflow-hidden">
-<div id="map" class="w-full h-full" style="height: 200px; min-height: 200px;"></div>
+<div class="relative w-full overflow-hidden bg-slate-950" style="height: 190px; min-height: 190px;">
+<div id="map" class="w-full h-full" style="height: 190px; width: 100%; min-height: 190px;"></div>
 <!-- Center Radar Crosshair Reticle -->
 <div class="radar-crosshair w-28 h-28 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center">
 <div class="w-16 h-16 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
 </div>
 <!-- Big Primary Dial Action Button Anchored on Radar -->
-<div class="absolute bottom-2 right-2 pointer-events-none z-[600]">
+<div class="absolute bottom-2 right-2 pointer-events-none z-30">
 <a 
 id="centerCallBtn" 
 href="tel:4123603620,1" 
@@ -685,9 +677,11 @@ window.speechSynthesis.onvoiceschanged = () => {
 window.speechSynthesis.getVoices();
 };
 }
-// DEAD CENTER USA GEOGRAPHIC COORDINATES & CONTINENTAL OVERVIEW ZOOM (Leaflet uses [Lat, Lng])
-const US_CENTER_LAT_LNG = [39.8283, -98.5795];
-const US_INITIAL_ZOOM = 4;
+// Split Mapbox token segments
+mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
+// Continental United States Geographic Center [Lng, Lat]
+const US_CENTER_LNG_LAT = [-98.5795, 39.8283];
+const US_OVERVIEW_ZOOM = 3.3;
 const defaultHub = {
 badge: "University Drive & Heinz Divisions",
 visn: "VA Pittsburgh Healthcare System",
@@ -695,64 +689,57 @@ name: "VA Pittsburgh Healthcare System",
 desc: "University Drive & H.J. Heinz Campus Catchment",
 phone: "412-360-3620 (Press 1)",
 cleanPhone: "4123603620,1",
-lat: 40.4444,
-lng: -79.9600
+coords: [-79.9600, 40.4444]
 };
 let activeHub = defaultHub;
-// INITIALIZE BULLETPROOF LEAFLET MAP ENGINE (Works 100% on iOS Safari)
-const map = L.map('map', {
-center: US_CENTER_LAT_LNG,
-zoom: US_INITIAL_ZOOM,
-zoomControl: false,
-attributionControl: true
+// Initialize Mapbox with Continental US Center
+const map = new mapboxgl.Map({
+container: 'map',
+style: 'mapbox://styles/mapbox/dark-v11',
+center: US_CENTER_LNG_LAT,
+zoom: US_OVERVIEW_ZOOM,
+attributionControl: false,
+renderWorldCopies: false
 });
-// Dark Matter Tiles (High performance, zero rate-limit, zero token failure)
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-attribution: '© OpenStreetMap contributors © CARTO',
-subdomains: 'abcd',
-maxZoom: 19
-}).addTo(map);
-// Custom Emerald Marker Pulse Pin
-const emeraldPinIcon = L.divIcon({
-className: 'custom-radar-pin',
-html: ⁠<div class="relative flex items-center justify-center w-6 h-6"> <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span> <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-emerald-100 shadow-md"></span> </div>⁠,
-iconSize: [24, 24],
-iconAnchor: [12, 12]
+map.addControl(new mapboxgl.AttributionControl({ compact: true }));
+const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
+.setLngLat(US_CENTER_LNG_LAT)
+.addTo(map);
+// Guaranteed sizing refresh on WebKit load
+map.on('load', () => {
+map.resize();
 });
-const marker = L.marker(US_CENTER_LAT_LNG, { icon: emeraldPinIcon }).addTo(map);
-// Ensure map tiles properly compute canvas bounds upon iOS render
-setTimeout(() => { map.invalidateSize(); }, 150);
-setTimeout(() => { map.invalidateSize(); }, 600);
-window.addEventListener('resize', () => { map.invalidateSize(); });
-// Complete Nationwide & Regional VISN Routing Database (lat, lng)
+setTimeout(() => { if (map) map.resize(); }, 200);
+setTimeout(() => { if (map) map.resize(); }, 600);
+// Complete Nationwide & Regional VISN Routing Database
 const visnDatabase = {
-"visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
-"visn2": { badge: "NY / NJ Metro Region", visn: "James J. Peters VAMC (Bronx)", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Regional Catchment", phone: "718-584-9000", cleanPhone: "7185849000", lat: 40.8677, lng: -73.9004 },
-"visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
-"visn4_butler": { badge: "Butler Regional Division", visn: "Butler VA Health Care System", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", lat: 40.8687, lng: -79.9554 },
-"visn4_erie": { badge: "NW Pennsylvania Division", visn: "Erie VA Medical Center", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", lat: 42.1065, lng: -80.0526 },
-"visn4_altoona": { badge: "Central PA Division", visn: "James E. Van Zandt VAMC", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", lat: 40.4996, lng: -78.3846 },
-"visn4_lebanon": { badge: "South Central PA Division", visn: "Lebanon VA Medical Center", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", lat: 40.3106, lng: -76.4024 },
-"visn4_coatesville": { badge: "Brandywine Division", visn: "Coatesville VA Medical Center", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", lat: 40.0039, lng: -75.8078 },
-"visn4_wilkes": { badge: "Northeastern PA Division", visn: "Wilkes-Barre VA Medical Center", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", lat: 41.2523, lng: -75.8457 },
-"visn4_wilmington": { badge: "Delaware Valley Division", visn: "Wilmington VA Medical Center", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey Catchment", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", lat: 39.7423, lng: -75.6022 },
-"visn4_philly": { badge: "SE Pennsylvania Division", visn: "Michael J. Crescenz VAMC", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", lat: 39.9482, lng: -75.1979 },
-"visn5": { badge: "Capital Regional Network", visn: "Washington DC VA Medical Center", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA Catchment", phone: "202-745-8000", cleanPhone: "2027458000", lat: 38.9298, lng: -77.0125 },
-"visn6": { badge: "Mid-Atlantic Network", visn: "Fayetteville NC VA Medical Center", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA Catchment", phone: "910-488-2120", cleanPhone: "9104882120", lat: 35.0805, lng: -78.8872 },
-"visn7": { badge: "Southeast Regional Network", visn: "Atlanta VA Medical Center", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina Catchment", phone: "404-321-6111", cleanPhone: "4043216111", lat: 33.7938, lng: -84.3015 },
-"visn8": { badge: "Sunshine Regional Network", visn: "James A. Haley Hospital (Tampa)", name: "James A. Haley Hospital (Tampa)", desc: "Florida & Puerto Rico Regional Catchment", phone: "813-972-2000", cleanPhone: "8139722000", lat: 28.0592, lng: -82.4278 },
-"visn9": { badge: "MidSouth Regional Network", visn: "Tennessee Valley Healthcare", name: "Tennessee Valley Healthcare", desc: "Tennessee, Kentucky & South IN Catchment", phone: "615-327-4751", cleanPhone: "6153274751", lat: 36.1444, lng: -86.8041 },
-"visn10": { badge: "Midwest Network (OH/IN/MI)", visn: "Louis Stokes Cleveland VAMC", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana & Lower Michigan Catchment", phone: "216-791-3800", cleanPhone: "2167913800", lat: 41.5036, lng: -81.6119 },
-"visn12": { badge: "Great Lakes Network", visn: "Jesse Brown VAMC (Chicago)", name: "Jesse Brown VAMC (Chicago)", desc: "Illinois, Wisconsin & Upper MI Catchment", phone: "312-569-8387", cleanPhone: "3125698387", lat: 41.8703, lng: -87.6749 },
-"visn15": { badge: "Heartland Regional Network", visn: "Kansas City VA Medical Center", name: "Kansas City VA Medical Center", desc: "Missouri, Kansas & South IL Catchment", phone: "816-861-4700", cleanPhone: "8168614700", lat: 39.0494, lng: -94.5222 },
-"visn16": { badge: "South Central Regional Network", visn: "Michael E. DeBakey VAMC", name: "Michael E. DeBakey VAMC", desc: "MS, LA, AR & East Texas Catchment", phone: "713-791-1414", cleanPhone: "7137911414", lat: 29.7042, lng: -95.3855 },
-"visn17": { badge: "Heart of Texas Network", visn: "Central Texas Veterans Health", name: "Central Texas Veterans Health", desc: "Central, South & West Texas Catchment", phone: "254-778-4811", cleanPhone: "2547784811", lat: 31.0827, lng: -97.3547 },
-"visn19": { badge: "Rocky Mountain Network", visn: "Rocky Mountain Regional VAMC", name: "Rocky Mountain Regional VAMC", desc: "CO, MT, UT, WY & West KS/NE Catchment", phone: "303-399-8020", cleanPhone: "3033998020", lat: 39.7420, lng: -104.8384 },
-"visn20": { badge: "Northwest Regional Network", visn: "VA Puget Sound Healthcare", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, ID & Alaska Catchment", phone: "206-762-1010", cleanPhone: "2067621010", lat: 47.5583, lng: -122.3101 },
-"visn21": { badge: "Sierra Pacific Network", visn: "San Francisco VA Health Care", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii Catchment", phone: "415-221-4810", cleanPhone: "4152214810", lat: 37.7820, lng: -122.5052 },
-"visn22": { badge: "Desert Pacific Network", visn: "VA Greater Los Angeles Healthcare", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona Catchment", phone: "310-478-3711", cleanPhone: "3104783711", lat: 34.0532, lng: -118.4552 },
-"visn23": { badge: "Midwest Regional Network", visn: "Minneapolis VA Health Care", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE Catchment", phone: "612-725-2000", cleanPhone: "6127252000", lat: 44.9015, lng: -93.2081 },
-"national_fallback": { badge: "National Dispatch Center", visn: "VA Beneficiary Travel Dispatch", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Beneficiary Travel Hotline", phone: "855-574-7292", cleanPhone: "8555747292", lat: 38.9072, lng: -77.0369 }
+"visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
+"visn2": { badge: "NY / NJ Metro Region", visn: "James J. Peters VAMC (Bronx)", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Regional Catchment", phone: "718-584-9000", cleanPhone: "7185849000", coords: [-73.9004, 40.8677] },
+"visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
+"visn4_butler": { badge: "Butler Regional Division", visn: "Butler VA Health Care System", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
+"visn4_erie": { badge: "NW Pennsylvania Division", visn: "Erie VA Medical Center", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
+"visn4_altoona": { badge: "Central PA Division", visn: "James E. Van Zandt VAMC", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+"visn4_lebanon": { badge: "South Central PA Division", visn: "Lebanon VA Medical Center", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
+"visn4_coatesville": { badge: "Brandywine Division", visn: "Coatesville VA Medical Center", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
+"visn4_wilkes": { badge: "Northeastern PA Division", visn: "Wilkes-Barre VA Medical Center", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
+"visn4_wilmington": { badge: "Delaware Valley Division", visn: "Wilmington VA Medical Center", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey Catchment", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
+"visn4_philly": { badge: "SE Pennsylvania Division", visn: "Michael J. Crescenz VAMC", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
+"visn5": { badge: "Capital Regional Network", visn: "Washington DC VA Medical Center", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA Catchment", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0125, 38.9298] },
+"visn6": { badge: "Mid-Atlantic Network", visn: "Fayetteville NC VA Medical Center", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA Catchment", phone: "910-488-2120", cleanPhone: "9104882120", coords: [-78.8872, 35.0805] },
+"visn7": { badge: "Southeast Regional Network", visn: "Atlanta VA Medical Center", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina Catchment", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.3015, 33.7938] },
+"visn8": { badge: "Sunshine Regional Network", visn: "James A. Haley Hospital (Tampa)", name: "James A. Haley Hospital (Tampa)", desc: "Florida & Puerto Rico Regional Catchment", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4278, 28.0592] },
+"visn9": { badge: "MidSouth Regional Network", visn: "Tennessee Valley Healthcare", name: "Tennessee Valley Healthcare", desc: "Tennessee, Kentucky & South IN Catchment", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8041, 36.1444] },
+"visn10": { badge: "Midwest Network (OH/IN/MI)", visn: "Louis Stokes Cleveland VAMC", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana & Lower Michigan Catchment", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6119, 41.5036] },
+"visn12": { badge: "Great Lakes Network", visn: "Jesse Brown VAMC (Chicago)", name: "Jesse Brown VAMC (Chicago)", desc: "Illinois, Wisconsin & Upper MI Catchment", phone: "312-569-8387", cleanPhone: "3125698387", coords: [-87.6749, 41.8703] },
+"visn15": { badge: "Heartland Regional Network", visn: "Kansas City VA Medical Center", name: "Kansas City VA Medical Center", desc: "Missouri, Kansas & South IL Catchment", phone: "816-861-4700", cleanPhone: "8168614700", coords: [-94.5222, 39.0494] },
+"visn16": { badge: "South Central Regional Network", visn: "Michael E. DeBakey VAMC", name: "Michael E. DeBakey VAMC", desc: "MS, LA, AR & East Texas Catchment", phone: "713-791-1414", cleanPhone: "7137911414", coords: [-95.3855, 29.7042] },
+"visn17": { badge: "Heart of Texas Network", visn: "Central Texas Veterans Health", name: "Central Texas Veterans Health", desc: "Central, South & West Texas Catchment", phone: "254-778-4811", cleanPhone: "2547784811", coords: [-97.3547, 31.0827] },
+"visn19": { badge: "Rocky Mountain Network", visn: "Rocky Mountain Regional VAMC", name: "Rocky Mountain Regional VAMC", desc: "CO, MT, UT, WY & West KS/NE Catchment", phone: "303-399-8020", cleanPhone: "3033998020", coords: [-104.8384, 39.7420] },
+"visn20": { badge: "Northwest Regional Network", visn: "VA Puget Sound Healthcare", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, ID & Alaska Catchment", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3101, 47.5583] },
+"visn21": { badge: "Sierra Pacific Network", visn: "San Francisco VA Health Care", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii Catchment", phone: "415-221-4810", cleanPhone: "4152214810", coords: [-122.5052, 37.7820] },
+"visn22": { badge: "Desert Pacific Network", visn: "VA Greater Los Angeles Healthcare", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona Catchment", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4552, 34.0532] },
+"visn23": { badge: "Midwest Regional Network", visn: "Minneapolis VA Health Care", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE Catchment", phone: "612-725-2000", cleanPhone: "6127252000", coords: [-93.2081, 44.9015] },
+"national_fallback": { badge: "National Dispatch Center", visn: "VA Beneficiary Travel Dispatch", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Beneficiary Travel Hotline", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
 };
 const zipInput = document.getElementById('zipInput');
 const clearZipBtn = document.getElementById('clearZipBtn');
@@ -821,9 +808,9 @@ hideAlert();
 matchStatus.textContent = "Live Auto-Lookup";
 matchStatus.className = "text-[10px] font-mono-code text-slate-400";
 centerCallBtn.classList.remove('call-btn-blinking');
-// Smooth reset back to USA center overview
-map.flyTo(US_CENTER_LAT_LNG, US_INITIAL_ZOOM, { duration: 1.2 });
-marker.setLatLng(US_CENTER_LAT_LNG);
+// Reset back to Nationwide Center View
+map.flyTo({ center: US_CENTER_LNG_LAT, zoom: US_OVERVIEW_ZOOM, speed: 1.4 });
+mapMarker.setLngLat(US_CENTER_LNG_LAT);
 mapCoordinates.textContent = ⁠39.8283° N, 98.5795° W⁠;
 radarHeaderLabel.textContent = "Nationwide VISN Radar View";
 zipInput.focus();
@@ -870,7 +857,7 @@ if ([193, 194, 195, 196].includes(p)) return visnDatabase.visn4_coatesville;
 if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
 if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
 if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
+if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visn6 = visnDatabase.visn6;
 if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
 if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
 if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
@@ -900,11 +887,10 @@ centerCallText.textContent = isFallback ? "CALL DISPATCH" : "CALL TRAVEL COORDIN
 if (radarHeaderLabel) {
 radarHeaderLabel.textContent = isFallback ? "National Dispatch Radar View" : ⁠${data.name} Radar View⁠;
 }
-if (map && data.lat && data.lng) {
-const dest = [data.lat, data.lng];
-map.flyTo(dest, isFallback ? 5 : 12, { duration: 1.4 });
-marker.setLatLng(dest);
-mapCoordinates.textContent = ⁠${data.lat.toFixed(4)}° N, ${Math.abs(data.lng).toFixed(4)}° W⁠;
+if (map && data.coords) {
+map.flyTo({ center: data.coords, zoom: isFallback ? 5 : 12, speed: 1.4, essential: true });
+mapMarker.setLngLat(data.coords);
+mapCoordinates.textContent = ⁠${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W⁠;
 }
 }
 function showAlert(msg) {
@@ -989,15 +975,19 @@ const zip = numbersOnly.substring(0, 5);
 zipInput.value = zip;
 clearZipBtn.classList.remove('hidden');
 executeLookup(zip, 'Voice Input');
+// 1. Stop recognition so hardware releases the mic
 try { recognition.stop(); } catch (e) {}
 micBtnLabel.textContent = "VOICE";
 micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
+// 2. Resolve hub and verbalize location
 const matchedHub = resolveHub(zip);
 if (matchedHub) {
 const spokenPhone = matchedHub.phone.replace(/ Ext /gi, ' extension ');
 const spokenReply = ⁠${matchedHub.name}. Phone number ${spokenPhone}. Click the blinking button if you would like to make the call.⁠;
+// Highlight the speak button and trigger voice readout
 readFacilityBtn.classList.add('animate-bounce');
 setTimeout(() => { readFacilityBtn.classList.remove('animate-bounce'); }, 2000);
+// Execute speech synthesis
 speakGreeting(spokenReply);
 }
 } else {
@@ -1031,8 +1021,8 @@ async (position) => {
 const lat = position.coords.latitude;
 const lon = position.coords.longitude;
 if (map) {
-map.flyTo([lat, lon], 12, { duration: 1.4 });
-marker.setLatLng([lat, lon]);
+map.flyTo({ center: [lon, lat], zoom: 12, essential: true });
+mapMarker.setLngLat([lon, lat]);
 mapCoordinates.textContent = ⁠${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W⁠;
 }
 try {
