@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                         -->
-<!-- BUILD VERSION: BUILD 3.7 (REV 60) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.8 (REV 61) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
 <!-- DATE: OCTOBER 20, 2026                                                     -->
 <!-- DEPLOYMENT TARGET: GITHUB PAGES (aceface21-bit.github.io)                  -->
@@ -219,7 +219,7 @@
           <div class="vu-bar"></div>
           <div class="vu-bar"></div>
         </div>
-        <span>BUILD 3.7 (REV 60)</span>
+        <span>BUILD 3.8 (REV 61)</span>
       </div>
 
       <!-- Platform Branding -->
@@ -996,7 +996,8 @@
       iconAnchor: [7, 7]
     });
 
-    const marker = L.marker([pittsburghDefaultHub.lat, pittsburghDefaultHub.lng], { icon: radarIcon }).addTo(map);
+    // Initial marker placed at the geographic center of the US (Kansas) on load
+    const marker = L.marker([39.8283, -98.5795], { icon: radarIcon }).addTo(map);
 
     function updateMarkerCallout(hub) {
       if (!hub || !hub.name) return;
@@ -1018,7 +1019,7 @@
 
     setTimeout(() => { 
       map.invalidateSize();
-      // On initial load, keep national view centered in Kansas, do not force popup over the US map
+      map.setView([39.8283, -98.5795], 4);
     }, 200);
     setTimeout(() => { map.invalidateSize(); }, 600);
     window.addEventListener('resize', () => { map.invalidateSize(); });
@@ -1441,8 +1442,8 @@
       );
     });
 
-    // Initial load setup for default PGH
-    updateMarkerCallout(pittsburghDefaultHub);
+    // Initial load setup: keep centered in Kansas coast-to-coast view
+    map.setView([39.8283, -98.5795], 4);
   </script>
 </body>
 </html>
