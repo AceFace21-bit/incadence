@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.7 (REV 56) - PRODUCTION MASTER                      -->
+<!-- BUILD VERSION: BUILD 3.8 (REV 57) - PRODUCTION MASTER                      -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
 <!-- DATE: OCTOBER 20, 2026                                                     -->
 <!-- ========================================================================== -->
@@ -181,7 +181,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.7 (REV 56)</span>
+        <span>BUILD 3.8 (REV 57)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -252,14 +252,7 @@
           <strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
         </button>
       </div>
-      <button 
-        id="badgeRequirementBtn" 
-        type="button" 
-        class="text-[9px] font-mono-code text-emerald-400 hover:text-emerald-300 underline uppercase tracking-wider shrink-0 ml-1" 
-        title="View VHA travel authorization criteria"
-      >
-        VHA Details
-      </button>
+      
     </div>
 
     <!-- Input Section: Keypad, Voice Recognition & GPS Geolocation -->
@@ -746,7 +739,7 @@
     const eligibilityDetailModal = document.getElementById('eligibilityDetailModal');
     const infoRequirementBtn = document.getElementById('infoRequirementBtn');
     const textRequirementBtn = document.getElementById('textRequirementBtn');
-    const badgeRequirementBtn = document.getElementById('badgeRequirementBtn');
+    
     const closeEligibilityDetailBtn = document.getElementById('closeEligibilityDetailBtn');
     const dismissEligibilityDetailBtn = document.getElementById('dismissEligibilityDetailBtn');
 
@@ -761,7 +754,7 @@
 
     if (infoRequirementBtn) infoRequirementBtn.addEventListener('click', openEligibilityModal);
     if (textRequirementBtn) textRequirementBtn.addEventListener('click', openEligibilityModal);
-    if (badgeRequirementBtn) badgeRequirementBtn.addEventListener('click', openEligibilityModal);
+    
 
     if (closeEligibilityDetailBtn && eligibilityDetailModal) {
       closeEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
