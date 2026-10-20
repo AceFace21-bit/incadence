@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 49) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 51) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -94,9 +94,9 @@
       display: inline-block;
     }
 
-    /* Clean Dark Map Container Styling */
+    /* Clean Dark Container */
     .leaflet-container {
-      background: #090d16 !important;
+      background: #111827 !important;
       outline: none;
     }
     .leaflet-control-attribution {
@@ -115,7 +115,7 @@
       box-shadow: none;
       color: #38bdf8;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 800;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -126,9 +126,9 @@
 
     /* Tactile Glowing VA Destination Callout Banner */
     .va-radar-callout {
-      background: rgba(15, 23, 42, 0.94);
+      background: rgba(15, 23, 42, 0.95);
       border: 1.5px solid #10b981;
-      box-shadow: 0 0 18px rgba(16, 185, 129, 0.7);
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.75);
       border-radius: 8px;
       padding: 5px 10px;
       color: #f8fafc;
@@ -181,7 +181,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 49)</span>
+        <span>BUILD 3.5 (REV 51)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -811,10 +811,10 @@
       };
     }
 
-    // Default Starting View: Geographic Center of Contiguous US (Lebanon, KS)
+    // Geographic Center of Contiguous US (Coast-to-Coast Initial View)
     const US_CENTER_LAT = 39.8283;
     const US_CENTER_LNG = -98.5795;
-    const US_INITIAL_ZOOM = 4.0;
+    const US_COAST_TO_COAST_ZOOM = 3.2;
 
     const defaultHub = {
       badge: "University Drive & Heinz Divisions",
@@ -832,17 +832,25 @@
     // Initialize Leaflet Map
     const map = L.map('map', {
       center: [US_CENTER_LAT, US_CENTER_LNG],
-      zoom: US_INITIAL_ZOOM,
+      zoom: US_COAST_TO_COAST_ZOOM,
+      minZoom: 2.5,
       zoomControl: false,
       attributionControl: false
     });
 
-    // 1. BASE LAYER: Dark Matter CartoDB Basemap (Crisp, High-Contrast, Zero Key Required)
-    L.tileLayer('https://a.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png', {
-      maxZoom: 19
+    // 1. BASE LAYER: Esri World Dark Gray Canvas Base (Reliable, Zero-Watermark, Dark Tone)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 16
     }).addTo(map);
 
-    // 2. VECTOR STATE LINES & STATE NAMES OVERLAY
+    // 2. STREETS & TRANSPORTATION OVERLAY (Only Appears at Local Zoom >= 12, Leaving Nationwide Clean)
+    const streetOverlay = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
+      minZoom: 12,
+      maxZoom: 16,
+      zIndex: 350
+    });
+
+    // 3. VECTOR STATE BOUNDARIES: Precision High-Resolution GeoJSON (Clean Blue #0284c7)
     let stateBordersLayer = null;
     const stateLabelsGroup = L.layerGroup().addTo(map);
 
@@ -899,34 +907,36 @@
       const lblIcon = L.divIcon({
         className: 'state-name-label',
         html: `<span>${s.name}</span>`,
-        iconSize: [24, 14],
-        iconAnchor: [12, 7]
+        iconSize: [20, 12],
+        iconAnchor: [10, 6]
       });
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
 
-    // High-resolution real US State vector borders
+    // High-Resolution Smooth US State GeoJSON Boundaries
     fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
       .then(res => res.json())
       .then(data => {
         stateBordersLayer = L.geoJSON(data, {
           style: {
-            color: '#0284c7', // True vivid blue
-            weight: 2.2,
-            opacity: 0.9,
+            color: '#0284c7', // Smooth, crisp state-line blue
+            weight: 1.8,
+            opacity: 0.95,
             fillOpacity: 0
           }
         }).addTo(map);
       })
       .catch(() => {});
 
-    // Dynamic zoom visibility handler: hides state overlays when focusing into city/street level
+    // Dynamic zoom handler: switches seamlessly between Continental State Radar and Local Streets
     map.on('zoomend', () => {
       const z = map.getZoom();
-      if (z >= 11) {
+      if (z >= 12) {
+        if (!map.hasLayer(streetOverlay)) map.addLayer(streetOverlay);
         if (stateBordersLayer && map.hasLayer(stateBordersLayer)) map.removeLayer(stateBordersLayer);
         if (map.hasLayer(stateLabelsGroup)) map.removeLayer(stateLabelsGroup);
       } else {
+        if (map.hasLayer(streetOverlay)) map.removeLayer(streetOverlay);
         if (stateBordersLayer && !map.hasLayer(stateBordersLayer)) map.addLayer(stateBordersLayer);
         if (!map.hasLayer(stateLabelsGroup)) map.addLayer(stateLabelsGroup);
       }
@@ -1073,8 +1083,8 @@
       matchStatus.className = "text-[10px] font-mono-code text-slate-400";
       centerCallBtn.classList.remove('call-btn-blinking');
       
-      // Reset back to USA Center View
-      map.flyTo([US_CENTER_LAT, US_CENTER_LNG], US_INITIAL_ZOOM, { duration: 1.2 });
+      // Reset back to USA Coast-to-Coast View
+      map.flyTo([US_CENTER_LAT, US_CENTER_LNG], US_COAST_TO_COAST_ZOOM, { duration: 1.2 });
       marker.setLatLng([US_CENTER_LAT, US_CENTER_LNG]);
       marker.closePopup();
       mapCoordinates.textContent = `${US_CENTER_LAT.toFixed(4)}° N, ${Math.abs(US_CENTER_LNG).toFixed(4)}° W`;
@@ -1168,8 +1178,8 @@
       }
 
       if (fly && data.lat && data.lng) {
-        // High-clarity hospital campus zoom (level 16) with all street & building names
-        map.flyTo([data.lat, data.lng], isFallback ? 5 : 16, { duration: 1.4 });
+        // Zoom 15 delivers razor-sharp local streets, hospital campus buildings, and zero 404 tile glitches
+        map.flyTo([data.lat, data.lng], isFallback ? 5 : 15, { duration: 1.4 });
         marker.setLatLng([data.lat, data.lng]);
         updateMarkerCallout(data);
         mapCoordinates.textContent = `${data.lat.toFixed(4)}° N, ${Math.abs(data.lng).toFixed(4)}° W`;
@@ -1325,7 +1335,7 @@
           const lon = position.coords.longitude;
 
           if (map) {
-            map.flyTo([lat, lon], 16, { duration: 1.4 });
+            map.flyTo([lat, lon], 15, { duration: 1.4 });
             marker.setLatLng([lat, lon]);
             mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
           }
