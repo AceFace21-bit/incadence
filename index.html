@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 35) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 36) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -21,7 +21,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Leaflet CSS & JS (Rock solid canvas/raster tile rendering on mobile Safari) -->
+  <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
@@ -94,19 +94,17 @@
       display: inline-block;
     }
 
-    /* Leaflet overrides for dark radar UI */
+    /* Tactical Dark Radar Tile Styling (Pure Inverted Dark Mode) */
     .leaflet-container {
       background: #020617 !important;
       outline: none;
     }
-    .leaflet-control-attribution {
-      font-size: 7px !important;
-      background: rgba(2, 6, 23, 0.75) !important;
-      color: #64748b !important;
+    .radar-tiles {
+      filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+      -webkit-filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
     }
-    .leaflet-control-attribution a {
-      color: #94a3b8 !important;
-      text-decoration: none;
+    .leaflet-control-attribution {
+      display: none !important;
     }
 
     /* Modal Scrollbars */
@@ -144,7 +142,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 35)</span>
+        <span>BUILD 3.5 (REV 36)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -800,11 +798,11 @@
       attributionControl: false
     });
 
-    // High performance CartoDB Dark Matter tiles (free, reliable, dark theme, zero auth)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    // 100% Free, Unlimited OpenStreetMap Humanitarian/Standard Tiles with Pure Dark Tactical Shader Filter
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      subdomains: 'abcd',
-      attribution: '&copy; OpenStreetMap, &copy; CARTO'
+      className: 'radar-tiles',
+      attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
     // Custom Glowing Green Radar Marker Icon
@@ -817,7 +815,7 @@
 
     const marker = L.marker([US_CENTER_LAT, US_CENTER_LNG], { icon: radarIcon }).addTo(map);
 
-    // Invalidate map size after DOM mount and rendering cycle to eliminate gray/blank tile issues
+    // Invalidate map size after DOM mount to ensure crisp rendering
     setTimeout(() => { map.invalidateSize(); }, 150);
     setTimeout(() => { map.invalidateSize(); }, 600);
     window.addEventListener('resize', () => { map.invalidateSize(); });
