@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 36) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 37) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -94,14 +94,14 @@
       display: inline-block;
     }
 
-    /* Tactical Dark Radar Tile Styling (Pure Inverted Dark Mode) */
+    /* Option 3 High-Contrast Monochrome Tactical Radar Styling */
     .leaflet-container {
-      background: #020617 !important;
+      background: #000000 !important;
       outline: none;
     }
-    .radar-tiles {
-      filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
-      -webkit-filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+    .contrast-radar-tiles {
+      filter: contrast(180%) brightness(95%);
+      -webkit-filter: contrast(180%) brightness(95%);
     }
     .leaflet-control-attribution {
       display: none !important;
@@ -142,7 +142,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 36)</span>
+        <span>BUILD 3.5 (REV 37)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -291,7 +291,7 @@
         <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">39.8283° N, 98.5795° W</span>
       </div>
       
-      <div class="relative w-full flex-1 bg-slate-950" style="min-height: 150px;">
+      <div class="relative w-full flex-1 bg-black" style="min-height: 150px;">
         <!-- Leaflet Map Container -->
         <div id="map" class="absolute inset-0 w-full h-full" style="height: 100%; width: 100%;"></div>
 
@@ -578,7 +578,7 @@
           <span>Eligibility Verification</span>
         </div>
         <p class="text-[11px] text-slate-200 leading-normal">
-          To qualify for VA Beneficiary Travel transit coordination, you must be <strong>30% or more service-connected</strong>, traveling for care of a service-connected condition, or otherwise <strong>VA Travel authorized</strong> (38 CFR Part 70).
+          To qualify for VA Beneficiary Travel transit coordination, you must be <strong>30% or more service-connected</strong>, profile-authorized, or traveling for care of a service-connected condition (38 CFR Part 70).
         </p>
       </div>
 
@@ -667,7 +667,7 @@
         
         const voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
-          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.lang === "en-US" || v.lang.startsWith("en")));
+          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang === "en-US" || v.lang.startsWith("en")));
           if (naturalVoice) activeUtterance.voice = naturalVoice;
         }
 
@@ -798,11 +798,12 @@
       attributionControl: false
     });
 
-    // 100% Free, Unlimited OpenStreetMap Humanitarian/Standard Tiles with Pure Dark Tactical Shader Filter
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      className: 'radar-tiles',
-      attribution: '&copy; OpenStreetMap'
+    // OPTION 3: High-Contrast Monochrome Tactical Radar (Toner Dark / Contrast Engine)
+    // Zero API key, zero watermark, high contrast white arterial roads & coastlines on deep black terrain
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_dark/{z}/{x}/{y}{r}.png', {
+      maxZoom: 20,
+      className: 'contrast-radar-tiles',
+      attribution: '&copy; Stadia Maps &copy; Stamen Design &copy; OpenStreetMap'
     }).addTo(map);
 
     // Custom Glowing Green Radar Marker Icon
@@ -815,7 +816,7 @@
 
     const marker = L.marker([US_CENTER_LAT, US_CENTER_LNG], { icon: radarIcon }).addTo(map);
 
-    // Invalidate map size after DOM mount to ensure crisp rendering
+    // Invalidate map size after DOM mount to guarantee razor-sharp tile rendering
     setTimeout(() => { map.invalidateSize(); }, 150);
     setTimeout(() => { map.invalidateSize(); }, 600);
     window.addEventListener('resize', () => { map.invalidateSize(); });
