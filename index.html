@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                         -->
-<!-- BUILD VERSION: BUILD 3.10 (REV 64) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.10 (REV 65) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
 <!-- DATE: OCTOBER 20, 2026                                                     -->
 <!-- DEPLOYMENT TARGET: GITHUB PAGES (aceface21-bit.github.io)                  -->
@@ -191,6 +191,36 @@
       background: #d97706;
       border-radius: 3px;
     }
+  
+    /* Red, White & Blue Flag Wave Marquee Animation */
+    @keyframes flagWaveShimmer {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .flag-wave-marquee {
+      background: linear-gradient(
+        270deg,
+        #dc2626 0%,
+        #ffffff 35%,
+        #2563eb 70%,
+        #dc2626 100%
+      );
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: flagWaveShimmer 4s ease infinite;
+      display: inline-block;
+    }
+
   </style>
 </head>
 <body class="bg-stone-950 text-stone-100 h-[100dvh] w-screen overflow-hidden flex flex-col justify-between antialiased selection:bg-amber-500 selection:text-stone-950 select-none">
@@ -219,7 +249,7 @@
           <div class="vu-bar"></div>
           <div class="vu-bar"></div>
         </div>
-        <span>BUILD 3.10 (REV 64)</span>
+        <span>BUILD 3.10 (REV 65)</span>
       </div>
 
       <!-- Platform Branding -->
@@ -295,7 +325,7 @@
     <!-- Input Section: Keypad, Voice Recognition & GPS Geolocation -->
     <section class="desk-wood-grain border border-amber-900/40 rounded-lg p-2 shrink-0 shadow-md">
       <div class="flex items-center justify-between mb-1">
-        <label for="zipInput" class="block text-[10.5px] font-extrabold uppercase tracking-wider desk-gold-wave">
+        <label for="zipInput" class="block text-[10.5px] font-extrabold uppercase tracking-wider flag-wave-marquee">
           ENTER 5-DIGIT VETERAN ZIP CODE:
         </label>
         <span id="matchStatus" class="text-[9.5px] font-mono-code text-stone-400">Live Auto-Lookup</span>
