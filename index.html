@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.6 (REV 55) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.7 (REV 56) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -24,6 +24,9 @@
   <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Leaflet Official US States Vector Data (CORS-immune Script Load) -->
+  <script src="https://leafletjs.com/examples/choropleth/us-states.js"></script>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
@@ -103,9 +106,16 @@
       display: none !important;
     }
 
-    /* Vector SVG Crisp Non-Scaling Strokes */
-    path.leaflet-interactive {
+    /* Vector SVG Crisp Non-Scaling Strokes & Bold Red Glow */
+    path.leaflet-interactive, path.state-border-path {
       vector-effect: non-scaling-stroke;
+    }
+
+    .bold-red-state-border {
+      stroke: #ef4444 !important;
+      stroke-width: 2.2px !important;
+      stroke-opacity: 1 !important;
+      filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.75));
     }
 
     /* State Name Radar Labels: Pure White High-Contrast Typography */
@@ -115,7 +125,7 @@
       box-shadow: none;
       color: #ffffff !important;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px;
+      font-size: 9px;
       font-weight: 800;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -181,7 +191,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.6 (REV 55)</span>
+        <span>BUILD 3.7 (REV 56)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -850,10 +860,62 @@
       zIndex: 350
     });
 
-    // 3. VECTOR STATE BOUNDARIES: Precision High-Resolution GeoJSON (Clean Tactical Red #ef4444)
+    // 3. VECTOR STATE BOUNDARIES: Bold Tactical Red (#ef4444)
     let stateBordersLayer = null;
     const stateLabelsGroup = L.layerGroup().addTo(map);
 
+    const boldRedStyle = {
+      color: '#ef4444',
+      weight: 2.2,
+      opacity: 1.0,
+      fillColor: '#ef4444',
+      fillOpacity: 0.03,
+      className: 'bold-red-state-border'
+    };
+
+    // Render State Boundaries Function
+    function renderStateBoundaries(geoJsonData) {
+      if (stateBordersLayer) {
+        map.removeLayer(stateBordersLayer);
+      }
+      stateBordersLayer = L.geoJSON(geoJsonData, {
+        style: boldRedStyle
+      }).addTo(map);
+      
+      // Ensure boundaries sit just beneath markers
+      if (typeof stateBordersLayer.bringToBack === 'function') {
+        stateBordersLayer.bringToBack();
+      }
+    }
+
+    // Try Synchronously loaded statesData from script tag first (100% reliable, zero CORS)
+    if (typeof statesData !== 'undefined') {
+      renderStateBoundaries(statesData);
+    } else {
+      // Fallback Multi-CDN GeoJSON loader
+      const geoJsonUrls = [
+        'https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson',
+        'https://cdn.jsdelivr.net/gh/PublicMapping/district-builder@master/server/fixtures/states.geojson'
+      ];
+
+      function tryFetchGeoJson(index) {
+        if (index >= geoJsonUrls.length) return;
+        fetch(geoJsonUrls[index])
+          .then(res => {
+            if (!res.ok) throw new Error('Network error');
+            return res.json();
+          })
+          .then(data => {
+            renderStateBoundaries(data);
+          })
+          .catch(() => {
+            tryFetchGeoJson(index + 1);
+          });
+      }
+      tryFetchGeoJson(0);
+    }
+
+    // High-Contrast Pure White State Abbreviations
     const stateLabels = [
       { name: "WA", lat: 47.4, lng: -120.5 },
       { name: "OR", lat: 43.8, lng: -120.6 },
@@ -912,21 +974,6 @@
       });
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
-
-    // High-Resolution Precision US State Boundaries in Tactical Red (#ef4444)
-    fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
-      .then(res => res.json())
-      .then(data => {
-        stateBordersLayer = L.geoJSON(data, {
-          style: {
-            color: '#ef4444',
-            weight: 1.8,
-            opacity: 0.95,
-            fillOpacity: 0
-          }
-        }).addTo(map);
-      })
-      .catch(() => {});
 
     // Dynamic zoom handler: switches seamlessly between Continental State Radar and Local Streets
     map.on('zoomend', () => {
