@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 40) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 41) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -94,20 +94,25 @@
       display: inline-block;
     }
 
-    /* Option 2: Clean Native Esri Dark Gray Canvas */
+    /* Tactical Dark Styling */
     .leaflet-container {
-      background: #242424 !important;
+      background: #111827 !important;
       outline: none;
     }
     .leaflet-control-attribution {
       display: none !important;
     }
 
+    /* Crisp High-Contrast Reference Label Styling */
+    .leaflet-pane.leaflet-overlay-pane {
+      z-index: 350;
+    }
+
     /* Destination Callout Badge */
     .va-radar-callout {
-      background: rgba(15, 23, 42, 0.94);
+      background: rgba(15, 23, 42, 0.96);
       border: 1.5px solid #10b981;
-      box-shadow: 0 0 16px rgba(16, 185, 129, 0.45);
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.55);
       border-radius: 8px;
       padding: 5px 9px;
       color: #f8fafc;
@@ -160,7 +165,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 40)</span>
+        <span>BUILD 3.5 (REV 41)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -808,7 +813,7 @@
 
     let activeHub = defaultHub;
 
-    // Initialize Leaflet Map (Guaranteed Canvas/Tile Rendering on Mobile Safari)
+    // Initialize Leaflet Map
     const map = L.map('map', {
       center: [US_CENTER_LAT, US_CENTER_LNG],
       zoom: US_INITIAL_ZOOM,
@@ -816,10 +821,15 @@
       attributionControl: false
     });
 
-    // OPTION 2: Pure Esri World Dark Gray Canvas Base (Clean Dark, Neutral Tone, Exact Preview #2)
+    // 1. BASE LAYER: Dark Gray Canvas Base
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 16
+    }).addTo(map);
+
+    // 2. REFERENCE OVERLAY LAYER: Crisp State Lines, County Borders, Highways, Major Streets & City Names
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 16,
-      attribution: '&copy; Esri &copy; OpenStreetMap'
+      pane: 'overlayPane'
     }).addTo(map);
 
     // Custom Glowing Green Radar Marker Icon
@@ -1058,7 +1068,7 @@
       }
 
       if (fly && data.lat && data.lng) {
-        map.flyTo([data.lat, data.lng], isFallback ? 5 : 12, { duration: 1.4 });
+        map.flyTo([data.lat, data.lng], isFallback ? 5 : 13, { duration: 1.4 });
         marker.setLatLng([data.lat, data.lng]);
         updateMarkerCallout(data);
         mapCoordinates.textContent = `${data.lat.toFixed(4)}° N, ${Math.abs(data.lng).toFixed(4)}° W`;
@@ -1214,7 +1224,7 @@
           const lon = position.coords.longitude;
 
           if (map) {
-            map.flyTo([lat, lon], 12, { duration: 1.4 });
+            map.flyTo([lat, lon], 13, { duration: 1.4 });
             marker.setLatLng([lat, lon]);
             mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
           }
