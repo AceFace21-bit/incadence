@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                         -->
-<!-- BUILD VERSION: BUILD 3.6 (REV 59) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.7 (REV 60) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
 <!-- DATE: OCTOBER 20, 2026                                                     -->
 <!-- DEPLOYMENT TARGET: GITHUB PAGES (aceface21-bit.github.io)                  -->
@@ -219,7 +219,7 @@
           <div class="vu-bar"></div>
           <div class="vu-bar"></div>
         </div>
-        <span>BUILD 3.6 (REV 59)</span>
+        <span>BUILD 3.7 (REV 60)</span>
       </div>
 
       <!-- Platform Branding -->
@@ -873,11 +873,11 @@
 
     let activeHub = pittsburghDefaultHub;
 
-    // Leaflet Map Initialization
+    // Leaflet Map Initialization - Coast-to-Coast Centered in Kansas (Geographic Center)
     const map = L.map('map', {
-      center: [pittsburghDefaultHub.lat, pittsburghDefaultHub.lng],
-      zoom: 14,
-      minZoom: 2.5,
+      center: [39.8283, -98.5795],
+      zoom: 4,
+      minZoom: 3,
       zoomControl: false,
       attributionControl: false
     });
@@ -1018,7 +1018,7 @@
 
     setTimeout(() => { 
       map.invalidateSize();
-      updateMarkerCallout(pittsburghDefaultHub);
+      // On initial load, keep national view centered in Kansas, do not force popup over the US map
     }, 200);
     setTimeout(() => { map.invalidateSize(); }, 600);
     window.addEventListener('resize', () => { map.invalidateSize(); });
