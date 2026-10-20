@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 46) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 48) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -103,24 +103,34 @@
       display: none !important;
     }
 
-    /* Crisp Street Raster Sharpening */
-    .crisp-street-tiles {
-      filter: contrast(125%) brightness(105%);
-      -webkit-filter: contrast(125%) brightness(105%);
-    }
-
     /* Vector SVG Crisp Non-Scaling Strokes */
     path.leaflet-interactive {
       vector-effect: non-scaling-stroke;
     }
 
+    /* State Name Radar Labels */
+    .state-name-label {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      color: #7dd3fc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-shadow: 0 0 4px #000, 0 1px 2px #000;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
     /* Tactile Glowing VA Destination Callout Banner */
     .va-radar-callout {
-      background: rgba(15, 23, 42, 0.96);
+      background: rgba(15, 23, 42, 0.94);
       border: 1.5px solid #10b981;
-      box-shadow: 0 0 18px rgba(16, 185, 129, 0.55);
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.7);
       border-radius: 8px;
-      padding: 5px 9px;
+      padding: 5px 10px;
       color: #f8fafc;
       font-family: 'JetBrains Mono', monospace;
       white-space: nowrap;
@@ -171,7 +181,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 46)</span>
+        <span>BUILD 3.5 (REV 48)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -696,7 +706,7 @@
         
         const voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
-          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.lang === "en-US" || v.lang.startsWith("en")));
+          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang === "en-US" || v.lang.startsWith("en")));
           if (naturalVoice) activeUtterance.voice = naturalVoice;
         }
 
@@ -827,12 +837,20 @@
       attributionControl: false
     });
 
-    // 1. BASE LAYER: Clean Charcoal Dark Gray Base
+    // 1. CLEAN DARK BASE LAYER (Esri Dark Gray Base)
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 16
+      maxZoom: 19
     }).addTo(map);
 
-    // 2. EMBEDDED US STATE BOUNDARIES GEOJSON: Always Visible, Zero-Latency, Dedicated Cyan-Blue Outlines (#0ea5e9)
+    // 2. DYNAMIC STREETS LAYER: Only enabled when zoomed into facility (Zoom >= 13)
+    // Eliminates all beige interstate lines from nationwide/regional view!
+    const streetLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
+      minZoom: 13,
+      maxZoom: 19,
+      zIndex: 300
+    });
+
+    // 3. COMPLETE US STATE BORDERS: Vivid Royal Blue (#0284c7)
     const usStatesGeoJSON = {
       "type": "FeatureCollection",
       "features": [
@@ -885,35 +903,87 @@
       ]
     };
 
-    // Vector GeoJSON for States: Immediate rendering, vibrant tactical cyan-blue line
     L.geoJSON(usStatesGeoJSON, {
       style: {
-        color: '#0ea5e9',
+        color: '#0284c7', // Vivid royal blue
         weight: 2.2,
         opacity: 0.95
       }
     }).addTo(map);
 
-    // Also fetch high-resolution nationwide state boundary geometry in background
-    fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
-      .then(res => res.json())
-      .then(data => {
-        L.geoJSON(data, {
-          style: {
-            color: '#0ea5e9',
-            weight: 2.0,
-            opacity: 0.95
-          }
-        }).addTo(map);
-      })
-      .catch(() => {});
+    // 4. US STATE NAMES: Clean Centroid Labels
+    const stateLabels = [
+      { name: "WA", lat: 47.4, lng: -120.5 },
+      { name: "OR", lat: 43.8, lng: -120.6 },
+      { name: "CA", lat: 36.8, lng: -119.4 },
+      { name: "NV", lat: 38.8, lng: -116.4 },
+      { name: "ID", lat: 44.1, lng: -114.7 },
+      { name: "MT", lat: 46.9, lng: -110.5 },
+      { name: "WY", lat: 43.1, lng: -107.6 },
+      { name: "UT", lat: 39.3, lng: -111.1 },
+      { name: "AZ", lat: 34.0, lng: -111.1 },
+      { name: "CO", lat: 39.0, lng: -105.8 },
+      { name: "NM", lat: 34.5, lng: -105.9 },
+      { name: "ND", lat: 47.5, lng: -99.8 },
+      { name: "SD", lat: 44.3, lng: -99.9 },
+      { name: "NE", lat: 41.5, lng: -99.8 },
+      { name: "KS", lat: 38.5, lng: -98.3 },
+      { name: "OK", lat: 35.5, lng: -97.5 },
+      { name: "TX", lat: 31.0, lng: -99.0 },
+      { name: "MN", lat: 46.7, lng: -94.7 },
+      { name: "IA", lat: 42.0, lng: -93.2 },
+      { name: "MO", lat: 38.6, lng: -92.2 },
+      { name: "AR", lat: 34.9, lng: -92.4 },
+      { name: "LA", lat: 31.2, lng: -91.9 },
+      { name: "WI", lat: 43.8, lng: -89.8 },
+      { name: "IL", lat: 40.6, lng: -89.4 },
+      { name: "MI", lat: 44.3, lng: -85.6 },
+      { name: "IN", lat: 40.3, lng: -86.1 },
+      { name: "KY", lat: 37.8, lng: -84.3 },
+      { name: "TN", lat: 35.5, lng: -86.6 },
+      { name: "MS", lat: 32.3, lng: -89.4 },
+      { name: "AL", lat: 32.3, lng: -86.9 },
+      { name: "GA", lat: 32.2, lng: -83.4 },
+      { name: "FL", lat: 28.3, lng: -81.5 },
+      { name: "SC", lat: 34.0, lng: -81.0 },
+      { name: "NC", lat: 35.8, lng: -79.0 },
+      { name: "VA", lat: 37.4, lng: -78.7 },
+      { name: "WV", lat: 38.6, lng: -80.4 },
+      { name: "OH", lat: 40.4, lng: -82.9 },
+      { name: "PA", lat: 41.2, lng: -77.2 },
+      { name: "NY", lat: 43.3, lng: -74.2 },
+      { name: "ME", lat: 45.2, lng: -69.4 },
+      { name: "VT", lat: 44.6, lng: -72.6 },
+      { name: "NH", lat: 43.2, lng: -71.6 },
+      { name: "MA", lat: 42.4, lng: -71.4 },
+      { name: "CT", lat: 41.6, lng: -72.7 },
+      { name: "NJ", lat: 40.1, lng: -74.5 },
+      { name: "MD", lat: 39.0, lng: -76.6 }
+    ];
 
-    // 3. CRISP STREET & HIGHWAY OVERLAY: Pure Esri World Transportation at high contrast
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19,
-      className: 'crisp-street-tiles',
-      zIndex: 350
-    }).addTo(map);
+    const stateLabelsGroup = L.layerGroup();
+    stateLabels.forEach(s => {
+      const lblIcon = L.divIcon({
+        className: 'state-name-label',
+        html: `<span>${s.name}</span>`,
+        iconSize: [24, 14],
+        iconAnchor: [12, 7]
+      });
+      L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
+    });
+    stateLabelsGroup.addTo(map);
+
+    // Zoom listener: shows state names on wide views, shows local streets on tight facility view
+    map.on('zoomend', () => {
+      const z = map.getZoom();
+      if (z >= 13) {
+        if (!map.hasLayer(streetLayer)) map.addLayer(streetLayer);
+        if (map.hasLayer(stateLabelsGroup)) map.removeLayer(stateLabelsGroup);
+      } else {
+        if (map.hasLayer(streetLayer)) map.removeLayer(streetLayer);
+        if (!map.hasLayer(stateLabelsGroup)) map.addLayer(stateLabelsGroup);
+      }
+    });
 
     // Custom Glowing Green Radar Marker Icon
     const radarIcon = L.divIcon({
@@ -1151,8 +1221,8 @@
       }
 
       if (fly && data.lat && data.lng) {
-        // High-clarity street level zoom (level 15.5) for immediate neighborhood & street names
-        map.flyTo([data.lat, data.lng], isFallback ? 5 : 15.5, { duration: 1.4 });
+        // High-clarity hospital campus zoom (level 16.5) reveals crisp streets around the VA hospital
+        map.flyTo([data.lat, data.lng], isFallback ? 5 : 16.5, { duration: 1.4 });
         marker.setLatLng([data.lat, data.lng]);
         updateMarkerCallout(data);
         mapCoordinates.textContent = `${data.lat.toFixed(4)}° N, ${Math.abs(data.lng).toFixed(4)}° W`;
@@ -1308,7 +1378,7 @@
           const lon = position.coords.longitude;
 
           if (map) {
-            map.flyTo([lat, lon], 15.5, { duration: 1.4 });
+            map.flyTo([lat, lon], 16.5, { duration: 1.4 });
             marker.setLatLng([lat, lon]);
             mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
           }
