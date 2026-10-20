@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.8 (REV 58) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.9 (REV 59) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-  <!-- Leaflet Official US States Vector Data (CORS-immune Script Load) -->
+  <!-- Leaflet Official US States Vector Data (Zero-CORS Vector Script Load) -->
   <script src="https://leafletjs.com/examples/choropleth/us-states.js"></script>
 
   <style>
@@ -113,7 +113,7 @@
 
     .bold-red-state-border {
       stroke: #ef4444 !important;
-      stroke-width: 2.2px !important;
+      stroke-width: 2.4px !important;
       stroke-opacity: 1 !important;
       filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.75));
     }
@@ -205,7 +205,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800 border border-slate-700 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.8 (REV 58)</span>
+        <span>BUILD 3.9 (REV 59)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -927,13 +927,12 @@
       attributionControl: false
     });
 
-    // 1. BASE LAYER: CartoDB Dark Matter (Pure Clean Radar Jet Black, Zero Distracting Watermarks)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd',
+    // 1. BASE LAYER: Esri Dark Gray Canvas Base (Official, 100% Free Public Server, ZERO API Key, Zero Watermarks)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 16
     }).addTo(map);
 
-    // 2. STREETS OVERLAY (Only Appears at Local Zoom >= 12, Leaving Nationwide Clean)
+    // 2. CRISP STREETS OVERLAY (Appears dynamically at Local Zoom >= 12, ZERO API Key, Zero Watermarks)
     const streetOverlay = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
       minZoom: 12,
       maxZoom: 16,
@@ -967,7 +966,7 @@
       }
     }
 
-    // Try statesData from us-states.js script tag first (100% reliable, zero CORS)
+    // Synchronous statesData from us-states.js script tag (100% reliable, zero CORS)
     if (typeof statesData !== 'undefined') {
       renderStateBoundaries(statesData);
     } else {
@@ -1268,7 +1267,7 @@
 
       if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
       if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
-      if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visn7_hub(p);
+      if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
       if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
       if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
       if (p >= 430 && p <= 499) return visnDatabase.visn10;
@@ -1283,10 +1282,6 @@
       if ((p >= 500 && p <= 528) || (p >= 550 && p <= 588) || (p >= 680 && p <= 693)) return visnDatabase.visn23;
 
       return visnDatabase.national_fallback;
-    }
-
-    function visn7_hub(p) {
-      return visnDatabase.visn7;
     }
 
     function updateHubUI(data, fly = true) {
