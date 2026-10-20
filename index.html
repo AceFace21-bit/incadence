@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 37) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 38) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -94,14 +94,14 @@
       display: inline-block;
     }
 
-    /* Option 3 High-Contrast Monochrome Tactical Radar Styling */
+    /* High-Contrast Charcoal / Pitch Black Tactical Canvas */
     .leaflet-container {
-      background: #000000 !important;
+      background: #020617 !important;
       outline: none;
     }
-    .contrast-radar-tiles {
-      filter: contrast(180%) brightness(95%);
-      -webkit-filter: contrast(180%) brightness(95%);
+    .esri-dark-tiles {
+      filter: contrast(160%) brightness(105%);
+      -webkit-filter: contrast(160%) brightness(105%);
     }
     .leaflet-control-attribution {
       display: none !important;
@@ -142,7 +142,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 37)</span>
+        <span>BUILD 3.5 (REV 38)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -291,7 +291,7 @@
         <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">39.8283° N, 98.5795° W</span>
       </div>
       
-      <div class="relative w-full flex-1 bg-black" style="min-height: 150px;">
+      <div class="relative w-full flex-1 bg-slate-950" style="min-height: 150px;">
         <!-- Leaflet Map Container -->
         <div id="map" class="absolute inset-0 w-full h-full" style="height: 100%; width: 100%;"></div>
 
@@ -667,7 +667,7 @@
         
         const voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
-          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang === "en-US" || v.lang.startsWith("en")));
+          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.lang === "en-US" || v.lang.startsWith("en")));
           if (naturalVoice) activeUtterance.voice = naturalVoice;
         }
 
@@ -798,12 +798,11 @@
       attributionControl: false
     });
 
-    // OPTION 3: High-Contrast Monochrome Tactical Radar (Toner Dark / Contrast Engine)
-    // Zero API key, zero watermark, high contrast white arterial roads & coastlines on deep black terrain
-    L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_dark/{z}/{x}/{y}{r}.png', {
-      maxZoom: 20,
-      className: 'contrast-radar-tiles',
-      attribution: '&copy; Stadia Maps &copy; Stamen Design &copy; OpenStreetMap'
+    // ESRI Dark Gray Canvas Layer (Completely Open, Zero Authentication / No 401 Error, Built-In High Contrast Dark)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 16,
+      className: 'esri-dark-tiles',
+      attribution: '&copy; Esri &copy; HERE &copy; OpenStreetMap'
     }).addTo(map);
 
     // Custom Glowing Green Radar Marker Icon
@@ -986,9 +985,9 @@
       if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
 
       if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
-      if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
-      if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
+      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visn6;
+      if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visn7;
+      if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visn8;
       if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
       if (p >= 430 && p <= 499) return visnDatabase.visn10;
       if ((p >= 530 && p <= 549) || (p >= 600 && p <= 619)) return visnDatabase.visn12;
