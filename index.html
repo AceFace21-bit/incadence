@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.9 (REV 59) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 4.0 (REV 60) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 20, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-  <!-- Leaflet Official US States Vector Data (Zero-CORS Vector Script Load) -->
+  <!-- Leaflet Official US States Vector Data (CORS-immune Script Load) -->
   <script src="https://leafletjs.com/examples/choropleth/us-states.js"></script>
 
   <style>
@@ -106,16 +106,44 @@
       display: none !important;
     }
 
-    /* Vector SVG Crisp Non-Scaling Strokes & Bold Red Glow */
-    path.leaflet-interactive, path.state-border-path {
+    /* Vector SVG Crisp Non-Scaling Strokes */
+    path.leaflet-interactive, path.state-border-path, path.interstate-path {
       vector-effect: non-scaling-stroke;
     }
 
+    /* Bold Red State Boundaries */
     .bold-red-state-border {
       stroke: #ef4444 !important;
-      stroke-width: 2.4px !important;
+      stroke-width: 2.2px !important;
       stroke-opacity: 1 !important;
-      filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.75));
+      filter: drop-shadow(0 0 2.5px rgba(239, 68, 68, 0.75));
+    }
+
+    /* Dark Skinny Blue Interstates */
+    .skinny-dark-blue-interstate {
+      stroke: #1d4ed8 !important;
+      stroke-width: 1.6px !important;
+      stroke-opacity: 0.95 !important;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Interstate Shield Typography */
+    .interstate-shield-label {
+      background: #1e3a8a;
+      border: 1px solid #60a5fa;
+      border-radius: 4px;
+      color: #ffffff !important;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-align: center;
+      line-height: 12px;
+      padding: 0 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 5px rgba(30, 58, 138, 0.8);
+      pointer-events: none;
+      white-space: nowrap;
     }
 
     /* State Name Radar Labels: Pure White High-Contrast Typography */
@@ -205,7 +233,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800 border border-slate-700 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.9 (REV 59)</span>
+        <span>BUILD 4.0 (REV 60)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -927,12 +955,12 @@
       attributionControl: false
     });
 
-    // 1. BASE LAYER: Esri Dark Gray Canvas Base (Official, 100% Free Public Server, ZERO API Key, Zero Watermarks)
+    // 1. BASE LAYER: Esri Dark Gray Canvas Base (Zero Watermarks, Zero API Keys, Always Free)
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 16
     }).addTo(map);
 
-    // 2. CRISP STREETS OVERLAY (Appears dynamically at Local Zoom >= 12, ZERO API Key, Zero Watermarks)
+    // 2. CRISP STREETS OVERLAY (Appears dynamically at Local Zoom >= 12, Zero API Keys)
     const streetOverlay = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
       minZoom: 12,
       maxZoom: 16,
@@ -945,14 +973,13 @@
 
     const boldRedStyle = {
       color: '#ef4444',
-      weight: 2.4,
+      weight: 2.2,
       opacity: 1.0,
       fillColor: '#ef4444',
       fillOpacity: 0.04,
       className: 'bold-red-state-border'
     };
 
-    // Render State Boundaries Function
     function renderStateBoundaries(geoJsonData) {
       if (stateBordersLayer) {
         map.removeLayer(stateBordersLayer);
@@ -966,7 +993,6 @@
       }
     }
 
-    // Synchronous statesData from us-states.js script tag (100% reliable, zero CORS)
     if (typeof statesData !== 'undefined') {
       renderStateBoundaries(statesData);
     } else {
@@ -974,20 +1000,12 @@
         'https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson',
         'https://cdn.jsdelivr.net/gh/PublicMapping/district-builder@master/server/fixtures/states.geojson'
       ];
-
       function tryFetchGeoJson(index) {
         if (index >= geoJsonUrls.length) return;
         fetch(geoJsonUrls[index])
-          .then(res => {
-            if (!res.ok) throw new Error('Network error');
-            return res.json();
-          })
-          .then(data => {
-            renderStateBoundaries(data);
-          })
-          .catch(() => {
-            tryFetchGeoJson(index + 1);
-          });
+          .then(res => res.json())
+          .then(data => renderStateBoundaries(data))
+          .catch(() => tryFetchGeoJson(index + 1));
       }
       tryFetchGeoJson(0);
     }
@@ -1052,6 +1070,57 @@
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
 
+    // 4. MAJOR INTERSTATE HIGHWAYS (DARK SKINNY BLUE + SHIELD LABELS)
+    const interstateRoutes = [
+      // I-90 (Coast to Coast North)
+      { id: "I-90", labelPoint: [44.8, -107.0], coords: [[47.60, -122.33], [47.66, -117.42], [46.87, -113.99], [45.78, -108.50], [44.08, -103.23], [43.54, -96.73], [43.80, -91.24], [43.07, -89.40], [41.97, -87.70], [41.65, -83.53], [41.50, -81.69], [42.06, -80.18], [42.88, -78.87], [42.65, -73.75], [42.36, -71.05]] },
+      // I-80 (San Francisco to New York)
+      { id: "I-80", labelPoint: [41.2, -102.5], coords: [[37.77, -122.41], [38.58, -121.49], [39.53, -119.81], [40.76, -111.89], [41.58, -109.22], [41.14, -104.82], [41.13, -100.76], [41.25, -95.93], [41.58, -93.62], [41.52, -88.08], [41.60, -87.10], [41.60, -83.60], [41.20, -80.65], [41.10, -78.50], [40.85, -74.00]] },
+      // I-70 (Utah to Maryland)
+      { id: "I-70", labelPoint: [39.0, -96.5], coords: [[38.60, -112.58], [38.93, -110.15], [39.06, -108.55], [39.73, -104.99], [39.31, -101.71], [38.84, -99.32], [39.11, -94.62], [38.95, -92.33], [38.62, -90.19], [39.46, -87.41], [39.76, -86.15], [39.96, -83.00], [40.06, -80.72], [40.17, -80.24], [39.65, -77.72], [39.29, -76.61]] },
+      // I-40 (California to North Carolina)
+      { id: "I-40", labelPoint: [35.4, -100.5], coords: [[34.89, -117.02], [34.84, -114.61], [35.19, -111.65], [35.08, -106.65], [35.17, -103.72], [35.22, -101.83], [35.46, -97.51], [35.43, -94.39], [34.74, -92.28], [35.14, -90.04], [36.16, -86.78], [35.96, -83.92], [35.59, -82.55], [36.07, -79.79], [35.77, -78.63], [34.22, -77.94]] },
+      // I-10 (Coast to Coast South)
+      { id: "I-10", labelPoint: [31.5, -103.5], coords: [[34.02, -118.49], [33.44, -112.07], [32.22, -110.92], [32.31, -106.77], [31.76, -106.48], [30.90, -102.90], [29.42, -98.49], [29.76, -95.36], [30.22, -92.01], [30.45, -91.18], [30.00, -90.07], [30.69, -88.03], [30.42, -87.21], [30.43, -84.28], [30.33, -81.65]] },
+      // I-5 (West Coast North-South)
+      { id: "I-5", labelPoint: [42.5, -123.0], coords: [[49.00, -122.75], [47.60, -122.33], [45.51, -122.67], [44.05, -123.08], [42.32, -122.87], [40.58, -122.39], [38.58, -121.49], [36.97, -120.73], [35.37, -119.01], [34.05, -118.24], [32.71, -117.16], [32.54, -117.03]] },
+      // I-15 (Mountain West North-South)
+      { id: "I-15", labelPoint: [41.5, -112.5], coords: [[49.00, -111.96], [47.50, -111.30], [46.59, -112.03], [46.00, -112.53], [42.87, -112.44], [41.22, -111.97], [40.76, -111.89], [38.70, -112.60], [37.10, -113.58], [36.16, -115.15], [34.10, -117.29], [32.71, -117.16]] },
+      // I-35 (Midwest North-South)
+      { id: "I-35", labelPoint: [34.5, -97.2], coords: [[46.78, -92.10], [44.97, -93.26], [43.15, -93.20], [41.58, -93.62], [39.11, -94.62], [37.68, -97.33], [35.46, -97.51], [32.77, -96.79], [31.54, -97.14], [30.26, -97.74], [29.42, -98.49], [27.50, -99.50]] },
+      // I-75 (Great Lakes to Florida)
+      { id: "I-75", labelPoint: [34.8, -84.7], coords: [[46.49, -84.34], [45.02, -84.67], [43.60, -83.88], [42.33, -83.04], [41.65, -83.53], [39.10, -84.51], [38.04, -84.50], [35.96, -83.92], [34.99, -85.25], [33.74, -84.38], [32.84, -83.63], [30.18, -82.63], [28.05, -82.45], [26.12, -80.25]] },
+      // I-95 (East Coast Corridor)
+      { id: "I-95", labelPoint: [36.5, -77.6], coords: [[46.12, -67.83], [44.80, -68.77], [43.65, -70.25], [42.80, -70.88], [42.36, -71.05], [41.82, -71.41], [41.30, -72.92], [40.85, -73.90], [40.22, -74.75], [39.95, -75.16], [39.29, -76.61], [38.90, -77.03], [37.54, -77.43], [35.22, -77.80], [34.19, -79.76], [32.08, -81.09], [30.33, -81.65], [28.53, -80.75], [25.76, -80.19]] },
+      // I-79 (PA & WV Keystone Corridor)
+      { id: "I-79", labelPoint: [40.8, -80.1], coords: [[42.12, -80.08], [41.64, -80.15], [40.44, -80.00], [39.90, -80.15], [39.62, -79.95], [38.88, -80.50], [38.35, -81.63]] }
+    ];
+
+    const interstateLayerGroup = L.layerGroup().addTo(map);
+
+    interstateRoutes.forEach(route => {
+      // Draw skinny dark blue interstate polyline
+      L.polyline(route.coords, {
+        color: '#1d4ed8',
+        weight: 1.6,
+        opacity: 0.92,
+        lineCap: 'round',
+        lineJoin: 'round',
+        className: 'skinny-dark-blue-interstate'
+      }).addTo(interstateLayerGroup);
+
+      // Add Interstate Highway Shield Badge
+      if (route.labelPoint) {
+        const shieldIcon = L.divIcon({
+          className: 'interstate-shield-label',
+          html: route.id,
+          iconSize: [22, 14],
+          iconAnchor: [11, 7]
+        });
+        L.marker(route.labelPoint, { icon: shieldIcon, interactive: false }).addTo(interstateLayerGroup);
+      }
+    });
+
     // Dynamic zoom handler: switches seamlessly between Continental State Radar and Local Streets
     map.on('zoomend', () => {
       const z = map.getZoom();
@@ -1059,10 +1128,12 @@
         if (!map.hasLayer(streetOverlay)) map.addLayer(streetOverlay);
         if (stateBordersLayer && map.hasLayer(stateBordersLayer)) map.removeLayer(stateBordersLayer);
         if (map.hasLayer(stateLabelsGroup)) map.removeLayer(stateLabelsGroup);
+        if (map.hasLayer(interstateLayerGroup)) map.removeLayer(interstateLayerGroup);
       } else {
         if (map.hasLayer(streetOverlay)) map.removeLayer(streetOverlay);
         if (stateBordersLayer && !map.hasLayer(stateBordersLayer)) map.addLayer(stateBordersLayer);
         if (!map.hasLayer(stateLabelsGroup)) map.addLayer(stateLabelsGroup);
+        if (!map.hasLayer(interstateLayerGroup)) map.addLayer(interstateLayerGroup);
       }
     });
 
@@ -1076,7 +1147,6 @@
 
     const marker = L.marker([US_CENTER_LAT, US_CENTER_LNG], { icon: radarIcon }).addTo(map);
 
-    // Dynamic Tactical VA Destination Label Callout (Binds to Marker)
     function updateMarkerCallout(hub) {
       if (!hub || !hub.name) return;
       const popupHtml = `
@@ -1095,7 +1165,6 @@
       }).openPopup();
     }
 
-    // Invalidate map size after DOM mount to guarantee razor-sharp tile rendering
     setTimeout(() => { map.invalidateSize(); }, 150);
     setTimeout(() => { map.invalidateSize(); }, 600);
     window.addEventListener('resize', () => { map.invalidateSize(); });
