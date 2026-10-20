@@ -1,8 +1,9 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                         -->
-<!-- BUILD VERSION: BUILD 3.6 (REV 55) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.6 (REV 56) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
 <!-- DATE: OCTOBER 20, 2026                                                     -->
+<!-- DEPLOYMENT TARGET: GITHUB PAGES (aceface21-bit.github.io)                  -->
 <!-- ========================================================================== -->
 <!DOCTYPE html>
 <html lang="en">
@@ -219,7 +220,7 @@
           <div class="vu-bar"></div>
           <div class="vu-bar"></div>
         </div>
-        <span>BUILD 3.6 (REV 55)</span>
+        <span>BUILD 3.6 (REV 56)</span>
       </div>
 
       <!-- Centered Platform Branding with Acoustic Tiny Desk Warmth -->
@@ -230,7 +231,7 @@
           </div>
           <span class="font-display font-black tracking-wider text-xs uppercase text-stone-100 leading-none">Forward March Transit</span>
         </div>
-        <span class="text-[9px] text-amber-400/90 font-mono-code tracking-wider block mt-1 leading-none">TINY DESK LIVE DISPATCH // ALL VISNS</span>
+        <span class="text-[9px] text-amber-400/90 font-mono-code tracking-wider block mt-1 leading-none">CLINICAL NO-SHOW PREVENT // VISN 1 &amp; NATIONWIDE</span>
       </div>
 
       <!-- Zero-PII Security Architecture Trigger (Right) -->
@@ -318,7 +319,7 @@
             pattern="[0-9]*" 
             inputmode="numeric" 
             maxlength="5" 
-            placeholder="e.g. 15120, 60601" 
+            placeholder="e.g. 02130, 15120, 06516" 
             class="tactile-btn w-full bg-stone-950 border-2 border-amber-900/50 focus:border-amber-400 rounded-lg pl-3 pr-8 py-2 text-sm text-stone-100 placeholder-stone-600 font-mono-code font-bold transition outline-none shadow-inner"
           >
           <button 
@@ -355,6 +356,15 @@
         </button>
       </div>
 
+      <!-- Quick VISN 1 Preset Demonstration Chips for the Chief Pitch -->
+      <div class="mt-2 pt-2 border-t border-amber-950/60 flex items-center space-x-1.5 overflow-x-auto">
+        <span class="text-[9px] font-mono-code text-stone-400 uppercase shrink-0">Demo Hubs:</span>
+        <button type="button" onclick="setZipExample('02130')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">02130 (Boston)</button>
+        <button type="button" onclick="setZipExample('06516')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">06516 (CT)</button>
+        <button type="button" onclick="setZipExample('03104')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">03104 (NH)</button>
+        <button type="button" onclick="setZipExample('15120')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">15120 (PGH)</button>
+      </div>
+
       <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
     </section>
 
@@ -384,7 +394,7 @@
         <div class="absolute bottom-2 right-2 pointer-events-none z-20">
           <a 
             id="centerCallBtn" 
-            href="tel:4123603620,1" 
+            href="tel:8573644000" 
             class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 active:scale-95 text-stone-950 px-4 py-2 rounded-lg font-black uppercase tracking-wider flex items-center space-x-2 border-2 border-emerald-200"
           >
             <i data-lucide="phone-call" class="w-4 h-4 fill-stone-950"></i>
@@ -398,17 +408,17 @@
     <section id="resultCard" class="desk-wood-grain border-2 border-amber-900/50 rounded-lg p-2.5 shrink-0 shadow-md flex items-center justify-between gap-2">
       <div class="min-w-0 flex-1">
         <div class="flex items-center space-x-1.5 mb-0.5 truncate">
-          <span id="visnBadge" class="text-[10px] font-mono-code text-amber-400 shrink-0 font-extrabold uppercase tracking-wider truncate">VA Pittsburgh Healthcare System</span>
+          <span id="visnBadge" class="text-[10px] font-mono-code text-amber-400 shrink-0 font-extrabold uppercase tracking-wider truncate">VA Boston Healthcare System</span>
           <span class="text-stone-600 text-[10px]">•</span>
           <span id="hubBadge" class="text-[10px] font-mono-code text-stone-300 font-medium truncate">
-            University Drive & Heinz Divisions
+            Jamaica Plain &amp; West Roxbury
           </span>
         </div>
         <h2 id="facilityName" class="text-xs font-black text-stone-100 leading-snug truncate">
-          VA Pittsburgh Healthcare System
+          VA Boston Healthcare System (VISN 1)
         </h2>
         <p id="facilityAddress" class="text-[10px] text-stone-400 truncate">
-          University Drive & H.J. Heinz Divisions
+          New England Regional Hub Catchment
         </p>
       </div>
 
@@ -427,7 +437,7 @@
       <div class="text-right shrink-0 pl-2 border-l border-stone-800">
         <div class="text-[9px] uppercase font-mono-code tracking-wider text-amber-400/90 font-bold">Travel Desk</div>
         <div id="facilityPhone" class="text-xs font-black text-amber-300 font-mono-code whitespace-nowrap">
-          412-360-3620 (Press 1)
+          857-364-4000
         </div>
       </div>
     </section>
@@ -473,7 +483,7 @@
     </div>
   </footer>
 
-  <!-- Step-by-Step Call Dialogue Modal (Cardi B / NPR Tiny Desk Acoustic Session Layout) -->
+  <!-- Step-by-Step Call Dialogue Modal -->
   <div id="scriptModal" class="hidden fixed inset-0 z-[99999] bg-stone-950/95 backdrop-blur-md p-3 flex items-center justify-center">
     <div class="bg-stone-900 border-2 border-amber-600/40 rounded-xl max-w-sm w-full p-3.5 flex flex-col max-h-[90dvh] shadow-2xl relative z-10">
       <div class="flex items-center justify-between border-b border-amber-900/50 pb-2.5 shrink-0">
@@ -859,15 +869,16 @@
     const US_CENTER_LNG = -98.5795;
     const US_COAST_TO_COAST_ZOOM = 3.2;
 
+    // Pitch Focus Hub: VISN 1 (VA Boston Healthcare System)
     const defaultHub = {
-      badge: "University Drive & Heinz Divisions",
-      visn: "VA Pittsburgh Healthcare System",
-      name: "VA Pittsburgh Healthcare System",
-      desc: "University Drive & H.J. Heinz Campus Catchment",
-      phone: "412-360-3620 (Press 1)",
-      cleanPhone: "4123603620,1",
-      lat: 40.4444,
-      lng: -79.9600
+      badge: "Jamaica Plain & West Roxbury",
+      visn: "VA Boston Healthcare System",
+      name: "VA Boston Healthcare System (VISN 1)",
+      desc: "New England Regional Hub Catchment",
+      phone: "857-364-4000",
+      cleanPhone: "8573644000",
+      lat: 42.3149,
+      lng: -71.1097
     };
 
     let activeHub = defaultHub;
@@ -897,12 +908,6 @@
     let stateBordersLayer = null;
     const stateLabelsGroup = L.layerGroup().addTo(map);
 
-    // VHA 5-District Color Grouping Mapping (from digital.va.gov)
-    // District 1 (Red): North Atlantic (CT, DC, DE, ME, MD, MA, NH, NJ, NY, PA, RI, VT, WV)
-    // District 2 (Orange): Southeast (AL, FL, GA, NC, PR, SC, VI, VA)
-    // District 3 (Green): Midwest (IL, IN, IA, KY, MI, MN, ND, OH, SD, TN, WI)
-    // District 4 (Purple): Continental (AR, CO, KS, LA, MS, MO, NE, OK, TX, UT, WY)
-    // District 5 (Blue): Pacific (AK, AZ, CA, HI, ID, MT, NV, NM, OR, WA)
     const stateDistricts = {
       'CT': 1, 'DC': 1, 'DE': 1, 'ME': 1, 'MD': 1, 'MA': 1, 'NH': 1, 'NJ': 1, 'NY': 1, 'PA': 1, 'RI': 1, 'VT': 1, 'WV': 1,
       'AL': 2, 'FL': 2, 'GA': 2, 'NC': 2, 'PR': 2, 'SC': 2, 'VI': 2, 'VA': 2,
@@ -912,7 +917,7 @@
     };
 
     const districtColors = {
-      1: '#ef4444', // Red (North Atlantic)
+      1: '#ef4444', // Red (North Atlantic - VISN 1 & 4)
       2: '#f97316', // Orange (Southeast)
       3: '#10b981', // Green (Midwest)
       4: '#a855f7', // Purple (Continental)
@@ -1021,7 +1026,7 @@
       iconAnchor: [7, 7]
     });
 
-    const marker = L.marker([US_CENTER_LAT, US_CENTER_LNG], { icon: radarIcon }).addTo(map);
+    const marker = L.marker([defaultHub.lat, defaultHub.lng], { icon: radarIcon }).addTo(map);
 
     // Dynamic Tactical VA Destination Label Callout
     function updateMarkerCallout(hub) {
@@ -1042,14 +1047,29 @@
       }).openPopup();
     }
 
-    setTimeout(() => { map.invalidateSize(); }, 150);
+    setTimeout(() => { 
+      map.invalidateSize();
+      updateMarkerCallout(defaultHub);
+    }, 200);
     setTimeout(() => { map.invalidateSize(); }, 600);
     window.addEventListener('resize', () => { map.invalidateSize(); });
 
     // Complete Nationwide & Regional VISN Routing Database
     const visnDatabase = {
-      "visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
+      // VISN 1 Specific Regional Health Systems (New England Network)
+      "visn1_boston": { badge: "VISN 1 New England", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System (VISN 1)", desc: "Jamaica Plain & West Roxbury Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
+      "visn1_connecticut": { badge: "VISN 1 Connecticut", visn: "VA Connecticut Healthcare System", name: "VA Connecticut Healthcare System (West Haven)", desc: "West Haven & Newington Campuses", phone: "203-932-5711 Ext 2280", cleanPhone: "2039325711,2280", lat: 41.2721, lng: -72.9554 },
+      "visn1_manchester": { badge: "VISN 1 New Hampshire", visn: "Manchester VA Medical Center", name: "Manchester VA Medical Center", desc: "New Hampshire Statewide Catchment", phone: "603-624-4366 Ext 6825", cleanPhone: "6036244366,6825", lat: 43.0185, lng: -71.4429 },
+      "visn1_providence": { badge: "VISN 1 Rhode Island", visn: "Providence VA Medical Center", name: "Providence VA Medical Center", desc: "Rhode Island & SE Massachusetts Catchment", phone: "401-273-7100 Ext 13134", cleanPhone: "4012737100,13134", lat: 41.8344, lng: -71.4392 },
+      "visn1_togus": { badge: "VISN 1 Maine", visn: "Togus VA Medical Center", name: "Togus VA Medical Center (Maine)", desc: "Maine Statewide Regional Catchment", phone: "207-623-8411 Ext 5515", cleanPhone: "2076238411,5515", lat: 44.3051, lng: -69.7042 },
+      "visn1_whiteriver": { badge: "VISN 1 Vermont", visn: "White River Junction VAMC", name: "White River Junction VA Medical Center", desc: "Vermont & Western NH Regional Catchment", phone: "802-295-9363 Ext 5420", cleanPhone: "8022959363,5420", lat: 43.6495, lng: -72.3275 },
+      "visn1_bedford": { badge: "VISN 1 Massachusetts", visn: "Edith Nourse Rogers Memorial VAMC", name: "Bedford VA Healthcare System", desc: "Middlesex & North Shore MA Catchment", phone: "781-687-2000 Ext 3100", cleanPhone: "7816872000,3100", lat: 42.4975, lng: -71.2778 },
+      "visn1_central_ma": { badge: "VISN 1 Central MA", visn: "VA Central Western Massachusetts", name: "Edward P. Boland VAMC (Leeds)", desc: "Hampshire, Hampden & Berkshire Catchment", phone: "413-584-4040 Ext 2200", cleanPhone: "4135844040,2200", lat: 42.3484, lng: -72.6784 },
+
+      // VISN 2
       "visn2": { badge: "NY / NJ Metro Region", visn: "James J. Peters VAMC (Bronx)", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Regional Catchment", phone: "718-584-9000", cleanPhone: "7185849000", lat: 40.8677, lng: -73.9004 },
+
+      // VISN 4 Complete Regional Breakdown
       "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
       "visn4_butler": { badge: "Butler Regional Division", visn: "Butler VA Health Care System", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", lat: 40.8687, lng: -79.9554 },
       "visn4_erie": { badge: "NW Pennsylvania Division", visn: "Erie VA Medical Center", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", lat: 42.1065, lng: -80.0526 },
@@ -1059,6 +1079,8 @@
       "visn4_wilkes": { badge: "Northeastern PA Division", visn: "Wilkes-Barre VA Medical Center", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", lat: 41.2523, lng: -75.8457 },
       "visn4_wilmington": { badge: "Delaware Valley Division", visn: "Wilmington VA Medical Center", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey Catchment", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", lat: 39.7423, lng: -75.6022 },
       "visn4_philly": { badge: "SE Pennsylvania Division", visn: "Michael J. Crescenz VAMC", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", lat: 39.9482, lng: -75.1979 },
+
+      // Additional VISNs nationwide
       "visn5": { badge: "Capital Regional Network", visn: "Washington DC VA Medical Center", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA Catchment", phone: "202-745-8000", cleanPhone: "2027458000", lat: 38.9298, lng: -77.0125 },
       "visn6": { badge: "Mid-Atlantic Network", visn: "Fayetteville NC VA Medical Center", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA Catchment", phone: "910-488-2120", cleanPhone: "9104882120", lat: 35.0805, lng: -78.8872 },
       "visn7": { badge: "Southeast Regional Network", visn: "Atlanta VA Medical Center", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina Catchment", phone: "404-321-6111", cleanPhone: "4043216111", lat: 33.7938, lng: -84.3015 },
@@ -1120,8 +1142,8 @@
       if (typeof window.plausible === 'function') {
         window.plausible('Call Script Opened', {
           props: {
-            current_hub: activeHub ? activeHub.name : 'VA Pittsburgh Healthcare System',
-            visn: activeHub ? activeHub.visn : 'VISN 4'
+            current_hub: activeHub ? activeHub.name : 'VA Boston Healthcare System',
+            visn: activeHub ? activeHub.visn : 'VISN 1'
           }
         });
       }
@@ -1164,6 +1186,12 @@
       zipInput.focus();
     });
 
+    function setZipExample(zip) {
+      zipInput.value = zip;
+      clearZipBtn.classList.remove('hidden');
+      executeLookup(zip, 'Demo Chip');
+    }
+
     function trackLookup(zip, matchData, method) {
       if (typeof window.plausible === 'function' && matchData) {
         window.plausible('Hub Search', {
@@ -1197,7 +1225,26 @@
       if (!zip || zip.length < 3) return null;
       const p = parseInt(zip.substring(0, 3), 10);
       
-      if (p >= 10 && p <= 69) return visnDatabase.visn1;
+      // VISN 1 Specific Routing by New England 3-Digit Prefix
+      // MA (010-027): 010-013 Central/Western, 017-018 Bedford, 021-022 Boston metro
+      if ([10, 11, 12, 13].includes(p)) return visnDatabase.visn1_central_ma;
+      if ([17, 18].includes(p)) return visnDatabase.visn1_bedford;
+      if ([21, 22, 24].includes(p)) return visnDatabase.visn1_boston;
+      // RI (028-029)
+      if (p === 28 || p === 29) return visnDatabase.visn1_providence;
+      // NH (030-038)
+      if (p >= 30 && p <= 38) return visnDatabase.visn1_manchester;
+      // ME (039-049)
+      if (p >= 39 && p <= 49) return visnDatabase.visn1_togus;
+      // VT (050-059)
+      if (p >= 50 && p <= 59) return visnDatabase.visn1_whiteriver;
+      // CT (060-069)
+      if (p >= 60 && p <= 69) return visnDatabase.visn1_connecticut;
+
+      // Other VISN 1 prefix fallback
+      if (p >= 10 && p <= 69) return visnDatabase.visn1_boston;
+
+      // VISN 2
       if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
 
       // VISN 4 Complete Resolution Table
@@ -1211,6 +1258,7 @@
       if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
       if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
 
+      // Nationwide VISN resolution
       if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
       if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
       if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
