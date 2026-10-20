@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                         -->
-<!-- BUILD VERSION: BUILD 3.8 (REV 61) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.9 (REV 62) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
 <!-- DATE: OCTOBER 20, 2026                                                     -->
 <!-- DEPLOYMENT TARGET: GITHUB PAGES (aceface21-bit.github.io)                  -->
@@ -219,7 +219,7 @@
           <div class="vu-bar"></div>
           <div class="vu-bar"></div>
         </div>
-        <span>BUILD 3.8 (REV 61)</span>
+        <span>BUILD 3.9 (REV 62)</span>
       </div>
 
       <!-- Platform Branding -->
@@ -898,6 +898,7 @@
     const stateLabelsGroup = L.layerGroup().addTo(map);
 
     // Official VHA 5-District Color Coding
+    // Official VA 5-District State Groupings per VHA Regional Map
     const stateDistricts = {
       'CT': 1, 'DC': 1, 'DE': 1, 'ME': 1, 'MD': 1, 'MA': 1, 'NH': 1, 'NJ': 1, 'NY': 1, 'PA': 1, 'RI': 1, 'VT': 1, 'WV': 1,
       'AL': 2, 'FL': 2, 'GA': 2, 'NC': 2, 'PR': 2, 'SC': 2, 'VI': 2, 'VA': 2,
@@ -906,12 +907,13 @@
       'AK': 5, 'AZ': 5, 'CA': 5, 'HI': 5, 'ID': 5, 'MT': 5, 'NV': 5, 'NM': 5, 'OR': 5, 'WA': 5
     };
 
+    // Official VA 5-District Color Palette (matching VA VHA regional map)
     const districtColors = {
-      1: '#ef4444', // Red (North Atlantic)
-      2: '#f97316', // Orange (Southeast)
-      3: '#10b981', // Green (Midwest)
-      4: '#a855f7', // Purple (Continental)
-      5: '#0ea5e9'  // Blue (Pacific)
+      1: '#dc2626', // VISN 1: Red (Northeast / North Atlantic)
+      2: '#ea580c', // VISN 2: Orange (Southeast / Mid-Atlantic)
+      3: '#16a34a', // VISN 3: Green (Midwest / Great Lakes)
+      4: '#9333ea', // VISN 4: Purple (Continental / Central)
+      5: '#2563eb'  // VISN 5: Blue (Pacific / Western)
     };
 
     const stateLabels = [
