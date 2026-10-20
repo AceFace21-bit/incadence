@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                         -->
-<!-- BUILD VERSION: BUILD 3.10 (REV 63) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.10 (REV 64) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
 <!-- DATE: OCTOBER 20, 2026                                                     -->
 <!-- DEPLOYMENT TARGET: GITHUB PAGES (aceface21-bit.github.io)                  -->
@@ -219,7 +219,7 @@
           <div class="vu-bar"></div>
           <div class="vu-bar"></div>
         </div>
-        <span>BUILD 3.10 (REV 63)</span>
+        <span>BUILD 3.10 (REV 64)</span>
       </div>
 
       <!-- Platform Branding -->
@@ -230,7 +230,7 @@
           </div>
           <span class="font-display font-black tracking-wider text-xs uppercase text-stone-100 leading-none">Forward March Transit</span>
         </div>
-        <span class="text-[9px] text-amber-400/90 font-mono-code tracking-wider block mt-1 leading-none">CLINICAL NO-SHOW PREVENT // 5-DISTRICT VHA MAP</span>
+        <span class="text-[9px] text-amber-400/90 font-mono-code tracking-wider block mt-1 leading-none">CLINICAL NO-SHOW PREVENT // COAST-TO-COAST VHA MAP</span>
       </div>
 
       <!-- Zero-PII Compliance Trigger (Right) -->
@@ -353,21 +353,21 @@
         <button type="button" onclick="setZipExample('15120')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">15120 (PGH)</button>
         <button type="button" onclick="setZipExample('02130')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">02130 (Boston)</button>
         <button type="button" onclick="setZipExample('06516')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">06516 (CT)</button>
-        <button type="button" onclick="setZipExample('03104')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">03104 (NH)</button>
+        <button type="button" onclick="setZipExample('90210')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">90210 (LA)</button>
       </div>
 
       <div id="statusAlert" class="hidden text-[11px] py-1 px-2 mt-1.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
     </section>
 
-    <!-- Radar Target Map Viewport -->
+    <!-- Radar Target Map Viewport (Coast-to-Coast Centered) -->
     <section class="desk-wood-grain border border-amber-900/40 rounded-lg overflow-hidden relative flex-1 min-h-[150px] max-h-[220px] shadow-lg flex flex-col z-0">
       <div class="px-2.5 py-1 border-b border-amber-950 flex items-center justify-between bg-stone-950/90 shrink-0 z-10">
         <div class="flex items-center space-x-1.5">
           <i data-lucide="disc" class="w-3.5 h-3.5 text-amber-400 animate-spin" style="animation-duration: 6s;"></i>
-          <span id="radarHeaderLabel" class="text-[9.5px] font-extrabold uppercase tracking-wider text-amber-200">Nationwide VISN Studio Radar</span>
+          <span id="radarHeaderLabel" class="text-[9.5px] font-extrabold uppercase tracking-wider text-amber-200">Coast-to-Coast VHA Routing Radar</span>
         </div>
         <div class="flex items-center space-x-2">
-          <span class="text-[8px] font-mono-code px-1.5 py-0.5 rounded bg-amber-950/80 border border-amber-500/30 text-amber-300 font-bold">5-DISTRICT VHA MAP</span>
+          <span class="text-[8px] font-mono-code px-1.5 py-0.5 rounded bg-amber-950/80 border border-amber-500/30 text-amber-300 font-bold">PACIFIC ⟷ ATLANTIC VIEW</span>
           <span id="mapCoordinates" class="text-[8.5px] font-mono-code text-stone-400">39.8283° N, 98.5795° W</span>
         </div>
       </div>
@@ -787,7 +787,6 @@
     const eligibilityDetailModal = document.getElementById('eligibilityDetailModal');
     const infoRequirementBtn = document.getElementById('infoRequirementBtn');
     const textRequirementBtn = document.getElementById('textRequirementBtn');
-    const badgeRequirementBtn = document.getElementById('badgeRequirementBtn');
     const closeEligibilityDetailBtn = document.getElementById('closeEligibilityDetailBtn');
     const dismissEligibilityDetailBtn = document.getElementById('dismissEligibilityDetailBtn');
 
@@ -802,7 +801,6 @@
 
     if (infoRequirementBtn) infoRequirementBtn.addEventListener('click', openEligibilityModal);
     if (textRequirementBtn) textRequirementBtn.addEventListener('click', openEligibilityModal);
-    
 
     if (closeEligibilityDetailBtn && eligibilityDetailModal) {
       closeEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
@@ -889,8 +887,7 @@
     let stateBordersLayer = null;
     const stateLabelsGroup = L.layerGroup().addTo(map);
 
-    // Official VHA 5-District Color Coding
-    // Official VA 5-District State Groupings per VHA Regional Map
+    // Official VHA 5-District State Groupings per VHA Regional Map
     const stateDistricts = {
       'CT': 1, 'DC': 1, 'DE': 1, 'ME': 1, 'MD': 1, 'MA': 1, 'NH': 1, 'NJ': 1, 'NY': 1, 'PA': 1, 'RI': 1, 'VT': 1, 'WV': 1,
       'AL': 2, 'FL': 2, 'GA': 2, 'NC': 2, 'PR': 2, 'SC': 2, 'VI': 2, 'VA': 2,
@@ -1139,11 +1136,11 @@
       matchStatus.className = "text-[9.5px] font-mono-code text-stone-400";
       centerCallBtn.classList.remove('call-btn-blinking');
       
-      map.flyTo([pittsburghDefaultHub.lat, pittsburghDefaultHub.lng], 14, { duration: 1.2 });
-      marker.setLatLng([pittsburghDefaultHub.lat, pittsburghDefaultHub.lng]);
+      map.flyTo([39.8283, -98.5795], 4, { duration: 1.2 });
+      marker.setLatLng([39.8283, -98.5795]);
       updateMarkerCallout(pittsburghDefaultHub);
-      mapCoordinates.textContent = `${pittsburghDefaultHub.lat.toFixed(4)}° N, ${Math.abs(pittsburghDefaultHub.lng).toFixed(4)}° W`;
-      radarHeaderLabel.textContent = "VA Pittsburgh Healthcare System Radar View";
+      mapCoordinates.textContent = `39.8283° N, 98.5795° W`;
+      radarHeaderLabel.textContent = "Coast-to-Coast VHA Routing Radar";
       
       updateHubUI(pittsburghDefaultHub, false);
       zipInput.focus();
