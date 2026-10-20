@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                         -->
-<!-- BUILD VERSION: BUILD 3.6 (REV 58) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.6 (REV 59) - PRODUCTION MASTER                     -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
 <!-- DATE: OCTOBER 20, 2026                                                     -->
 <!-- DEPLOYMENT TARGET: GITHUB PAGES (aceface21-bit.github.io)                  -->
@@ -63,7 +63,7 @@
 
     /* Tactile Button Actions */
     .tactile-btn {
-      min-height: 48px;
+      min-height: 44px;
       touch-action: manipulation;
       transition: transform 0.08s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     }
@@ -80,8 +80,8 @@
       }
       50% {
         transform: scale(1.03);
-        box-shadow: 0 0 24px 6px rgba(251, 191, 36, 0.9);
-        filter: brightness(1.25);
+        box-shadow: 0 0 22px 5px rgba(251, 191, 36, 0.85);
+        filter: brightness(1.2);
       }
     }
 
@@ -162,9 +162,9 @@
     .va-radar-callout {
       background: rgba(28, 25, 23, 0.96);
       border: 1.5px solid #f59e0b;
-      box-shadow: 0 0 20px rgba(245, 158, 11, 0.7);
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.65);
       border-radius: 8px;
-      padding: 6px 12px;
+      padding: 5px 10px;
       color: #fef3c7;
       font-family: 'JetBrains Mono', monospace;
       white-space: nowrap;
@@ -195,7 +195,7 @@
 </head>
 <body class="bg-stone-950 text-stone-100 h-[100dvh] w-screen overflow-hidden flex flex-col justify-between antialiased selection:bg-amber-500 selection:text-stone-950 select-none">
 
-  <!-- Veterans Crisis Line Header -->
+  <!-- Veterans Crisis Line Mandatory Top Ribbon -->
   <aside class="bg-red-950/95 border-b border-red-800/80 px-3 py-1.5 text-center shrink-0 z-40">
     <div class="max-w-md mx-auto flex items-center justify-between text-[11px] font-mono-code text-red-200">
       <div class="flex items-center space-x-2 truncate">
@@ -209,17 +209,17 @@
     </div>
   </aside>
 
-  <!-- Header with Auto-Incremented Build Badge -->
+  <!-- Header with Increment Badge & Identity Branding -->
   <header class="border-b border-amber-900/40 bg-stone-900/95 backdrop-blur px-3 py-2 shrink-0 z-40 shadow-md">
     <div class="max-w-md mx-auto relative flex items-center justify-between">
-      <!-- Top Build Version Badge (Left) -->
+      <!-- Build Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-stone-950/90 border border-amber-600/40 text-[10px] font-mono-code text-amber-400 font-bold shrink-0 shadow-inner" title="Active Release Build">
         <div class="flex items-center space-x-0.5 mr-0.5">
           <div class="vu-bar"></div>
           <div class="vu-bar"></div>
           <div class="vu-bar"></div>
         </div>
-        <span>BUILD 3.6 (REV 58)</span>
+        <span>BUILD 3.6 (REV 59)</span>
       </div>
 
       <!-- Platform Branding -->
@@ -233,7 +233,7 @@
         <span class="text-[9px] text-amber-400/90 font-mono-code tracking-wider block mt-1 leading-none">CLINICAL NO-SHOW PREVENT // 5-DISTRICT VHA MAP</span>
       </div>
 
-      <!-- Zero-PII Trigger (Right) -->
+      <!-- Zero-PII Compliance Trigger (Right) -->
       <button 
         id="openZeroPiiBtn" 
         type="button" 
@@ -254,7 +254,7 @@
   </div>
 
   <!-- Main Viewport Dashboard -->
-  <main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0 relative z-10">
+  <main class="flex-1 max-w-md mx-auto w-full px-3 py-1.5 flex flex-col gap-1.5 min-h-0 relative z-10">
 
     <!-- Primary Instruction Companion Action Button -->
     <div class="w-full shrink-0">
@@ -301,12 +301,12 @@
     </div>
 
     <!-- Input Section: Keypad, Voice Recognition & GPS Geolocation -->
-    <section class="desk-wood-grain border border-amber-900/40 rounded-lg p-2.5 shrink-0 shadow-md">
-      <div class="flex items-center justify-between mb-1.5">
-        <label for="zipInput" class="block text-[11px] font-extrabold uppercase tracking-wider desk-gold-wave">
+    <section class="desk-wood-grain border border-amber-900/40 rounded-lg p-2 shrink-0 shadow-md">
+      <div class="flex items-center justify-between mb-1">
+        <label for="zipInput" class="block text-[10.5px] font-extrabold uppercase tracking-wider desk-gold-wave">
           ENTER 5-DIGIT VETERAN ZIP CODE:
         </label>
-        <span id="matchStatus" class="text-[10px] font-mono-code text-stone-400">Live Auto-Lookup</span>
+        <span id="matchStatus" class="text-[9.5px] font-mono-code text-stone-400">Live Auto-Lookup</span>
       </div>
 
       <div class="flex items-center space-x-2">
@@ -318,8 +318,8 @@
             pattern="[0-9]*" 
             inputmode="numeric" 
             maxlength="5" 
-            placeholder="e.g. 02130, 15120, 06516" 
-            class="tactile-btn w-full bg-stone-950 border-2 border-amber-900/50 focus:border-amber-400 rounded-lg pl-3 pr-8 py-2 text-sm text-stone-100 placeholder-stone-600 font-mono-code font-bold transition outline-none shadow-inner"
+            placeholder="e.g. 15120, 02130, 06516" 
+            class="tactile-btn w-full bg-stone-950 border-2 border-amber-900/50 focus:border-amber-400 rounded-lg pl-3 pr-8 py-1.5 text-sm text-stone-100 placeholder-stone-600 font-mono-code font-bold transition outline-none shadow-inner"
           >
           <button 
             type="button" 
@@ -337,7 +337,7 @@
           type="button" 
           title="Speak ZIP Code Aloud" 
           aria-label="Speak ZIP code aloud" 
-          class="tactile-btn bg-stone-900 hover:bg-stone-800 active:scale-95 text-amber-400 border-2 border-amber-500/50 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0 shadow-sm"
+          class="tactile-btn bg-stone-900 hover:bg-stone-800 active:scale-95 text-amber-400 border-2 border-amber-500/50 font-bold px-3 py-1.5 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0 shadow-sm"
         >
           <i data-lucide="mic" id="micIcon" class="w-4 h-4 text-amber-400"></i>
           <span id="micBtnLabel" class="font-mono-code font-extrabold text-[11px]">VOICE</span>
@@ -348,7 +348,7 @@
           id="geoBtn" 
           type="button" 
           title="Detect Current Location" 
-          class="tactile-btn bg-stone-900 hover:bg-stone-800 active:scale-95 text-amber-400 border-2 border-amber-500/50 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0 shadow-sm"
+          class="tactile-btn bg-stone-900 hover:bg-stone-800 active:scale-95 text-amber-400 border-2 border-amber-500/50 font-bold px-3 py-1.5 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0 shadow-sm"
         >
           <i data-lucide="map-pin" class="w-4 h-4 text-amber-400"></i>
           <span id="geoBtnLabel" class="font-mono-code font-extrabold text-[11px]">GPS</span>
@@ -356,44 +356,44 @@
       </div>
 
       <!-- Quick Preset Demonstration Chips -->
-      <div class="mt-2 pt-2 border-t border-amber-950/60 flex items-center space-x-1.5 overflow-x-auto">
+      <div class="mt-1.5 pt-1.5 border-t border-amber-950/60 flex items-center space-x-1.5 overflow-x-auto">
         <span class="text-[9px] font-mono-code text-stone-400 uppercase shrink-0">Demo Hubs:</span>
+        <button type="button" onclick="setZipExample('15120')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">15120 (PGH)</button>
         <button type="button" onclick="setZipExample('02130')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">02130 (Boston)</button>
         <button type="button" onclick="setZipExample('06516')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">06516 (CT)</button>
         <button type="button" onclick="setZipExample('03104')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">03104 (NH)</button>
-        <button type="button" onclick="setZipExample('15120')" class="px-2 py-0.5 rounded bg-stone-900 hover:bg-amber-950 border border-amber-600/30 text-[9.5px] font-mono-code text-amber-300 font-bold shrink-0">15120 (PGH)</button>
       </div>
 
-      <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
+      <div id="statusAlert" class="hidden text-[11px] py-1 px-2 mt-1.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
     </section>
 
-    <!-- Radar Target Map with Contained z-index Viewport -->
-    <section class="desk-wood-grain border border-amber-900/40 rounded-lg overflow-hidden relative flex-1 min-h-[160px] max-h-[240px] shadow-lg flex flex-col z-0">
-      <div class="px-2.5 py-1.5 border-b border-amber-950 flex items-center justify-between bg-stone-950/90 shrink-0 z-10">
+    <!-- Radar Target Map Viewport -->
+    <section class="desk-wood-grain border border-amber-900/40 rounded-lg overflow-hidden relative flex-1 min-h-[150px] max-h-[220px] shadow-lg flex flex-col z-0">
+      <div class="px-2.5 py-1 border-b border-amber-950 flex items-center justify-between bg-stone-950/90 shrink-0 z-10">
         <div class="flex items-center space-x-1.5">
-          <i data-lucide="disc" class="w-4 h-4 text-amber-400 animate-spin" style="animation-duration: 6s;"></i>
-          <span id="radarHeaderLabel" class="text-[10px] font-extrabold uppercase tracking-wider text-amber-200">Nationwide VISN Studio Radar</span>
+          <i data-lucide="disc" class="w-3.5 h-3.5 text-amber-400 animate-spin" style="animation-duration: 6s;"></i>
+          <span id="radarHeaderLabel" class="text-[9.5px] font-extrabold uppercase tracking-wider text-amber-200">Nationwide VISN Studio Radar</span>
         </div>
         <div class="flex items-center space-x-2">
           <span class="text-[8px] font-mono-code px-1.5 py-0.5 rounded bg-amber-950/80 border border-amber-500/30 text-amber-300 font-bold">5-DISTRICT VHA MAP</span>
-          <span id="mapCoordinates" class="text-[9px] font-mono-code text-stone-400">39.8283° N, 98.5795° W</span>
+          <span id="mapCoordinates" class="text-[8.5px] font-mono-code text-stone-400">39.8283° N, 98.5795° W</span>
         </div>
       </div>
       
-      <div class="relative w-full flex-1 bg-stone-950" style="min-height: 150px;">
+      <div class="relative w-full flex-1 bg-stone-950" style="min-height: 130px;">
         <div id="map" class="absolute inset-0 w-full h-full z-0" style="height: 100%; width: 100%;"></div>
 
         <!-- Center Radar Reticle -->
-        <div class="radar-crosshair w-28 h-28 rounded-full border border-amber-500/30 flex items-center justify-center pointer-events-none">
-          <div class="w-16 h-16 rounded-full border border-amber-400/40 border-dashed animate-[spin_10s_linear_infinite]"></div>
+        <div class="radar-crosshair w-24 h-24 rounded-full border border-amber-500/30 flex items-center justify-center pointer-events-none">
+          <div class="w-14 h-14 rounded-full border border-amber-400/40 border-dashed animate-[spin_10s_linear_infinite]"></div>
         </div>
 
-        <!-- Big Primary Dial Action Button Anchored on Radar -->
+        <!-- Primary Green Call Action Button Anchored on Radar -->
         <div class="absolute bottom-2 right-2 pointer-events-none z-20">
           <a 
             id="centerCallBtn" 
-            href="tel:8573644000" 
-            class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 active:scale-95 text-stone-950 px-4 py-2 rounded-lg font-black uppercase tracking-wider flex items-center space-x-2 border-2 border-emerald-200"
+            href="tel:4123603620,1" 
+            class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 active:scale-95 text-stone-950 px-3.5 py-1.5 rounded-lg font-black uppercase tracking-wider flex items-center space-x-2 border-2 border-emerald-200"
           >
             <i data-lucide="phone-call" class="w-4 h-4 fill-stone-950"></i>
             <span id="centerCallText" class="text-xs font-mono-code font-extrabold tracking-wide">CALL TRAVEL COORDINATOR</span>
@@ -403,53 +403,53 @@
     </section>
 
     <!-- Facility Match Micro-Card -->
-    <section id="resultCard" class="desk-wood-grain border-2 border-amber-900/50 rounded-lg p-2.5 shrink-0 shadow-md flex items-center justify-between gap-2">
+    <section id="resultCard" class="desk-wood-grain border-2 border-amber-900/50 rounded-lg p-2 shrink-0 shadow-md flex items-center justify-between gap-2">
       <div class="min-w-0 flex-1">
         <div class="flex items-center space-x-1.5 mb-0.5 truncate">
-          <span id="visnBadge" class="text-[10px] font-mono-code text-amber-400 shrink-0 font-extrabold uppercase tracking-wider truncate">VA Boston Healthcare System</span>
+          <span id="visnBadge" class="text-[10px] font-mono-code text-amber-400 shrink-0 font-extrabold uppercase tracking-wider truncate">VA Pittsburgh Healthcare System</span>
           <span class="text-stone-600 text-[10px]">•</span>
           <span id="hubBadge" class="text-[10px] font-mono-code text-stone-300 font-medium truncate">
-            Jamaica Plain &amp; West Roxbury
+            University Drive &amp; Heinz Divisions
           </span>
         </div>
         <h2 id="facilityName" class="text-xs font-black text-stone-100 leading-snug truncate">
-          VA Boston Healthcare System (VISN 1)
+          VA Pittsburgh Healthcare System
         </h2>
-        <p id="facilityAddress" class="text-[10px] text-stone-400 truncate">
-          New England Regional Hub Catchment
+        <p id="facilityAddress" class="text-[9.5px] text-stone-400 truncate">
+          University Drive &amp; H.J. Heinz Campus Catchment
         </p>
       </div>
 
-      <!-- Spoken Audio Button for Facility -->
+      <!-- Facility Spoken Read-Aloud Button -->
       <button 
         id="readFacilityBtn" 
         type="button" 
         title="Read facility details aloud" 
         aria-label="Read facility name and phone number aloud" 
-        class="tactile-btn p-2 rounded-lg bg-stone-900 hover:bg-stone-800 active:scale-95 border border-amber-600/40 text-amber-400 shrink-0 flex items-center justify-center shadow-sm"
+        class="tactile-btn p-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 active:scale-95 border border-amber-600/40 text-amber-400 shrink-0 flex items-center justify-center shadow-sm"
       >
-        <i data-lucide="volume-2" class="w-5 h-5 text-amber-400"></i>
+        <i data-lucide="volume-2" class="w-4 h-4 text-amber-400"></i>
       </button>
 
       <!-- Right Contact Extension Block -->
       <div class="text-right shrink-0 pl-2 border-l border-stone-800">
-        <div class="text-[9px] uppercase font-mono-code tracking-wider text-amber-400/90 font-bold">Travel Desk</div>
-        <div id="facilityPhone" class="text-xs font-black text-amber-300 font-mono-code whitespace-nowrap">
-          857-364-4000
+        <div class="text-[8.5px] uppercase font-mono-code tracking-wider text-amber-400/90 font-bold">Travel Desk</div>
+        <div id="facilityPhone" class="text-[11px] font-black text-amber-300 font-mono-code whitespace-nowrap">
+          412-360-3620 (Press 1)
         </div>
       </div>
     </section>
 
     <!-- Linear Secondary Actions -->
     <div class="grid grid-cols-2 gap-2 shrink-0">
-      <!-- National Hotline Fallback -->
+      <!-- National Fallback Dialer -->
       <a 
         id="fallbackCallBtn" 
         href="tel:8555747292" 
-        class="plausible-event-name=Dialer+Click tactile-btn desk-wood-grain border-2 border-stone-800 hover:border-amber-500/50 p-2.5 rounded-lg flex items-center justify-between transition shadow-sm"
+        class="plausible-event-name=Dialer+Click tactile-btn desk-wood-grain border-2 border-stone-800 hover:border-amber-500/50 p-2 rounded-lg flex items-center justify-between transition shadow-sm"
       >
         <div class="truncate">
-          <div class="text-[10px] font-extrabold uppercase text-stone-200">National Dispatch</div>
+          <div class="text-[9.5px] font-extrabold uppercase text-stone-200">National Dispatch</div>
           <div class="text-[10px] font-mono-code text-amber-400 font-bold">855-574-7292</div>
         </div>
         <i data-lucide="phone-forwarded" class="w-4 h-4 text-amber-400 shrink-0 ml-1"></i>
@@ -459,11 +459,11 @@
       <button 
         id="openScriptBtn" 
         type="button" 
-        class="plausible-event-name=Call+Script+Opened tactile-btn desk-wood-grain border-2 border-stone-800 hover:border-amber-500/50 p-2.5 rounded-lg flex items-center justify-between transition text-left shadow-sm"
+        class="plausible-event-name=Call+Script+Opened tactile-btn desk-wood-grain border-2 border-stone-800 hover:border-amber-500/50 p-2 rounded-lg flex items-center justify-between transition text-left shadow-sm"
       >
         <div>
-          <div class="text-[10px] font-extrabold uppercase text-stone-200">Call Script Demo</div>
-          <div class="text-[10px] text-amber-400 font-mono-code">Step-By-Step Dialogue</div>
+          <div class="text-[9.5px] font-extrabold uppercase text-stone-200">Call Script Demo</div>
+          <div class="text-[9.5px] text-amber-400 font-mono-code">Step-By-Step Dialogue</div>
         </div>
         <i data-lucide="headphones" class="w-4 h-4 text-amber-400 shrink-0 ml-1"></i>
       </button>
@@ -471,12 +471,12 @@
 
   </main>
 
-  <!-- Footer & Federal Disclaimers -->
-  <footer class="border-t border-amber-950/70 py-1.5 text-center text-stone-500 text-[8px] font-mono-code px-2 shrink-0 space-y-0.5 z-40 bg-stone-950">
+  <!-- Footer Disclaimers -->
+  <footer class="border-t border-amber-950/70 py-1 text-center text-stone-500 text-[8px] font-mono-code px-2 shrink-0 space-y-0.5 z-40 bg-stone-950">
     <div class="text-stone-400 font-bold tracking-wide truncate">
       DESIGNED &amp; DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
     </div>
-    <div class="text-stone-500 text-[7.5px] leading-tight max-w-sm mx-auto">
+    <div class="text-stone-500 text-[7px] leading-tight max-w-sm mx-auto">
       Independent veteran access platform. Not an official VA agency portal. Beneficiary travel subject to 38 CFR Part 70.
     </div>
   </footer>
@@ -859,29 +859,24 @@
       };
     }
 
-    // Geographic Center of Contiguous US
-    const US_CENTER_LAT = 39.8283;
-    const US_CENTER_LNG = -98.5795;
-    const US_COAST_TO_COAST_ZOOM = 3.2;
-
-    // Default Boston Healthcare System Hub
-    const defaultHub = {
-      badge: "Jamaica Plain & West Roxbury",
-      visn: "VA Boston Healthcare System",
-      name: "VA Boston Healthcare System (VISN 1)",
-      desc: "New England Regional Hub Catchment",
-      phone: "857-364-4000",
-      cleanPhone: "8573644000",
-      lat: 42.3149,
-      lng: -71.1097
+    // Default Landing Hub: VA Pittsburgh Healthcare System
+    const pittsburghDefaultHub = {
+      badge: "University Drive & Heinz Divisions",
+      visn: "VA Pittsburgh Healthcare System",
+      name: "VA Pittsburgh Healthcare System",
+      desc: "University Drive & H.J. Heinz Campus Catchment",
+      phone: "412-360-3620 (Press 1)",
+      cleanPhone: "4123603620,1",
+      lat: 40.4444,
+      lng: -79.9600
     };
 
-    let activeHub = defaultHub;
+    let activeHub = pittsburghDefaultHub;
 
     // Leaflet Map Initialization
     const map = L.map('map', {
-      center: [US_CENTER_LAT, US_CENTER_LNG],
-      zoom: US_COAST_TO_COAST_ZOOM,
+      center: [pittsburghDefaultHub.lat, pittsburghDefaultHub.lng],
+      zoom: 14,
       minZoom: 2.5,
       zoomControl: false,
       attributionControl: false
@@ -897,7 +892,7 @@
       minZoom: 12,
       maxZoom: 16,
       zIndex: 350
-    });
+    }).addTo(map);
 
     let stateBordersLayer = null;
     const stateLabelsGroup = L.layerGroup().addTo(map);
@@ -972,7 +967,10 @@
               fillOpacity: 0.08
             };
           }
-        }).addTo(map);
+        });
+        if (map.getZoom() < 12) {
+          stateBordersLayer.addTo(map);
+        }
       })
       .catch(() => {});
 
@@ -998,15 +996,15 @@
       iconAnchor: [7, 7]
     });
 
-    const marker = L.marker([defaultHub.lat, defaultHub.lng], { icon: radarIcon }).addTo(map);
+    const marker = L.marker([pittsburghDefaultHub.lat, pittsburghDefaultHub.lng], { icon: radarIcon }).addTo(map);
 
     function updateMarkerCallout(hub) {
       if (!hub || !hub.name) return;
       const popupHtml = `
         <div class="va-radar-callout">
           <div style="font-size: 8px; color: #f59e0b; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1px;">★ DESTINATION VA ★</div>
-          <div style="font-size: 11px; font-weight: 800; color: #ffffff; text-shadow: 0 1px 2px #000;">${hub.name}</div>
-          <div style="font-size: 8.5px; color: #cbd5e1; margin-top: 1px;">${hub.desc}</div>
+          <div style="font-size: 10.5px; font-weight: 800; color: #ffffff; text-shadow: 0 1px 2px #000;">${hub.name}</div>
+          <div style="font-size: 8px; color: #cbd5e1; margin-top: 1px;">${hub.desc}</div>
         </div>
       `;
       marker.bindPopup(popupHtml, {
@@ -1020,13 +1018,24 @@
 
     setTimeout(() => { 
       map.invalidateSize();
-      updateMarkerCallout(defaultHub);
+      updateMarkerCallout(pittsburghDefaultHub);
     }, 200);
     setTimeout(() => { map.invalidateSize(); }, 600);
     window.addEventListener('resize', () => { map.invalidateSize(); });
 
     // Nationwide & Regional VISN Routing Database
     const visnDatabase = {
+      // VISN 4 Complete Division Set
+      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
+      "visn4_butler": { badge: "Butler Regional Division", visn: "Butler VA Health Care System", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", lat: 40.8687, lng: -79.9554 },
+      "visn4_erie": { badge: "NW Pennsylvania Division", visn: "Erie VA Medical Center", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", lat: 42.1065, lng: -80.0526 },
+      "visn4_altoona": { badge: "Central PA Division", visn: "James E. Van Zandt VAMC", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", lat: 40.4996, lng: -78.3846 },
+      "visn4_lebanon": { badge: "South Central PA Division", visn: "Lebanon VA Medical Center", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", lat: 40.3106, lng: -76.4024 },
+      "visn4_coatesville": { badge: "Brandywine Division", visn: "Coatesville VA Medical Center", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", lat: 40.0039, lng: -75.8078 },
+      "visn4_wilkes": { badge: "Northeastern PA Division", visn: "Wilkes-Barre VA Medical Center", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", lat: 41.2523, lng: -75.8457 },
+      "visn4_wilmington": { badge: "Delaware Valley Division", visn: "Wilmington VA Medical Center", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey Catchment", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", lat: 39.7423, lng: -75.6022 },
+      "visn4_philly": { badge: "SE Pennsylvania Division", visn: "Michael J. Crescenz VAMC", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", lat: 39.9482, lng: -75.1979 },
+
       // VISN 1 New England
       "visn1_boston": { badge: "VISN 1 New England", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System (VISN 1)", desc: "Jamaica Plain & West Roxbury Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
       "visn1_connecticut": { badge: "VISN 1 Connecticut", visn: "VA Connecticut Healthcare System", name: "VA Connecticut Healthcare System (West Haven)", desc: "West Haven & Newington Campuses", phone: "203-932-5711 Ext 2280", cleanPhone: "2039325711,2280", lat: 41.2721, lng: -72.9554 },
@@ -1039,17 +1048,6 @@
 
       // VISN 2
       "visn2": { badge: "NY / NJ Metro Region", visn: "James J. Peters VAMC (Bronx)", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Regional Catchment", phone: "718-584-9000", cleanPhone: "7185849000", lat: 40.8677, lng: -73.9004 },
-
-      // VISN 4 Complete Division Set
-      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
-      "visn4_butler": { badge: "Butler Regional Division", visn: "Butler VA Health Care System", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", lat: 40.8687, lng: -79.9554 },
-      "visn4_erie": { badge: "NW Pennsylvania Division", visn: "Erie VA Medical Center", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", lat: 42.1065, lng: -80.0526 },
-      "visn4_altoona": { badge: "Central PA Division", visn: "James E. Van Zandt VAMC", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", lat: 40.4996, lng: -78.3846 },
-      "visn4_lebanon": { badge: "South Central PA Division", visn: "Lebanon VA Medical Center", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", lat: 40.3106, lng: -76.4024 },
-      "visn4_coatesville": { badge: "Brandywine Division", visn: "Coatesville VA Medical Center", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", lat: 40.0039, lng: -75.8078 },
-      "visn4_wilkes": { badge: "Northeastern PA Division", visn: "Wilkes-Barre VA Medical Center", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", lat: 41.2523, lng: -75.8457 },
-      "visn4_wilmington": { badge: "Delaware Valley Division", visn: "Wilmington VA Medical Center", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey Catchment", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", lat: 39.7423, lng: -75.6022 },
-      "visn4_philly": { badge: "SE Pennsylvania Division", visn: "Michael J. Crescenz VAMC", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", lat: 39.9482, lng: -75.1979 },
 
       // Additional VISNs nationwide
       "visn5": { badge: "Capital Regional Network", visn: "Washington DC VA Medical Center", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA Catchment", phone: "202-745-8000", cleanPhone: "2027458000", lat: 38.9298, lng: -77.0125 },
@@ -1113,8 +1111,8 @@
       if (typeof window.plausible === 'function') {
         window.plausible('Call Script Opened', {
           props: {
-            current_hub: activeHub ? activeHub.name : 'VA Boston Healthcare System',
-            visn: activeHub ? activeHub.visn : 'VISN 1'
+            current_hub: activeHub ? activeHub.name : 'VA Pittsburgh Healthcare System',
+            visn: activeHub ? activeHub.visn : 'VISN 4'
           }
         });
       }
@@ -1143,16 +1141,16 @@
       clearZipBtn.classList.add('hidden');
       hideAlert();
       matchStatus.textContent = "Live Auto-Lookup";
-      matchStatus.className = "text-[10px] font-mono-code text-stone-400";
+      matchStatus.className = "text-[9.5px] font-mono-code text-stone-400";
       centerCallBtn.classList.remove('call-btn-blinking');
       
-      map.flyTo([US_CENTER_LAT, US_CENTER_LNG], US_COAST_TO_COAST_ZOOM, { duration: 1.2 });
-      marker.setLatLng([US_CENTER_LAT, US_CENTER_LNG]);
-      marker.closePopup();
-      mapCoordinates.textContent = `${US_CENTER_LAT.toFixed(4)}° N, ${Math.abs(US_CENTER_LNG).toFixed(4)}° W`;
-      radarHeaderLabel.textContent = "Nationwide VISN Studio Radar";
+      map.flyTo([pittsburghDefaultHub.lat, pittsburghDefaultHub.lng], 14, { duration: 1.2 });
+      marker.setLatLng([pittsburghDefaultHub.lat, pittsburghDefaultHub.lng]);
+      updateMarkerCallout(pittsburghDefaultHub);
+      mapCoordinates.textContent = `${pittsburghDefaultHub.lat.toFixed(4)}° N, ${Math.abs(pittsburghDefaultHub.lng).toFixed(4)}° W`;
+      radarHeaderLabel.textContent = "VA Pittsburgh Healthcare System Radar View";
       
-      updateHubUI(defaultHub, false);
+      updateHubUI(pittsburghDefaultHub, false);
       zipInput.focus();
     });
 
@@ -1195,6 +1193,17 @@
       if (!zip || zip.length < 3) return null;
       const p = parseInt(zip.substring(0, 3), 10);
       
+      // VISN 4 Complete Resolution Table
+      if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
+      if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
+      if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
+      if ([155, 157, 158, 159, 166, 168].includes(p)) return visnDatabase.visn4_altoona;
+      if ([170, 171, 172, 173, 174, 175, 176, 178, 179].includes(p)) return visnDatabase.visn4_lebanon;
+      if ([182, 183, 184, 185, 186, 187, 188].includes(p)) return visnDatabase.visn4_wilkes;
+      if ([193, 194, 195, 196].includes(p)) return visnDatabase.visn4_coatesville;
+      if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
+      if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
+
       // VISN 1 Specific Routing by New England 3-Digit Prefix
       if ([10, 11, 12, 13].includes(p)) return visnDatabase.visn1_central_ma;
       if ([17, 18].includes(p)) return visnDatabase.visn1_bedford;
@@ -1208,17 +1217,6 @@
 
       // VISN 2
       if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
-
-      // VISN 4 Resolution
-      if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
-      if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
-      if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
-      if ([155, 157, 158, 159, 166, 168].includes(p)) return visnDatabase.visn4_altoona;
-      if ([170, 171, 172, 173, 174, 175, 176, 178, 179].includes(p)) return visnDatabase.visn4_lebanon;
-      if ([182, 183, 184, 185, 186, 187, 188].includes(p)) return visnDatabase.visn4_wilkes;
-      if ([193, 194, 195, 196].includes(p)) return visnDatabase.visn4_coatesville;
-      if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
-      if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
 
       // Nationwide VISN Resolution
       if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
@@ -1281,10 +1279,10 @@
           updateHubUI(match, true);
           if (match.badge === "National Dispatch Center") {
             matchStatus.textContent = "National Dispatch";
-            matchStatus.className = "text-[10px] font-mono-code text-amber-400 font-bold";
+            matchStatus.className = "text-[9.5px] font-mono-code text-amber-400 font-bold";
           } else {
             matchStatus.textContent = cleanVal.length === 5 ? "Locked (Exact)" : "Searching Region...";
-            matchStatus.className = "text-[10px] font-mono-code text-amber-300 font-bold";
+            matchStatus.className = "text-[9.5px] font-mono-code text-amber-300 font-bold";
           }
 
           if (cleanVal.length === 5) {
@@ -1297,7 +1295,7 @@
         }
       } else {
         matchStatus.textContent = "Live Auto-Lookup";
-        matchStatus.className = "text-[10px] font-mono-code text-stone-400";
+        matchStatus.className = "text-[9.5px] font-mono-code text-stone-400";
         centerCallBtn.classList.remove('call-btn-blinking');
       }
     }
@@ -1442,6 +1440,9 @@
         { timeout: 8000, enableHighAccuracy: true }
       );
     });
+
+    // Initial load setup for default PGH
+    updateMarkerCallout(pittsburghDefaultHub);
   </script>
 </body>
 </html>
