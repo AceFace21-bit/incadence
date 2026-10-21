@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.7 (REV 56) - PRODUCTION MASTER                      -->
+<!-- BUILD VERSION: BUILD 3.8 (REV 57) - PRODUCTION MASTER                      -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 20, 2026                                                   -->
 <!-- ========================================================================== -->
@@ -124,6 +124,23 @@
       white-space: nowrap;
     }
 
+    /* VISN Region Badge Label overlay on map */
+    .visn-region-label {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      border-radius: 6px;
+      color: #ffffff !important;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      text-transform: uppercase;
+      text-align: center;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
     /* Tactile Glowing VA Destination Callout Banner */
     .va-radar-callout {
       background: rgba(15, 23, 42, 0.95);
@@ -181,7 +198,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.7 (REV 56)</span>
+        <span>BUILD 3.8 (REV 57)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -637,7 +654,6 @@
     const eligibilityDetailModal = document.getElementById('eligibilityDetailModal');
     const infoRequirementBtn = document.getElementById('infoRequirementBtn');
     const textRequirementBtn = document.getElementById('textRequirementBtn');
-    const badgeRequirementBtn = document.getElementById('badgeRequirementBtn');
     const closeEligibilityDetailBtn = document.getElementById('closeEligibilityDetailBtn');
     const dismissEligibilityDetailBtn = document.getElementById('dismissEligibilityDetailBtn');
 
@@ -653,7 +669,6 @@
     if (infoRequirementBtn) infoRequirementBtn.addEventListener('click', openEligibilityModal);
     if (textRequirementBtn) textRequirementBtn.addEventListener('click', openEligibilityModal);
     
-
     if (closeEligibilityDetailBtn && eligibilityDetailModal) {
       closeEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
     }
@@ -741,9 +756,53 @@
       zIndex: 350
     });
 
-    // 3. VECTOR STATE BOUNDARIES: Precision High-Resolution GeoJSON (Clean Tactical Red #ef4444)
-    let stateBordersLayer = null;
+    // 3. COLOR-CODED VISN TERRITORIES & STATE BOUNDARIES
+    let visnGeoJsonLayer = null;
     const stateLabelsGroup = L.layerGroup().addTo(map);
+    const visnLabelsGroup = L.layerGroup().addTo(map);
+
+    // VISN 1 (New England / Northeast): Red (#991b1b or #b91c1c)
+    // VISN 2 (Mid-Atlantic / Southeast): Orange (#c2410c or #ea580c)
+    // VISN 3 (Midwest): Green (#15803d)
+    // VISN 4 (Continental / Central/South): Purple (#7e22ce)
+    // VISN 5 (West / Pacific): Blue (#1d4ed8)
+
+    const visn1States = ['ME', 'VT', 'NH', 'MA', 'RI', 'CT', 'NY', 'NJ', 'PA', 'DE', 'MD', 'WV'];
+    const visn2States = ['NC', 'SC', 'GA', 'FL', 'AL', 'MS', 'TN', 'KY'];
+    const visn3States = ['ND', 'SD', 'MN', 'WI', 'MI', 'IA', 'IL', 'IN', 'OH'];
+    const visn4States = ['NE', 'KS', 'MO', 'OK', 'AR', 'TX', 'LA', 'CO', 'NM', 'WY', 'UT'];
+    const visn5States = ['WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'];
+
+    function getVisnColor(stateNameOrAbbr) {
+      // Map state abbreviations or names
+      const abbrMap = {
+        'Maine': 'ME', 'Vermont': 'VT', 'New Hampshire': 'NH', 'Massachusetts': 'MA', 'Rhode Island': 'RI', 'Connecticut': 'CT', 'New York': 'NY', 'New Jersey': 'NJ', 'Pennsylvania': 'PA', 'Delaware': 'DE', 'Maryland': 'MD', 'West Virginia': 'WV',
+        'North Carolina': 'NC', 'South Carolina': 'SC', 'Georgia': 'GA', 'Florida': 'FL', 'Alabama': 'AL', 'Mississippi': 'MS', 'Tennessee': 'TN', 'Kentucky': 'KY',
+        'North Dakota': 'ND', 'South Dakota': 'SD', 'Minnesota': 'MN', 'Wisconsin': 'WI', 'Michigan': 'MI', 'Iowa': 'IA', 'Illinois': 'IL', 'Indiana': 'IN', 'Ohio': 'OH',
+        'Nebraska': 'NE', 'Kansas': 'KS', 'Missouri': 'MO', 'Oklahoma': 'OK', 'Arkansas': 'AR', 'Texas': 'TX', 'Louisiana': 'LA', 'Colorado': 'CO', 'New Mexico': 'NM', 'Wyoming': 'WY', 'Utah': 'UT',
+        'Washington': 'WA', 'Oregon': 'OR', 'California': 'CA', 'Nevada': 'NV', 'Idaho': 'ID', 'Montana': 'MT', 'Arizona': 'AZ', 'Alaska': 'AK', 'Hawaii': 'HI'
+      };
+      return '#334155'; // default
+    }
+
+    // VISN Region Center Labels matching reference image
+    const visnRegionLabels = [
+      { name: "VISN 1", lat: 43.5, lng: -73.0, color: '#991b1b' },
+      { name: "VISN 2", lat: 33.5, lng: -82.0, color: '#c2410c' },
+      { name: "VISN 3", lat: 44.5, lng: -88.0, color: '#15803d' },
+      { name: "VISN 4", lat: 37.5, lng: -98.0, color: '#7e22ce' },
+      { name: "VISN 5", lat: 38.0, lng: -118.0, color: '#1d4ed8' }
+    ];
+
+    visnRegionLabels.forEach(v => {
+      const vIcon = L.divIcon({
+        className: 'visn-region-label',
+        html: `<span style="color: #ffffff; text-shadow: 0 1px 3px #000;">${v.name}</span>`,
+        iconSize: [60, 24],
+        iconAnchor: [30, 12]
+      });
+      L.marker([v.lat, v.lng], { icon: vIcon, interactive: false }).addTo(visnLabelsGroup);
+    });
 
     const stateLabels = [
       { name: "WA", lat: 47.4, lng: -120.5 },
@@ -804,32 +863,65 @@
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
 
-    // High-Resolution Precision US State Boundaries in Tactical Red (#ef4444)
+    // Fetch US State Boundaries and color-code by VISN region matching reference image
     fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
       .then(res => res.json())
       .then(data => {
-        stateBordersLayer = L.geoJSON(data, {
-          style: {
-            color: '#ef4444',
-            weight: 1.8,
-            opacity: 0.95,
-            fillOpacity: 0
+        visnGeoJsonLayer = L.geoJSON(data, {
+          style: function(feature) {
+            const name = feature.properties.NAME || feature.properties.name || '';
+            const abbr = feature.properties.STATE || feature.properties.STUSPS || '';
+            
+            // Determine VISN color matching reference image exactly
+            let fillColor = '#7e22ce'; // Default VISN 4 Purple
+            let fillOp = 0.65;
+
+            // VISN 1: New England / Northeast (Red)
+            if (['Maine', 'Vermont', 'New Hampshire', 'Massachusetts', 'Rhode Island', 'Connecticut', 'New York', 'New Jersey', 'Pennsylvania', 'Delaware', 'Maryland', 'West Virginia', 'ME', 'VT', 'NH', 'MA', 'RI', 'CT', 'NY', 'NJ', 'PA', 'DE', 'MD', 'WV'].includes(name) || ['ME', 'VT', 'NH', 'MA', 'RI', 'CT', 'NY', 'NJ', 'PA', 'DE', 'MD', 'WV'].includes(abbr)) {
+              fillColor = '#991b1b'; // Red
+            }
+            // VISN 2: Mid-Atlantic / Southeast (Orange)
+            else if (['North Carolina', 'South Carolina', 'Georgia', 'Florida', 'Alabama', 'Mississippi', 'Tennessee', 'Kentucky', 'NC', 'SC', 'GA', 'FL', 'AL', 'MS', 'TN', 'KY'].includes(name) || ['NC', 'SC', 'GA', 'FL', 'AL', 'MS', 'TN', 'KY'].includes(abbr)) {
+              fillColor = '#c2410c'; // Orange
+            }
+            // VISN 3: Midwest (Green)
+            else if (['North Dakota', 'South Dakota', 'Minnesota', 'Wisconsin', 'Michigan', 'Iowa', 'Illinois', 'Indiana', 'Ohio', 'ND', 'SD', 'MN', 'WI', 'MI', 'IA', 'IL', 'IN', 'OH'].includes(name) || ['ND', 'SD', 'MN', 'WI', 'MI', 'IA', 'IL', 'IN', 'OH'].includes(abbr)) {
+              fillColor = '#15803d'; // Green
+            }
+            // VISN 5: West / Pacific (Blue)
+            else if (['Washington', 'Oregon', 'California', 'Nevada', 'Idaho', 'Montana', 'Arizona', 'Alaska', 'Hawaii', 'WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'].includes(name) || ['WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'].includes(abbr)) {
+              fillColor = '#1d4ed8'; // Blue
+            }
+            // VISN 4: Central/South/Mountain (Purple - default)
+            else {
+              fillColor = '#7e22ce'; // Purple
+            }
+
+            return {
+              color: '#ffffff',
+              weight: 1.5,
+              opacity: 0.9,
+              fillColor: fillColor,
+              fillOpacity: fillOp
+            };
           }
         }).addTo(map);
       })
       .catch(() => {});
 
-    // Dynamic zoom handler: switches seamlessly between Continental State Radar and Local Streets
+    // Dynamic zoom handler: switches seamlessly between Continental VISN Color Map and Local Streets
     map.on('zoomend', () => {
       const z = map.getZoom();
       if (z >= 12) {
         if (!map.hasLayer(streetOverlay)) map.addLayer(streetOverlay);
-        if (stateBordersLayer && map.hasLayer(stateBordersLayer)) map.removeLayer(stateBordersLayer);
+        if (visnGeoJsonLayer && map.hasLayer(visnGeoJsonLayer)) map.removeLayer(visnGeoJsonLayer);
         if (map.hasLayer(stateLabelsGroup)) map.removeLayer(stateLabelsGroup);
+        if (map.hasLayer(visnLabelsGroup)) map.removeLayer(visnLabelsGroup);
       } else {
         if (map.hasLayer(streetOverlay)) map.removeLayer(streetOverlay);
-        if (stateBordersLayer && !map.hasLayer(stateBordersLayer)) map.addLayer(stateBordersLayer);
+        if (visnGeoJsonLayer && !map.hasLayer(visnGeoJsonLayer)) map.addLayer(visnGeoJsonLayer);
         if (!map.hasLayer(stateLabelsGroup)) map.addLayer(stateLabelsGroup);
+        if (!map.hasLayer(visnLabelsGroup)) map.addLayer(visnLabelsGroup);
       }
     });
 
@@ -1000,7 +1092,6 @@
       if ([182, 183, 184, 185, 186, 187, 188].includes(p)) return visnDatabase.visn4_wilkes;
       if ([193, 194, 195, 196].includes(p)) return visnDatabase.visn4_coatesville;
       if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
-      if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
 
       // VISN 5 (Pacific & West: AK, CA, WA, OR, NV, AZ, HI, ID, MT, UT, WY)
       if (p >= 850 && p <= 999) return visnDatabase.visn5;
