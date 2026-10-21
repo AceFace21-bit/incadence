@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // PITTSBURGH VAPHS                                 -->
-<!-- SEMVER VERSION: v3.17.2 (BUILD 3.17 // REV 49) - SEMANTIC VERSIONING        -->
+<!-- SEMVER VERSION: v3.18.0 (BUILD 3.5 // REV 55) - SEMANTIC VERSIONING        -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -69,12 +69,12 @@ filter: brightness(1.2);
 .call-btn-blinking {
 animation: callBtnPulse 0.9s ease-in-out infinite;
 }
-/* Stationary Flashing Red, White, and Blue US Flag Animation /
+/* Stationary Flashing Red, White, and Blue US Flag Animation */
 @keyframes usFlagFlash {
-0% { color: #ef4444; text-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }   / Red /
-33% { color: #ffffff; text-shadow: 0 0 8px rgba(255, 255, 255, 0.8); } / White /
-66% { color: #3b82f6; text-shadow: 0 0 8px rgba(59, 130, 246, 0.6); }  / Blue /
-100% { color: #ef4444; text-shadow: 0 0 8px rgba(239, 68, 68, 0.6); } / Red */
+0% { color: #ef4444; text-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }   /* Red */
+33% { color: #ffffff; text-shadow: 0 0 8px rgba(255, 255, 255, 0.8); } /* White */
+66% { color: #3b82f6; text-shadow: 0 0 8px rgba(59, 130, 246, 0.6); }  /* Blue */
+100% { color: #ef4444; text-shadow: 0 0 8px rgba(239, 68, 68, 0.6); } /* Red */
 }
 .us-flag-flash-text {
 animation: usFlagFlash 1.8s ease-in-out infinite;
@@ -114,7 +114,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v3.17.2</span>
+<span>v3.18.0</span>
 </div>
 <!-- Centered Platform Branding: FORWARD MARCH TRANSIT PITTSBURGH VAPHS (All Green & Centered) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -236,8 +236,8 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 </div>
 <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">40.4444° N, 79.9600° W</span>
 </div>
-<!-- Explicit Height container -->
-<div class="relative w-full h-[150px] bg-slate-950">
+<!-- Explicit Height container fixed for mobile layout and rendering -->
+<div class="relative w-full h-[170px] bg-slate-950">
 <div id="map" class="w-full h-full"></div>
 <!-- Center Radar Crosshair Reticle -->
 <div class="radar-crosshair w-20 h-20 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center z-10">
@@ -567,7 +567,7 @@ cleanPhone: "4123603620,1",
 coords: [-79.9600, 40.4444]
 };
 let activeHub = defaultHub;
-// Map Centered directly on Pittsburgh VA Hospital (University Drive & Heinz, Zoom 11.5)
+// Map Centered directly on Pittsburgh VA Hospital (University Drive & Heinz, Zoom 11.5) with strict resize handling
 const map = new mapboxgl.Map({
 container: 'map',
 style: 'mapbox://styles/mapbox/dark-v11',
@@ -579,6 +579,14 @@ map.addControl(new mapboxgl.AttributionControl({ compact: true }));
 const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
 .setLngLat([-79.9600, 40.4444])
 .addTo(map);
+
+// Ensure map container calculates correctly on load and resize
+window.addEventListener('load', () => {
+setTimeout(() => {
+if (map) map.resize();
+}, 250);
+});
+
 // Comprehensive National & VISN 4 Hospital Database covering all US ZIP prefixes (001 - 999)
 const nationwideHospitalDatabase = [
 // VISN 4: Pennsylvania, Delaware, parts of OH/WV/NJ
@@ -682,7 +690,7 @@ zipInput.blur();
 readFacilityBtn.addEventListener('click', () => {
 if (!activeHub) return;
 centerCallBtn.classList.add('call-btn-blinking');
-const textToRead = ⁠${activeHub.name}. ${activeHub.desc}. Travel coordinator phone number is ${activeHub.phone}, or tap the blinking green button.⁠;
+const textToRead = `${activeHub.name}. ${activeHub.desc}. Travel coordinator phone number is ${activeHub.phone}, or tap the blinking green button.`;
 speakGreeting(textToRead);
 });
 clearZipBtn.addEventListener('click', () => {
@@ -750,12 +758,12 @@ centerCallBtn.href = callUri;
 const isFallback = (data.visn === "VA Beneficiary Travel Dispatch" || data.badge === "National Dispatch Center");
 centerCallText.textContent = isFallback ? "CALL DISPATCH" : "CALL TRAVEL COORDINATOR";
 if (radarHeaderLabel) {
-radarHeaderLabel.textContent = isFallback ? "National Dispatch Radar View" : ⁠${data.name} Radar View⁠;
+radarHeaderLabel.textContent = isFallback ? "National Dispatch Radar View" : `${data.name} Radar View`;
 }
 if (map && data.coords) {
 map.flyTo({ center: data.coords, zoom: isFallback ? 7 : 12.5, speed: 1.4, essential: true });
 mapMarker.setLngLat(data.coords);
-mapCoordinates.textContent = ⁠${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W⁠;
+mapCoordinates.textContent = `${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W`;
 }
 }
 function showAlert(msg) {
@@ -848,7 +856,7 @@ micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
 const matchedHub = resolveHub(zip);
 if (matchedHub) {
 const spokenPhone = matchedHub.phone.replace(/ Ext /gi, ' extension ');
-const spokenReply = ⁠${matchedHub.name}. Phone number ${spokenPhone}. Click the blinking button if you would like to make the call.⁠;
+const spokenReply = `${matchedHub.name}. Phone number ${spokenPhone}. Click the blinking button if you would like to make the call.`;
 readFacilityBtn.classList.add('animate-bounce');
 setTimeout(() => { readFacilityBtn.classList.remove('animate-bounce'); }, 2000);
 speakGreeting(spokenReply);
@@ -886,10 +894,10 @@ const lon = position.coords.longitude;
 if (map) {
 map.flyTo({ center: [lon, lat], zoom: 12.5, essential: true });
 mapMarker.setLngLat([lon, lat]);
-mapCoordinates.textContent = ⁠${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W⁠;
+mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
 }
 try {
-const res = await fetch(⁠https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en⁠);
+const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
 const data = await res.json();
 const detectedZip = data.postcode;
 if (detectedZip) {
