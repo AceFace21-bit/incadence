@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.9 (REV 75) - FULL COMPLETE PRODUCTION MASTER        -->
+<!-- BUILD VERSION: BUILD 3.9 (REV 77) - FULL COMPLETE PRODUCTION MASTER        -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 21, 2026                                                   -->
 <!-- ========================================================================== -->
@@ -199,7 +199,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-100 border border-slate-200 text-[10px] font-mono-code text-emerald-700 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-        <span>BUILD 3.9 (REV 75)</span>
+        <span>BUILD 3.9 (REV 77)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -900,10 +900,6 @@
       if (!zip || zip.length < 3) return null;
       const p = parseInt(zip.substring(0, 3), 10);
       
-      if ((p >= 10 && p <= 69) || (p >= 100 && p <= 219) || (p >= 250 && p <= 268)) return visnDatabase.visn1;
-      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn2;
-      if ((p >= 430 && p <= 499) || (p >= 600 && p <= 619) || (p >= 530 && p <= 549)) return visnDatabase.visn3;
-
       if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
       if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
       if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
@@ -913,6 +909,9 @@
       if ([193, 194, 195, 196].includes(p)) return visnDatabase.visn4_coatesville;
       if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
 
+      if ((p >= 10 && p <= 69) || (p >= 100 && p <= 219) || (p >= 250 && p <= 268)) return visnDatabase.visn1;
+      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn2;
+      if ((p >= 430 && p <= 499) || (p >= 600 && p <= 619) || (p >= 530 && p <= 549)) return visnDatabase.visn3;
       if (p >= 850 && p <= 999) return visnDatabase.visn5;
 
       return visnDatabase.national_fallback;
