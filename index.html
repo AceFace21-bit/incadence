@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.5 (REV 35) - PRODUCTION MASTER RETUNED              -->
+<!-- BUILD VERSION: BUILD 3.7 (REV 37) - VISN 4 DEDICATED MASTER                -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -9,7 +9,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>In Cadence | Forward March Transit</title>
+  <title>In Cadence | Forward March Transit - VISN 4</title>
   
   <!-- Privacy-friendly analytics by Plausible with Tagged Events Extension -->
   <script defer data-domain="aceface21-bit.github.io" src="https://plausible.io/js/script.tagged-events.js"></script>
@@ -135,7 +135,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.5 (REV 35)</span>
+        <span>BUILD 3.7 (VISN 4)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -146,7 +146,7 @@
           </div>
           <span class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none">Forward March Transit</span>
         </div>
-        <span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-1 leading-none">IN CADENCE // ALL VISNS</span>
+        <span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-1 leading-none">IN CADENCE // VISN 4 DEDICATED</span>
       </div>
 
       <!-- Zero-PII Security Architecture Trigger (Right) -->
@@ -218,7 +218,7 @@
             pattern="[0-9]*" 
             inputmode="numeric" 
             maxlength="5" 
-            placeholder="e.g. 15120, 60601" 
+            placeholder="e.g. 15120, 19104" 
             class="tactile-btn w-full bg-slate-950 border-2 border-slate-700 focus:border-emerald-400 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-100 placeholder-slate-500 font-mono-code font-bold transition outline-none"
           >
           <button 
@@ -258,14 +258,14 @@
       <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
     </section>
 
-    <!-- Radar Target Map with Direct Interactive Dial Anchor & Explicit Height -->
+    <!-- VISN 4 Dedicated Radar Map Section -->
     <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative shrink-0 shadow-md flex flex-col">
       <div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/85 shrink-0 z-10">
         <div class="flex items-center space-x-1.5">
           <i data-lucide="radar" class="w-4 h-4 text-emerald-400"></i>
-          <span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-200">National Healthcare Radar View (Coast-to-Coast)</span>
+          <span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-200">VISN 4 Regional Healthcare Map</span>
         </div>
-        <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">37.0902° N, 95.7129° W</span>
+        <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">40.8000° N, 78.0000° W</span>
       </div>
       
       <!-- Explicit Height container so Mapbox GL JS renders reliably without collapsing -->
@@ -295,17 +295,17 @@
     <section id="resultCard" class="bg-slate-900 border-2 border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md flex items-center justify-between gap-2">
       <div class="min-w-0 flex-1">
         <div class="flex items-center space-x-1.5 mb-0.5 truncate">
-          <span id="visnBadge" class="text-[10px] font-mono-code text-emerald-400 shrink-0 font-bold uppercase tracking-wider truncate">VA Pittsburgh Healthcare System</span>
+          <span id="visnBadge" class="text-[10px] font-mono-code text-emerald-400 shrink-0 font-bold uppercase tracking-wider truncate">VISN 4 (Western PA)</span>
           <span class="text-slate-600 text-[10px]">•</span>
           <span id="hubBadge" class="text-[10px] font-mono-code text-slate-400 font-medium truncate">
-            University Drive & Heinz Divisions
+            Pittsburgh, PA
           </span>
         </div>
         <h2 id="facilityName" class="text-xs font-extrabold text-slate-100 leading-snug truncate">
-          VA Pittsburgh Healthcare System
+          VA Pittsburgh Healthcare System (University Drive & Heinz)
         </h2>
         <p id="facilityAddress" class="text-[10px] text-slate-400 truncate">
-          University Drive & H.J. Heinz Divisions
+          Pittsburgh, PA
         </p>
       </div>
 
@@ -562,10 +562,10 @@
     mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 
     const defaultHub = {
-      badge: "University Drive & Heinz Divisions",
-      visn: "VA Pittsburgh Healthcare System",
-      name: "VA Pittsburgh Healthcare System",
-      desc: "University Drive & H.J. Heinz Campus Catchment",
+      badge: "Pittsburgh, PA",
+      visn: "VISN 4 (Western PA)",
+      name: "VA Pittsburgh Healthcare System (University Drive & Heinz)",
+      desc: "Pittsburgh, PA",
       phone: "412-360-3620 (Press 1)",
       cleanPhone: "4123603620,1",
       coords: [-79.9600, 40.4444]
@@ -573,124 +573,46 @@
 
     let activeHub = defaultHub;
 
-    // Coast-to-Coast Map Initialization with Continental US Center
+    // VISN 4 Dedicated Regional Map Initialization (Centered on PA/DE/Tri-State region, Zoom 7.2)
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/dark-v11',
-      center: [-95.7129, 37.0902],
-      zoom: 3.2,
+      center: [-78.0, 40.8],
+      zoom: 7.2,
       attributionControl: false
     });
     map.addControl(new mapboxgl.AttributionControl({ compact: true }));
 
     const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
-      .setLngLat([-95.7129, 37.0902])
+      .setLngLat([-79.9600, 40.4444])
       .addTo(map);
 
-    // 5-VISN Regional Polygon Boundaries Overlay matching reference map
-    map.on('load', () => {
-      const visnGeoJson = {
-        "type": "FeatureCollection",
-        "features": [
-          {
-            "type": "Feature",
-            "properties": { "visn": "VISN 1", "color": "#ef4444" },
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [[[-80.5, 42.5], [-70.0, 47.5], [-66.9, 45.0], [-71.0, 41.0], [-75.0, 39.0], [-80.5, 42.5]]]
-            }
-          },
-          {
-            "type": "Feature",
-            "properties": { "visn": "VISN 2", "color": "#f97316" },
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [[[-85.0, 37.0], [-81.0, 36.5], [-75.0, 39.0], [-81.0, 35.0], [-81.5, 30.0], [-85.0, 25.0], [-91.0, 30.0], [-85.0, 37.0]]]
-            }
-          },
-          {
-            "type": "Feature",
-            "properties": { "visn": "VISN 3", "color": "#22c55e" },
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [[[-97.0, 49.0], [-82.0, 49.0], [-80.5, 42.5], [-85.0, 37.0], [-91.0, 37.0], [-97.0, 43.0], [-97.0, 49.0]]]
-            }
-          },
-          {
-            "type": "Feature",
-            "properties": { "visn": "VISN 4", "color": "#a855f7" },
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [[[-109.0, 49.0], [-97.0, 49.0], [-97.0, 43.0], [-91.0, 37.0], [-85.0, 37.0], [-91.0, 30.0], [-94.0, 26.0], [-106.0, 31.0], [-109.0, 37.0], [-109.0, 49.0]]]
-            }
-          },
-          {
-            "type": "Feature",
-            "properties": { "visn": "VISN 5", "color": "#3b82f6" },
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [[[-124.7, 49.0], [-109.0, 49.0], [-109.0, 37.0], [-106.0, 31.0], [-114.0, 32.0], [-124.7, 40.0], [-124.7, 49.0]]]
-            }
-          }
-        ]
-      };
+    // VISN 4 Master Hospital & ZIP Code Database
+    const visn4HospitalDatabase = [
+      { min: 150, max: 154, region: "VISN 4 (Western PA)", name: "VA Pittsburgh Healthcare System (University Drive & Heinz)", location: "Pittsburgh, PA", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
+      { min: 156, max: 156, region: "VISN 4 (Western PA)", name: "VA Pittsburgh Healthcare System (University Drive & Heinz)", location: "Pittsburgh, PA", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
+      { min: 160, max: 163, region: "VISN 4 (Western PA)", name: "Butler VA Health Care System", location: "Butler, PA", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
+      { min: 164, max: 165, region: "VISN 4 (Northwestern PA)", name: "Erie VA Medical Center", location: "Erie, PA", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
+      { min: 155, max: 155, region: "VISN 4 (Central PA)", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+      { min: 157, max: 159, region: "VISN 4 (Central PA)", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+      { min: 166, max: 166, region: "VISN 4 (Central PA)", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+      { min: 168, max: 168, region: "VISN 4 (Central PA)", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+      { min: 170, max: 179, region: "VISN 4 (South Central PA)", name: "Lebanon VA Medical Center", location: "Lebanon, PA", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
+      { min: 193, max: 196, region: "VISN 4 (Brandywine)", name: "Coatesville VA Medical Center", location: "Coatesville, PA", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
+      { min: 182, max: 188, region: "VISN 4 (Northeastern PA)", name: "Wilkes-Barre VA Medical Center", location: "Wilkes-Barre, PA", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
+      { min: 189, max: 192, region: "VISN 4 (Philadelphia)", name: "Michael J. Crescenz VAMC", location: "Philadelphia, PA", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
+      { min: 197, max: 199, region: "VISN 4 (Delaware Valley)", name: "Wilmington VA Medical Center", location: "Wilmington, DE", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
+      { min: 80, max: 84, region: "VISN 4 (Delaware Valley)", name: "Wilmington VA Medical Center", location: "Wilmington, DE", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] }
+    ];
 
-      map.addSource('visn-regions', {
-        type: 'geojson',
-        data: visnGeoJson
-      });
-
-      map.addLayer({
-        id: 'visn-fills',
-        type: 'fill',
-        source: 'visn-regions',
-        paint: {
-          'fill-color': ['get', 'color'],
-          'fill-opacity': 0.22
-        }
-      });
-
-      map.addLayer({
-        id: 'visn-borders',
-        type: 'line',
-        source: 'visn-regions',
-        paint: {
-          'line-color': ['get', 'color'],
-          'line-width': 1.5,
-          'line-opacity': 0.6
-        }
-      });
-    });
-
-    // Complete Nationwide & Regional VISN Routing Database
-    const visnDatabase = {
-      "visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
-      "visn2": { badge: "NY / NJ Metro Region", visn: "James J. Peters VAMC (Bronx)", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Regional Catchment", phone: "718-584-9000", cleanPhone: "7185849000", coords: [-73.9004, 40.8677] },
-      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
-      "visn4_butler": { badge: "Butler Regional Division", visn: "Butler VA Health Care System", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
-      "visn4_erie": { badge: "NW Pennsylvania Division", visn: "Erie VA Medical Center", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
-      "visn4_altoona": { badge: "Central PA Division", visn: "James E. Van Zandt VAMC", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
-      "visn4_lebanon": { badge: "South Central PA Division", visn: "Lebanon VA Medical Center", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
-      "visn4_coatesville": { badge: "Brandywine Division", visn: "Coatesville VA Medical Center", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
-      "visn4_wilkes": { badge: "Northeastern PA Division", visn: "Wilkes-Barre VA Medical Center", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
-      "visn4_wilmington": { badge: "Delaware Valley Division", visn: "Wilmington VA Medical Center", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey Catchment", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
-      "visn4_philly": { badge: "SE Pennsylvania Division", visn: "Michael J. Crescenz VAMC", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
-      "visn5": { badge: "Capital Regional Network", visn: "Washington DC VA Medical Center", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA Catchment", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0125, 38.9298] },
-      "visn6": { badge: "Mid-Atlantic Network", visn: "Fayetteville NC VA Medical Center", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA Catchment", phone: "910-488-2120", cleanPhone: "9104882120", coords: [-78.8872, 35.0805] },
-      "visn7": { badge: "Southeast Regional Network", visn: "Atlanta VA Medical Center", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina Catchment", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.3015, 33.7938] },
-      "visn8": { badge: "Sunshine Regional Network", visn: "James A. Haley Hospital (Tampa)", name: "James A. Haley Hospital (Tampa)", desc: "Florida & Puerto Rico Regional Catchment", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4278, 28.0592] },
-      "visn9": { badge: "MidSouth Regional Network", visn: "Tennessee Valley Healthcare", name: "Tennessee Valley Healthcare", desc: "Tennessee, Kentucky & South IN Catchment", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8041, 36.1444] },
-      "visn10": { badge: "Midwest Network (OH/IN/MI)", visn: "Louis Stokes Cleveland VAMC", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana & Lower Michigan Catchment", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6119, 41.5036] },
-      "visn12": { badge: "Great Lakes Network", visn: "Jesse Brown VAMC (Chicago)", name: "Jesse Brown VAMC (Chicago)", desc: "Illinois, Wisconsin & Upper MI Catchment", phone: "312-569-8387", cleanPhone: "3125698387", coords: [-87.6749, 41.8703] },
-      "visn15": { badge: "Heartland Regional Network", visn: "Kansas City VA Medical Center", name: "Kansas City VA Medical Center", desc: "Missouri, Kansas & South IL Catchment", phone: "816-861-4700", cleanPhone: "8168614700", coords: [-94.5222, 39.0494] },
-      "visn16": { badge: "South Central Regional Network", visn: "Michael E. DeBakey VAMC", name: "Michael E. DeBakey VAMC", desc: "MS, LA, AR & East Texas Catchment", phone: "713-791-1414", cleanPhone: "7137911414", coords: [-95.3855, 29.7042] },
-      "visn17": { badge: "Heart of Texas Network", visn: "Central Texas Veterans Health", name: "Central Texas Veterans Health", desc: "Central, South & West Texas Catchment", phone: "254-778-4811", cleanPhone: "2547784811", coords: [-97.3547, 31.0827] },
-      "visn19": { badge: "Rocky Mountain Network", visn: "Rocky Mountain Regional VAMC", name: "Rocky Mountain Regional VAMC", desc: "CO, MT, UT, WY & West KS/NE Catchment", phone: "303-399-8020", cleanPhone: "3033998020", coords: [-104.8384, 39.7420] },
-      "visn20": { badge: "Northwest Regional Network", visn: "VA Puget Sound Healthcare", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, ID & Alaska Catchment", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3101, 47.5583] },
-      "visn21": { badge: "Sierra Pacific Network", visn: "San Francisco VA Health Care", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii Catchment", phone: "415-221-4810", cleanPhone: "4152214810", coords: [-122.5052, 37.7820] },
-      "visn22": { badge: "Desert Pacific Network", visn: "VA Greater Los Angeles Healthcare", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona Catchment", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4552, 34.0532] },
-      "visn23": { badge: "Midwest Regional Network", visn: "Minneapolis VA Health Care", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE Catchment", phone: "612-725-2000", cleanPhone: "6127252000", coords: [-93.2081, 44.9015] },
-      "national_fallback": { badge: "National Dispatch Center", visn: "VA Beneficiary Travel Dispatch", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Beneficiary Travel Hotline", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
+    const nationalFallback = {
+      badge: "National Dispatch Center",
+      visn: "VA Beneficiary Travel Dispatch",
+      name: "VA Beneficiary Travel Dispatch",
+      desc: "Centralized National Beneficiary Travel Hotline",
+      phone: "855-574-7292",
+      cleanPhone: "8555747292",
+      coords: [-77.0369, 38.9072]
     };
 
     const zipInput = document.getElementById('zipInput');
@@ -778,43 +700,28 @@
     }
 
     centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
-    fallbackCallBtn.addEventListener('click', () => trackDialerClick('National Fallback Dial Button', visnDatabase.national_fallback));
-    directNationalBtn.addEventListener('click', () => trackDialerClick('Direct National Center Button', visnDatabase.national_fallback));
+    fallbackCallBtn.addEventListener('click', () => trackDialerClick('National Fallback Dial Button', nationalFallback));
+    directNationalBtn.addEventListener('click', () => trackDialerClick('Direct National Center Button', nationalFallback));
 
     function resolveHub(zip) {
       if (!zip || zip.length < 3) return null;
       const p = parseInt(zip.substring(0, 3), 10);
       
-      if (p >= 10 && p <= 69) return visnDatabase.visn1;
-      if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
+      for (const entry of visn4HospitalDatabase) {
+        if (p >= entry.min && p <= entry.max) {
+          return {
+            badge: entry.location,
+            visn: entry.region,
+            name: entry.name,
+            desc: entry.location,
+            phone: entry.phone,
+            cleanPhone: entry.cleanPhone,
+            coords: entry.coords
+          };
+        }
+      }
 
-      if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
-      if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
-      if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
-      if ([155, 157, 158, 159, 166, 168].includes(p)) return visnDatabase.visn4_altoona;
-      if ([170, 171, 172, 173, 174, 175, 176, 178, 179].includes(p)) return visnDatabase.visn4_lebanon;
-      if ([182, 183, 184, 185, 186, 187, 188].includes(p)) return visnDatabase.visn4_wilkes;
-      if ([193, 194, 195, 196].includes(p)) return visnDatabase.visn4_coatesville;
-      if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
-      if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
-
-      if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
-      if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
-      if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
-      if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
-      if (p >= 430 && p <= 499) return visnDatabase.visn10;
-      if ((p >= 530 && p <= 549) || (p >= 600 && p <= 619)) return visnDatabase.visn12;
-      if (p >= 620 && p <= 679) return visnDatabase.visn15;
-      if ((p >= 386 && p <= 397) || (p >= 700 && p <= 729) || (p >= 750 && p <= 759) || (p >= 770 && p <= 777)) return visnDatabase.visn16;
-      if ((p >= 760 && p <= 769) || (p >= 780 && p <= 799)) return visnDatabase.visn17;
-      if ((p >= 590 && p <= 599) || (p >= 800 && p <= 847)) return visnDatabase.visn19;
-      if (p >= 970 && p <= 999) return visnDatabase.visn20;
-      if ((p >= 890 && p <= 898) || (p >= 936 && p <= 969)) return visnDatabase.visn21;
-      if ((p >= 850 && p <= 865) || (p >= 900 && p <= 935)) return visnDatabase.visn22;
-      if ((p >= 500 && p <= 528) || (p >= 550 && p <= 588) || (p >= 680 && p <= 693)) return visnDatabase.visn23;
-
-      return visnDatabase.national_fallback;
+      return nationalFallback;
     }
 
     function updateHubUI(data) {
@@ -835,7 +742,7 @@
       }
 
       if (map && data.coords) {
-        map.flyTo({ center: data.coords, zoom: isFallback ? 4 : 11, speed: 1.4, essential: true });
+        map.flyTo({ center: data.coords, zoom: isFallback ? 7 : 12, speed: 1.4, essential: true });
         mapMarker.setLngLat(data.coords);
         mapCoordinates.textContent = `${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W`;
       }
@@ -988,7 +895,7 @@
           const lon = position.coords.longitude;
 
           if (map) {
-            map.flyTo({ center: [lon, lat], zoom: 11, essential: true });
+            map.flyTo({ center: [lon, lat], zoom: 12, essential: true });
             mapMarker.setLngLat([lon, lat]);
             mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
           }
@@ -1001,7 +908,7 @@
             if (detectedZip) {
               const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
               zipInput.value = cleanZip;
-              clearZipBtn.classList.remove('hidden');
+              clearZipBtn.classList.add('hidden');
               executeLookup(cleanZip, 'GPS');
             } else {
               showAlert("Could not detect ZIP. Enter manually.");
