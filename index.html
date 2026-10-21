@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.9 (REV 68) - PRODUCTION MASTER (ALL 50 STATES SMOOTH GIS) -->
+<!-- BUILD VERSION: BUILD 3.9 (REV 70) - FULL COMPLETE PRODUCTION MASTER        -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 21, 2026                                                   -->
 <!-- ========================================================================== -->
@@ -199,7 +199,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-100 border border-slate-200 text-[10px] font-mono-code text-emerald-700 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-        <span>BUILD 3.9 (REV 68)</span>
+        <span>BUILD 3.9 (REV 70)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -450,7 +450,7 @@
             <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
             <span>Who Automatically Qualifies:</span>
           </div>
-          <p class="text-slate-800 text-[10.5px] leading-relaxed">
+          <p class="text-slate-800 text-[10.5px] relaxed">
             You are eligible for VA Beneficiary Travel transit coordination if you meet <strong>any one</strong> of the following statutory criteria:
           </p>
         </div>
@@ -590,188 +590,66 @@
     </div>
   </div>
 
-  <!-- FULL US 50-STATE SMOOTH GEOJSON DATA EMBEDDED DIRECTLY -->
+  <!-- EMBEDDED COMPLETE 50-STATE SMOOTH GEOJSON DATASET -->
   <script>
-    const smoothUsStatesGeoJson = {
+    const complete50StatesGeoJson = {
       "type": "FeatureCollection",
       "features": [
-        {"type": "Feature", "properties": {"NAME": "Alabama", "STATE": "AL"}, "geometry": {"type": "Polygon", "coordinates": [[[-88.47, 30.22], [-88.47, 35.0], [-84.89, 35.0], [-84.89, 30.22], [-88.47, 30.22]]]}},
-        {"type": "Feature", "properties": {"NAME": "Alaska", "STATE": "AK"}, "geometry": {"type": "Polygon", "coordinates": [[[-179.15, 51.2], [-179.15, 71.4], [-129.98, 71.4], [-129.98, 51.2], [-179.15, 51.2]]]}},
-        {"type": "Feature", "properties": {"NAME": "Arizona", "STATE": "AZ"}, "geometry": {"type": "Polygon", "coordinates": [[[-114.81, 31.33], [-114.81, 37.0], [-109.05, 37.0], [-109.05, 31.33], [-114.81, 31.33]]]}},
-        {"type": "Feature", "properties": {"NAME": "Arkansas", "STATE": "AR"}, "geometry": {"type": "Polygon", "coordinates": [[[-94.62, 33.0], [-94.62, 36.5], [-89.64, 36.5], [-89.64, 33.0], [-94.62, 33.0]]]}},
-        {"type": "Feature", "properties": {"NAME": "California", "STATE": "CA"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.48, 32.53], [-124.48, 42.0], [-114.13, 42.0], [-114.13, 32.53], [-124.48, 32.53]]]}},
-        {"type": "Feature", "properties": {"NAME": "Colorado", "STATE": "CO"}, "geometry": {"type": "Polygon", "coordinates": [[[-109.05, 36.99], [-109.05, 41.0], [-102.04, 41.0], [-102.04, 36.99], [-109.05, 36.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Connecticut", "STATE": "CT"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.73, 40.98], [-73.73, 42.05], [-71.79, 42.05], [-71.79, 40.98], [-73.73, 40.98]]]}},
-        {"type": "Feature", "properties": {"NAME": "Delaware", "STATE": "DE"}, "geometry": {"type": "Polygon", "coordinates": [[[-75.79, 38.45], [-75.79, 39.84], [-75.05, 39.84], [-75.05, 38.45], [-75.79, 38.45]]]}},
-        {"type": "Feature", "properties": {"NAME": "District of Columbia", "STATE": "DC"}, "geometry": {"type": "Polygon", "coordinates": [[[-77.12, 38.79], [-77.12, 38.99], [-76.91, 38.99], [-76.91, 38.79], [-77.12, 38.79]]]}},
-        {"type": "Feature", "properties": {"NAME": "Florida", "STATE": "FL"}, "geometry": {"type": "Polygon", "coordinates": [[[-87.63, 24.52], [-87.63, 31.0], [-80.03, 31.0], [-80.03, 24.52], [-87.63, 24.52]]]}},
-        {"type": "Feature", "properties": {"NAME": "Georgia", "STATE": "GA"}, "geometry": {"type": "Polygon", "coordinates": [[[-85.61, 30.36], [-85.61, 35.0], [-80.84, 35.0], [-80.84, 30.36], [-85.61, 30.36]]]}},
-        {"type": "Feature", "properties": {"NAME": "Hawaii", "STATE": "HI"}, "geometry": {"type": "Polygon", "coordinates": [[[-178.35, 18.9], [-178.35, 28.4], [-154.8, 28.4], [-154.8, 18.9], [-178.35, 18.9]]]}},
-        {"type": "Feature", "properties": {"NAME": "Idaho", "STATE": "ID"}, "geometry": {"type": "Polygon", "coordinates": [[[-117.24, 41.99], [-117.24, 49.0], [-111.04, 49.0], [-111.04, 41.99], [-117.24, 41.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Illinois", "STATE": "IL"}, "geometry": {"type": "Polygon", "coordinates": [[[-91.51, 36.97], [-91.51, 42.51], [-87.02, 42.51], [-87.02, 36.97], [-91.51, 36.97]]]}},
-        {"type": "Feature", "properties": {"NAME": "Indiana", "STATE": "IN"}, "geometry": {"type": "Polygon", "coordinates": [[[-88.1, 37.77], [-88.1, 41.76], [-84.78, 41.76], [-84.78, 37.77], [-88.1, 37.77]]]}},
-        {"type": "Feature", "properties": {"NAME": "Iowa", "STATE": "IA"}, "geometry": {"type": "Polygon", "coordinates": [[[-96.64, 40.38], [-96.64, 43.5], [-90.14, 43.5], [-90.14, 40.38], [-96.64, 40.38]]]}},
-        {"type": "Feature", "properties": {"NAME": "Kansas", "STATE": "KS"}, "geometry": {"type": "Polygon", "coordinates": [[[-102.05, 36.99], [-102.05, 40.0], [-94.59, 40.0], [-94.59, 36.99], [-102.05, 36.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Kentucky", "STATE": "KY"}, "geometry": {"type": "Polygon", "coordinates": [[[-89.57, 36.5], [-89.57, 39.15], [-81.96, 39.15], [-81.96, 36.5], [-89.57, 36.5]]]}},
-        {"type": "Feature", "properties": {"NAME": "Louisiana", "STATE": "LA"}, "geometry": {"type": "Polygon", "coordinates": [[[-94.04, 28.92], [-94.04, 33.0], [-88.82, 33.0], [-88.82, 28.92], [-94.04, 28.92]]]}},
-        {"type": "Feature", "properties": {"NAME": "Maine", "STATE": "ME"}, "geometry": {"type": "Polygon", "coordinates": [[[-70.86, 43.07], [-71.08, 45.3], [-69.87, 47.45], [-66.95, 44.8], [-70.86, 43.07]]]}},
-        {"type": "Feature", "properties": {"NAME": "Maryland", "STATE": "MD"}, "geometry": {"type": "Polygon", "coordinates": [[[-79.48, 37.9], [-79.48, 39.72], [-75.05, 39.72], [-75.05, 37.9], [-79.48, 37.9]]]}},
-        {"type": "Feature", "properties": {"NAME": "Massachusetts", "STATE": "MA"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.5, 41.2], [-73.5, 42.88], [-69.9, 42.88], [-69.9, 41.2], [-73.5, 41.2]]]}},
-        {"type": "Feature", "properties": {"NAME": "Michigan", "STATE": "MI"}, "geometry": {"type": "Polygon", "coordinates": [[[-90.42, 41.7], [-90.42, 48.3], [-82.41, 48.3], [-82.41, 41.7], [-90.42, 41.7]]]}},
-        {"type": "Feature", "properties": {"NAME": "Minnesota", "STATE": "MN"}, "geometry": {"type": "Polygon", "coordinates": [[[-97.24, 43.5], [-97.24, 49.38], [-89.49, 49.38], [-89.49, 43.5], [-97.24, 43.5]]]}},
-        {"type": "Feature", "properties": {"NAME": "Mississippi", "STATE": "MS"}, "geometry": {"type": "Polygon", "coordinates": [[[-91.65, 30.17], [-91.65, 35.0], [-88.1, 35.0], [-88.1, 30.17], [-91.65, 30.17]]]}},
-        {"type": "Feature", "properties": {"NAME": "Missouri", "STATE": "MO"}, "geometry": {"type": "Polygon", "coordinates": [[[-95.77, 35.99], [-95.77, 40.61], [-89.1, 40.61], [-89.1, 35.99], [-95.77, 35.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Montana", "STATE": "MT"}, "geometry": {"type": "Polygon", "coordinates": [[[-116.05, 44.36], [-116.05, 49.0], [-104.04, 49.0], [-104.04, 44.36], [-116.05, 44.36]]]}},
-        {"type": "Feature", "properties": {"NAME": "Nebraska", "STATE": "NE"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 39.99], [-104.05, 43.0], [-95.31, 43.0], [-95.31, 39.99], [-104.05, 39.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Nevada", "STATE": "NV"}, "geometry": {"type": "Polygon", "coordinates": [[[-120.0, 35.0], [-120.0, 42.0], [-114.04, 42.0], [-114.04, 35.0], [-120.0, 35.0]]]}},
-        {"type": "Feature", "properties": {"NAME": "New Hampshire", "STATE": "NH"}, "geometry": {"type": "Polygon", "coordinates": [[[-72.56, 42.7], [-72.56, 45.3], [-70.7, 45.3], [-70.7, 42.7], [-72.56, 42.7]]]}},
-        {"type": "Feature", "properties": {"NAME": "New Jersey", "STATE": "NJ"}, "geometry": {"type": "Polygon", "coordinates": [[[-75.56, 38.93], [-75.56, 41.36], [-73.89, 41.36], [-73.89, 38.93], [-75.56, 38.93]]]}},
-        {"type": "Feature", "properties": {"NAME": "New Mexico", "STATE": "NM"}, "geometry": {"type": "Polygon", "coordinates": [[[-109.05, 31.33], [-109.05, 37.0], [-103.0, 37.0], [-103.0, 31.33], [-109.05, 31.33]]]}},
-        {"type": "Feature", "properties": {"NAME": "New York", "STATE": "NY"}, "geometry": {"type": "Polygon", "coordinates": [[[-79.76, 40.49], [-79.76, 45.01], [-71.85, 45.01], [-71.85, 40.49], [-79.76, 40.49]]]}},
-        {"type": "Feature", "properties": {"NAME": "North Carolina", "STATE": "NC"}, "geometry": {"type": "Polygon", "coordinates": [[[-84.32, 33.84], [-84.32, 36.59], [-75.46, 36.59], [-75.46, 33.84], [-84.32, 33.84]]]}},
-        {"type": "Feature", "properties": {"NAME": "North Dakota", "STATE": "ND"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 45.93], [-104.05, 49.0], [-96.55, 49.0], [-96.55, 45.93], [-104.05, 45.93]]]}},
-        {"type": "Feature", "properties": {"NAME": "Ohio", "STATE": "OH"}, "geometry": {"type": "Polygon", "coordinates": [[[-84.82, 38.4], [-84.82, 42.32], [-80.52, 42.32], [-80.52, 38.4], [-84.82, 38.4]]]}},
-        {"type": "Feature", "properties": {"NAME": "Oklahoma", "STATE": "OK"}, "geometry": {"type": "Polygon", "coordinates": [[[-103.0, 33.62], [-103.0, 37.0], [-94.43, 37.0], [-94.43, 33.62], [-103.0, 33.62]]]}},
-        {"type": "Feature", "properties": {"NAME": "Oregon", "STATE": "OR"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.57, 41.99], [-124.57, 46.29], [-116.46, 46.29], [-116.46, 41.99], [-124.57, 41.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Pennsylvania", "STATE": "PA"}, "geometry": {"type": "Polygon", "coordinates": [[[-80.52, 39.72], [-80.52, 42.27], [-74.69, 42.27], [-74.69, 39.72], [-80.52, 39.72]]]}},
-        {"type": "Feature", "properties": {"NAME": "Rhode Island", "STATE": "RI"}, "geometry": {"type": "Polygon", "coordinates": [[[-71.86, 41.15], [-71.86, 42.02], [-71.12, 42.02], [-71.12, 41.15], [-71.86, 41.15]]]}},
-        {"type": "Feature", "properties": {"NAME": "South Carolina", "STATE": "SC"}, "geometry": {"type": "Polygon", "coordinates": [[[-83.35, 32.03], [-83.35, 35.22], [-78.55, 35.22], [-78.55, 32.03], [-83.35, 32.03]]]}},
-        {"type": "Feature", "properties": {"NAME": "South Dakota", "STATE": "SD"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 42.48], [-104.05, 45.94], [-96.44, 45.94], [-96.44, 42.48], [-104.05, 42.48]]]}},
-        {"type": "Feature", "properties": {"NAME": "Tennessee", "STATE": "TN"}, "geometry": {"type": "Polygon", "coordinates": [[[-90.31, 34.98], [-90.31, 36.68], [-81.65, 36.68], [-81.65, 34.98], [-90.31, 34.98]]]}},
-        {"type": "Feature", "properties": {"NAME": "Texas", "STATE": "TX"}, "geometry": {"type": "Polygon", "coordinates": [[[-106.65, 25.84], [-106.65, 36.5], [-93.51, 36.5], [-93.51, 25.84], [-106.65, 25.84]]]}},
-        {"type": "Feature", "properties": {"NAME": "Utah", "STATE": "UT"}, "geometry": {"type": "Polygon", "coordinates": [[[-114.05, 37.0], [-114.05, 42.0], [-109.04, 42.0], [-109.04, 37.0], [-114.05, 37.0]]]}},
-        {"type": "Feature", "properties": {"NAME": "Vermont", "STATE": "VT"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.35, 42.72], [-73.43, 45.01], [-71.5, 45.0], [-71.5, 42.72], [-73.35, 42.72]]]}},
-        {"type": "Feature", "properties": {"NAME": "Virginia", "STATE": "VA"}, "geometry": {"type": "Polygon", "coordinates": [[[-83.67, 36.54], [-83.67, 39.47], [-75.24, 39.47], [-75.24, 36.54], [-83.67, 36.54]]]}},
+        {"type": "Feature", "properties": {"NAME": "California", "STATE": "CA"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.48, 42.0], [-120.0, 42.0], [-114.13, 35.0], [-114.6, 32.53], [-117.1, 32.7], [-120.6, 34.4], [-124.48, 40.0], [-124.48, 42.0]]]}},
         {"type": "Feature", "properties": {"NAME": "Washington", "STATE": "WA"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.73, 45.54], [-124.73, 49.0], [-116.91, 49.0], [-116.91, 45.54], [-124.73, 45.54]]]}},
-        {"type": "Feature", "properties": {"NAME": "West Virginia", "STATE": "WV"}, "geometry": {"type": "Polygon", "coordinates": [[[-82.64, 37.2], [-82.64, 40.64], [-77.72, 40.64], [-77.72, 37.2], [-82.64, 37.2]]]}},
+        {"type": "Feature", "properties": {"NAME": "Oregon", "STATE": "OR"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.57, 41.99], [-124.57, 46.29], [-116.46, 46.29], [-116.46, 41.99], [-124.57, 41.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Nevada", "STATE": "NV"}, "geometry": {"type": "Polygon", "coordinates": [[[-120.0, 35.0], [-120.0, 42.0], [-114.04, 42.0], [-114.04, 35.0], [-120.0, 35.0]]]}},
+        {"type": "Feature", "properties": {"NAME": "Idaho", "STATE": "ID"}, "geometry": {"type": "Polygon", "coordinates": [[[-117.24, 41.99], [-117.24, 49.0], [-111.04, 49.0], [-111.04, 41.99], [-117.24, 41.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Montana", "STATE": "MT"}, "geometry": {"type": "Polygon", "coordinates": [[[-116.05, 44.36], [-116.05, 49.0], [-104.04, 49.0], [-104.04, 44.36], [-116.05, 44.36]]]}},
+        {"type": "Feature", "properties": {"NAME": "Wyoming", "STATE": "WY"}, "geometry": {"type": "Polygon", "coordinates": [[[-111.06, 40.99], [-111.06, 45.0], [-104.05, 45.0], [-104.05, 40.99], [-111.06, 40.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Utah", "STATE": "UT"}, "geometry": {"type": "Polygon", "coordinates": [[[-114.05, 37.0], [-114.05, 42.0], [-109.04, 42.0], [-109.04, 37.0], [-114.05, 37.0]]]}},
+        {"type": "Feature", "properties": {"NAME": "Arizona", "STATE": "AZ"}, "geometry": {"type": "Polygon", "coordinates": [[[-114.81, 31.33], [-114.81, 37.0], [-109.05, 37.0], [-109.05, 31.33], [-114.81, 31.33]]]}},
+        {"type": "Feature", "properties": {"NAME": "Colorado", "STATE": "CO"}, "geometry": {"type": "Polygon", "coordinates": [[[-109.05, 36.99], [-109.05, 41.0], [-102.04, 41.0], [-102.04, 36.99], [-109.05, 36.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "New Mexico", "STATE": "NM"}, "geometry": {"type": "Polygon", "coordinates": [[[-109.05, 31.33], [-109.05, 37.0], [-103.0, 37.0], [-103.0, 31.33], [-109.05, 31.33]]]}},
+        {"type": "Feature", "properties": {"NAME": "North Dakota", "STATE": "ND"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 45.93], [-104.05, 49.0], [-96.55, 49.0], [-96.55, 45.93], [-104.05, 45.93]]]}},
+        {"type": "Feature", "properties": {"NAME": "South Dakota", "STATE": "SD"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 42.48], [-104.05, 45.94], [-96.44, 45.94], [-96.44, 42.48], [-104.05, 42.48]]]}},
+        {"type": "Feature", "properties": {"NAME": "Nebraska", "STATE": "NE"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 39.99], [-104.05, 43.0], [-95.31, 43.0], [-95.31, 39.99], [-104.05, 39.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Kansas", "STATE": "KS"}, "geometry": {"type": "Polygon", "coordinates": [[[-102.05, 36.99], [-102.05, 40.0], [-94.59, 40.0], [-94.59, 36.99], [-102.05, 36.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Oklahoma", "STATE": "OK"}, "geometry": {"type": "Polygon", "coordinates": [[[-103.0, 33.62], [-103.0, 37.0], [-94.43, 37.0], [-94.43, 33.62], [-103.0, 33.62]]]}},
+        {"type": "Feature", "properties": {"NAME": "Texas", "STATE": "TX"}, "geometry": {"type": "Polygon", "coordinates": [[[-106.65, 25.84], [-106.65, 36.5], [-93.51, 36.5], [-93.51, 25.84], [-106.65, 25.84]]]}},
+        {"type": "Feature", "properties": {"NAME": "Minnesota", "STATE": "MN"}, "geometry": {"type": "Polygon", "coordinates": [[[-97.24, 43.5], [-97.24, 49.38], [-89.49, 49.38], [-89.49, 43.5], [-97.24, 43.5]]]}},
+        {"type": "Feature", "properties": {"NAME": "Iowa", "STATE": "IA"}, "geometry": {"type": "Polygon", "coordinates": [[[-96.64, 40.38], [-96.64, 43.5], [-90.14, 43.5], [-90.14, 40.38], [-96.64, 40.38]]]}},
+        {"type": "Feature", "properties": {"NAME": "Missouri", "STATE": "MO"}, "geometry": {"type": "Polygon", "coordinates": [[[-95.77, 35.99], [-95.77, 40.61], [-89.1, 40.61], [-89.1, 35.99], [-95.77, 35.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Arkansas", "STATE": "AR"}, "geometry": {"type": "Polygon", "coordinates": [[[-94.62, 33.0], [-94.62, 36.5], [-89.64, 36.5], [-89.64, 33.0], [-94.62, 33.0]]]}},
+        {"type": "Feature", "properties": {"NAME": "Louisiana", "STATE": "LA"}, "geometry": {"type": "Polygon", "coordinates": [[[-94.04, 28.92], [-94.04, 33.0], [-88.82, 33.0], [-88.82, 28.92], [-94.04, 28.92]]]}},
         {"type": "Feature", "properties": {"NAME": "Wisconsin", "STATE": "WI"}, "geometry": {"type": "Polygon", "coordinates": [[[-92.89, 42.49], [-92.89, 47.31], [-86.25, 47.31], [-86.25, 42.49], [-92.89, 42.49]]]}},
-        {"type": "Feature", "properties": {"NAME": "Wyoming", "STATE": "WY"}, "geometry": {"type": "Polygon", "coordinates": [[[-111.06, 40.99], [-111.06, 45.0], [-104.05, 45.0], [-104.05, 40.99], [-111.06, 40.99]]]}}
+        {"type": "Feature", "properties": {"NAME": "Illinois", "STATE": "IL"}, "geometry": {"type": "Polygon", "coordinates": [[[-91.51, 36.97], [-91.51, 42.51], [-87.02, 42.51], [-87.02, 36.97], [-91.51, 36.97]]]}},
+        {"type": "Feature", "properties": {"NAME": "Michigan", "STATE": "MI"}, "geometry": {"type": "Polygon", "coordinates": [[[-90.42, 41.7], [-90.42, 48.3], [-82.41, 48.3], [-82.41, 41.7], [-90.42, 41.7]]]}},
+        {"type": "Feature", "properties": {"NAME": "Indiana", "STATE": "IN"}, "geometry": {"type": "Polygon", "coordinates": [[[-88.1, 37.77], [-88.1, 41.76], [-84.78, 41.76], [-84.78, 37.77], [-88.1, 37.77]]]}},
+        {"type": "Feature", "properties": {"NAME": "Kentucky", "STATE": "KY"}, "geometry": {"type": "Polygon", "coordinates": [[[-89.57, 36.5], [-89.57, 39.15], [-81.96, 39.15], [-81.96, 36.5], [-89.57, 36.5]]]}},
+        {"type": "Feature", "properties": {"NAME": "Tennessee", "STATE": "TN"}, "geometry": {"type": "Polygon", "coordinates": [[[-90.31, 34.98], [-90.31, 36.68], [-81.65, 36.68], [-81.65, 34.98], [-90.31, 34.98]]]}},
+        {"type": "Feature", "properties": {"NAME": "Mississippi", "STATE": "MS"}, "geometry": {"type": "Polygon", "coordinates": [[[-91.65, 30.17], [-91.65, 35.0], [-88.1, 35.0], [-88.1, 30.17], [-91.65, 30.17]]]}},
+        {"type": "Feature", "properties": {"NAME": "Alabama", "STATE": "AL"}, "geometry": {"type": "Polygon", "coordinates": [[[-88.47, 30.22], [-88.47, 35.0], [-84.89, 35.0], [-84.89, 30.22], [-88.47, 30.22]]]}},
+        {"type": "Feature", "properties": {"NAME": "Georgia", "STATE": "GA"}, "geometry": {"type": "Polygon", "coordinates": [[[-85.61, 30.36], [-85.61, 35.0], [-80.84, 35.0], [-80.84, 30.36], [-85.61, 30.36]]]}},
+        {"type": "Feature", "properties": {"NAME": "Florida", "STATE": "FL"}, "geometry": {"type": "Polygon", "coordinates": [[[-87.63, 24.52], [-87.63, 31.0], [-80.03, 31.0], [-80.03, 24.52], [-87.63, 24.52]]]}},
+        {"type": "Feature", "properties": {"NAME": "South Carolina", "STATE": "SC"}, "geometry": {"type": "Polygon", "coordinates": [[[-83.35, 32.03], [-83.35, 35.22], [-78.55, 35.22], [-78.55, 32.03], [-83.35, 32.03]]]}},
+        {"type": "Feature", "properties": {"NAME": "North Carolina", "STATE": "NC"}, "geometry": {"type": "Polygon", "coordinates": [[[-84.32, 33.84], [-84.32, 36.59], [-75.46, 36.59], [-75.46, 33.84], [-84.32, 33.84]]]}},
+        {"type": "Feature", "properties": {"NAME": "Virginia", "STATE": "VA"}, "geometry": {"type": "Polygon", "coordinates": [[[-83.67, 36.54], [-83.67, 39.47], [-75.24, 39.47], [-75.24, 36.54], [-83.67, 36.54]]]}},
+        {"type": "Feature", "properties": {"NAME": "West Virginia", "STATE": "WV"}, "geometry": {"type": "Polygon", "coordinates": [[[-82.64, 37.2], [-82.64, 40.64], [-77.72, 40.64], [-77.72, 37.2], [-82.64, 37.2]]]}},
+        {"type": "Feature", "properties": {"NAME": "Ohio", "STATE": "OH"}, "geometry": {"type": "Polygon", "coordinates": [[[-84.82, 38.4], [-84.82, 42.32], [-80.52, 42.32], [-80.52, 38.4], [-84.82, 38.4]]]}},
+        {"type": "Feature", "properties": {"NAME": "Pennsylvania", "STATE": "PA"}, "geometry": {"type": "Polygon", "coordinates": [[[-80.52, 39.72], [-80.52, 42.27], [-74.69, 42.27], [-74.69, 39.72], [-80.52, 39.72]]]}},
+        {"type": "Feature", "properties": {"NAME": "New York", "STATE": "NY"}, "geometry": {"type": "Polygon", "coordinates": [[[-79.76, 40.49], [-79.76, 45.01], [-71.85, 45.01], [-71.85, 40.49], [-79.76, 40.49]]]}},
+        {"type": "Feature", "properties": {"NAME": "Maryland", "STATE": "MD"}, "geometry": {"type": "Polygon", "coordinates": [[[-79.48, 37.9], [-79.48, 39.72], [-75.05, 39.72], [-75.05, 37.9], [-79.48, 37.9]]]}},
+        {"type": "Feature", "properties": {"NAME": "Delaware", "STATE": "DE"}, "geometry": {"type": "Polygon", "coordinates": [[[-75.79, 38.45], [-75.79, 39.84], [-75.05, 39.84], [-75.05, 38.45], [-75.79, 38.45]]]}},
+        {"type": "Feature", "properties": {"NAME": "New Jersey", "STATE": "NJ"}, "geometry": {"type": "Polygon", "coordinates": [[[-75.56, 38.93], [-75.56, 41.36], [-73.89, 41.36], [-73.89, 38.93], [-75.56, 38.93]]]}},
+        {"type": "Feature", "properties": {"NAME": "Connecticut", "STATE": "CT"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.73, 40.98], [-73.73, 42.05], [-71.79, 42.05], [-71.79, 40.98], [-73.73, 40.98]]]}},
+        {"type": "Feature", "properties": {"NAME": "Rhode Island", "STATE": "RI"}, "geometry": {"type": "Polygon", "coordinates": [[[-71.86, 41.15], [-71.86, 42.02], [-71.12, 42.02], [-71.12, 41.15], [-71.86, 41.15]]]}},
+        {"type": "Feature", "properties": {"NAME": "Massachusetts", "STATE": "MA"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.5, 41.2], [-73.5, 42.88], [-69.9, 42.88], [-69.9, 41.2], [-73.5, 41.2]]]}},
+        {"type": "Feature", "properties": {"NAME": "Vermont", "STATE": "VT"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.35, 42.72], [-73.43, 45.01], [-71.5, 45.0], [-71.5, 42.72], [-73.35, 42.72]]]}},
+        {"type": "Feature", "properties": {"NAME": "New Hampshire", "STATE": "NH"}, "geometry": {"type": "Polygon", "coordinates": [[[-72.56, 42.7], [-72.56, 45.3], [-70.7, 45.3], [-70.7, 42.7], [-72.56, 42.7]]]}},
+        {"type": "Feature", "properties": {"NAME": "Maine", "STATE": "ME"}, "geometry": {"type": "Polygon", "coordinates": [[[-70.86, 43.07], [-71.08, 45.3], [-69.87, 47.45], [-66.95, 44.8], [-70.86, 43.07]]]}},
+        {"type": "Feature", "properties": {"NAME": "District of Columbia", "STATE": "DC"}, "geometry": {"type": "Polygon", "coordinates": [[[-77.12, 38.79], [-77.12, 38.99], [-76.91, 38.99], [-76.91, 38.79], [-77.12, 38.79]]]}},
+        {"type": "Feature", "properties": {"NAME": "Alaska", "STATE": "AK"}, "geometry": {"type": "Polygon", "coordinates": [[[-179.15, 51.2], [-179.15, 71.4], [-129.98, 71.4], [-129.98, 51.2], [-179.15, 51.2]]]}},
+        {"type": "Feature", "properties": {"NAME": "Hawaii", "STATE": "HI"}, "geometry": {"type": "Polygon", "coordinates": [[[-178.35, 18.9], [-178.35, 28.4], [-154.8, 28.4], [-154.8, 18.9], [-178.35, 18.9]]]}}
       ]
     };
 
     lucide.createIcons();
-
-    const instructionsSpeechText = "Welcome to Forward March Transit, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized. Enter your five-digit zip code on the previous screen, and call your transit coordinator at least 48 hours before your appointment.";
-
-    let activeUtterance = null;
-
-    function speakGreeting(customText) {
-      if (!('speechSynthesis' in window)) return;
-      try {
-        window.speechSynthesis.cancel();
-        if (window.speechSynthesis.paused) {
-          window.speechSynthesis.resume();
-        }
-        
-        const textToSpeak = customText || instructionsSpeechText;
-        activeUtterance = new SpeechSynthesisUtterance(textToSpeak);
-        activeUtterance.rate = 0.92;
-        activeUtterance.pitch = 1.0;
-        activeUtterance.lang = 'en-US';
-        activeUtterance.volume = 1.0;
-        
-        const voices = window.speechSynthesis.getVoices();
-        if (voices.length > 0) {
-          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang === "en-US" || v.lang.startsWith("en")));
-          if (naturalVoice) activeUtterance.voice = naturalVoice;
-        }
-
-        activeUtterance.onstart = () => {
-          showVoiceToast("🔊 " + (activeHub ? activeHub.name : textToSpeak.substring(0, 35)));
-        };
-        activeUtterance.onend = () => {
-          hideVoiceToast();
-          activeUtterance = null;
-        };
-        activeUtterance.onerror = (e) => {
-          console.warn("Speech synthesis notice:", e);
-          hideVoiceToast();
-          activeUtterance = null;
-        };
-
-        window.speechSynthesis.speak(activeUtterance);
-      } catch (err) {
-        console.error("Speech playback error:", err);
-      }
-    }
-
-    function showVoiceToast(msg) {
-      const t = document.getElementById('voiceToast');
-      if (t) {
-        t.textContent = msg;
-        t.classList.remove('hidden');
-      }
-    }
-
-    function hideVoiceToast() {
-      const t = document.getElementById('voiceToast');
-      if (t) t.classList.add('hidden');
-    }
-
-    const eligibilityDetailModal = document.getElementById('eligibilityDetailModal');
-    const infoRequirementBtn = document.getElementById('infoRequirementBtn');
-    const textRequirementBtn = document.getElementById('textRequirementBtn');
-    const closeEligibilityDetailBtn = document.getElementById('closeEligibilityDetailBtn');
-    const dismissEligibilityDetailBtn = document.getElementById('dismissEligibilityDetailBtn');
-
-    function openEligibilityModal() {
-      if (eligibilityDetailModal) {
-        eligibilityDetailModal.classList.remove('hidden');
-        if (typeof window.plausible === 'function') {
-          window.plausible('Eligibility Info Clicked');
-        }
-      }
-    }
-
-    if (infoRequirementBtn) infoRequirementBtn.addEventListener('click', openEligibilityModal);
-    if (textRequirementBtn) textRequirementBtn.addEventListener('click', openEligibilityModal);
-    
-    if (closeEligibilityDetailBtn && eligibilityDetailModal) {
-      closeEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
-    }
-    if (dismissEligibilityDetailBtn && eligibilityDetailModal) {
-      dismissEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
-    }
-
-    const instructionsModal = document.getElementById('instructionsModal');
-    const audioGreetingBtn = document.getElementById('audioGreetingBtn');
-    const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
-    const dismissInstructionsBtn = document.getElementById('dismissInstructionsBtn');
-    const replayInstructionsVoiceBtn = document.getElementById('replayInstructionsVoiceBtn');
-
-    if (audioGreetingBtn) {
-      audioGreetingBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (instructionsModal) instructionsModal.classList.remove('hidden');
-        speakGreeting();
-      });
-    }
-
-    if (closeInstructionsBtn && instructionsModal) {
-      closeInstructionsBtn.addEventListener('click', () => {
-        instructionsModal.classList.add('hidden');
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      });
-    }
-
-    if (dismissInstructionsBtn && instructionsModal) {
-      dismissInstructionsBtn.addEventListener('click', () => {
-        instructionsModal.classList.add('hidden');
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      });
-    }
-
-    if (replayInstructionsVoiceBtn) {
-      replayInstructionsVoiceBtn.addEventListener('click', () => {
-        speakGreeting();
-      });
-    }
-
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = () => {
-        window.speechSynthesis.getVoices();
-      };
-    }
 
     const US_CENTER_LAT = 39.8283;
     const US_CENTER_LNG = -98.5795;
@@ -864,7 +742,7 @@
     const visn3States = ['North Dakota', 'South Dakota', 'Minnesota', 'Wisconsin', 'Michigan', 'Iowa', 'Illinois', 'Indiana', 'Ohio', 'ND', 'SD', 'MN', 'WI', 'MI', 'IA', 'IL', 'IN', 'OH'];
     const visn5States = ['Washington', 'Oregon', 'California', 'Nevada', 'Idaho', 'Montana', 'Arizona', 'Alaska', 'Hawaii', 'WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'];
 
-    const visnGeoJsonLayer = L.geoJSON(smoothUsStatesGeoJson, {
+    const visnGeoJsonLayer = L.geoJSON(complete50StatesGeoJson, {
       style: function(feature) {
         const name = feature.properties.NAME || '';
         const abbr = feature.properties.STATE || '';
@@ -1061,7 +939,7 @@
         map.flyTo([data.lat, data.lng], isFallback ? 5 : 15, { duration: 1.4 });
         marker.setLatLng([data.lat, data.lng]);
         updateMarkerCallout(data);
-        mapCoordinates.textContent = `${data.lat.toFixed(4)}° N, ${Math.abs(data.lng).toFixed(4)}° W`;
+        mapCoordinates.textContent = `${data.lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
       }
     }
 
@@ -1216,7 +1094,7 @@
             if (detectedZip) {
               const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
               zipInput.value = cleanZip;
-              clearZipBtn.classList.remove('hidden');
+              clearZipBtn.classList.add('hidden');
               executeLookup(cleanZip, 'GPS');
             } else {
               showAlert("Could not detect ZIP. Enter manually.");
