@@ -1,7 +1,7 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v4.8.0 (BUILD 4.8 // REV 69) - GRANULAR PA ROUTING EDITION -->
-<!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
+<!-- SEMVER VERSION: v4.9.0 (BUILD 4.9 // REV 70) - FINAL PRODUCTION EDITION     -->
+<!-- DEVELOPER: TERRANCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
 <!DOCTYPE html>
@@ -114,7 +114,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v4.8.0</span>
+<span>v4.9.0</span>
 </div>
 <!-- Centered Platform Branding: BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -283,7 +283,7 @@ class="tactile-btn p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-sl
 <!-- Footer & Federal Disclaimers -->
 <footer class="border-t border-slate-800/90 py-2 text-center text-slate-400 text-[8.5px] font-mono-code px-3 shrink-0 space-y-0.5 bg-slate-900/95 z-40">
 <div class="text-slate-300 font-bold tracking-wider">
-DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
+DESIGNED & DEVELOPED BY TERRANCE WATKINS, VETERAN, VA PITTSBURGH
 </div>
 <div class="text-slate-400 text-[7.5px] leading-tight max-w-sm mx-auto">
 BTAO Institutional Platform. Not an official VA agency portal. Beneficiary travel subject to 38 CFR Part 70.
@@ -291,7 +291,7 @@ BTAO Institutional Platform. Not an official VA agency portal. Beneficiary trave
 </footer>
 <!-- Zero-PII Security Architecture Modal -->
 <div id="zeroPiiModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
-<div class="bg-slate-900 border-2 border-emerald-500/60 rounded-xl max-w-sm w-full p-4 flex flex-col shadow-2xl space-y-3">
+<div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col shadow-2xl space-y-3">
 <div class="flex items-center justify-between border-b border-slate-800 pb-2">
 <div class="flex items-center space-x-2">
 <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
@@ -318,7 +318,7 @@ Acknowledged
 lucide.createIcons();
 
 // Voice Synthesis Prompt Audio Engine
-const instructionsSpeechText = "Welcome to Beneficiary Travel and Attendance Optimization, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized.";
+const instructionsSpeechText = "Welcome to Beneficiary Travel and Attendance Optimization, brought to you by Terrance Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized.";
 let activeUtterance = null;
 function speakGreeting(customText) {
 if (!('speechSynthesis' in window)) return;
@@ -506,7 +506,6 @@ function resolveHub(zip) {
 if (!zip || zip.length < 5) return null;
 const zipNum = parseInt(zip, 10);
 
-// Check Pennsylvania granular ranges
 for (const entry of paHospitalDatabase) {
 if (zipNum >= entry.min && zipNum <= entry.max) {
 return {
@@ -521,7 +520,6 @@ coords: entry.coords
 }
 }
 
-// Fallback for non-PA zip codes
 return walterReedHub;
 }
 
