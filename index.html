@@ -669,9 +669,9 @@
     let activeHub = defaultHub;
 
     const map = L.map('map', {
-      center: [39.8283, -98.5795],
-      zoom: 3.5,
-      minZoom: 2.5,
+      center: [US_CENTER_LAT, US_CENTER_LNG],
+      zoom: US_COAST_TO_COAST_ZOOM,
+      minZoom: 2.0,
       zoomControl: false,
       attributionControl: false
     });
