@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v4.2.0 (BUILD 4.2 // REV 63) - WALTER REED ROUTING EDITION -->
+<!-- SEMVER VERSION: v4.3.0 (BUILD 4.3 // REV 64) - CLEAN SPEECH AUDIO EDITION -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -114,7 +114,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v4.2.0</span>
+<span>v4.3.0</span>
 </div>
 <!-- Centered Platform Branding: BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -391,7 +391,7 @@ Understood / Return to App
 <span>Eligibility Verification</span>
 </div>
 <p class="text-[11px] text-slate-200 leading-normal">
-To qualify for VA Beneficiary Travel transit coordination, you must be <strong>30% or more service-connected</strong>, traveling for care of a service-connected condition, or otherwise <strong>VA Travel authorized</strong> (38 CFR Part 70).
+To qualify for VA Beneficiary Travel transit coordination, you must be <strong>30% or more service-connected</strong>, traveling for care of a service-connected condition, or otherwise <strong>VA Travel authorized</strong>.
 </p>
 </div>
 <div class="space-y-2 text-[11px] text-slate-300 leading-normal overflow-y-auto modal-scroll pr-1 max-h-[48dvh]">
@@ -450,8 +450,8 @@ Acknowledged
 </div>
 <script>
 lucide.createIcons();
-// Voice Synthesis Prompt Audio Engine
-const instructionsSpeechText = "Welcome to Beneficiary Travel and Attendance Optimization, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized. Enter your five-digit zip code on the previous screen, and call your transit coordinator at least 48 hours before your appointment.";
+// Voice Synthesis Prompt Audio Engine - strict cut-off after "or VA travel authorized."
+const instructionsSpeechText = "Welcome to Beneficiary Travel and Attendance Optimization, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized.";
 let activeUtterance = null;
 function speakGreeting(customText) {
 if (!('speechSynthesis' in window)) return;
@@ -607,10 +607,8 @@ const validPA = ["15", "16", "17", "18", "19"];
 
 
 if (validPA.includes(prefix2)) {
-// Route to local Pittsburgh / PA VAPHS hub if 5 digits are entered or matching prefix
 return defaultHub;
 } else {
-// Route to Walter Reed for any other zip code prefix
 return walterReedHub;
 }
 }
