@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.4 (REV 32) - PRODUCTION MASTER                     -->
+<!-- BUILD VERSION: BUILD 3.4 (REV 35) - MASTER PRODUCTION                      -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -123,7 +123,7 @@ Call 988 • 1
 <!-- Top Build Version Badge (Left) -->
 <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>BUILD 3.4 (REV 32)</span>
+<span>BUILD 3.4 (REV 35)</span>
 </div>
 <!-- Centered Platform Branding -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-2">
@@ -133,7 +133,7 @@ Call 988 • 1
 </div>
 <span class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none">Forward March Transit</span>
 </div>
-<span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-1 leading-none">IN CADENCE // ALL VISNS</span>
+<span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-1 leading-none">IN CADENCE // 5-VISN COAST-TO-COAST</span>
 </div>
 <!-- Zero-PII Security Architecture Trigger (Right) -->
 <button 
@@ -154,7 +154,7 @@ class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800 hover:bg-
 <span id="voiceToastText">Announcing VA Healthcare Hub...</span>
 </div>
 <!-- Main Viewport Dashboard -->
-<main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0">
+<main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0 overflow-y-auto">
 <!-- Primary Instruction Companion Action Button -->
 <div class="w-full shrink-0">
 <button 
@@ -170,15 +170,9 @@ class="tactile-btn w-full flex items-center justify-center space-x-2 py-2 px-3 r
 <!-- VA Travel Statutory Eligibility Banner -->
 <div class="px-2.5 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between text-[10px] shrink-0">
 <div class="flex items-center space-x-1.5 truncate">
-<button 
-id="infoRequirementBtn" 
-type="button" 
-title="Click to see exact qualification details" 
-aria-label="Click to see exact VA ride qualification details" 
-class="p-1 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 active:scale-95 border border-emerald-500/50 text-emerald-300 transition flex items-center justify-center shrink-0 cursor-pointer"
->
+<span class="p-1 rounded-md bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 flex items-center justify-center shrink-0">
 <i data-lucide="info" class="w-4 h-4 text-emerald-400"></i>
-</button>
+</span>
 <span class="text-left text-slate-200 font-medium truncate">
 <strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
 </span>
@@ -201,7 +195,7 @@ id="zipInput"
 pattern="[0-9]*" 
 inputmode="numeric" 
 maxlength="5" 
-placeholder="e.g. 15120, 60601" 
+placeholder="e.g. 15120, 90210" 
 class="tactile-btn w-full bg-slate-950 border-2 border-slate-700 focus:border-emerald-400 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-100 placeholder-slate-500 font-mono-code font-bold transition outline-none"
 >
 <button 
@@ -237,30 +231,31 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 </div>
 <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
 </section>
-<!-- Radar Target Map with Direct Interactive Dial Anchor -->
-<section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative flex-1 min-h-[160px] max-h-[240px] shadow-md flex flex-col">
-<div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/90 shrink-0 z-10">
+<!-- Coast-to-Coast 5-VISN Map Radar View with Direct Dial Anchor -->
+<section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative shrink-0 h-[190px] shadow-md flex flex-col">
+<div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/95 shrink-0 z-20">
 <div class="flex items-center space-x-1.5">
 <i data-lucide="radar" class="w-4 h-4 text-emerald-400"></i>
-<span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-200">National Healthcare Radar View (Coast-to-Coast)</span>
+<span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-200">5-VISN Coast-to-Coast Radar Map</span>
 </div>
 <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">37.0902° N, 95.7129° W</span>
 </div>
-<div class="relative w-full flex-1 bg-slate-950 min-h-[100px]">
+<div class="relative w-full flex-1 bg-slate-950">
+<!-- Explicit CSS sizing for robust Mapbox initialization -->
 <div id="map" class="absolute inset-0 w-full h-full"></div>
 <!-- Center Radar Crosshair Reticle -->
-<div class="radar-crosshair w-28 h-28 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center z-10">
-<div class="w-16 h-16 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
+<div class="radar-crosshair w-24 h-24 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center z-10">
+<div class="w-14 h-14 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
 </div>
 <!-- Big Primary Dial Action Button Anchored on Radar -->
 <div class="absolute bottom-2 right-2 pointer-events-none z-20">
 <a 
 id="centerCallBtn" 
 href="tel:4123603620,1" 
-class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-2 border-2 border-emerald-200"
+class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3.5 py-2 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border-2 border-emerald-200"
 >
-<i data-lucide="phone-call" class="w-4 h-4 fill-slate-950"></i>
-<span id="centerCallText" class="text-xs font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
+<i data-lucide="phone-call" class="w-4 h-4 fill-slate-950 shrink-0"></i>
+<span id="centerCallText" class="text-[11px] font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
 </a>
 </div>
 </div>
@@ -301,7 +296,7 @@ class="tactile-btn p-2 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slat
 </div>
 </section>
 <!-- National Hotline Fallback Bypass (Full Width) -->
-<div class="shrink-0">
+<div class="shrink-0 pb-1">
 <a 
 id="fallbackCallBtn" 
 href="tel:8555747292" 
@@ -327,75 +322,6 @@ DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
 Independent veteran access platform. Not an official VA agency portal. Beneficiary travel subject to 38 CFR Part 70.
 </div>
 </footer>
-<!-- Detailed VA Travel Qualification & Eligibility Modal -->
-<div id="eligibilityDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
-<div class="bg-slate-900 border-2 border-emerald-500/60 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3">
-<div class="flex items-center justify-between border-b border-slate-800 pb-2.5 shrink-0">
-<div class="flex items-center space-x-2">
-<div class="w-6 h-6 rounded-md bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400">
-<i data-lucide="shield-check" class="w-4 h-4"></i>
-</div>
-<div>
-<h3 class="text-xs font-bold uppercase tracking-wider text-slate-100">VA Ride Qualification Criteria</h3>
-<span class="text-[9px] text-emerald-400 font-mono-code block">38 CFR Part 70 // Beneficiary Travel</span>
-</div>
-</div>
-<button id="closeEligibilityDetailBtn" class="text-slate-400 hover:text-slate-100 p-1" aria-label="Close Eligibility Details">
-<i data-lucide="x" class="w-5 h-5"></i>
-</button>
-</div>
-<div class="text-[11px] text-slate-300 leading-normal overflow-y-auto modal-scroll pr-1 space-y-2.5 max-h-[58dvh]">
-<div class="p-2.5 rounded-lg bg-emerald-950/30 border border-emerald-500/40">
-<div class="text-emerald-400 font-bold uppercase text-[10px] tracking-wider mb-1 flex items-center space-x-1">
-<i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
-<span>Who Automatically Qualifies:</span>
-</div>
-<p class="text-slate-200 text-[10.5px] leading-relaxed">
-You are eligible for VA Beneficiary Travel transit coordination if you meet <strong>any one</strong> of the following statutory criteria:
-</p>
-</div>
-<div class="p-2.5 rounded bg-slate-950/70 border border-slate-800 space-y-1">
-<div class="font-mono-code font-bold text-emerald-400 text-[10px] uppercase">1. 30% or Higher Service Connection</div>
-<p class="text-slate-300 text-[10.5px]">
-You have a service-connected disability rating of <strong>30% or greater</strong> (for care of any medical condition).
-</p>
-</div>
-<div class="p-2.5 rounded bg-slate-950/70 border border-slate-800 space-y-1">
-<div class="font-mono-code font-bold text-emerald-400 text-[10px] uppercase">2. Care for Service-Connected Conditions</div>
-<p class="text-slate-300 text-[10.5px]">
-You have a rating under 30%, but you are traveling specifically for the treatment or examination of a <strong>service-connected disability</strong>.
-</p>
-</div>
-<div class="p-2.5 rounded bg-slate-950/70 border border-slate-800 space-y-1">
-<div class="font-mono-code font-bold text-emerald-400 text-[10px] uppercase">3. VA Non-Service Connected Pension</div>
-<p class="text-slate-300 text-[10.5px]">
-You receive a <strong>VA disability pension</strong> or your annual household income falls below the maximum annual VA pension rate.
-</p>
-</div>
-<div class="p-2.5 rounded bg-slate-950/70 border border-slate-800 space-y-1">
-<div class="font-mono-code font-bold text-emerald-400 text-[10px] uppercase">4. Scheduled C&P Examinations</div>
-<p class="text-slate-300 text-[10.5px]">
-You are traveling for an official scheduled <strong>Compensation and Pension (C&P) exam</strong> ordered by the VA.
-</p>
-</div>
-<div class="p-2.5 rounded bg-slate-950/70 border border-slate-800 space-y-1">
-<div class="font-mono-code font-bold text-emerald-400 text-[10px] uppercase">5. Special Mode Transportation Authorization</div>
-<p class="text-slate-300 text-[10.5px]">
-Your doctor or VA clinician has pre-approved specialized transport (wheelchair van, stretcher) due to medical necessity.
-</p>
-</div>
-<div class="p-2.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-200 text-[10px] space-y-0.5">
-<strong class="uppercase font-bold tracking-wider block">Standard 48-Hour Booking Protocol:</strong>
-<span>Always call your travel coordinator at least 48 hours prior to your scheduled clinic appointment.</span>
-</div>
-</div>
-<div class="pt-1 shrink-0">
-<button id="dismissEligibilityDetailBtn" class="tactile-btn w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 py-2 rounded-lg text-xs font-bold uppercase tracking-wider">
-Understood / Return to App
-</button>
-</div>
-</div>
-</div>
 <!-- Instructions & Eligibility Modal -->
 <div id="instructionsModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
 <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3">
@@ -525,26 +451,6 @@ function hideVoiceToast() {
 const t = document.getElementById('voiceToast');
 if (t) t.classList.add('hidden');
 }
-// Detailed Eligibility Modal Handlers
-const eligibilityDetailModal = document.getElementById('eligibilityDetailModal');
-const infoRequirementBtn = document.getElementById('infoRequirementBtn');
-const closeEligibilityDetailBtn = document.getElementById('closeEligibilityDetailBtn');
-const dismissEligibilityDetailBtn = document.getElementById('dismissEligibilityDetailBtn');
-function openEligibilityModal() {
-if (eligibilityDetailModal) {
-eligibilityDetailModal.classList.remove('hidden');
-if (typeof window.plausible === 'function') {
-window.plausible('Eligibility Info Clicked');
-}
-}
-}
-if (infoRequirementBtn) infoRequirementBtn.addEventListener('click', openEligibilityModal);
-if (closeEligibilityDetailBtn && eligibilityDetailModal) {
-closeEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
-}
-if (dismissEligibilityDetailBtn && eligibilityDetailModal) {
-dismissEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
-}
 // Instructions & Modal Handlers
 const instructionsModal = document.getElementById('instructionsModal');
 const audioGreetingBtn = document.getElementById('audioGreetingBtn');
@@ -598,17 +504,52 @@ const map = new mapboxgl.Map({
 container: 'map',
 style: 'mapbox://styles/mapbox/dark-v11',
 center: continentalUSCenter, // Coast-to-coast continental US view
-zoom: 3.2,                   // National overview zoom level
+zoom: 3.1,                   // National overview zoom level
 attributionControl: false
 });
 map.addControl(new mapboxgl.AttributionControl({ compact: true }));
 const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
 .setLngLat(continentalUSCenter)
 .addTo(map);
-// Ensure map resizes correctly when container layout stabilizes
+// Ensure map container renders properly upon load
+map.on('load', () => {
+map.resize();
+// Add 5-VISN regional colored boundaries matching the reference map
+map.addSource('visn-regions', {
+type: 'geojson',
+data: 'https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json'
+});
+map.addLayer({
+id: 'visn-fills',
+type: 'fill',
+source: 'visn-regions',
+paint: {
+'fill-color': [
+'match',
+['get', 'name'],
+['Maine', 'New Hampshire', 'Vermont', 'Massachusetts', 'Rhode Island', 'Connecticut', 'New York', 'New Jersey', 'Pennsylvania', 'Delaware', 'Maryland', 'West Virginia'], '#991b1b', // VISN 1 (Red / Northeast)
+['Virginia', 'North Carolina', 'South Carolina', 'Georgia', 'Florida'], '#c2410c', // VISN 2 (Orange / Southeast)
+['Ohio', 'Indiana', 'Michigan', 'Wisconsin', 'Illinois', 'Minnesota', 'Iowa', 'North Dakota', 'South Dakota', 'Nebraska'], '#166534', // VISN 3 (Green / Midwest)
+['Texas', 'Oklahoma', 'Kansas', 'Missouri', 'Arkansas', 'Louisiana', 'Mississippi', 'Alabama', 'Kentucky', 'Tennessee'], '#6b21a8', // VISN 4 (Purple / Central & South)
+'#1e40af' // VISN 5 (Blue / West & Northwest)
+],
+'fill-opacity': 0.35
+}
+});
+map.addLayer({
+id: 'visn-borders',
+type: 'line',
+source: 'visn-regions',
+paint: {
+'line-color': '#ffffff',
+'line-width': 0.75,
+'line-opacity': 0.4
+}
+});
+});
 setTimeout(() => {
 map.resize();
-}, 250);
+}, 300);
 // Complete Nationwide & Regional VISN Routing Database
 const visnDatabase = {
 "visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
@@ -765,7 +706,7 @@ if (radarHeaderLabel) {
 radarHeaderLabel.textContent = isFallback ? "National Dispatch Radar View" : ⁠${data.name} Radar View⁠;
 }
 if (map && data.coords) {
-map.flyTo({ center: data.coords, zoom: isFallback ? 5 : 12, speed: 1.4, essential: true });
+map.flyTo({ center: data.coords, zoom: isFallback ? 4 : 11, speed: 1.4, essential: true });
 mapMarker.setLngLat(data.coords);
 mapCoordinates.textContent = ⁠${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W⁠;
 }
@@ -852,19 +793,15 @@ const zip = numbersOnly.substring(0, 5);
 zipInput.value = zip;
 clearZipBtn.classList.remove('hidden');
 executeLookup(zip, 'Voice Input');
-// 1. Stop recognition so hardware releases the mic
 try { recognition.stop(); } catch (e) {}
 micBtnLabel.textContent = "VOICE";
 micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
-// 2. Resolve hub and verbalize location
 const matchedHub = resolveHub(zip);
 if (matchedHub) {
 const spokenPhone = matchedHub.phone.replace(/ Ext /gi, ' extension ');
 const spokenReply = ⁠${matchedHub.name}. Phone number ${spokenPhone}. Click the blinking button if you would like to make the call.⁠;
-// Highlight the speak button and trigger voice readout
 readFacilityBtn.classList.add('animate-bounce');
 setTimeout(() => { readFacilityBtn.classList.remove('animate-bounce'); }, 2000);
-// Execute speech synthesis
 speakGreeting(spokenReply);
 }
 } else {
@@ -898,7 +835,7 @@ async (position) => {
 const lat = position.coords.latitude;
 const lon = position.coords.longitude;
 if (map) {
-map.flyTo({ center: [lon, lat], zoom: 12, essential: true });
+map.flyTo({ center: [lon, lat], zoom: 11, essential: true });
 mapMarker.setLngLat([lon, lat]);
 mapCoordinates.textContent = ⁠${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W⁠;
 }
