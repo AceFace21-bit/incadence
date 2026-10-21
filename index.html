@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.9 (REV 71) - FULL COMPLETE PRODUCTION MASTER        -->
+<!-- BUILD VERSION: BUILD 3.9 (REV 68) - PRODUCTION MASTER (ALL 50 STATES SMOOTH GIS) -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 21, 2026                                                   -->
 <!-- ========================================================================== -->
@@ -199,7 +199,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-100 border border-slate-200 text-[10px] font-mono-code text-emerald-700 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-        <span>BUILD 3.9 (REV 71)</span>
+        <span>BUILD 3.9 (REV 68)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -289,14 +289,13 @@
             inputmode="numeric" 
             maxlength="5" 
             placeholder="e.g. 15120, 606" 
-            value="15120"
             class="tactile-btn w-full bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-900 placeholder-slate-400 font-mono-code font-bold transition outline-none shadow-inner"
           >
           <button 
             type="button" 
             id="clearZipBtn" 
             aria-label="Clear ZIP code input" 
-            class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1"
+            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1"
           >
             <i data-lucide="x" class="w-4 h-4"></i>
           </button>
@@ -336,7 +335,7 @@
           <i data-lucide="radar" class="w-4 h-4 text-emerald-600"></i>
           <span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-700">5-VISN National Radar View</span>
         </div>
-        <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-500">40.4444° N, 79.9600° W</span>
+        <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-500">39.8283° N, 98.5795° W</span>
       </div>
       
       <div class="relative w-full flex-1 bg-slate-100" style="min-h-0;">
@@ -353,7 +352,7 @@
           <a 
             id="centerCallBtn" 
             href="tel:4123603620,1" 
-            class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-xl shadow-emerald-600/30 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white px-4 py-2 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-2 border-2 border-emerald-300 call-btn-blinking"
+            class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-xl shadow-emerald-600/30 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white px-4 py-2 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-2 border-2 border-emerald-300"
           >
             <i data-lucide="phone-call" class="w-4 h-4 fill-white"></i>
             <span id="centerCallText" class="text-xs font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
@@ -366,7 +365,7 @@
     <section id="resultCard" class="bg-white border-2 border-slate-200 rounded-lg p-2.5 shrink-0 shadow-sm flex items-center justify-between gap-2">
       <div class="min-w-0 flex-1">
         <div class="flex items-center space-x-1.5 mb-0.5 truncate">
-          <span id="visnBadge" class="text-[10px] font-mono-code text-emerald-700 shrink-0 font-bold uppercase tracking-wider truncate">VISN 1: Northeast / New England (Pittsburgh Division)</span>
+          <span id="visnBadge" class="text-[10px] font-mono-code text-emerald-700 shrink-0 font-bold uppercase tracking-wider truncate">VA Pittsburgh Healthcare System</span>
           <span class="text-slate-400 text-[10px]">•</span>
           <span id="hubBadge" class="text-[10px] font-mono-code text-slate-500 font-medium truncate">
             University Drive & Heinz Divisions
@@ -376,7 +375,7 @@
           VA Pittsburgh Healthcare System
         </h2>
         <p id="facilityAddress" class="text-[10px] text-slate-500 truncate">
-          University Drive & H.J. Heinz Campus Catchment
+          University Drive & H.J. Heinz Divisions
         </p>
       </div>
 
@@ -451,7 +450,7 @@
             <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
             <span>Who Automatically Qualifies:</span>
           </div>
-          <p class="text-slate-800 text-[10.5px] relaxed">
+          <p class="text-slate-800 text-[10.5px] leading-relaxed">
             You are eligible for VA Beneficiary Travel transit coordination if you meet <strong>any one</strong> of the following statutory criteria:
           </p>
         </div>
@@ -591,66 +590,188 @@
     </div>
   </div>
 
-  <!-- EMBEDDED COMPLETE 50-STATE SMOOTH GEOJSON DATASET -->
+  <!-- FULL US 50-STATE SMOOTH GEOJSON DATA EMBEDDED DIRECTLY -->
   <script>
-    const complete50StatesGeoJson = {
+    const smoothUsStatesGeoJson = {
       "type": "FeatureCollection",
       "features": [
-        {"type": "Feature", "properties": {"NAME": "California", "STATE": "CA"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.48, 42.0], [-120.0, 42.0], [-114.13, 35.0], [-114.6, 32.53], [-117.1, 32.7], [-120.6, 34.4], [-124.48, 40.0], [-124.48, 42.0]]]}},
-        {"type": "Feature", "properties": {"NAME": "Washington", "STATE": "WA"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.73, 45.54], [-124.73, 49.0], [-116.91, 49.0], [-116.91, 45.54], [-124.73, 45.54]]]}},
-        {"type": "Feature", "properties": {"NAME": "Oregon", "STATE": "OR"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.57, 41.99], [-124.57, 46.29], [-116.46, 46.29], [-116.46, 41.99], [-124.57, 41.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Nevada", "STATE": "NV"}, "geometry": {"type": "Polygon", "coordinates": [[[-120.0, 35.0], [-120.0, 42.0], [-114.04, 42.0], [-114.04, 35.0], [-120.0, 35.0]]]}},
-        {"type": "Feature", "properties": {"NAME": "Idaho", "STATE": "ID"}, "geometry": {"type": "Polygon", "coordinates": [[[-117.24, 41.99], [-117.24, 49.0], [-111.04, 49.0], [-111.04, 41.99], [-117.24, 41.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Montana", "STATE": "MT"}, "geometry": {"type": "Polygon", "coordinates": [[[-116.05, 44.36], [-116.05, 49.0], [-104.04, 49.0], [-104.04, 44.36], [-116.05, 44.36]]]}},
-        {"type": "Feature", "properties": {"NAME": "Wyoming", "STATE": "WY"}, "geometry": {"type": "Polygon", "coordinates": [[[-111.06, 40.99], [-111.06, 45.0], [-104.05, 45.0], [-104.05, 40.99], [-111.06, 40.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Utah", "STATE": "UT"}, "geometry": {"type": "Polygon", "coordinates": [[[-114.05, 37.0], [-114.05, 42.0], [-109.04, 42.0], [-109.04, 37.0], [-114.05, 37.0]]]}},
-        {"type": "Feature", "properties": {"NAME": "Arizona", "STATE": "AZ"}, "geometry": {"type": "Polygon", "coordinates": [[[-114.81, 31.33], [-114.81, 37.0], [-109.05, 37.0], [-109.05, 31.33], [-114.81, 31.33]]]}},
-        {"type": "Feature", "properties": {"NAME": "Colorado", "STATE": "CO"}, "geometry": {"type": "Polygon", "coordinates": [[[-109.05, 36.99], [-109.05, 41.0], [-102.04, 41.0], [-102.04, 36.99], [-109.05, 36.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "New Mexico", "STATE": "NM"}, "geometry": {"type": "Polygon", "coordinates": [[[-109.05, 31.33], [-109.05, 37.0], [-103.0, 37.0], [-103.0, 31.33], [-109.05, 31.33]]]}},
-        {"type": "Feature", "properties": {"NAME": "North Dakota", "STATE": "ND"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 45.93], [-104.05, 49.0], [-96.55, 49.0], [-96.55, 45.93], [-104.05, 45.93]]]}},
-        {"type": "Feature", "properties": {"NAME": "South Dakota", "STATE": "SD"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 42.48], [-104.05, 45.94], [-96.44, 45.94], [-96.44, 42.48], [-104.05, 42.48]]]}},
-        {"type": "Feature", "properties": {"NAME": "Nebraska", "STATE": "NE"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 39.99], [-104.05, 43.0], [-95.31, 43.0], [-95.31, 39.99], [-104.05, 39.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Kansas", "STATE": "KS"}, "geometry": {"type": "Polygon", "coordinates": [[[-102.05, 36.99], [-102.05, 40.0], [-94.59, 40.0], [-94.59, 36.99], [-102.05, 36.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Oklahoma", "STATE": "OK"}, "geometry": {"type": "Polygon", "coordinates": [[[-103.0, 33.62], [-103.0, 37.0], [-94.43, 37.0], [-94.43, 33.62], [-103.0, 33.62]]]}},
-        {"type": "Feature", "properties": {"NAME": "Texas", "STATE": "TX"}, "geometry": {"type": "Polygon", "coordinates": [[[-106.65, 25.84], [-106.65, 36.5], [-93.51, 36.5], [-93.51, 25.84], [-106.65, 25.84]]]}},
-        {"type": "Feature", "properties": {"NAME": "Minnesota", "STATE": "MN"}, "geometry": {"type": "Polygon", "coordinates": [[[-97.24, 43.5], [-97.24, 49.38], [-89.49, 49.38], [-89.49, 43.5], [-97.24, 43.5]]]}},
-        {"type": "Feature", "properties": {"NAME": "Iowa", "STATE": "IA"}, "geometry": {"type": "Polygon", "coordinates": [[[-96.64, 40.38], [-96.64, 43.5], [-90.14, 43.5], [-90.14, 40.38], [-96.64, 40.38]]]}},
-        {"type": "Feature", "properties": {"NAME": "Missouri", "STATE": "MO"}, "geometry": {"type": "Polygon", "coordinates": [[[-95.77, 35.99], [-95.77, 40.61], [-89.1, 40.61], [-89.1, 35.99], [-95.77, 35.99]]]}},
-        {"type": "Feature", "properties": {"NAME": "Arkansas", "STATE": "AR"}, "geometry": {"type": "Polygon", "coordinates": [[[-94.62, 33.0], [-94.62, 36.5], [-89.64, 36.5], [-89.64, 33.0], [-94.62, 33.0]]]}},
-        {"type": "Feature", "properties": {"NAME": "Louisiana", "STATE": "LA"}, "geometry": {"type": "Polygon", "coordinates": [[[-94.04, 28.92], [-94.04, 33.0], [-88.82, 33.0], [-88.82, 28.92], [-94.04, 28.92]]]}},
-        {"type": "Feature", "properties": {"NAME": "Wisconsin", "STATE": "WI"}, "geometry": {"type": "Polygon", "coordinates": [[[-92.89, 42.49], [-92.89, 47.31], [-86.25, 47.31], [-86.25, 42.49], [-92.89, 42.49]]]}},
-        {"type": "Feature", "properties": {"NAME": "Illinois", "STATE": "IL"}, "geometry": {"type": "Polygon", "coordinates": [[[-91.51, 36.97], [-91.51, 42.51], [-87.02, 42.51], [-87.02, 36.97], [-91.51, 36.97]]]}},
-        {"type": "Feature", "properties": {"NAME": "Michigan", "STATE": "MI"}, "geometry": {"type": "Polygon", "coordinates": [[[-90.42, 41.7], [-90.42, 48.3], [-82.41, 48.3], [-82.41, 41.7], [-90.42, 41.7]]]}},
-        {"type": "Feature", "properties": {"NAME": "Indiana", "STATE": "IN"}, "geometry": {"type": "Polygon", "coordinates": [[[-88.1, 37.77], [-88.1, 41.76], [-84.78, 41.76], [-84.78, 37.77], [-88.1, 37.77]]]}},
-        {"type": "Feature", "properties": {"NAME": "Kentucky", "STATE": "KY"}, "geometry": {"type": "Polygon", "coordinates": [[[-89.57, 36.5], [-89.57, 39.15], [-81.96, 39.15], [-81.96, 36.5], [-89.57, 36.5]]]}},
-        {"type": "Feature", "properties": {"NAME": "Tennessee", "STATE": "TN"}, "geometry": {"type": "Polygon", "coordinates": [[[-90.31, 34.98], [-90.31, 36.68], [-81.65, 36.68], [-81.65, 34.98], [-90.31, 34.98]]]}},
-        {"type": "Feature", "properties": {"NAME": "Mississippi", "STATE": "MS"}, "geometry": {"type": "Polygon", "coordinates": [[[-91.65, 30.17], [-91.65, 35.0], [-88.1, 35.0], [-88.1, 30.17], [-91.65, 30.17]]]}},
         {"type": "Feature", "properties": {"NAME": "Alabama", "STATE": "AL"}, "geometry": {"type": "Polygon", "coordinates": [[[-88.47, 30.22], [-88.47, 35.0], [-84.89, 35.0], [-84.89, 30.22], [-88.47, 30.22]]]}},
-        {"type": "Feature", "properties": {"NAME": "Georgia", "STATE": "GA"}, "geometry": {"type": "Polygon", "coordinates": [[[-85.61, 30.36], [-85.61, 35.0], [-80.84, 35.0], [-80.84, 30.36], [-85.61, 30.36]]]}},
-        {"type": "Feature", "properties": {"NAME": "Florida", "STATE": "FL"}, "geometry": {"type": "Polygon", "coordinates": [[[-87.63, 24.52], [-87.63, 31.0], [-80.03, 31.0], [-80.03, 24.52], [-87.63, 24.52]]]}},
-        {"type": "Feature", "properties": {"NAME": "South Carolina", "STATE": "SC"}, "geometry": {"type": "Polygon", "coordinates": [[[-83.35, 32.03], [-83.35, 35.22], [-78.55, 35.22], [-78.55, 32.03], [-83.35, 32.03]]]}},
-        {"type": "Feature", "properties": {"NAME": "North Carolina", "STATE": "NC"}, "geometry": {"type": "Polygon", "coordinates": [[[-84.32, 33.84], [-84.32, 36.59], [-75.46, 36.59], [-75.46, 33.84], [-84.32, 33.84]]]}},
-        {"type": "Feature", "properties": {"NAME": "Virginia", "STATE": "VA"}, "geometry": {"type": "Polygon", "coordinates": [[[-83.67, 36.54], [-83.67, 39.47], [-75.24, 39.47], [-75.24, 36.54], [-83.67, 36.54]]]}},
-        {"type": "Feature", "properties": {"NAME": "West Virginia", "STATE": "WV"}, "geometry": {"type": "Polygon", "coordinates": [[[-82.64, 37.2], [-82.64, 40.64], [-77.72, 40.64], [-77.72, 37.2], [-82.64, 37.2]]]}},
-        {"type": "Feature", "properties": {"NAME": "Ohio", "STATE": "OH"}, "geometry": {"type": "Polygon", "coordinates": [[[-84.82, 38.4], [-84.82, 42.32], [-80.52, 42.32], [-80.52, 38.4], [-84.82, 38.4]]]}},
-        {"type": "Feature", "properties": {"NAME": "Pennsylvania", "STATE": "PA"}, "geometry": {"type": "Polygon", "coordinates": [[[-80.52, 39.72], [-80.52, 42.27], [-74.69, 42.27], [-74.69, 39.72], [-80.52, 39.72]]]}},
-        {"type": "Feature", "properties": {"NAME": "New York", "STATE": "NY"}, "geometry": {"type": "Polygon", "coordinates": [[[-79.76, 40.49], [-79.76, 45.01], [-71.85, 45.01], [-71.85, 40.49], [-79.76, 40.49]]]}},
-        {"type": "Feature", "properties": {"NAME": "Maryland", "STATE": "MD"}, "geometry": {"type": "Polygon", "coordinates": [[[-79.48, 37.9], [-79.48, 39.72], [-75.05, 39.72], [-75.05, 37.9], [-79.48, 37.9]]]}},
-        {"type": "Feature", "properties": {"NAME": "Delaware", "STATE": "DE"}, "geometry": {"type": "Polygon", "coordinates": [[[-75.79, 38.45], [-75.79, 39.84], [-75.05, 39.84], [-75.05, 38.45], [-75.79, 38.45]]]}},
-        {"type": "Feature", "properties": {"NAME": "New Jersey", "STATE": "NJ"}, "geometry": {"type": "Polygon", "coordinates": [[[-75.56, 38.93], [-75.56, 41.36], [-73.89, 41.36], [-73.89, 38.93], [-75.56, 38.93]]]}},
-        {"type": "Feature", "properties": {"NAME": "Connecticut", "STATE": "CT"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.73, 40.98], [-73.73, 42.05], [-71.79, 42.05], [-71.79, 40.98], [-73.73, 40.98]]]}},
-        {"type": "Feature", "properties": {"NAME": "Rhode Island", "STATE": "RI"}, "geometry": {"type": "Polygon", "coordinates": [[[-71.86, 41.15], [-71.86, 42.02], [-71.12, 42.02], [-71.12, 41.15], [-71.86, 41.15]]]}},
-        {"type": "Feature", "properties": {"NAME": "Massachusetts", "STATE": "MA"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.5, 41.2], [-73.5, 42.88], [-69.9, 42.88], [-69.9, 41.2], [-73.5, 41.2]]]}},
-        {"type": "Feature", "properties": {"NAME": "Vermont", "STATE": "VT"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.35, 42.72], [-73.43, 45.01], [-71.5, 45.0], [-71.5, 42.72], [-73.35, 42.72]]]}},
-        {"type": "Feature", "properties": {"NAME": "New Hampshire", "STATE": "NH"}, "geometry": {"type": "Polygon", "coordinates": [[[-72.56, 42.7], [-72.56, 45.3], [-70.7, 45.3], [-70.7, 42.7], [-72.56, 42.7]]]}},
-        {"type": "Feature", "properties": {"NAME": "Maine", "STATE": "ME"}, "geometry": {"type": "Polygon", "coordinates": [[[-70.86, 43.07], [-71.08, 45.3], [-69.87, 47.45], [-66.95, 44.8], [-70.86, 43.07]]]}},
-        {"type": "Feature", "properties": {"NAME": "District of Columbia", "STATE": "DC"}, "geometry": {"type": "Polygon", "coordinates": [[[-77.12, 38.79], [-77.12, 38.99], [-76.91, 38.99], [-76.91, 38.79], [-77.12, 38.79]]]}},
         {"type": "Feature", "properties": {"NAME": "Alaska", "STATE": "AK"}, "geometry": {"type": "Polygon", "coordinates": [[[-179.15, 51.2], [-179.15, 71.4], [-129.98, 71.4], [-129.98, 51.2], [-179.15, 51.2]]]}},
-        {"type": "Feature", "properties": {"NAME": "Hawaii", "STATE": "HI"}, "geometry": {"type": "Polygon", "coordinates": [[[-178.35, 18.9], [-178.35, 28.4], [-154.8, 28.4], [-154.8, 18.9], [-178.35, 18.9]]]}}
+        {"type": "Feature", "properties": {"NAME": "Arizona", "STATE": "AZ"}, "geometry": {"type": "Polygon", "coordinates": [[[-114.81, 31.33], [-114.81, 37.0], [-109.05, 37.0], [-109.05, 31.33], [-114.81, 31.33]]]}},
+        {"type": "Feature", "properties": {"NAME": "Arkansas", "STATE": "AR"}, "geometry": {"type": "Polygon", "coordinates": [[[-94.62, 33.0], [-94.62, 36.5], [-89.64, 36.5], [-89.64, 33.0], [-94.62, 33.0]]]}},
+        {"type": "Feature", "properties": {"NAME": "California", "STATE": "CA"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.48, 32.53], [-124.48, 42.0], [-114.13, 42.0], [-114.13, 32.53], [-124.48, 32.53]]]}},
+        {"type": "Feature", "properties": {"NAME": "Colorado", "STATE": "CO"}, "geometry": {"type": "Polygon", "coordinates": [[[-109.05, 36.99], [-109.05, 41.0], [-102.04, 41.0], [-102.04, 36.99], [-109.05, 36.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Connecticut", "STATE": "CT"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.73, 40.98], [-73.73, 42.05], [-71.79, 42.05], [-71.79, 40.98], [-73.73, 40.98]]]}},
+        {"type": "Feature", "properties": {"NAME": "Delaware", "STATE": "DE"}, "geometry": {"type": "Polygon", "coordinates": [[[-75.79, 38.45], [-75.79, 39.84], [-75.05, 39.84], [-75.05, 38.45], [-75.79, 38.45]]]}},
+        {"type": "Feature", "properties": {"NAME": "District of Columbia", "STATE": "DC"}, "geometry": {"type": "Polygon", "coordinates": [[[-77.12, 38.79], [-77.12, 38.99], [-76.91, 38.99], [-76.91, 38.79], [-77.12, 38.79]]]}},
+        {"type": "Feature", "properties": {"NAME": "Florida", "STATE": "FL"}, "geometry": {"type": "Polygon", "coordinates": [[[-87.63, 24.52], [-87.63, 31.0], [-80.03, 31.0], [-80.03, 24.52], [-87.63, 24.52]]]}},
+        {"type": "Feature", "properties": {"NAME": "Georgia", "STATE": "GA"}, "geometry": {"type": "Polygon", "coordinates": [[[-85.61, 30.36], [-85.61, 35.0], [-80.84, 35.0], [-80.84, 30.36], [-85.61, 30.36]]]}},
+        {"type": "Feature", "properties": {"NAME": "Hawaii", "STATE": "HI"}, "geometry": {"type": "Polygon", "coordinates": [[[-178.35, 18.9], [-178.35, 28.4], [-154.8, 28.4], [-154.8, 18.9], [-178.35, 18.9]]]}},
+        {"type": "Feature", "properties": {"NAME": "Idaho", "STATE": "ID"}, "geometry": {"type": "Polygon", "coordinates": [[[-117.24, 41.99], [-117.24, 49.0], [-111.04, 49.0], [-111.04, 41.99], [-117.24, 41.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Illinois", "STATE": "IL"}, "geometry": {"type": "Polygon", "coordinates": [[[-91.51, 36.97], [-91.51, 42.51], [-87.02, 42.51], [-87.02, 36.97], [-91.51, 36.97]]]}},
+        {"type": "Feature", "properties": {"NAME": "Indiana", "STATE": "IN"}, "geometry": {"type": "Polygon", "coordinates": [[[-88.1, 37.77], [-88.1, 41.76], [-84.78, 41.76], [-84.78, 37.77], [-88.1, 37.77]]]}},
+        {"type": "Feature", "properties": {"NAME": "Iowa", "STATE": "IA"}, "geometry": {"type": "Polygon", "coordinates": [[[-96.64, 40.38], [-96.64, 43.5], [-90.14, 43.5], [-90.14, 40.38], [-96.64, 40.38]]]}},
+        {"type": "Feature", "properties": {"NAME": "Kansas", "STATE": "KS"}, "geometry": {"type": "Polygon", "coordinates": [[[-102.05, 36.99], [-102.05, 40.0], [-94.59, 40.0], [-94.59, 36.99], [-102.05, 36.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Kentucky", "STATE": "KY"}, "geometry": {"type": "Polygon", "coordinates": [[[-89.57, 36.5], [-89.57, 39.15], [-81.96, 39.15], [-81.96, 36.5], [-89.57, 36.5]]]}},
+        {"type": "Feature", "properties": {"NAME": "Louisiana", "STATE": "LA"}, "geometry": {"type": "Polygon", "coordinates": [[[-94.04, 28.92], [-94.04, 33.0], [-88.82, 33.0], [-88.82, 28.92], [-94.04, 28.92]]]}},
+        {"type": "Feature", "properties": {"NAME": "Maine", "STATE": "ME"}, "geometry": {"type": "Polygon", "coordinates": [[[-70.86, 43.07], [-71.08, 45.3], [-69.87, 47.45], [-66.95, 44.8], [-70.86, 43.07]]]}},
+        {"type": "Feature", "properties": {"NAME": "Maryland", "STATE": "MD"}, "geometry": {"type": "Polygon", "coordinates": [[[-79.48, 37.9], [-79.48, 39.72], [-75.05, 39.72], [-75.05, 37.9], [-79.48, 37.9]]]}},
+        {"type": "Feature", "properties": {"NAME": "Massachusetts", "STATE": "MA"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.5, 41.2], [-73.5, 42.88], [-69.9, 42.88], [-69.9, 41.2], [-73.5, 41.2]]]}},
+        {"type": "Feature", "properties": {"NAME": "Michigan", "STATE": "MI"}, "geometry": {"type": "Polygon", "coordinates": [[[-90.42, 41.7], [-90.42, 48.3], [-82.41, 48.3], [-82.41, 41.7], [-90.42, 41.7]]]}},
+        {"type": "Feature", "properties": {"NAME": "Minnesota", "STATE": "MN"}, "geometry": {"type": "Polygon", "coordinates": [[[-97.24, 43.5], [-97.24, 49.38], [-89.49, 49.38], [-89.49, 43.5], [-97.24, 43.5]]]}},
+        {"type": "Feature", "properties": {"NAME": "Mississippi", "STATE": "MS"}, "geometry": {"type": "Polygon", "coordinates": [[[-91.65, 30.17], [-91.65, 35.0], [-88.1, 35.0], [-88.1, 30.17], [-91.65, 30.17]]]}},
+        {"type": "Feature", "properties": {"NAME": "Missouri", "STATE": "MO"}, "geometry": {"type": "Polygon", "coordinates": [[[-95.77, 35.99], [-95.77, 40.61], [-89.1, 40.61], [-89.1, 35.99], [-95.77, 35.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Montana", "STATE": "MT"}, "geometry": {"type": "Polygon", "coordinates": [[[-116.05, 44.36], [-116.05, 49.0], [-104.04, 49.0], [-104.04, 44.36], [-116.05, 44.36]]]}},
+        {"type": "Feature", "properties": {"NAME": "Nebraska", "STATE": "NE"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 39.99], [-104.05, 43.0], [-95.31, 43.0], [-95.31, 39.99], [-104.05, 39.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Nevada", "STATE": "NV"}, "geometry": {"type": "Polygon", "coordinates": [[[-120.0, 35.0], [-120.0, 42.0], [-114.04, 42.0], [-114.04, 35.0], [-120.0, 35.0]]]}},
+        {"type": "Feature", "properties": {"NAME": "New Hampshire", "STATE": "NH"}, "geometry": {"type": "Polygon", "coordinates": [[[-72.56, 42.7], [-72.56, 45.3], [-70.7, 45.3], [-70.7, 42.7], [-72.56, 42.7]]]}},
+        {"type": "Feature", "properties": {"NAME": "New Jersey", "STATE": "NJ"}, "geometry": {"type": "Polygon", "coordinates": [[[-75.56, 38.93], [-75.56, 41.36], [-73.89, 41.36], [-73.89, 38.93], [-75.56, 38.93]]]}},
+        {"type": "Feature", "properties": {"NAME": "New Mexico", "STATE": "NM"}, "geometry": {"type": "Polygon", "coordinates": [[[-109.05, 31.33], [-109.05, 37.0], [-103.0, 37.0], [-103.0, 31.33], [-109.05, 31.33]]]}},
+        {"type": "Feature", "properties": {"NAME": "New York", "STATE": "NY"}, "geometry": {"type": "Polygon", "coordinates": [[[-79.76, 40.49], [-79.76, 45.01], [-71.85, 45.01], [-71.85, 40.49], [-79.76, 40.49]]]}},
+        {"type": "Feature", "properties": {"NAME": "North Carolina", "STATE": "NC"}, "geometry": {"type": "Polygon", "coordinates": [[[-84.32, 33.84], [-84.32, 36.59], [-75.46, 36.59], [-75.46, 33.84], [-84.32, 33.84]]]}},
+        {"type": "Feature", "properties": {"NAME": "North Dakota", "STATE": "ND"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 45.93], [-104.05, 49.0], [-96.55, 49.0], [-96.55, 45.93], [-104.05, 45.93]]]}},
+        {"type": "Feature", "properties": {"NAME": "Ohio", "STATE": "OH"}, "geometry": {"type": "Polygon", "coordinates": [[[-84.82, 38.4], [-84.82, 42.32], [-80.52, 42.32], [-80.52, 38.4], [-84.82, 38.4]]]}},
+        {"type": "Feature", "properties": {"NAME": "Oklahoma", "STATE": "OK"}, "geometry": {"type": "Polygon", "coordinates": [[[-103.0, 33.62], [-103.0, 37.0], [-94.43, 37.0], [-94.43, 33.62], [-103.0, 33.62]]]}},
+        {"type": "Feature", "properties": {"NAME": "Oregon", "STATE": "OR"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.57, 41.99], [-124.57, 46.29], [-116.46, 46.29], [-116.46, 41.99], [-124.57, 41.99]]]}},
+        {"type": "Feature", "properties": {"NAME": "Pennsylvania", "STATE": "PA"}, "geometry": {"type": "Polygon", "coordinates": [[[-80.52, 39.72], [-80.52, 42.27], [-74.69, 42.27], [-74.69, 39.72], [-80.52, 39.72]]]}},
+        {"type": "Feature", "properties": {"NAME": "Rhode Island", "STATE": "RI"}, "geometry": {"type": "Polygon", "coordinates": [[[-71.86, 41.15], [-71.86, 42.02], [-71.12, 42.02], [-71.12, 41.15], [-71.86, 41.15]]]}},
+        {"type": "Feature", "properties": {"NAME": "South Carolina", "STATE": "SC"}, "geometry": {"type": "Polygon", "coordinates": [[[-83.35, 32.03], [-83.35, 35.22], [-78.55, 35.22], [-78.55, 32.03], [-83.35, 32.03]]]}},
+        {"type": "Feature", "properties": {"NAME": "South Dakota", "STATE": "SD"}, "geometry": {"type": "Polygon", "coordinates": [[[-104.05, 42.48], [-104.05, 45.94], [-96.44, 45.94], [-96.44, 42.48], [-104.05, 42.48]]]}},
+        {"type": "Feature", "properties": {"NAME": "Tennessee", "STATE": "TN"}, "geometry": {"type": "Polygon", "coordinates": [[[-90.31, 34.98], [-90.31, 36.68], [-81.65, 36.68], [-81.65, 34.98], [-90.31, 34.98]]]}},
+        {"type": "Feature", "properties": {"NAME": "Texas", "STATE": "TX"}, "geometry": {"type": "Polygon", "coordinates": [[[-106.65, 25.84], [-106.65, 36.5], [-93.51, 36.5], [-93.51, 25.84], [-106.65, 25.84]]]}},
+        {"type": "Feature", "properties": {"NAME": "Utah", "STATE": "UT"}, "geometry": {"type": "Polygon", "coordinates": [[[-114.05, 37.0], [-114.05, 42.0], [-109.04, 42.0], [-109.04, 37.0], [-114.05, 37.0]]]}},
+        {"type": "Feature", "properties": {"NAME": "Vermont", "STATE": "VT"}, "geometry": {"type": "Polygon", "coordinates": [[[-73.35, 42.72], [-73.43, 45.01], [-71.5, 45.0], [-71.5, 42.72], [-73.35, 42.72]]]}},
+        {"type": "Feature", "properties": {"NAME": "Virginia", "STATE": "VA"}, "geometry": {"type": "Polygon", "coordinates": [[[-83.67, 36.54], [-83.67, 39.47], [-75.24, 39.47], [-75.24, 36.54], [-83.67, 36.54]]]}},
+        {"type": "Feature", "properties": {"NAME": "Washington", "STATE": "WA"}, "geometry": {"type": "Polygon", "coordinates": [[[-124.73, 45.54], [-124.73, 49.0], [-116.91, 49.0], [-116.91, 45.54], [-124.73, 45.54]]]}},
+        {"type": "Feature", "properties": {"NAME": "West Virginia", "STATE": "WV"}, "geometry": {"type": "Polygon", "coordinates": [[[-82.64, 37.2], [-82.64, 40.64], [-77.72, 40.64], [-77.72, 37.2], [-82.64, 37.2]]]}},
+        {"type": "Feature", "properties": {"NAME": "Wisconsin", "STATE": "WI"}, "geometry": {"type": "Polygon", "coordinates": [[[-92.89, 42.49], [-92.89, 47.31], [-86.25, 47.31], [-86.25, 42.49], [-92.89, 42.49]]]}},
+        {"type": "Feature", "properties": {"NAME": "Wyoming", "STATE": "WY"}, "geometry": {"type": "Polygon", "coordinates": [[[-111.06, 40.99], [-111.06, 45.0], [-104.05, 45.0], [-104.05, 40.99], [-111.06, 40.99]]]}}
       ]
     };
 
     lucide.createIcons();
+
+    const instructionsSpeechText = "Welcome to Forward March Transit, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized. Enter your five-digit zip code on the previous screen, and call your transit coordinator at least 48 hours before your appointment.";
+
+    let activeUtterance = null;
+
+    function speakGreeting(customText) {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+        
+        const textToSpeak = customText || instructionsSpeechText;
+        activeUtterance = new SpeechSynthesisUtterance(textToSpeak);
+        activeUtterance.rate = 0.92;
+        activeUtterance.pitch = 1.0;
+        activeUtterance.lang = 'en-US';
+        activeUtterance.volume = 1.0;
+        
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang === "en-US" || v.lang.startsWith("en")));
+          if (naturalVoice) activeUtterance.voice = naturalVoice;
+        }
+
+        activeUtterance.onstart = () => {
+          showVoiceToast("🔊 " + (activeHub ? activeHub.name : textToSpeak.substring(0, 35)));
+        };
+        activeUtterance.onend = () => {
+          hideVoiceToast();
+          activeUtterance = null;
+        };
+        activeUtterance.onerror = (e) => {
+          console.warn("Speech synthesis notice:", e);
+          hideVoiceToast();
+          activeUtterance = null;
+        };
+
+        window.speechSynthesis.speak(activeUtterance);
+      } catch (err) {
+        console.error("Speech playback error:", err);
+      }
+    }
+
+    function showVoiceToast(msg) {
+      const t = document.getElementById('voiceToast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.remove('hidden');
+      }
+    }
+
+    function hideVoiceToast() {
+      const t = document.getElementById('voiceToast');
+      if (t) t.classList.add('hidden');
+    }
+
+    const eligibilityDetailModal = document.getElementById('eligibilityDetailModal');
+    const infoRequirementBtn = document.getElementById('infoRequirementBtn');
+    const textRequirementBtn = document.getElementById('textRequirementBtn');
+    const closeEligibilityDetailBtn = document.getElementById('closeEligibilityDetailBtn');
+    const dismissEligibilityDetailBtn = document.getElementById('dismissEligibilityDetailBtn');
+
+    function openEligibilityModal() {
+      if (eligibilityDetailModal) {
+        eligibilityDetailModal.classList.remove('hidden');
+        if (typeof window.plausible === 'function') {
+          window.plausible('Eligibility Info Clicked');
+        }
+      }
+    }
+
+    if (infoRequirementBtn) infoRequirementBtn.addEventListener('click', openEligibilityModal);
+    if (textRequirementBtn) textRequirementBtn.addEventListener('click', openEligibilityModal);
+    
+    if (closeEligibilityDetailBtn && eligibilityDetailModal) {
+      closeEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
+    }
+    if (dismissEligibilityDetailBtn && eligibilityDetailModal) {
+      dismissEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
+    }
+
+    const instructionsModal = document.getElementById('instructionsModal');
+    const audioGreetingBtn = document.getElementById('audioGreetingBtn');
+    const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
+    const dismissInstructionsBtn = document.getElementById('dismissInstructionsBtn');
+    const replayInstructionsVoiceBtn = document.getElementById('replayInstructionsVoiceBtn');
+
+    if (audioGreetingBtn) {
+      audioGreetingBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (instructionsModal) instructionsModal.classList.remove('hidden');
+        speakGreeting();
+      });
+    }
+
+    if (closeInstructionsBtn && instructionsModal) {
+      closeInstructionsBtn.addEventListener('click', () => {
+        instructionsModal.classList.add('hidden');
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      });
+    }
+
+    if (dismissInstructionsBtn && instructionsModal) {
+      dismissInstructionsBtn.addEventListener('click', () => {
+        instructionsModal.classList.add('hidden');
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      });
+    }
+
+    if (replayInstructionsVoiceBtn) {
+      replayInstructionsVoiceBtn.addEventListener('click', () => {
+        speakGreeting();
+      });
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
 
     const US_CENTER_LAT = 39.8283;
     const US_CENTER_LNG = -98.5795;
@@ -658,7 +779,7 @@
 
     const defaultHub = {
       badge: "University Drive & Heinz Divisions",
-      visn: "VISN 1: Northeast / New England (Pittsburgh Division)",
+      visn: "VA Pittsburgh Healthcare System",
       name: "VA Pittsburgh Healthcare System",
       desc: "University Drive & H.J. Heinz Campus Catchment",
       phone: "412-360-3620 (Press 1)",
@@ -670,8 +791,8 @@
     let activeHub = defaultHub;
 
     const map = L.map('map', {
-      center: [40.4444, -79.9600],
-      zoom: 15,
+      center: [US_CENTER_LAT, US_CENTER_LNG],
+      zoom: US_COAST_TO_COAST_ZOOM,
       minZoom: 2.5,
       zoomControl: false,
       attributionControl: false
@@ -743,7 +864,7 @@
     const visn3States = ['North Dakota', 'South Dakota', 'Minnesota', 'Wisconsin', 'Michigan', 'Iowa', 'Illinois', 'Indiana', 'Ohio', 'ND', 'SD', 'MN', 'WI', 'MI', 'IA', 'IL', 'IN', 'OH'];
     const visn5States = ['Washington', 'Oregon', 'California', 'Nevada', 'Idaho', 'Montana', 'Arizona', 'Alaska', 'Hawaii', 'WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'];
 
-    const visnGeoJsonLayer = L.geoJSON(complete50StatesGeoJson, {
+    const visnGeoJsonLayer = L.geoJSON(smoothUsStatesGeoJson, {
       style: function(feature) {
         const name = feature.properties.NAME || '';
         const abbr = feature.properties.STATE || '';
@@ -751,13 +872,13 @@
         let fillOp = 0.60;
 
         if (visn1States.includes(name) || visn1States.includes(abbr)) {
-          fillColor = '#dc2626'; // Red (VISN 1)
+          fillColor = '#dc2626'; // Red
         } else if (visn2States.includes(name) || visn2States.includes(abbr)) {
-          fillColor = '#ea580c'; // Orange (VISN 2)
+          fillColor = '#ea580c'; // Orange
         } else if (visn3States.includes(name) || visn3States.includes(abbr)) {
-          fillColor = '#16a34a'; // Green (VISN 3)
+          fillColor = '#16a34a'; // Green
         } else if (visn5States.includes(name) || visn5States.includes(abbr)) {
-          fillColor = '#2563eb'; // Blue (VISN 5)
+          fillColor = '#2563eb'; // Blue
         } else {
           fillColor = '#9333ea'; // Purple (VISN 4)
         }
@@ -794,7 +915,7 @@
       iconAnchor: [7, 7]
     });
 
-    const marker = L.marker([40.4444, -79.9600], { icon: radarIcon }).addTo(map);
+    const marker = L.marker([US_CENTER_LAT, US_CENTER_LNG], { icon: radarIcon }).addTo(map);
 
     function updateMarkerCallout(hub) {
       if (!hub || !hub.name) return;
@@ -814,8 +935,6 @@
       }).openPopup();
     }
 
-    updateMarkerCallout(defaultHub);
-
     setTimeout(() => { map.invalidateSize(); }, 150);
     setTimeout(() => { map.invalidateSize(); }, 600);
     window.addEventListener('resize', () => { map.invalidateSize(); });
@@ -824,14 +943,14 @@
       "visn1": { badge: "New England & Northeast Region", visn: "VISN 1: Northeast / New England", name: "VA Boston Healthcare System", desc: "CT, DC, DE, ME, MD, MA, NH, NJ, NY, PA, RI, VT, WV Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
       "visn2": { badge: "Mid-Atlantic Region", visn: "VISN 2: Mid-Atlantic", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & VA Regional Catchment", phone: "910-488-2120", cleanPhone: "9104882120", lat: 35.0805, lng: -78.8872 },
       "visn3": { badge: "Midwest Region", visn: "VISN 3: Midwest", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana, Michigan & IL Catchment", phone: "216-791-3800", cleanPhone: "2167913800", lat: 41.5036, lng: -81.6119 },
-      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VISN 1: Northeast / New England (Pittsburgh Division)", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
-      "visn4_butler": { badge: "Butler Regional Division", visn: "VISN 1: Northeast / New England (Butler Division)", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", lat: 40.8687, lng: -79.9554 },
-      "visn4_erie": { badge: "NW Pennsylvania Division", visn: "VISN 1: Northeast / New England (Erie Division)", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", lat: 42.1065, lng: -80.0526 },
-      "visn4_altoona": { badge: "Central PA Division", visn: "VISN 1: Northeast / New England (Altoona Division)", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", lat: 40.4996, lng: -78.3846 },
-      "visn4_lebanon": { badge: "South Central PA Division", visn: "VISN 1: Northeast / New England (Lebanon Division)", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", lat: 40.3106, lng: -76.4024 },
-      "visn4_coatesville": { badge: "Brandywine Division", visn: "VISN 1: Northeast / New England (Coatesville Division)", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", lat: 40.0039, lng: -75.8078 },
-      "visn4_wilkes": { badge: "Northeastern PA Division", visn: "VISN 1: Northeast / New England (Wilkes-Barre Division)", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", lat: 41.2523, lng: -75.8457 },
-      "visn4_philly": { badge: "SE Pennsylvania Division", visn: "VISN 1: Northeast / New England (Philadelphia Division)", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", lat: 39.9482, lng: -75.1979 },
+      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VISN 4: Continental / Allegheny", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
+      "visn4_butler": { badge: "Butler Regional Division", visn: "VISN 4: Continental / Allegheny", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", lat: 40.8687, lng: -79.9554 },
+      "visn4_erie": { badge: "NW Pennsylvania Division", visn: "VISN 4: Continental / Allegheny", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", lat: 42.1065, lng: -80.0526 },
+      "visn4_altoona": { badge: "Central PA Division", visn: "VISN 4: Continental / Allegheny", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", lat: 40.4996, lng: -78.3846 },
+      "visn4_lebanon": { badge: "South Central PA Division", visn: "VISN 4: Continental / Allegheny", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", lat: 40.3106, lng: -76.4024 },
+      "visn4_coatesville": { badge: "Brandywine Division", visn: "VISN 4: Continental / Allegheny", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", lat: 40.0039, lng: -75.8078 },
+      "visn4_wilkes": { badge: "Northeastern PA Division", visn: "VISN 4: Continental / Allegheny", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", lat: 41.2523, lng: -75.8457 },
+      "visn4_philly": { badge: "SE Pennsylvania Division", visn: "VISN 4: Continental / Allegheny", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", lat: 39.9482, lng: -75.1979 },
       "visn5": { badge: "Pacific & West Region", visn: "VISN 5: Pacific & West", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, California & West Catchment", phone: "206-762-1010", cleanPhone: "2067621010", lat: 47.5583, lng: -122.3101 },
       "national_fallback": { badge: "National Dispatch Center", visn: "VA Beneficiary Travel Dispatch", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Beneficiary Travel Hotline", phone: "855-574-7292", cleanPhone: "8555747292", lat: 38.9072, lng: -77.0369 }
     };
