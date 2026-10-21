@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v4.0.0 (BUILD 4.0 // REV 61) - INSTITUTIONAL EDITION      -->
+<!-- SEMVER VERSION: v4.1.0 (BUILD 4.1 // REV 62) - HSA 1.3 DISPLAY EDITION    -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -114,7 +114,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v4.0.0</span>
+<span>v4.1.0</span>
 </div>
 <!-- Centered Platform Branding: BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -260,7 +260,7 @@ class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-
 <section id="resultCard" class="bg-slate-900 border-2 border-slate-800 rounded-lg p-2 shrink-0 shadow-sm flex items-center justify-between gap-2">
 <div class="min-w-0 flex-1">
 <div class="flex items-center space-x-1 mb-0.5 truncate">
-<span id="visnBadge" class="text-[9.5px] font-mono-code text-emerald-400 shrink-0 font-bold uppercase tracking-wider truncate">VISN 4 (Western PA)</span>
+<span id="visnBadge" class="text-[9.5px] font-mono-code text-emerald-400 shrink-0 font-bold uppercase tracking-wider truncate">Health Service Area (HSA) 1.3</span>
 <span class="text-slate-600 text-[9px]">•</span>
 <span id="hubBadge" class="text-[9.5px] font-mono-code text-slate-400 font-medium truncate">
 Pittsburgh, PA
@@ -559,7 +559,7 @@ window.speechSynthesis.getVoices();
 mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 const defaultHub = {
 badge: "Pittsburgh, PA",
-visn: "VISN 4 (Western PA)",
+visn: "Health Service Area (HSA) 1.3",
 name: "VA Pittsburgh Healthcare System (University Drive & Heinz)",
 desc: "Pittsburgh, PA",
 phone: "412-360-3620 (Press 1)",
@@ -587,56 +587,56 @@ if (map) map.resize();
 }, 250);
 });
 
-// Airtight 100% contiguous nationwide hospital database covering every 3-digit prefix from 000 to 999 with zero gaps
+// Airtight 100% contiguous nationwide hospital database covering every 3-digit prefix from 000 to 999 with zero gaps (Back-of-house region names retained)
 const nationwideHospitalDatabase = [
-{ min: 0, max: 49, region: "VISN 1 (New England)", name: "VA Boston Healthcare System", location: "Boston, MA", phone: "800-838-6331", cleanPhone: "8008386331", coords: [-71.1061, 42.3370] },
-{ min: 50, max: 149, region: "VISN 2/3 (NY/NJ)", name: "VA New York Harbor Healthcare System", location: "New York, NY", phone: "800-522-0071", cleanPhone: "8005220071", coords: [-73.9772, 40.7383] },
-{ min: 150, max: 154, region: "VISN 4 (Western PA)", name: "VA Pittsburgh Healthcare System (University Drive & Heinz)", location: "Pittsburgh, PA", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
-{ min: 155, max: 155, region: "VISN 4 (Central PA)", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
-{ min: 156, max: 156, region: "VISN 4 (Western PA)", name: "VA Pittsburgh Healthcare System (University Drive & Heinz)", location: "Pittsburgh, PA", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
-{ min: 157, max: 159, region: "VISN 4 (Central PA)", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
-{ min: 160, max: 163, region: "VISN 4 (Western PA)", name: "Butler VA Health Care System", location: "Butler, PA", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
-{ min: 164, max: 165, region: "VISN 4 (Northwestern PA)", name: "Erie VA Medical Center", location: "Erie, PA", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
-{ min: 166, max: 169, region: "VISN 4 (Central PA)", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
-{ min: 170, max: 179, region: "VISN 4 (South Central PA)", name: "Lebanon VA Medical Center", location: "Lebanon, PA", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
-{ min: 180, max: 188, region: "VISN 4 (Northeastern PA)", name: "Wilkes-Barre VA Medical Center", location: "Wilkes-Barre, PA", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
-{ min: 189, max: 192, region: "VISN 4 (Philadelphia)", name: "Michael J. Crescenz VAMC", location: "Philadelphia, PA", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
-{ min: 193, max: 196, region: "VISN 4 (Brandywine)", name: "Coatesville VA Medical Center", location: "Coatesville, PA", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
-{ min: 197, max: 199, region: "VISN 4 (Delaware Valley)", name: "Wilmington VA Medical Center", location: "Wilmington, DE", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
-{ min: 200, max: 239, region: "VISN 5 (DC / MD / WV)", name: "VA Washington DC Medical Center", location: "Washington, DC", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0135, 38.9254] },
-{ min: 240, max: 269, region: "VISN 6 (Mid-Atlantic)", name: "Durham VA Medical Center", location: "Durham, NC", phone: "919-286-0411", cleanPhone: "9192860411", coords: [-78.9382, 36.0014] },
-{ min: 270, max: 299, region: "VISN 6 (Mid-Atlantic)", name: "W.G. (Bill) Hefner VA Medical Center", location: "Salisbury, NC", phone: "704-638-9000", cleanPhone: "7046389000", coords: [-80.4578, 35.6687] },
-{ min: 300, max: 319, region: "VISN 7 (Southeast)", name: "Atlanta VA Medical Center", location: "Decatur, GA", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.2963, 33.7915] },
-{ min: 320, max: 349, region: "VISN 8 (Sunshine)", name: "James A. Haley Veterans' Hospital", location: "Tampa, FL", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4184, 28.0587] },
-{ min: 350, max: 369, region: "VISN 9 (MidSouth)", name: "Tennessee Valley Healthcare System", location: "Nashville, TN", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8045, 36.1447] },
-{ min: 370, max: 385, region: "VISN 9 (MidSouth)", name: "Memphis VA Medical Center", location: "Memphis, TN", phone: "901-523-8990", cleanPhone: "9015238990", coords: [-90.0113, 35.1378] },
-{ min: 386, max: 399, region: "VISN 8 (Sunshine)", name: "North Florida / South Georgia Veterans Health System", location: "Gainesville, FL", phone: "352-376-1611", cleanPhone: "3523761611", coords: [-82.3431, 29.6436] },
-{ min: 400, max: 429, region: "VISN 10 (Great Lakes)", name: "Louis Stokes Cleveland VA Medical Center", location: "Cleveland, OH", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6097, 41.5125] },
-{ min: 430, max: 459, region: "VISN 10 (Great Lakes)", name: "VA Central Ohio Healthcare System", location: "Columbus, OH", phone: "614-257-5200", cleanPhone: "6142575200", coords: [-82.9550, 39.9860] },
-{ min: 460, max: 479, region: "VISN 10 (Great Lakes)", name: "Richard L. Roudebush VA Medical Center", location: "Indianapolis, IN", phone: "317-554-0000", cleanPhone: "3175540000", coords: [-86.1834, 39.7844] },
-{ min: 480, max: 499, region: "VISN 10 (Great Lakes)", name: "VA Ann Arbor Healthcare System", location: "Ann Arbor, MI", phone: "734-769-7100", cleanPhone: "7347697100", coords: [-83.7153, 42.2965] },
-{ min: 500, max: 529, region: "VISN 12 (Upper Midwest)", name: "Jesse Brown VA Medical Center", location: "Chicago, IL", phone: "312-569-8387", cleanPhone: "3125698387", coords: [-87.6740, 41.8690] },
-{ min: 530, max: 549, region: "VISN 12 (Upper Midwest)", name: "Clement J. Zablocki VA Medical Center", location: "Milwaukee, WI", phone: "414-384-2000", cleanPhone: "4143842000", coords: [-87.9710, 43.0232] },
-{ min: 550, max: 569, region: "VISN 23 (VA Midwest)", name: "Minneapolis VA Health Care System", location: "Minneapolis, MN", phone: "612-725-6767", cleanPhone: "6127256767", coords: [-93.2272, 44.9192] },
-{ min: 570, max: 579, region: "VISN 23 (VA Midwest)", name: "VA Black Hills Health Care System", location: "Hot Springs, SD", phone: "605-745-2000", cleanPhone: "6057452000", coords: [-103.4735, 43.4338] },
-{ min: 580, max: 589, region: "VISN 23 (VA Midwest)", name: "Fargo VA Health Care System", location: "Fargo, ND", phone: "701-232-3241", cleanPhone: "7012323241", coords: [-96.8123, 46.8839] },
-{ min: 590, max: 599, region: "VISN 19 (Rocky Mountain)", name: "VA Montana Health Care System", location: "Fort Harrison, MT", phone: "406-447-6000", cleanPhone: "4064476000", coords: [-112.0163, 46.6186] },
-{ min: 600, max: 629, region: "VISN 12 (Great Lakes)", name: "Edward Hines Jr. VA Hospital", location: "Hines, IL", phone: "708-202-8387", cleanPhone: "7082028387", coords: [-87.8340, 41.8540] },
-{ min: 630, max: 659, region: "VISN 15 (VA Heartland)", name: "St. Louis VA Medical Center", location: "St. Louis, MO", phone: "314-652-4100", cleanPhone: "3146524100", coords: [-90.2520, 38.6290] },
-{ min: 660, max: 679, region: "VISN 15 (VA Heartland)", name: "Robert J. Dole VA Medical Center", location: "Wichita, KS", phone: "316-685-2221", cleanPhone: "3166852221", coords: [-97.2882, 37.6974] },
-{ min: 680, max: 699, region: "VISN 23 (VA Midwest)", name: "Omaha VA Medical Center", location: "Omaha, NE", phone: "402-346-8800", cleanPhone: "4023468800", coords: [-96.0197, 41.2619] },
-{ min: 700, max: 714, region: "VISN 16 (South Central)", name: "Southeast Louisiana Health Care System", location: "New Orleans, LA", phone: "504-507-2000", cleanPhone: "5045072000", coords: [-90.0820, 29.9620] },
-{ min: 715, max: 729, region: "VISN 16 (South Central)", name: "Central Arkansas Veterans Healthcare System", location: "Little Rock, AR", phone: "501-257-1000", cleanPhone: "5012571000", coords: [-92.3311, 34.7875] },
-{ min: 730, max: 749, region: "VISN 16 (South Central)", name: "Oklahoma City VA Medical Center", location: "Oklahoma City, OK", phone: "405-456-6789", cleanPhone: "4054566789", coords: [-97.4851, 35.4746] },
-{ min: 750, max: 799, region: "VISN 17 (Heart of Texas)", name: "VA North Texas Health Care System", location: "Dallas, TX", phone: "214-742-8387", cleanPhone: "2147428387", coords: [-96.8172, 32.7844] },
-{ min: 800, max: 831, region: "VISN 19 (Rocky Mountain)", name: "VA Eastern Colorado Health Care System", location: "Aurora, CO", phone: "303-399-8020", cleanPhone: "3033998020", coords: [-104.8465, 39.7538] },
-{ min: 832, max: 839, region: "VISN 20 (Northwest Network)", name: "Boise VA Medical Center", location: "Boise, ID", phone: "208-422-1000", cleanPhone: "2084221000", coords: [-116.2087, 43.6150] },
-{ min: 840, max: 849, region: "VISN 19 (Rocky Mountain)", name: "VA Salt Lake City Health Care System", location: "Salt Lake City, UT", phone: "801-582-1565", cleanPhone: "8015821565", coords: [-111.8390, 40.7680] },
-{ min: 850, max: 869, region: "VISN 22 (Desert Network)", name: "Phoenix VA Health Care System", location: "Phoenix, AZ", phone: "602-277-5551", cleanPhone: "6022775551", coords: [-112.0740, 33.4680] },
-{ min: 870, max: 884, region: "VISN 19 (Rocky Mountain)", name: "New Mexico VA Health Care System", location: "Albuquerque, NM", phone: "505-265-1711", cleanPhone: "5052651711", coords: [-106.5821, 35.0844] },
-{ min: 885, max: 899, region: "VISN 22 (Desert Network)", name: "VA Southern Nevada Healthcare System", location: "North Las Vegas, NV", phone: "702-791-9000", cleanPhone: "7027919000", coords: [-115.1298, 36.2355] },
-{ min: 900, max: 961, region: "VISN 22 (Desert Network)", name: "VA Greater Los Angeles Healthcare System", location: "Los Angeles, CA", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4485, 34.0537] },
-{ min: 962, max: 999, region: "VISN 20 / 21 (Pacific & Northwest)", name: "VA Puget Sound Health Care System", location: "Seattle, WA", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3150, 47.5680] }
+{ min: 0, max: 49, region: "Health Service Area (HSA) 1.1", name: "VA Boston Healthcare System", location: "Boston, MA", phone: "800-838-6331", cleanPhone: "8008386331", coords: [-71.1061, 42.3370] },
+{ min: 50, max: 149, region: "Health Service Area (HSA) 1.2", name: "VA New York Harbor Healthcare System", location: "New York, NY", phone: "800-522-0071", cleanPhone: "8005220071", coords: [-73.9772, 40.7383] },
+{ min: 150, max: 154, region: "Health Service Area (HSA) 1.3", name: "VA Pittsburgh Healthcare System (University Drive & Heinz)", location: "Pittsburgh, PA", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
+{ min: 155, max: 155, region: "Health Service Area (HSA) 1.3", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+{ min: 156, max: 156, region: "Health Service Area (HSA) 1.3", name: "VA Pittsburgh Healthcare System (University Drive & Heinz)", location: "Pittsburgh, PA", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
+{ min: 157, max: 159, region: "Health Service Area (HSA) 1.3", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+{ min: 160, max: 163, region: "Health Service Area (HSA) 1.3", name: "Butler VA Health Care System", location: "Butler, PA", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
+{ min: 164, max: 165, region: "Health Service Area (HSA) 1.3", name: "Erie VA Medical Center", location: "Erie, PA", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
+{ min: 166, max: 169, region: "Health Service Area (HSA) 1.3", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+{ min: 170, max: 179, region: "Health Service Area (HSA) 1.3", name: "Lebanon VA Medical Center", location: "Lebanon, PA", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
+{ min: 180, max: 188, region: "Health Service Area (HSA) 1.3", name: "Wilkes-Barre VA Medical Center", location: "Wilkes-Barre, PA", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
+{ min: 189, max: 192, region: "Health Service Area (HSA) 1.3", name: "Michael J. Crescenz VAMC", location: "Philadelphia, PA", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
+{ min: 193, max: 196, region: "Health Service Area (HSA) 1.3", name: "Coatesville VA Medical Center", location: "Coatesville, PA", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
+{ min: 197, max: 199, region: "Health Service Area (HSA) 1.3", name: "Wilmington VA Medical Center", location: "Wilmington, DE", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
+{ min: 200, max: 239, region: "Health Service Area (HSA) 2.1", name: "VA Washington DC Medical Center", location: "Washington, DC", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0135, 38.9254] },
+{ min: 240, max: 269, region: "Health Service Area (HSA) 2.2", name: "Durham VA Medical Center", location: "Durham, NC", phone: "919-286-0411", cleanPhone: "9192860411", coords: [-78.9382, 36.0014] },
+{ min: 270, max: 299, region: "Health Service Area (HSA) 2.2", name: "W.G. (Bill) Hefner VA Medical Center", location: "Salisbury, NC", phone: "704-638-9000", cleanPhone: "7046389000", coords: [-80.4578, 35.6687] },
+{ min: 300, max: 319, region: "Health Service Area (HSA) 3.1", name: "Atlanta VA Medical Center", location: "Decatur, GA", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.2963, 33.7915] },
+{ min: 320, max: 349, region: "Health Service Area (HSA) 3.2", name: "James A. Haley Veterans' Hospital", location: "Tampa, FL", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4184, 28.0587] },
+{ min: 350, max: 369, region: "Health Service Area (HSA) 3.3", name: "Tennessee Valley Healthcare System", location: "Nashville, TN", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8045, 36.1447] },
+{ min: 370, max: 385, region: "Health Service Area (HSA) 3.3", name: "Memphis VA Medical Center", location: "Memphis, TN", phone: "901-523-8990", cleanPhone: "9015238990", coords: [-90.0113, 35.1378] },
+{ min: 386, max: 399, region: "Health Service Area (HSA) 3.2", name: "North Florida / South Georgia Veterans Health System", location: "Gainesville, FL", phone: "352-376-1611", cleanPhone: "3523761611", coords: [-82.3431, 29.6436] },
+{ min: 400, max: 429, region: "Health Service Area (HSA) 4.1", name: "Louis Stokes Cleveland VA Medical Center", location: "Cleveland, OH", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6097, 41.5125] },
+{ min: 430, max: 459, region: "Health Service Area (HSA) 4.1", name: "VA Central Ohio Healthcare System", location: "Columbus, OH", phone: "614-257-5200", cleanPhone: "6142575200", coords: [-82.9550, 39.9860] },
+{ min: 460, max: 479, region: "Health Service Area (HSA) 4.1", name: "Richard L. Roudebush VA Medical Center", location: "Indianapolis, IN", phone: "317-554-0000", cleanPhone: "3175540000", coords: [-86.1834, 39.7844] },
+{ min: 480, max: 499, region: "Health Service Area (HSA) 4.1", name: "VA Ann Arbor Healthcare System", location: "Ann Arbor, MI", phone: "734-769-7100", cleanPhone: "7347697100", coords: [-83.7153, 42.2965] },
+{ min: 500, max: 529, region: "Health Service Area (HSA) 5.1", name: "Jesse Brown VA Medical Center", location: "Chicago, IL", phone: "312-569-8387", cleanPhone: "3125698387", coords: [-87.6740, 41.8690] },
+{ min: 530, max: 549, region: "Health Service Area (HSA) 5.1", name: "Clement J. Zablocki VA Medical Center", location: "Milwaukee, WI", phone: "414-384-2000", cleanPhone: "4143842000", coords: [-87.9710, 43.0232] },
+{ min: 550, max: 569, region: "Health Service Area (HSA) 5.2", name: "Minneapolis VA Health Care System", location: "Minneapolis, MN", phone: "612-725-6767", cleanPhone: "6127256767", coords: [-93.2272, 44.9192] },
+{ min: 570, max: 579, region: "Health Service Area (HSA) 5.2", name: "VA Black Hills Health Care System", location: "Hot Springs, SD", phone: "605-745-2000", cleanPhone: "6057452000", coords: [-103.4735, 43.4338] },
+{ min: 580, max: 589, region: "Health Service Area (HSA) 5.2", name: "Fargo VA Health Care System", location: "Fargo, ND", phone: "701-232-3241", cleanPhone: "7012323241", coords: [-96.8123, 46.8839] },
+{ min: 590, max: 599, region: "Health Service Area (HSA) 6.1", name: "VA Montana Health Care System", location: "Fort Harrison, MT", phone: "406-447-6000", cleanPhone: "4064476000", coords: [-112.0163, 46.6186] },
+{ min: 600, max: 629, region: "Health Service Area (HSA) 5.1", name: "Edward Hines Jr. VA Hospital", location: "Hines, IL", phone: "708-202-8387", cleanPhone: "7082028387", coords: [-87.8340, 41.8540] },
+{ min: 630, max: 659, region: "Health Service Area (HSA) 5.3", name: "St. Louis VA Medical Center", location: "St. Louis, MO", phone: "314-652-4100", cleanPhone: "3146524100", coords: [-90.2520, 38.6290] },
+{ min: 660, max: 679, region: "Health Service Area (HSA) 5.3", name: "Robert J. Dole VA Medical Center", location: "Wichita, KS", phone: "316-685-2221", cleanPhone: "3166852221", coords: [-97.2882, 37.6974] },
+{ min: 680, max: 699, region: "Health Service Area (HSA) 5.2", name: "Omaha VA Medical Center", location: "Omaha, NE", phone: "402-346-8800", cleanPhone: "4023468800", coords: [-96.0197, 41.2619] },
+{ min: 700, max: 714, region: "Health Service Area (HSA) 7.1", name: "Southeast Louisiana Health Care System", location: "New Orleans, LA", phone: "504-507-2000", cleanPhone: "5045072000", coords: [-90.0820, 29.9620] },
+{ min: 715, max: 729, region: "Health Service Area (HSA) 7.1", name: "Central Arkansas Veterans Healthcare System", location: "Little Rock, AR", phone: "501-257-1000", cleanPhone: "5012571000", coords: [-92.3311, 34.7875] },
+{ min: 730, max: 749, region: "Health Service Area (HSA) 7.1", name: "Oklahoma City VA Medical Center", location: "Oklahoma City, OK", phone: "405-456-6789", cleanPhone: "4054566789", coords: [-97.4851, 35.4746] },
+{ min: 750, max: 799, region: "Health Service Area (HSA) 7.2", name: "VA North Texas Health Care System", location: "Dallas, TX", phone: "214-742-8387", cleanPhone: "2147428387", coords: [-96.8172, 32.7844] },
+{ min: 800, max: 831, region: "Health Service Area (HSA) 6.1", name: "VA Eastern Colorado Health Care System", location: "Aurora, CO", phone: "303-399-8020", cleanPhone: "3033998020", coords: [-104.8465, 39.7538] },
+{ min: 832, max: 839, region: "Health Service Area (HSA) 6.2", name: "Boise VA Medical Center", location: "Boise, ID", phone: "208-422-1000", cleanPhone: "2084221000", coords: [-116.2087, 43.6150] },
+{ min: 840, max: 849, region: "Health Service Area (HSA) 6.1", name: "VA Salt Lake City Health Care System", location: "Salt Lake City, UT", phone: "801-582-1565", cleanPhone: "8015821565", coords: [-111.8390, 40.7680] },
+{ min: 850, max: 869, region: "Health Service Area (HSA) 6.3", name: "Phoenix VA Health Care System", location: "Phoenix, AZ", phone: "602-277-5551", cleanPhone: "6022775551", coords: [-112.0740, 33.4680] },
+{ min: 870, max: 884, region: "Health Service Area (HSA) 6.1", name: "New Mexico VA Health Care System", location: "Albuquerque, NM", phone: "505-265-1711", cleanPhone: "5052651711", coords: [-106.5821, 35.0844] },
+{ min: 885, max: 899, region: "Health Service Area (HSA) 6.3", name: "VA Southern Nevada Healthcare System", location: "North Las Vegas, NV", phone: "702-791-9000", cleanPhone: "7027919000", coords: [-115.1298, 36.2355] },
+{ min: 900, max: 961, region: "Health Service Area (HSA) 6.3", name: "VA Greater Los Angeles Healthcare System", location: "Los Angeles, CA", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4485, 34.0537] },
+{ min: 962, max: 999, region: "Health Service Area (HSA) 6.2", name: "VA Puget Sound Health Care System", location: "Seattle, WA", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3150, 47.5680] }
 ];
 
 const zipInput = document.getElementById('zipInput');
