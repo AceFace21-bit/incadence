@@ -1,8 +1,8 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.9 (REV 58) - PRODUCTION MASTER                      -->
+<!-- BUILD VERSION: BUILD 3.9 (REV 59) - PRODUCTION MASTER                      -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
-<!-- DATE: OCTOBER 20, 2026                                                   -->
+<!-- DATE: OCTOBER 21, 2026                                                   -->
 <!-- ========================================================================== -->
 <!DOCTYPE html>
 <html lang="en">
@@ -198,7 +198,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.9 (REV 58)</span>
+        <span>BUILD 3.9 (REV 59)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -761,30 +761,6 @@
     const stateLabelsGroup = L.layerGroup().addTo(map);
     const visnLabelsGroup = L.layerGroup().addTo(map);
 
-    // VISN 1 (New England / Northeast): Red (#991b1b or #b91c1c)
-    // VISN 2 (Mid-Atlantic / Southeast): Orange (#c2410c or #ea580c)
-    // VISN 3 (Midwest): Green (#15803d)
-    // VISN 4 (Continental / Central/South): Purple (#7e22ce)
-    // VISN 5 (West / Pacific): Blue (#1d4ed8)
-
-    const visn1States = ['ME', 'VT', 'NH', 'MA', 'RI', 'CT', 'NY', 'NJ', 'PA', 'DE', 'MD', 'WV'];
-    const visn2States = ['NC', 'SC', 'GA', 'FL', 'AL', 'MS', 'TN', 'KY'];
-    const visn3States = ['ND', 'SD', 'MN', 'WI', 'MI', 'IA', 'IL', 'IN', 'OH'];
-    const visn4States = ['NE', 'KS', 'MO', 'OK', 'AR', 'TX', 'LA', 'CO', 'NM', 'WY', 'UT'];
-    const visn5States = ['WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'];
-
-    function getVisnColor(stateNameOrAbbr) {
-      // Map state abbreviations or names
-      const abbrMap = {
-        'Maine': 'ME', 'Vermont': 'VT', 'New Hampshire': 'NH', 'Massachusetts': 'MA', 'Rhode Island': 'RI', 'Connecticut': 'CT', 'New York': 'NY', 'New Jersey': 'NJ', 'Pennsylvania': 'PA', 'Delaware': 'DE', 'Maryland': 'MD', 'West Virginia': 'WV',
-        'North Carolina': 'NC', 'South Carolina': 'SC', 'Georgia': 'GA', 'Florida': 'FL', 'Alabama': 'AL', 'Mississippi': 'MS', 'Tennessee': 'TN', 'Kentucky': 'KY',
-        'North Dakota': 'ND', 'South Dakota': 'SD', 'Minnesota': 'MN', 'Wisconsin': 'WI', 'Michigan': 'MI', 'Iowa': 'IA', 'Illinois': 'IL', 'Indiana': 'IN', 'Ohio': 'OH',
-        'Nebraska': 'NE', 'Kansas': 'KS', 'Missouri': 'MO', 'Oklahoma': 'OK', 'Arkansas': 'AR', 'Texas': 'TX', 'Louisiana': 'LA', 'Colorado': 'CO', 'New Mexico': 'NM', 'Wyoming': 'WY', 'Utah': 'UT',
-        'Washington': 'WA', 'Oregon': 'OR', 'California': 'CA', 'Nevada': 'NV', 'Idaho': 'ID', 'Montana': 'MT', 'Arizona': 'AZ', 'Alaska': 'AK', 'Hawaii': 'HI'
-      };
-      return '#334155'; // default
-    }
-
     // VISN Region Center Labels matching reference image
     const visnRegionLabels = [
       { name: "VISN 1", lat: 44.2, lng: -71.5, color: '#991b1b' },
@@ -863,7 +839,7 @@
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
 
-    // Fetch US State Boundaries and color-code by VISN region matching reference image
+    // Fetch US State Boundaries and color-code by VISN region matching reference image exactly
     fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
       .then(res => res.json())
       .then(data => {
@@ -872,7 +848,6 @@
             const name = feature.properties.NAME || feature.properties.name || '';
             const abbr = feature.properties.STATE || feature.properties.STUSPS || '';
             
-            // Determine VISN color matching reference image exactly
             let fillColor = '#7e22ce'; // Default VISN 4 Purple
             let fillOp = 0.65;
 
