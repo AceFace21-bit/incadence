@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.9 (REV 59) - PRODUCTION MASTER                      -->
+<!-- BUILD VERSION: BUILD 3.9 (REV 60) - PRODUCTION MASTER                      -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 21, 2026                                                   -->
 <!-- ========================================================================== -->
@@ -198,7 +198,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.9 (REV 59)</span>
+        <span>BUILD 3.9 (REV 60)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -763,7 +763,7 @@
 
     // VISN Region Center Labels matching reference image
     const visnRegionLabels = [
-      { name: "VISN 1", lat: 44.2, lng: -71.5, color: '#991b1b' },
+      { name: "VISN 1", lat: 41.5, lng: -74.5, color: '#991b1b' },
       { name: "VISN 2", lat: 33.8, lng: -80.5, color: '#c2410c' },
       { name: "VISN 3", lat: 43.8, lng: -85.0, color: '#15803d' },
       { name: "VISN 4", lat: 34.8, lng: -99.5, color: '#7e22ce' },
@@ -839,7 +839,15 @@
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
 
-    // Fetch US State Boundaries and color-code by VISN region matching reference image exactly
+    // Exact VISN 1 Red States as specified: Connecticut, District of Columbia, Delaware, Maine, Maryland, Massachusetts, New Hampshire, New Jersey, New York, Pennsylvania, Rhode Island, Vermont, West Virginia
+    const visn1StatesList = [
+      'Connecticut', 'District of Columbia', 'Delaware', 'Maine', 'Maryland', 
+      'Massachusetts', 'New Hampshire', 'New Jersey', 'New York', 
+      'Pennsylvania', 'Rhode Island', 'Vermont', 'West Virginia',
+      'CT', 'DC', 'DE', 'ME', 'MD', 'MA', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT', 'WV'
+    ];
+
+    // Fetch US State Boundaries and color-code VISN 1 states strictly red
     fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
       .then(res => res.json())
       .then(data => {
@@ -848,12 +856,12 @@
             const name = feature.properties.NAME || feature.properties.name || '';
             const abbr = feature.properties.STATE || feature.properties.STUSPS || '';
             
-            let fillColor = '#7e22ce'; // Default VISN 4 Purple
+            let fillColor = '#7e22ce'; // Default Purple
             let fillOp = 0.65;
 
-            // VISN 1: New England / Northeast (Red)
-            if (['Maine', 'Vermont', 'New Hampshire', 'Massachusetts', 'Rhode Island', 'Connecticut', 'New York', 'New Jersey', 'Pennsylvania', 'Delaware', 'Maryland', 'West Virginia', 'ME', 'VT', 'NH', 'MA', 'RI', 'CT', 'NY', 'NJ', 'PA', 'DE', 'MD', 'WV'].includes(name) || ['ME', 'VT', 'NH', 'MA', 'RI', 'CT', 'NY', 'NJ', 'PA', 'DE', 'MD', 'WV'].includes(abbr)) {
-              fillColor = '#991b1b'; // Red
+            // Explicit VISN 1 Red States check
+            if (visn1StatesList.includes(name) || visn1StatesList.includes(abbr)) {
+              fillColor = '#991b1b'; // Crimson Red
             }
             // VISN 2: Mid-Atlantic / Southeast (Orange)
             else if (['North Carolina', 'South Carolina', 'Georgia', 'Florida', 'Alabama', 'Mississippi', 'Tennessee', 'Kentucky', 'NC', 'SC', 'GA', 'FL', 'AL', 'MS', 'TN', 'KY'].includes(name) || ['NC', 'SC', 'GA', 'FL', 'AL', 'MS', 'TN', 'KY'].includes(abbr)) {
@@ -866,10 +874,6 @@
             // VISN 5: West / Pacific (Blue)
             else if (['Washington', 'Oregon', 'California', 'Nevada', 'Idaho', 'Montana', 'Arizona', 'Alaska', 'Hawaii', 'WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'].includes(name) || ['WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'].includes(abbr)) {
               fillColor = '#1d4ed8'; // Blue
-            }
-            // VISN 4: Central/South/Mountain (Purple - default)
-            else {
-              fillColor = '#7e22ce'; // Purple
             }
 
             return {
@@ -935,7 +939,7 @@
 
     // Complete Nationwide & Regional VISN Routing Database (5 VISNs)
     const visnDatabase = {
-      "visn1": { badge: "New England Region", visn: "VISN 1: New England", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
+      "visn1": { badge: "New England & Northeast Region", visn: "VISN 1: Northeast / New England", name: "VA Boston Healthcare System", desc: "CT, DC, DE, ME, MD, MA, NH, NJ, NY, PA, RI, VT, WV Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
       "visn2": { badge: "Mid-Atlantic Region", visn: "VISN 2: Mid-Atlantic", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & VA Regional Catchment", phone: "910-488-2120", cleanPhone: "9104882120", lat: 35.0805, lng: -78.8872 },
       "visn3": { badge: "Midwest Region", visn: "VISN 3: Midwest", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana, Michigan & IL Catchment", phone: "216-791-3800", cleanPhone: "2167913800", lat: 41.5036, lng: -81.6119 },
       "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VISN 4: Continental / Allegheny", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
@@ -1049,8 +1053,8 @@
       if (!zip || zip.length < 3) return null;
       const p = parseInt(zip.substring(0, 3), 10);
       
-      // VISN 1 (New England: 010-069)
-      if (p >= 10 && p <= 69) return visnDatabase.visn1;
+      // VISN 1 (Northeast / New England: CT, MA, ME, NH, NY, NJ, PA, RI, VT, WV, MD, DE, DC etc.)
+      if ((p >= 10 && p <= 69) || (p >= 100 && p <= 219) || (p >= 250 && p <= 268)) return visnDatabase.visn1;
       
       // VISN 2 (Mid-Atlantic: NC, VA, etc.)
       if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn2;
