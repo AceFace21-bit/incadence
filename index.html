@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.6 (REV 55) - PRODUCTION MASTER                      -->
+<!-- BUILD VERSION: BUILD 3.7 (REV 56) - PRODUCTION MASTER                      -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 20, 2026                                                   -->
 <!-- ========================================================================== -->
@@ -181,7 +181,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.6 (REV 55)</span>
+        <span>BUILD 3.7 (REV 56)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -232,33 +232,23 @@
     </div>
 
     <!-- VA Travel Statutory Eligibility Banner -->
-    <div class="px-2.5 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between text-[10px] shrink-0">
-      <div class="flex items-center space-x-1.5 truncate">
-        <button 
-          id="infoRequirementBtn" 
-          type="button" 
-          title="Click to see exact qualification details" 
-          aria-label="Click to see exact VA ride qualification details" 
-          class="p-1 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 active:scale-95 border border-emerald-500/50 text-emerald-300 transition flex items-center justify-center shrink-0 cursor-pointer"
-        >
-          <i data-lucide="info" class="w-4 h-4 text-emerald-400"></i>
-        </button>
-        <button 
-          id="textRequirementBtn" 
-          type="button" 
-          class="text-left text-slate-200 font-medium truncate hover:text-white transition" 
-          title="Click to view full qualification guidelines"
-        >
-          <strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
-        </button>
-      </div>
+    <div class="px-3 py-2 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center space-x-2 text-[10.5px] shrink-0">
       <button 
-        id="badgeRequirementBtn" 
+        id="infoRequirementBtn" 
         type="button" 
-        class="text-[9px] font-mono-code text-emerald-400 hover:text-emerald-300 underline uppercase tracking-wider shrink-0 ml-1" 
-        title="View VHA travel authorization criteria"
+        title="Click to see exact qualification details" 
+        aria-label="Click to see exact VA ride qualification details" 
+        class="p-1 rounded-md bg-emerald-500/20 hover:bg-emerald-500/30 active:scale-95 border border-emerald-500/50 text-emerald-300 transition flex items-center justify-center shrink-0 cursor-pointer"
       >
-        VHA Details
+        <i data-lucide="info" class="w-4 h-4 text-emerald-400"></i>
+      </button>
+      <button 
+        id="textRequirementBtn" 
+        type="button" 
+        class="text-left text-slate-200 font-medium truncate hover:text-white transition flex-1" 
+        title="Click to view full qualification guidelines"
+      >
+        <strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
       </button>
     </div>
 
@@ -662,7 +652,7 @@
 
     if (infoRequirementBtn) infoRequirementBtn.addEventListener('click', openEligibilityModal);
     if (textRequirementBtn) textRequirementBtn.addEventListener('click', openEligibilityModal);
-    if (badgeRequirementBtn) badgeRequirementBtn.addEventListener('click', openEligibilityModal);
+    
 
     if (closeEligibilityDetailBtn && eligibilityDetailModal) {
       closeEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
