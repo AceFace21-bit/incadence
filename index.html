@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // PITTSBURGH                                       -->
-<!-- BUILD VERSION: BUILD 3.11 (REV 41) - REFINED UI CLEANUP                   -->
+<!-- BUILD VERSION: BUILD 3.12 (REV 42) - US FLAG WAVING MARQUEE               -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -77,6 +77,33 @@
       animation: callBtnPulse 0.9s ease-in-out infinite;
     }
 
+    /* US Flag Waving Marquee Gradient & Animation */
+    @keyframes usFlagWave {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .us-flag-wave-text {
+      background: linear-gradient(
+        90deg, 
+        #ef4444 0%,   /* Red */
+        #ffffff 20%,  /* White */
+        #3b82f6 40%,  /* Blue */
+        #ef4444 60%,  /* Red */
+        #ffffff 80%,  /* White */
+        #3b82f6 100%  /* Blue */
+      );
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: usFlagWave 4s ease-in-out infinite;
+      display: inline-block;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
     /* Modal Scrollbars */
     .modal-scroll::-webkit-scrollbar {
       width: 5px;
@@ -112,10 +139,10 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.11</span>
+        <span>BUILD 3.12</span>
       </div>
 
-      <!-- Centered Platform Branding: Forward March Transit Pittsburgh (All Green & Centered, Subtitle Removed) -->
+      <!-- Centered Platform Branding: Forward March Transit Pittsburgh (All Green & Centered) -->
       <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
         <h1 class="text-xs font-extrabold tracking-wider uppercase text-emerald-400 leading-tight m-0">
           Forward March Transit Pittsburgh
@@ -158,7 +185,7 @@
       </button>
     </div>
 
-    <!-- VA Travel Statutory Eligibility Banner (Only the lowercase 'i' icon opens the VHA Details modal) -->
+    <!-- VA Travel Statutory Eligibility Banner (Only lowercase 'i' opens VHA modal) -->
     <div class="px-3 py-2 rounded-lg bg-emerald-950/50 border border-emerald-500/40 flex items-center justify-between text-[11px] shrink-0 shadow-sm">
       <div class="flex items-center space-x-2 truncate">
         <button 
@@ -179,12 +206,18 @@
       </span>
     </div>
 
-    <!-- Input Section: Keypad, Voice Recognition & GPS Geolocation -->
-    <section class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md">
-      <div class="flex items-center justify-between mb-1.5">
-        <label for="zipInput" class="block text-[11px] font-bold uppercase tracking-wider text-emerald-400">
-          Enter 5-Digit Veteran ZIP Code:
-        </label>
+    <!-- Input Section: Keypad, Voice Recognition & GPS Geolocation with Waving Marquee Header -->
+    <section class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md overflow-hidden">
+      <div class="flex items-center justify-between mb-1.5 overflow-hidden">
+        <div class="w-full overflow-hidden whitespace-nowrap">
+          <marquee behavior="scroll" direction="left" scrollamount="4" class="block w-full">
+            <label for="zipInput" class="block text-[11px] font-bold uppercase tracking-wider us-flag-wave-text cursor-pointer">
+              &#9733; ENTER 5-DIGIT VETERAN ZIP CODE &#9733; ENTER 5-DIGIT VETERAN ZIP CODE &#9733;
+            </label>
+          </marquee>
+        </div>
+      </div>
+      <div class="flex items-center justify-end mb-1">
         <span id="matchStatus" class="text-[10px] font-mono-code text-slate-400">Live Auto-Lookup</span>
       </div>
 
