@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // PITTSBURGH VAPHS                                 -->
-<!-- SEMVER VERSION: v3.18.3 (BUILD 3.5 // REV 58) - SEMANTIC VERSIONING        -->
+<!-- SEMVER VERSION: v3.18.4 (BUILD 3.5 // REV 59) - SEMANTIC VERSIONING        -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -114,7 +114,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v3.18.3</span>
+<span>v3.18.4</span>
 </div>
 <!-- Centered Platform Branding: FORWARD MARCH TRANSIT PITTSBURGH VAPHS (All Green & Centered) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -227,7 +227,7 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 </div>
 <div id="statusAlert" class="hidden text-[10px] py-1 px-2 mt-1 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
 </section>
-<!-- Pittsburgh VA Centered Radar Map Section -->
+<!-- Pittsburgh VA Centered Radar Map Section - Expanded Larger Map Height (260px) -->
 <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative shrink-0 shadow-sm flex flex-col">
 <div class="px-2 py-1 border-b border-slate-800 flex items-center justify-between bg-slate-950/85 shrink-0 z-10">
 <div class="flex items-center space-x-1">
@@ -236,22 +236,22 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 </div>
 <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">40.4444° N, 79.9600° W</span>
 </div>
-<!-- Explicit Height container fixed for mobile layout and rendering -->
-<div class="relative w-full h-[170px] bg-slate-950">
+<!-- Expanded Height container (260px) -->
+<div class="relative w-full h-[260px] bg-slate-950">
 <div id="map" class="w-full h-full"></div>
 <!-- Center Radar Crosshair Reticle -->
-<div class="radar-crosshair w-20 h-20 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center z-10">
-<div class="w-12 h-12 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
+<div class="radar-crosshair w-24 h-24 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center z-10">
+<div class="w-16 h-16 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
 </div>
 <!-- Big Primary Dial Action Button Anchored on Radar -->
 <div class="absolute bottom-2 right-2 pointer-events-none z-20">
 <a 
 id="centerCallBtn" 
 href="tel:4123603620,1" 
-class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border border-emerald-200"
+class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3.5 py-2 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border border-emerald-200"
 >
-<i data-lucide="phone-call" class="w-3.5 h-3.5 fill-slate-950"></i>
-<span id="centerCallText" class="text-[11px] font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
+<i data-lucide="phone-call" class="w-4 h-4 fill-slate-950"></i>
+<span id="centerCallText" class="text-[11.5px] font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
 </a>
 </div>
 </div>
@@ -731,7 +731,6 @@ coords: entry.coords
 };
 }
 }
-// Absolute fail-safe backstop routed to Pittsburgh VAPHS
 return defaultHub;
 }
 
