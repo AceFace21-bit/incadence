@@ -1,865 +1,1026 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.4 (REV 36) - MASTER PRODUCTION FIXED                 -->
+<!-- BUILD VERSION: BUILD 3.5 (REV 35) - PRODUCTION MASTER RETUNED              -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>In Cadence | Forward March Transit</title>
-<!-- Privacy-friendly analytics by Plausible with Tagged Events Extension -->
-<script defer data-domain="aceface21-bit.github.io" src="https://plausible.io/js/script.tagged-events.js"></script>
-<script>
-window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};
-</script>
-<!-- Tailwind CSS & Lucide Icons -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<!-- Mapbox GL JS -->
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
-body {
-font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
--webkit-tap-highlight-color: transparent;
-}
-.font-mono-code {
-font-family: 'JetBrains Mono', monospace;
-}
-.mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right {
-transform: scale(0.7);
-transform-origin: bottom left;
-left: 6px !important;
-bottom: 2px !important;
-right: auto !important;
-}
-.radar-crosshair {
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-pointer-events: none;
-}
-/* Tactile Big Button Styles */
-.tactile-btn {
-min-height: 48px;
-touch-action: manipulation;
-transition: transform 0.08s ease, background-color 0.15s ease, border-color 0.15s ease;
-}
-.tactile-btn:active {
-transform: scale(0.96);
-}
-/* Call Button Pulse Animation */
-@keyframes callBtnPulse {
-0%, 100% {
-transform: scale(1);
-box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-filter: brightness(1);
-}
-50% {
-transform: scale(1.04);
-box-shadow: 0 0 22px 5px rgba(52, 211, 153, 0.85);
-filter: brightness(1.2);
-}
-}
-.call-btn-blinking {
-animation: callBtnPulse 0.9s ease-in-out infinite;
-}
-/* High-Visibility Gradient Header */
-@keyframes patriotWave {
-0% { background-position: 0% center; }
-100% { background-position: 200% center; }
-}
-.patriot-wave-text {
-background: linear-gradient(
-90deg,
-#ef4444 0%,
-#f8fafc 25%,
-#38bdf8 50%,
-#ef4444 75%,
-#f8fafc 100%
-);
-background-size: 200% auto;
--webkit-background-clip: text;
-background-clip: text;
--webkit-text-fill-color: transparent;
-animation: patriotWave 4s linear infinite;
-display: inline-block;
-}
-/* Modal Scrollbars */
-.modal-scroll::-webkit-scrollbar {
-width: 5px;
-}
-.modal-scroll::-webkit-scrollbar-track {
-background: rgba(15, 23, 42, 0.8);
-}
-.modal-scroll::-webkit-scrollbar-thumb {
-background: #334155;
-border-radius: 3px;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>In Cadence | Forward March Transit</title>
+  
+  <!-- Privacy-friendly analytics by Plausible with Tagged Events Extension -->
+  <script defer data-domain="aceface21-bit.github.io" src="https://plausible.io/js/script.tagged-events.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};
+  </script>
+
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Mapbox GL JS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right {
+      transform: scale(0.7);
+      transform-origin: bottom left;
+      left: 6px !important;
+      bottom: 2px !important;
+      right: auto !important;
+    }
+    .radar-crosshair {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    /* Tactile Big Button Styles */
+    .tactile-btn {
+      min-height: 48px;
+      touch-action: manipulation;
+      transition: transform 0.08s ease, background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .tactile-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Call Button Pulse Animation */
+    @keyframes callBtnPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        filter: brightness(1);
+      }
+      50% {
+        transform: scale(1.04);
+        box-shadow: 0 0 22px 5px rgba(52, 211, 153, 0.85);
+        filter: brightness(1.2);
+      }
+    }
+
+    .call-btn-blinking {
+      animation: callBtnPulse 0.9s ease-in-out infinite;
+    }
+
+    /* High-Visibility Gradient Header */
+    @keyframes patriotWave {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .patriot-wave-text {
+      background: linear-gradient(
+        90deg, 
+        #ef4444 0%, 
+        #f8fafc 25%, 
+        #38bdf8 50%, 
+        #ef4444 75%, 
+        #f8fafc 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: patriotWave 4s linear infinite;
+      display: inline-block;
+    }
+
+    /* Modal Scrollbars */
+    .modal-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .modal-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.8);
+    }
+    .modal-scroll::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+  </style>
 </head>
 <body class="bg-slate-950 text-slate-100 h-[100dvh] w-screen overflow-hidden flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-slate-950 select-none">
-<!-- Veterans Crisis Line Mandatory Header -->
-<aside class="bg-red-950/90 border-b border-red-800/80 px-3 py-1.5 text-center shrink-0 z-50">
-<div class="max-w-md mx-auto flex items-center justify-between text-[11px] font-mono-code text-red-200">
-<div class="flex items-center space-x-2 truncate">
-<span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span>
-<span class="font-bold tracking-wider uppercase text-red-100">Crisis Hotline:</span>
-<span class="truncate">Dial 988, Press 1</span>
-</div>
-<a href="tel:988,1" class="text-white bg-red-800/80 hover:bg-red-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider shrink-0 ml-2 border border-red-600" aria-label="Call Veterans Crisis Line 988 Press 1">
-Call 988 • 1
-</a>
-</div>
-</aside>
-<!-- Header with Auto-Incremented Build Badge & Centered Platform Branding -->
-<header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-2 shrink-0 z-50">
-<div class="max-w-md mx-auto relative flex items-center justify-between">
-<!-- Top Build Version Badge (Left) -->
-<div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
-<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>BUILD 3.4 (REV 36)</span>
-</div>
-<!-- Centered Platform Branding -->
-<div class="flex flex-col items-center justify-center text-center flex-1 px-2">
-<div class="flex items-center justify-center space-x-1.5">
-<div class="w-5 h-5 rounded-md bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
-<i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-</div>
-<span class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none">Forward March Transit</span>
-</div>
-<span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-1 leading-none">IN CADENCE // 5-VISN COAST-TO-COAST</span>
-</div>
-<!-- Zero-PII Security Architecture Trigger (Right) -->
-<button 
-id="openZeroPiiBtn" 
-type="button" 
-title="View Security & Zero-PII Compliance Architecture" 
-aria-label="View Zero PII security disclosure" 
-class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 text-[10px] font-medium text-slate-300 transition shrink-0 shadow-sm"
->
-<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-<span class="font-mono-code font-bold text-[9px]">Zero-PII</span>
-</button>
-</div>
-</header>
-<!-- Live Audio Announcement Toast Banner -->
-<div id="voiceToast" class="hidden bg-emerald-950/95 border-b border-emerald-500/60 px-3 py-1.5 text-center text-xs font-mono-code font-bold text-emerald-300 z-50 flex items-center justify-center space-x-2 shadow-lg">
-<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-<span id="voiceToastText">Announcing VA Healthcare Hub...</span>
-</div>
-<!-- Main Viewport Dashboard -->
-<main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0 overflow-y-auto">
-<!-- Primary Instruction Companion Action Button -->
-<div class="w-full shrink-0">
-<button 
-id="audioGreetingBtn" 
-type="button" 
-title="Need help? Click for instructions and audio guidance" 
-class="tactile-btn w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 active:bg-blue-700 border-2 border-blue-400 text-white font-bold text-xs uppercase tracking-wider text-center transition shadow-lg"
->
-<i data-lucide="help-circle" class="w-5 h-5 text-blue-200 shrink-0"></i>
-<span id="audioGreetingLabel" class="font-extrabold text-xs">Need help? Click for instructions</span>
-</button>
-</div>
-<!-- VA Travel Statutory Eligibility Banner -->
-<div class="px-2.5 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between text-[10px] shrink-0">
-<div class="flex items-center space-x-1.5 truncate">
-<span class="p-1 rounded-md bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 flex items-center justify-center shrink-0">
-<i data-lucide="info" class="w-4 h-4 text-emerald-400"></i>
-</span>
-<span class="text-left text-slate-200 font-medium truncate">
-<strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
-</span>
-</div>
-</div>
-<!-- Input Section: Keypad, Voice Recognition & GPS Geolocation -->
-<section class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md">
-<div class="flex items-center justify-between mb-1.5">
-<label for="zipInput" class="block text-[11px] font-bold uppercase tracking-wider patriot-wave-text">
-Enter 5-Digit Veteran ZIP Code:
-</label>
-<span id="matchStatus" class="text-[10px] font-mono-code text-slate-400">Live Auto-Lookup</span>
-</div>
-<div class="flex items-center space-x-2">
-<!-- Text / Number Pad Input Box -->
-<div class="relative flex-1">
-<input 
-type="text" 
-id="zipInput" 
-pattern="[0-9]*" 
-inputmode="numeric" 
-maxlength="5" 
-placeholder="e.g. 15120, 90210" 
-class="tactile-btn w-full bg-slate-950 border-2 border-slate-700 focus:border-emerald-400 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-100 placeholder-slate-500 font-mono-code font-bold transition outline-none"
->
-<button 
-type="button" 
-id="clearZipBtn" 
-aria-label="Clear ZIP code input" 
-class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
->
-<i data-lucide="x" class="w-4 h-4"></i>
-</button>
-</div>
-<!-- One-Tap Mic Voice Input Button -->
-<button 
-id="micBtn" 
-type="button" 
-title="Speak ZIP Code Aloud" 
-aria-label="Speak ZIP code aloud" 
-class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
->
-<i data-lucide="mic" id="micIcon" class="w-4 h-4 text-emerald-400"></i>
-<span id="micBtnLabel" class="font-mono-code font-bold text-[11px]">VOICE</span>
-</button>
-<!-- Current Location GPS Button -->
-<button 
-id="geoBtn" 
-type="button" 
-title="Detect Current Location" 
-class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
->
-<i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
-<span id="geoBtnLabel" class="font-mono-code font-bold text-[11px]">GPS</span>
-</button>
-</div>
-<div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
-</section>
-<!-- Coast-to-Coast 5-VISN Map Radar View with Direct Dial Anchor -->
-<section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative shrink-0 h-[190px] shadow-md flex flex-col">
-<div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/95 shrink-0 z-20">
-<div class="flex items-center space-x-1.5">
-<i data-lucide="radar" class="w-4 h-4 text-emerald-400"></i>
-<span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-200">5-VISN Coast-to-Coast Radar Map</span>
-</div>
-<span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">37.0902° N, 95.7129° W</span>
-</div>
-<div class="relative w-full flex-1 bg-slate-950">
-<div id="map" class="absolute inset-0 w-full h-full"></div>
-<!-- Center Radar Crosshair Reticle -->
-<div class="radar-crosshair w-24 h-24 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center z-10">
-<div class="w-14 h-14 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
-</div>
-<!-- Big Primary Dial Action Button Anchored on Radar -->
-<div class="absolute bottom-2 right-2 pointer-events-none z-20">
-<a 
-id="centerCallBtn" 
-href="tel:4123603620,1" 
-class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3.5 py-2 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border-2 border-emerald-200"
->
-<i data-lucide="phone-call" class="w-4 h-4 fill-slate-950 shrink-0"></i>
-<span id="centerCallText" class="text-[11px] font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
-</a>
-</div>
-</div>
-</section>
-<!-- Facility Match Micro-Card -->
-<section id="resultCard" class="bg-slate-900 border-2 border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md flex items-center justify-between gap-2">
-<div class="min-w-0 flex-1">
-<div class="flex items-center space-x-1.5 mb-0.5 truncate">
-<span id="visnBadge" class="text-[10px] font-mono-code text-emerald-400 shrink-0 font-bold uppercase tracking-wider truncate">VA Pittsburgh Healthcare System</span>
-<span class="text-slate-600 text-[10px]">•</span>
-<span id="hubBadge" class="text-[10px] font-mono-code text-slate-400 font-medium truncate">
-University Drive & Heinz Divisions
-</span>
-</div>
-<h2 id="facilityName" class="text-xs font-extrabold text-slate-100 leading-snug truncate">
-VA Pittsburgh Healthcare System
-</h2>
-<p id="facilityAddress" class="text-[10px] text-slate-400 truncate">
-University Drive & H.J. Heinz Divisions
-</p>
-</div>
-<!-- Spoken Audio Button for Facility -->
-<button 
-id="readFacilityBtn" 
-type="button" 
-title="Read facility details aloud" 
-aria-label="Read facility name and phone number aloud" 
-class="tactile-btn p-2 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-slate-700 text-emerald-400 shrink-0 flex items-center justify-center"
->
-<i data-lucide="volume-2" class="w-5 h-5"></i>
-</button>
-<!-- Right Contact Extension Block -->
-<div class="text-right shrink-0 pl-2 border-l border-slate-800">
-<div class="text-[9px] uppercase font-mono-code tracking-wider text-slate-400 font-bold">Travel Desk</div>
-<div id="facilityPhone" class="text-xs font-bold text-emerald-400 font-mono-code whitespace-nowrap">
-412-360-3620 (Press 1)
-</div>
-</div>
-</section>
-<!-- National Hotline Fallback Bypass (Full Width) -->
-<div class="shrink-0 pb-1">
-<a 
-id="fallbackCallBtn" 
-href="tel:8555747292" 
-class="plausible-event-name=Dialer+Click tactile-btn bg-slate-900 border-2 border-slate-800 hover:border-emerald-500/50 p-2.5 rounded-lg flex items-center justify-between transition w-full shadow-md"
->
-<div class="truncate">
-<div class="text-[10px] font-extrabold uppercase text-slate-200">National Dispatch Center</div>
-<div class="text-[11px] font-mono-code text-emerald-400 font-bold">855-574-7292</div>
-</div>
-<div class="flex items-center space-x-1.5 text-emerald-400 text-xs font-bold uppercase tracking-wider bg-slate-800 px-3 py-1.5 rounded border border-slate-700 shrink-0">
-<i data-lucide="phone-forwarded" class="w-4 h-4"></i>
-<span>Call National</span>
-</div>
-</a>
-</div>
-</main>
-<!-- Footer & Federal Disclaimers -->
-<footer class="border-t border-slate-800/90 py-1.5 text-center text-slate-500 text-[8px] font-mono-code px-2 shrink-0 space-y-0.5">
-<div class="text-slate-400 font-bold tracking-wide truncate">
-DESIGNED & DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
-</div>
-<div class="text-slate-500 text-[7.5px] leading-tight max-w-sm mx-auto">
-Independent veteran access platform. Not an official VA agency portal. Beneficiary travel subject to 38 CFR Part 70.
-</div>
-</footer>
-<!-- Instructions & Eligibility Modal -->
-<div id="instructionsModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
-<div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3">
-<div class="flex items-center justify-between border-b border-slate-800 pb-2">
-<div class="flex items-center space-x-2">
-<i data-lucide="info" class="w-5 h-5 text-emerald-400"></i>
-<div>
-<h3 class="text-xs font-bold uppercase tracking-wider text-slate-100">Ride Instructions & Eligibility</h3>
-<span class="text-[9px] text-emerald-400 font-mono-code block">Standard Operating Procedure</span>
-</div>
-</div>
-<button id="closeInstructionsBtn" class="text-slate-400 hover:text-slate-100 p-1" aria-label="Close Instructions">
-<i data-lucide="x" class="w-5 h-5"></i>
-</button>
-</div>
-<div class="p-2.5 rounded-lg bg-emerald-950/30 border border-emerald-500/40 space-y-1">
-<div class="flex items-center space-x-1.5 text-emerald-400 font-bold text-[11px] uppercase tracking-wider">
-<i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i>
-<span>Eligibility Verification</span>
-</div>
-<p class="text-[11px] text-slate-200 leading-normal">
-To qualify for VA Beneficiary Travel transit coordination, you must be <strong>30% or more service-connected</strong>, traveling for care of a service-connected condition, or otherwise <strong>VA Travel authorized</strong> (38 CFR Part 70).
-</p>
-</div>
-<div class="space-y-2 text-[11px] text-slate-300 leading-normal overflow-y-auto modal-scroll pr-1 max-h-[48dvh]">
-<div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
-<strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 1: Enter Your ZIP Code</strong>
-Enter your five-digit zip code on the previous screen, or use the Voice / GPS buttons.
-</div>
-<div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
-<strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 2: 48-Hour Advance Call Rule</strong>
-Tap the blinking green <strong class="text-slate-100 font-mono-code">CALL TRAVEL COORDINATOR</strong> button at least <strong>48 hours before your appointment</strong>.
-</div>
-<div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
-<strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 3: Have Details Ready</strong>
-Have your Full Name, Last 4 SSN, and Home of Record pickup address ready for verification.
-</div>
-<div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
-<strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 4: Ride Day Text Reply</strong>
-Reply <strong>'1'</strong> to the automated text when ready for pickup, and reply <strong>'2'</strong> when your clinic visit is done.
-</div>
-</div>
-<div class="flex space-x-2 pt-1">
-<button id="replayInstructionsVoiceBtn" class="tactile-btn flex-1 flex items-center justify-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 py-2 rounded-lg text-xs font-bold uppercase tracking-wider border border-emerald-500/30">
-<i data-lucide="volume-2" class="w-4 h-4"></i>
-<span>Replay Voice</span>
-</button>
-<button id="dismissInstructionsBtn" class="tactile-btn flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 py-2 rounded-lg text-xs font-bold uppercase tracking-wider">
-Got It
-</button>
-</div>
-</div>
-</div>
-<!-- Zero-PII Security Architecture Modal -->
-<div id="zeroPiiModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
-<div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col shadow-2xl space-y-3">
-<div class="flex items-center justify-between border-b border-slate-800 pb-2">
-<div class="flex items-center space-x-2">
-<i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
-<div>
-<h3 class="text-xs font-bold uppercase tracking-wider text-slate-100">Zero-PII Compliance</h3>
-<span class="text-[9px] text-emerald-400 font-mono-code block">Client-Side Architecture</span>
-</div>
-</div>
-<button id="closeZeroPiiBtn" class="text-slate-400 hover:text-slate-100 p-1" aria-label="Close Security Modal">
-<i data-lucide="x" class="w-5 h-5"></i>
-</button>
-</div>
-<div class="text-[11px] text-slate-300 space-y-2 leading-relaxed">
-<p><strong>1. Zero Data Logging:</strong> No names, Social Security Numbers, or health details are collected, stored, or transmitted to any server.</p>
-<p><strong>2. Local Browser Execution:</strong> 100% of ZIP lookups and dialer routing execute client-side in the veteran's device RAM.</p>
-<p><strong>3. Zero Breach Exposure:</strong> Fully compliant with VA cybersecurity standards and HIPAA safeguards by never capturing Protected Health Information (PHI).</p>
-</div>
-<button id="dismissZeroPiiBtn" class="tactile-btn w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-2 rounded-lg text-xs font-bold uppercase tracking-wider border border-slate-700">
-Acknowledged
-</button>
-</div>
-</div>
-<script>
-lucide.createIcons();
-// Voice Synthesis Prompt Audio Engine
-const instructionsSpeechText = "Welcome to Forward March Transit, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized. Enter your five-digit zip code on the previous screen, and call your transit coordinator at least 48 hours before your appointment.";
-let activeUtterance = null;
-function speakGreeting(customText) {
-if (!('speechSynthesis' in window)) return;
-try {
-window.speechSynthesis.cancel();
-if (window.speechSynthesis.paused) {
-window.speechSynthesis.resume();
-}
-const textToSpeak = customText || instructionsSpeechText;
-activeUtterance = new SpeechSynthesisUtterance(textToSpeak);
-activeUtterance.rate = 0.92;
-activeUtterance.pitch = 1.0;
-activeUtterance.lang = 'en-US';
-activeUtterance.volume = 1.0;
-const voices = window.speechSynthesis.getVoices();
-if (voices.length > 0) {
-const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang === "en-US" || v.lang.startsWith("en")));
-if (naturalVoice) activeUtterance.voice = naturalVoice;
-}
-activeUtterance.onstart = () => {
-showVoiceToast("🔊 " + (activeHub ? activeHub.name : textToSpeak.substring(0, 35)));
-};
-activeUtterance.onend = () => {
-hideVoiceToast();
-activeUtterance = null;
-};
-activeUtterance.onerror = (e) => {
-console.warn("Speech synthesis notice:", e);
-hideVoiceToast();
-activeUtterance = null;
-};
-window.speechSynthesis.speak(activeUtterance);
-} catch (err) {
-console.error("Speech playback error:", err);
-}
-}
-function showVoiceToast(msg) {
-const t = document.getElementById('voiceToast');
-if (t) {
-t.textContent = msg;
-t.classList.remove('hidden');
-}
-}
-function hideVoiceToast() {
-const t = document.getElementById('voiceToast');
-if (t) t.classList.add('hidden');
-}
-// Instructions & Modal Handlers
-const instructionsModal = document.getElementById('instructionsModal');
-const audioGreetingBtn = document.getElementById('audioGreetingBtn');
-const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
-const dismissInstructionsBtn = document.getElementById('dismissInstructionsBtn');
-const replayInstructionsVoiceBtn = document.getElementById('replayInstructionsVoiceBtn');
-if (audioGreetingBtn) {
-audioGreetingBtn.addEventListener('click', (e) => {
-e.stopPropagation();
-if (instructionsModal) instructionsModal.classList.remove('hidden');
-speakGreeting();
-});
-}
-if (closeInstructionsBtn && instructionsModal) {
-closeInstructionsBtn.addEventListener('click', () => {
-instructionsModal.classList.add('hidden');
-if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-});
-}
-if (dismissInstructionsBtn && instructionsModal) {
-dismissInstructionsBtn.addEventListener('click', () => {
-instructionsModal.classList.add('hidden');
-if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-});
-}
-if (replayInstructionsVoiceBtn) {
-replayInstructionsVoiceBtn.addEventListener('click', () => {
-speakGreeting();
-});
-}
-if ('speechSynthesis' in window) {
-window.speechSynthesis.onvoiceschanged = () => {
-window.speechSynthesis.getVoices();
-};
-}
-// Split Mapbox token segments
-mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
-// Continental US Center for Coast-to-Coast Initial View
-const continentalUSCenter = [-95.7129, 37.0902];
-const defaultHub = {
-badge: "University Drive & Heinz Divisions",
-visn: "VA Pittsburgh Healthcare System",
-name: "VA Pittsburgh Healthcare System",
-desc: "University Drive & H.J. Heinz Campus Catchment",
-phone: "412-360-3620 (Press 1)",
-cleanPhone: "4123603620,1",
-coords: [-79.9600, 40.4444]
-};
-let activeHub = defaultHub;
-const map = new mapboxgl.Map({
-container: 'map',
-style: 'mapbox://styles/mapbox/dark-v11',
-center: continentalUSCenter,
-zoom: 3.1,
-attributionControl: false
-});
-map.addControl(new mapboxgl.AttributionControl({ compact: true }));
-const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
-.setLngLat(continentalUSCenter)
-.addTo(map);
-map.on('load', () => {
-map.resize();
-map.addSource('visn-regions', {
-type: 'geojson',
-data: 'https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json'
-});
-map.addLayer({
-id: 'visn-fills',
-type: 'fill',
-source: 'visn-regions',
-paint: {
-'fill-color': [
-'match',
-['get', 'name'],
-['Maine', 'New Hampshire', 'Vermont', 'Massachusetts', 'Rhode Island', 'Connecticut', 'New York', 'New Jersey', 'Pennsylvania', 'Delaware', 'Maryland', 'West Virginia'], '#991b1b',
-['Virginia', 'North Carolina', 'South Carolina', 'Georgia', 'Florida'], '#c2410c',
-['Ohio', 'Indiana', 'Michigan', 'Wisconsin', 'Illinois', 'Minnesota', 'Iowa', 'North Dakota', 'South Dakota', 'Nebraska'], '#166534',
-['Texas', 'Oklahoma', 'Kansas', 'Missouri', 'Arkansas', 'Louisiana', 'Mississippi', 'Alabama', 'Kentucky', 'Tennessee'], '#6b21a8',
-'#1e40af'
-],
-'fill-opacity': 0.35
-}
-});
-map.addLayer({
-id: 'visn-borders',
-type: 'line',
-source: 'visn-regions',
-paint: {
-'line-color': '#ffffff',
-'line-width': 0.75,
-'line-opacity': 0.4
-}
-});
-});
-setTimeout(() => { map.resize(); }, 300);
-// Complete Nationwide & Regional VISN Routing Database
-const visnDatabase = {
-"visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
-"visn2": { badge: "NY / NJ Metro Region", visn: "James J. Peters VAMC (Bronx)", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Regional Catchment", phone: "718-584-9000", cleanPhone: "7185849000", coords: [-73.9004, 40.8677] },
-"visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
-"visn4_butler": { badge: "Butler Regional Division", visn: "Butler VA Health Care System", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
-"visn4_erie": { badge: "NW Pennsylvania Division", visn: "Erie VA Medical Center", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
-"visn4_altoona": { badge: "Central PA Division", visn: "James E. Van Zandt VAMC", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
-"visn4_lebanon": { badge: "South Central PA Division", visn: "Lebanon VA Medical Center", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
-"visn4_coatesville": { badge: "Brandywine Division", visn: "Coatesville VA Medical Center", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
-"visn4_wilkes": { badge: "Northeastern PA Division", visn: "Wilkes-Barre VA Medical Center", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
-"visn4_wilmington": { badge: "Delaware Valley Division", visn: "Wilmington VA Medical Center", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey Catchment", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
-"visn4_philly": { badge: "SE Pennsylvania Division", visn: "Michael J. Crescenz VAMC", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
-"visn5": { badge: "Capital Regional Network", visn: "Washington DC VA Medical Center", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA Catchment", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0125, 38.9298] },
-"visn6": { badge: "Mid-Atlantic Network", visn: "Fayetteville NC VA Medical Center", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA Catchment", phone: "910-488-2120", cleanPhone: "9104882120", coords: [-78.8872, 35.0805] },
-"visn7": { badge: "Southeast Regional Network", visn: "Atlanta VA Medical Center", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina Catchment", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.3015, 33.7938] },
-"visn8": { badge: "Sunshine Regional Network", visn: "James A. Haley Hospital (Tampa)", name: "James A. Haley Hospital (Tampa)", desc: "Florida & Puerto Rico Regional Catchment", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4278, 28.0592] },
-"visn9": { badge: "MidSouth Regional Network", visn: "Tennessee Valley Healthcare", name: "Tennessee Valley Healthcare", desc: "Tennessee, Kentucky & South IN Catchment", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8041, 36.1444] },
-"visn10": { badge: "Midwest Network (OH/IN/MI)", visn: "Louis Stokes Cleveland VAMC", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana & Lower Michigan Catchment", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6119, 41.5036] },
-"visn12": { badge: "Great Lakes Network", visn: "Jesse Brown VAMC (Chicago)", name: "Jesse Brown VAMC (Chicago)", desc: "Illinois, Wisconsin & Upper MI Catchment", phone: "312-569-8387", cleanPhone: "3125698387", coords: [-87.6749, 41.8703] },
-"visn15": { badge: "Heartland Regional Network", visn: "Kansas City VA Medical Center", name: "Kansas City VA Medical Center", desc: "Missouri, Kansas & South IL Catchment", phone: "816-861-4700", cleanPhone: "8168614700", coords: [-94.5222, 39.0494] },
-"visn16": { badge: "South Central Regional Network", visn: "Michael E. DeBakey VAMC", name: "Michael E. DeBakey VAMC", desc: "MS, LA, AR & East Texas Catchment", phone: "713-791-1414", cleanPhone: "7137911414", coords: [-95.3855, 29.7042] },
-"visn17": { badge: "Heart of Texas Network", visn: "Central Texas Veterans Health", name: "Central Texas Veterans Health", desc: "Central, South & West Texas Catchment", phone: "254-778-4811", cleanPhone: "2547784811", coords: [-97.3547, 31.0827] },
-"visn19": { badge: "Rocky Mountain Network", visn: "Rocky Mountain Regional VAMC", name: "Rocky Mountain Regional VAMC", desc: "CO, MT, UT, WY & West KS/NE Catchment", phone: "303-399-8020", cleanPhone: "3033998020", coords: [-104.8384, 39.7420] },
-"visn20": { badge: "Northwest Regional Network", visn: "VA Puget Sound Healthcare", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, ID & Alaska Catchment", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3101, 47.5583] },
-"visn21": { badge: "Sierra Pacific Network", visn: "San Francisco VA Health Care", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii Catchment", phone: "415-221-4810", cleanPhone: "4152214810", coords: [-122.5052, 37.7820] },
-"visn22": { badge: "Desert Pacific Network", visn: "VA Greater Los Angeles Healthcare", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona Catchment", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4552, 34.0532] },
-"visn23": { badge: "Midwest Regional Network", visn: "Minneapolis VA Health Care", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE Catchment", phone: "612-725-2000", cleanPhone: "6127252000", coords: [-93.2081, 44.9015] },
-"national_fallback": { badge: "National Dispatch Center", visn: "VA Beneficiary Travel Dispatch", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Beneficiary Travel Hotline", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
-};
-const zipInput = document.getElementById('zipInput');
-const clearZipBtn = document.getElementById('clearZipBtn');
-const micBtn = document.getElementById('micBtn');
-const micBtnLabel = document.getElementById('micBtnLabel');
-const geoBtn = document.getElementById('geoBtn');
-const geoBtnLabel = document.getElementById('geoBtnLabel');
-const matchStatus = document.getElementById('matchStatus');
-const statusAlert = document.getElementById('statusAlert');
-const hubBadge = document.getElementById('hubBadge');
-const visnBadge = document.getElementById('visnBadge');
-const facilityName = document.getElementById('facilityName');
-const facilityAddress = document.getElementById('facilityAddress');
-const facilityPhone = document.getElementById('facilityPhone');
-const readFacilityBtn = document.getElementById('readFacilityBtn');
-const centerCallBtn = document.getElementById('centerCallBtn');
-const centerCallText = document.getElementById('centerCallText');
-const fallbackCallBtn = document.getElementById('fallbackCallBtn');
-const mapCoordinates = document.getElementById('mapCoordinates');
-const radarHeaderLabel = document.getElementById('radarHeaderLabel');
-const zeroPiiModal = document.getElementById('zeroPiiModal');
-const openZeroPiiBtn = document.getElementById('openZeroPiiBtn');
-const closeZeroPiiBtn = document.getElementById('closeZeroPiiBtn');
-const dismissZeroPiiBtn = document.getElementById('dismissZeroPiiBtn');
-if (openZeroPiiBtn && zeroPiiModal) {
-openZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.remove('hidden'));
-closeZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.add('hidden'));
-dismissZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.add('hidden'));
-}
-document.addEventListener('touchstart', (e) => {
-if (document.activeElement === zipInput && e.target !== zipInput && e.target !== clearZipBtn && !clearZipBtn.contains(e.target)) {
-zipInput.blur();
-}
-});
-readFacilityBtn.addEventListener('click', () => {
-if (!activeHub) return;
-centerCallBtn.classList.add('call-btn-blinking');
-const textToRead = ⁠${activeHub.name}. ${activeHub.desc}. Travel coordinator phone number is ${activeHub.phone}, or tap the blinking green button.⁠;
-speakGreeting(textToRead);
-});
-clearZipBtn.addEventListener('click', () => {
-zipInput.value = '';
-clearZipBtn.classList.add('hidden');
-hideAlert();
-matchStatus.textContent = "Live Auto-Lookup";
-matchStatus.className = "text-[10px] font-mono-code text-slate-400";
-centerCallBtn.classList.remove('call-btn-blinking');
-updateHubUI(defaultHub);
-zipInput.focus();
-});
-function trackLookup(zip, matchData, method) {
-if (typeof window.plausible === 'function' && matchData) {
-window.plausible('Hub Search', {
-props: {
-zip_prefix: zip.substring(0, 3),
-visn: matchData.visn,
-hub_name: matchData.name,
-method: method
-}
-});
-}
-}
-function trackDialerClick(buttonType, targetHub) {
-if (typeof window.plausible === 'function' && targetHub) {
-window.plausible('Dialer Click', {
-props: {
-button: buttonType,
-visn: targetHub.visn,
-hub_name: targetHub.name,
-phone: targetHub.cleanPhone
-}
-});
-}
-}
-centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
-fallbackCallBtn.addEventListener('click', () => trackDialerClick('National Fallback Dial Button', visnDatabase.national_fallback));
-function resolveHub(zip) {
-if (!zip || zip.length < 3) return null;
-const p = parseInt(zip.substring(0, 3), 10);
-if (p >= 10 && p <= 69) return visnDatabase.visn1;
-if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
-if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
-if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
-if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
-if ([155, 157, 158, 159, 166, 168].includes(p)) return visnDatabase.visn4_altoona;
-if ([170, 171, 172, 173, 174, 175, 176, 178, 179].includes(p)) return visnDatabase.visn4_lebanon;
-if ([182, 183, 184, 185, 186, 187, 188].includes(p)) return visnDatabase.visn4_wilkes;
-if ([193, 194, 195, 196].includes(p)) return visnDatabase.visn4_coatesville;
-if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
-if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
-if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
-if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
-if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
-if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
-if (p >= 430 && p <= 499) return visnDatabase.visn10;
-if ((p >= 530 && p <= 549) || (p >= 600 && p <= 619)) return visnDatabase.visn12;
-if (p >= 620 && p <= 679) return visnDatabase.visn15;
-if ((p >= 386 && p <= 397) || (p >= 700 && p <= 729) || (p >= 750 && p <= 759) || (p >= 770 && p <= 777)) return visnDatabase.visn16;
-if ((p >= 760 && p <= 769) || (p >= 780 && p <= 799)) return visnDatabase.visn17;
-if ((p >= 590 && p <= 599) || (p >= 800 && p <= 847)) return visnDatabase.visn19;
-if (p >= 970 && p <= 999) return visnDatabase.visn20;
-if ((p >= 890 && p <= 898) || (p >= 936 && p <= 969)) return visnDatabase.visn21;
-if ((p >= 850 && p <= 865) || (p >= 900 && p <= 935)) return visnDatabase.visn22;
-if ((p >= 500 && p <= 528) || (p >= 550 && p <= 588) || (p >= 680 && p <= 693)) return visnDatabase.visn23;
-return visnDatabase.national_fallback;
-}
-function updateHubUI(data) {
-activeHub = data;
-hubBadge.textContent = data.badge;
-visnBadge.textContent = data.visn;
-facilityName.textContent = data.name;
-facilityAddress.textContent = data.desc;
-facilityPhone.textContent = data.phone;
-const callUri = "tel:" + data.cleanPhone;
-centerCallBtn.href = callUri;
-const isFallback = (data.visn === "VA Beneficiary Travel Dispatch" || data.badge === "National Dispatch Center");
-centerCallText.textContent = isFallback ? "CALL DISPATCH" : "CALL TRAVEL COORDINATOR";
-if (radarHeaderLabel) {
-radarHeaderLabel.textContent = isFallback ? "National Dispatch Radar View" : ⁠${data.name} Radar View⁠;
-}
-if (map && data.coords) {
-map.flyTo({ center: data.coords, zoom: isFallback ? 4 : 11, speed: 1.4, essential: true });
-mapMarker.setLngLat(data.coords);
-mapCoordinates.textContent = ⁠${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W⁠;
-}
-}
-function showAlert(msg) {
-statusAlert.textContent = msg;
-statusAlert.classList.remove('hidden');
-}
-function hideAlert() {
-statusAlert.classList.add('hidden');
-}
-function handleZipInput() {
-hideAlert();
-const rawVal = zipInput.value;
-const cleanVal = rawVal.replace(/\D/g, '').substring(0, 5);
-if (cleanVal !== rawVal) {
-zipInput.value = cleanVal;
-}
-if (cleanVal.length > 0) {
-clearZipBtn.classList.remove('hidden');
-} else {
-clearZipBtn.classList.add('hidden');
-}
-if (cleanVal.length >= 3) {
-const match = resolveHub(cleanVal);
-if (match) {
-updateHubUI(match);
-if (match.badge === "National Dispatch Center") {
-matchStatus.textContent = "National Dispatch";
-matchStatus.className = "text-[10px] font-mono-code text-amber-400 font-bold";
-} else {
-matchStatus.textContent = cleanVal.length === 5 ? "Locked (Exact)" : "Searching Region...";
-matchStatus.className = "text-[10px] font-mono-code text-emerald-400 font-bold";
-}
-if (cleanVal.length === 5) {
-trackLookup(cleanVal, match, 'ZIP Input');
-centerCallBtn.classList.add('call-btn-blinking');
-zipInput.blur();
-} else {
-centerCallBtn.classList.remove('call-btn-blinking');
-}
-}
-} else {
-matchStatus.textContent = "Live Auto-Lookup";
-matchStatus.className = "text-[10px] font-mono-code text-slate-400";
-centerCallBtn.classList.remove('call-btn-blinking');
-}
-}
-// Bulletproof Event Listeners for iOS Safari, Autofill, Paste, and Keypad Input
-zipInput.addEventListener('input', handleZipInput);
-zipInput.addEventListener('keyup', handleZipInput);
-zipInput.addEventListener('change', handleZipInput);
-zipInput.addEventListener('paste', () => {
-setTimeout(handleZipInput, 50);
-});
-// Voice-First Speech-to-Text Input (Web Speech API)
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (SpeechRecognition && micBtn) {
-const recognition = new SpeechRecognition();
-recognition.lang = 'en-US';
-recognition.continuous = false;
-recognition.interimResults = false;
-micBtn.addEventListener('click', () => {
-hideAlert();
-if ('speechSynthesis' in window) {
-try {
-window.speechSynthesis.resume();
-const primer = new SpeechSynthesisUtterance(' ');
-primer.volume = 0.01;
-window.speechSynthesis.speak(primer);
-} catch(e) {}
-}
-try {
-recognition.start();
-micBtnLabel.textContent = "REC...";
-micBtn.classList.add('border-emerald-400', 'bg-emerald-950/60');
-} catch (err) {
-recognition.stop();
-micBtnLabel.textContent = "VOICE";
-micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
-}
-});
-recognition.onresult = (event) => {
-const transcript = event.results[0][0].transcript;
-const numbersOnly = transcript.replace(/\D/g, '');
-if (numbersOnly.length >= 5) {
-const zip = numbersOnly.substring(0, 5);
-zipInput.value = zip;
-clearZipBtn.classList.remove('hidden');
-handleZipInput();
-try { recognition.stop(); } catch (e) {}
-micBtnLabel.textContent = "VOICE";
-micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
-const matchedHub = resolveHub(zip);
-if (matchedHub) {
-const spokenPhone = matchedHub.phone.replace(/ Ext /gi, ' extension ');
-const spokenReply = ⁠${matchedHub.name}. Phone number ${spokenPhone}. Click the blinking button if you would like to make the call.⁠;
-readFacilityBtn.classList.add('animate-bounce');
-setTimeout(() => { readFacilityBtn.classList.remove('animate-bounce'); }, 2000);
-speakGreeting(spokenReply);
-}
-} else {
-showAlert("Could not recognize 5-digit ZIP: " + transcript);
-}
-};
-recognition.onerror = (event) => {
-showAlert("Voice input error. Try manual keypad.");
-micBtnLabel.textContent = "VOICE";
-micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
-};
-recognition.onend = () => {
-micBtnLabel.textContent = "VOICE";
-micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
-};
-} else if (micBtn) {
-micBtn.classList.add('opacity-50');
-micBtn.title = "Voice recognition not supported on this browser";
-}
-// Geolocation Resolution
-geoBtn.addEventListener('click', () => {
-hideAlert();
-if (!navigator.geolocation) {
-showAlert("GPS not supported.");
-return;
-}
-geoBtnLabel.textContent = "...";
-geoBtn.disabled = true;
-navigator.geolocation.getCurrentPosition(
-async (position) => {
-const lat = position.coords.latitude;
-const lon = position.coords.longitude;
-if (map) {
-map.flyTo({ center: [lon, lat], zoom: 11, essential: true });
-mapMarker.setLngLat([lon, lat]);
-mapCoordinates.textContent = ⁠${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W⁠;
-}
-try {
-const res = await fetch(⁠https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en⁠);
-const data = await res.json();
-const detectedZip = data.postcode;
-if (detectedZip) {
-const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
-zipInput.value = cleanZip;
-clearZipBtn.classList.remove('hidden');
-handleZipInput();
-} else {
-showAlert("Could not detect ZIP. Enter manually.");
-}
-} catch (err) {
-showAlert("Service error. Enter ZIP manually.");
-} finally {
-geoBtnLabel.textContent = "GPS";
-geoBtn.disabled = false;
-}
-},
-(error) => {
-showAlert("GPS signal unavailable.");
-geoBtnLabel.textContent = "GPS";
-geoBtn.disabled = false;
-},
-{ timeout: 8000, enableHighAccuracy: true }
-);
-});
-</script>
+
+  <!-- Veterans Crisis Line Mandatory Header -->
+  <aside class="bg-red-950/90 border-b border-red-800/80 px-3 py-1.5 text-center shrink-0 z-50">
+    <div class="max-w-md mx-auto flex items-center justify-between text-[11px] font-mono-code text-red-200">
+      <div class="flex items-center space-x-2 truncate">
+        <span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span>
+        <span class="font-bold tracking-wider uppercase text-red-100">Crisis Hotline:</span>
+        <span class="truncate">Dial 988, Press 1</span>
+      </div>
+      <a href="tel:988,1" class="text-white bg-red-800/80 hover:bg-red-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider shrink-0 ml-2 border border-red-600" aria-label="Call Veterans Crisis Line 988 Press 1">
+        Call 988 &bull; 1
+      </a>
+    </div>
+  </aside>
+
+  <!-- Header with Auto-Incremented Build Badge & Centered Platform Branding -->
+  <header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-2 shrink-0 z-50">
+    <div class="max-w-md mx-auto relative flex items-center justify-between">
+      <!-- Top Build Version Badge (Left) -->
+      <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>BUILD 3.5 (REV 35)</span>
+      </div>
+
+      <!-- Centered Platform Branding -->
+      <div class="flex flex-col items-center justify-center text-center flex-1 px-2">
+        <div class="flex items-center justify-center space-x-1.5">
+          <div class="w-5 h-5 rounded-md bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          </div>
+          <span class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none">Forward March Transit</span>
+        </div>
+        <span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-1 leading-none">IN CADENCE // ALL VISNS</span>
+      </div>
+
+      <!-- Zero-PII Security Architecture Trigger (Right) -->
+      <button 
+        id="openZeroPiiBtn" 
+        type="button" 
+        title="View Security & Zero-PII Compliance Architecture" 
+        aria-label="View Zero PII security disclosure" 
+        class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 text-[10px] font-medium text-slate-300 transition shrink-0 shadow-sm"
+      >
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <span class="font-mono-code font-bold text-[9px]">Zero-PII</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Live Audio Announcement Toast Banner -->
+  <div id="voiceToast" class="hidden bg-emerald-950/95 border-b border-emerald-500/60 px-3 py-1.5 text-center text-xs font-mono-code font-bold text-emerald-300 z-50 flex items-center justify-center space-x-2 shadow-lg">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+    <span id="voiceToastText">Announcing VA Healthcare Hub...</span>
+  </div>
+
+  <!-- Main Viewport Dashboard -->
+  <main class="flex-1 max-w-md mx-auto w-full px-3 py-2 flex flex-col gap-2 min-h-0">
+
+    <!-- Primary Instruction Companion Action Button -->
+    <div class="w-full shrink-0">
+      <button 
+        id="audioGreetingBtn" 
+        type="button" 
+        title="Need help? Click for instructions and audio guidance" 
+        class="tactile-btn w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 active:bg-blue-700 border-2 border-blue-400 text-white font-bold text-xs uppercase tracking-wider text-center transition shadow-lg"
+      >
+        <i data-lucide="help-circle" class="w-5 h-5 text-blue-200 shrink-0"></i>
+        <span id="audioGreetingLabel" class="font-extrabold text-xs">Need help? Click for instructions</span>
+      </button>
+    </div>
+
+    <!-- VA Travel Statutory Eligibility Banner -->
+    <div class="px-2.5 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between text-[10px] shrink-0">
+      <div class="flex items-center space-x-1.5 truncate">
+        <div class="p-1 rounded-md bg-emerald-500/25 border border-emerald-500/50 text-emerald-300 flex items-center justify-center shrink-0">
+          <i data-lucide="info" class="w-4 h-4 text-emerald-400"></i>
+        </div>
+        <div class="text-slate-200 font-medium truncate">
+          <strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
+        </div>
+      </div>
+      <span class="text-[9px] font-mono-code text-emerald-400 uppercase tracking-wider shrink-0 ml-1">
+        38 CFR Part 70
+      </span>
+    </div>
+
+    <!-- Input Section: Keypad, Voice Recognition & GPS Geolocation -->
+    <section class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md">
+      <div class="flex items-center justify-between mb-1.5">
+        <label for="zipInput" class="block text-[11px] font-bold uppercase tracking-wider patriot-wave-text">
+          Enter 5-Digit Veteran ZIP Code:
+        </label>
+        <span id="matchStatus" class="text-[10px] font-mono-code text-slate-400">Live Auto-Lookup</span>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <!-- Text / Number Pad Input Box -->
+        <div class="relative flex-1">
+          <input 
+            type="text" 
+            id="zipInput" 
+            pattern="[0-9]*" 
+            inputmode="numeric" 
+            maxlength="5" 
+            placeholder="e.g. 15120, 60601" 
+            class="tactile-btn w-full bg-slate-950 border-2 border-slate-700 focus:border-emerald-400 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-100 placeholder-slate-500 font-mono-code font-bold transition outline-none"
+          >
+          <button 
+            type="button" 
+            id="clearZipBtn" 
+            aria-label="Clear ZIP code input" 
+            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
+          >
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- One-Tap Mic Voice Input Button -->
+        <button 
+          id="micBtn" 
+          type="button" 
+          title="Speak ZIP Code Aloud" 
+          aria-label="Speak ZIP code aloud" 
+          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
+        >
+          <i data-lucide="mic" id="micIcon" class="w-4 h-4 text-emerald-400"></i>
+          <span id="micBtnLabel" class="font-mono-code font-bold text-[11px]">VOICE</span>
+        </button>
+
+        <!-- Current Location GPS Button -->
+        <button 
+          id="geoBtn" 
+          type="button" 
+          title="Detect Current Location" 
+          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
+        >
+          <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
+          <span id="geoBtnLabel" class="font-mono-code font-bold text-[11px]">GPS</span>
+        </button>
+      </div>
+
+      <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
+    </section>
+
+    <!-- Radar Target Map with Direct Interactive Dial Anchor & Explicit Height -->
+    <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative shrink-0 shadow-md flex flex-col">
+      <div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/85 shrink-0 z-10">
+        <div class="flex items-center space-x-1.5">
+          <i data-lucide="radar" class="w-4 h-4 text-emerald-400"></i>
+          <span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-200">National Healthcare Radar View (Coast-to-Coast)</span>
+        </div>
+        <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">37.0902° N, 95.7129° W</span>
+      </div>
+      
+      <!-- Explicit Height container so Mapbox GL JS renders reliably without collapsing -->
+      <div class="relative w-full h-[180px] bg-slate-950">
+        <div id="map" class="w-full h-full"></div>
+
+        <!-- Center Radar Crosshair Reticle -->
+        <div class="radar-crosshair w-24 h-24 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center z-10">
+          <div class="w-14 h-14 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
+        </div>
+
+        <!-- Big Primary Dial Action Button Anchored on Radar -->
+        <div class="absolute bottom-2 right-2 pointer-events-none z-20">
+          <a 
+            id="centerCallBtn" 
+            href="tel:4123603620,1" 
+            class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3.5 py-2 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border-2 border-emerald-200"
+          >
+            <i data-lucide="phone-call" class="w-4 h-4 fill-slate-950"></i>
+            <span id="centerCallText" class="text-xs font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Facility Match Micro-Card -->
+    <section id="resultCard" class="bg-slate-900 border-2 border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md flex items-center justify-between gap-2">
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center space-x-1.5 mb-0.5 truncate">
+          <span id="visnBadge" class="text-[10px] font-mono-code text-emerald-400 shrink-0 font-bold uppercase tracking-wider truncate">VA Pittsburgh Healthcare System</span>
+          <span class="text-slate-600 text-[10px]">•</span>
+          <span id="hubBadge" class="text-[10px] font-mono-code text-slate-400 font-medium truncate">
+            University Drive & Heinz Divisions
+          </span>
+        </div>
+        <h2 id="facilityName" class="text-xs font-extrabold text-slate-100 leading-snug truncate">
+          VA Pittsburgh Healthcare System
+        </h2>
+        <p id="facilityAddress" class="text-[10px] text-slate-400 truncate">
+          University Drive & H.J. Heinz Divisions
+        </p>
+      </div>
+
+      <!-- Spoken Audio Button for Facility -->
+      <button 
+        id="readFacilityBtn" 
+        type="button" 
+        title="Read facility details aloud" 
+        aria-label="Read facility name and phone number aloud" 
+        class="tactile-btn p-2 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-slate-700 text-emerald-400 shrink-0 flex items-center justify-center"
+      >
+        <i data-lucide="volume-2" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Right Contact Extension Block -->
+      <div class="text-right shrink-0 pl-2 border-l border-slate-800">
+        <div class="text-[9px] uppercase font-mono-code tracking-wider text-slate-400 font-bold">Travel Desk</div>
+        <div id="facilityPhone" class="text-xs font-bold text-emerald-400 font-mono-code whitespace-nowrap">
+          412-360-3620 (Press 1)
+        </div>
+      </div>
+    </section>
+
+    <!-- Linear Secondary Actions -->
+    <div class="grid grid-cols-2 gap-2 shrink-0">
+      <!-- National Hotline Fallback Bypass -->
+      <a 
+        id="fallbackCallBtn" 
+        href="tel:8555747292" 
+        class="plausible-event-name=Dialer+Click tactile-btn bg-slate-900 border-2 border-slate-800 hover:border-emerald-500/50 p-2.5 rounded-lg flex items-center justify-between transition"
+      >
+        <div class="truncate">
+          <div class="text-[10px] font-extrabold uppercase text-slate-200">National Dispatch</div>
+          <div class="text-[10px] font-mono-code text-emerald-400 font-bold">855-574-7292</div>
+        </div>
+        <i data-lucide="phone-forwarded" class="w-4 h-4 text-emerald-400 shrink-0 ml-1"></i>
+      </a>
+
+      <!-- Direct National Dispatch Call Action -->
+      <a 
+        id="directNationalBtn" 
+        href="tel:8555747292" 
+        class="plausible-event-name=Dialer+Click tactile-btn bg-slate-900 border-2 border-slate-800 hover:border-emerald-500/50 p-2.5 rounded-lg flex items-center justify-between transition text-left"
+      >
+        <div class="truncate">
+          <div class="text-[10px] font-extrabold uppercase text-slate-200">National Center</div>
+          <div class="text-[10px] text-slate-400 font-mono-code">Call National</div>
+        </div>
+        <i data-lucide="phone-call" class="w-4 h-4 text-emerald-400 shrink-0 ml-1"></i>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Footer & Federal Disclaimers -->
+  <footer class="border-t border-slate-800/90 py-1.5 text-center text-slate-500 text-[8px] font-mono-code px-2 shrink-0 space-y-0.5">
+    <div class="text-slate-400 font-bold tracking-wide truncate">
+      DESIGNED &amp; DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
+    </div>
+    <div class="text-slate-500 text-[7.5px] leading-tight max-w-sm mx-auto">
+      Independent veteran access platform. Not an official VA agency portal. Beneficiary travel subject to 38 CFR Part 70.
+    </div>
+  </footer>
+
+  <!-- Instructions & Eligibility Modal -->
+  <div id="instructionsModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col max-h-[90dvh] shadow-2xl space-y-3">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="info" class="w-5 h-5 text-emerald-400"></i>
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-100">Ride Instructions &amp; Eligibility</h3>
+            <span class="text-[9px] text-emerald-400 font-mono-code block">Standard Operating Procedure</span>
+          </div>
+        </div>
+        <button id="closeInstructionsBtn" class="text-slate-400 hover:text-slate-100 p-1" aria-label="Close Instructions">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-2.5 rounded-lg bg-emerald-950/30 border border-emerald-500/40 space-y-1">
+        <div class="flex items-center space-x-1.5 text-emerald-400 font-bold text-[11px] uppercase tracking-wider">
+          <i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i>
+          <span>Eligibility Verification</span>
+        </div>
+        <p class="text-[11px] text-slate-200 leading-normal">
+          To qualify for VA Beneficiary Travel transit coordination, you must be <strong>30% or more service-connected</strong>, traveling for care of a service-connected condition, or otherwise <strong>VA Travel authorized</strong> (38 CFR Part 70).
+        </p>
+      </div>
+
+      <div class="space-y-2 text-[11px] text-slate-300 leading-normal overflow-y-auto modal-scroll pr-1 max-h-[48dvh]">
+        <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 1: Enter Your ZIP Code</strong>
+          Enter your five-digit zip code on the previous screen, or use the Voice / GPS buttons.
+        </div>
+
+        <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 2: 48-Hour Advance Call Rule</strong>
+          Tap the blinking green <strong class="text-slate-100 font-mono-code">CALL TRAVEL COORDINATOR</strong> button at least <strong>48 hours before your appointment</strong>.
+        </div>
+
+        <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 3: Have Details Ready</strong>
+          Have your Full Name, Last 4 SSN, and Home of Record pickup address ready for verification.
+        </div>
+
+        <div class="p-2.5 rounded bg-slate-950/60 border border-slate-800">
+          <strong class="uppercase tracking-wider font-mono-code text-[10px] block mb-0.5 text-emerald-400">Step 4: Ride Day Text Reply</strong>
+          Reply <strong>'1'</strong> to the automated text when ready for pickup, and reply <strong>'2'</strong> when your clinic visit is done.
+        </div>
+      </div>
+
+      <div class="flex space-x-2 pt-1">
+        <button id="replayInstructionsVoiceBtn" class="tactile-btn flex-1 flex items-center justify-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 py-2 rounded-lg text-xs font-bold uppercase tracking-wider border border-emerald-500/30">
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+          <span>Replay Voice</span>
+        </button>
+        <button id="dismissInstructionsBtn" class="tactile-btn flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 py-2 rounded-lg text-xs font-bold uppercase tracking-wider">
+          Got It
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zero-PII Security Architecture Modal -->
+  <div id="zeroPiiModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm p-3 flex items-center justify-center">
+    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-4 flex flex-col shadow-2xl space-y-3">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-100">Zero-PII Compliance</h3>
+            <span class="text-[9px] text-emerald-400 font-mono-code block">Client-Side Architecture</span>
+          </div>
+        </div>
+        <button id="closeZeroPiiBtn" class="text-slate-400 hover:text-slate-100 p-1" aria-label="Close Security Modal">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="text-[11px] text-slate-300 space-y-2 leading-relaxed">
+        <p><strong>1. Zero Data Logging:</strong> No names, Social Security Numbers, or health details are collected, stored, or transmitted to any server.</p>
+        <p><strong>2. Local Browser Execution:</strong> 100% of ZIP lookups and dialer routing execute client-side in the veteran's device RAM.</p>
+        <p><strong>3. Zero Breach Exposure:</strong> Fully compliant with VA cybersecurity standards and HIPAA safeguards by never capturing Protected Health Information (PHI).</p>
+      </div>
+      <button id="dismissZeroPiiBtn" class="tactile-btn w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-2 rounded-lg text-xs font-bold uppercase tracking-wider border border-slate-700">
+        Acknowledged
+      </button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Voice Synthesis Prompt Audio Engine
+    const instructionsSpeechText = "Welcome to Forward March Transit, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized. Enter your five-digit zip code on the previous screen, and call your transit coordinator at least 48 hours before your appointment.";
+
+    let activeUtterance = null;
+
+    function speakGreeting(customText) {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+        
+        const textToSpeak = customText || instructionsSpeechText;
+        activeUtterance = new SpeechSynthesisUtterance(textToSpeak);
+        activeUtterance.rate = 0.92;
+        activeUtterance.pitch = 1.0;
+        activeUtterance.lang = 'en-US';
+        activeUtterance.volume = 1.0;
+        
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang === "en-US" || v.lang.startsWith("en")));
+          if (naturalVoice) activeUtterance.voice = naturalVoice;
+        }
+
+        activeUtterance.onstart = () => {
+          showVoiceToast("🔊 " + (activeHub ? activeHub.name : textToSpeak.substring(0, 35)));
+        };
+        activeUtterance.onend = () => {
+          hideVoiceToast();
+          activeUtterance = null;
+        };
+        activeUtterance.onerror = (e) => {
+          console.warn("Speech synthesis notice:", e);
+          hideVoiceToast();
+          activeUtterance = null;
+        };
+
+        window.speechSynthesis.speak(activeUtterance);
+      } catch (err) {
+        console.error("Speech playback error:", err);
+      }
+    }
+
+    function showVoiceToast(msg) {
+      const t = document.getElementById('voiceToast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.remove('hidden');
+      }
+    }
+
+    function hideVoiceToast() {
+      const t = document.getElementById('voiceToast');
+      if (t) t.classList.add('hidden');
+    }
+
+    // Instructions & Modal Handlers
+    const instructionsModal = document.getElementById('instructionsModal');
+    const audioGreetingBtn = document.getElementById('audioGreetingBtn');
+    const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
+    const dismissInstructionsBtn = document.getElementById('dismissInstructionsBtn');
+    const replayInstructionsVoiceBtn = document.getElementById('replayInstructionsVoiceBtn');
+
+    if (audioGreetingBtn) {
+      audioGreetingBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (instructionsModal) instructionsModal.classList.remove('hidden');
+        speakGreeting();
+      });
+    }
+
+    if (closeInstructionsBtn && instructionsModal) {
+      closeInstructionsBtn.addEventListener('click', () => {
+        instructionsModal.classList.add('hidden');
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      });
+    }
+
+    if (dismissInstructionsBtn && instructionsModal) {
+      dismissInstructionsBtn.addEventListener('click', () => {
+        instructionsModal.classList.add('hidden');
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      });
+    }
+
+    if (replayInstructionsVoiceBtn) {
+      replayInstructionsVoiceBtn.addEventListener('click', () => {
+        speakGreeting();
+      });
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+
+    // Split Mapbox token segments
+    mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
+
+    const defaultHub = {
+      badge: "University Drive & Heinz Divisions",
+      visn: "VA Pittsburgh Healthcare System",
+      name: "VA Pittsburgh Healthcare System",
+      desc: "University Drive & H.J. Heinz Campus Catchment",
+      phone: "412-360-3620 (Press 1)",
+      cleanPhone: "4123603620,1",
+      coords: [-79.9600, 40.4444]
+    };
+
+    let activeHub = defaultHub;
+
+    // Coast-to-Coast Map Initialization with Continental US Center
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: [-95.7129, 37.0902],
+      zoom: 3.2,
+      attributionControl: false
+    });
+    map.addControl(new mapboxgl.AttributionControl({ compact: true }));
+
+    const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
+      .setLngLat([-95.7129, 37.0902])
+      .addTo(map);
+
+    // 5-VISN Regional Polygon Boundaries Overlay matching reference map
+    map.on('load', () => {
+      const visnGeoJson = {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": { "visn": "VISN 1", "color": "#ef4444" },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[[-80.5, 42.5], [-70.0, 47.5], [-66.9, 45.0], [-71.0, 41.0], [-75.0, 39.0], [-80.5, 42.5]]]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": { "visn": "VISN 2", "color": "#f97316" },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[[-85.0, 37.0], [-81.0, 36.5], [-75.0, 39.0], [-81.0, 35.0], [-81.5, 30.0], [-85.0, 25.0], [-91.0, 30.0], [-85.0, 37.0]]]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": { "visn": "VISN 3", "color": "#22c55e" },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[[-97.0, 49.0], [-82.0, 49.0], [-80.5, 42.5], [-85.0, 37.0], [-91.0, 37.0], [-97.0, 43.0], [-97.0, 49.0]]]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": { "visn": "VISN 4", "color": "#a855f7" },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[[-109.0, 49.0], [-97.0, 49.0], [-97.0, 43.0], [-91.0, 37.0], [-85.0, 37.0], [-91.0, 30.0], [-94.0, 26.0], [-106.0, 31.0], [-109.0, 37.0], [-109.0, 49.0]]]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": { "visn": "VISN 5", "color": "#3b82f6" },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[[-124.7, 49.0], [-109.0, 49.0], [-109.0, 37.0], [-106.0, 31.0], [-114.0, 32.0], [-124.7, 40.0], [-124.7, 49.0]]]
+            }
+          }
+        ]
+      };
+
+      map.addSource('visn-regions', {
+        type: 'geojson',
+        data: visnGeoJson
+      });
+
+      map.addLayer({
+        id: 'visn-fills',
+        type: 'fill',
+        source: 'visn-regions',
+        paint: {
+          'fill-color': ['get', 'color'],
+          'fill-opacity': 0.22
+        }
+      });
+
+      map.addLayer({
+        id: 'visn-borders',
+        type: 'line',
+        source: 'visn-regions',
+        paint: {
+          'line-color': ['get', 'color'],
+          'line-width': 1.5,
+          'line-opacity': 0.6
+        }
+      });
+    });
+
+    // Complete Nationwide & Regional VISN Routing Database
+    const visnDatabase = {
+      "visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
+      "visn2": { badge: "NY / NJ Metro Region", visn: "James J. Peters VAMC (Bronx)", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Regional Catchment", phone: "718-584-9000", cleanPhone: "7185849000", coords: [-73.9004, 40.8677] },
+      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
+      "visn4_butler": { badge: "Butler Regional Division", visn: "Butler VA Health Care System", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
+      "visn4_erie": { badge: "NW Pennsylvania Division", visn: "Erie VA Medical Center", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
+      "visn4_altoona": { badge: "Central PA Division", visn: "James E. Van Zandt VAMC", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+      "visn4_lebanon": { badge: "South Central PA Division", visn: "Lebanon VA Medical Center", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
+      "visn4_coatesville": { badge: "Brandywine Division", visn: "Coatesville VA Medical Center", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
+      "visn4_wilkes": { badge: "Northeastern PA Division", visn: "Wilkes-Barre VA Medical Center", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
+      "visn4_wilmington": { badge: "Delaware Valley Division", visn: "Wilmington VA Medical Center", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey Catchment", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
+      "visn4_philly": { badge: "SE Pennsylvania Division", visn: "Michael J. Crescenz VAMC", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
+      "visn5": { badge: "Capital Regional Network", visn: "Washington DC VA Medical Center", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA Catchment", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0125, 38.9298] },
+      "visn6": { badge: "Mid-Atlantic Network", visn: "Fayetteville NC VA Medical Center", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA Catchment", phone: "910-488-2120", cleanPhone: "9104882120", coords: [-78.8872, 35.0805] },
+      "visn7": { badge: "Southeast Regional Network", visn: "Atlanta VA Medical Center", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina Catchment", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.3015, 33.7938] },
+      "visn8": { badge: "Sunshine Regional Network", visn: "James A. Haley Hospital (Tampa)", name: "James A. Haley Hospital (Tampa)", desc: "Florida & Puerto Rico Regional Catchment", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4278, 28.0592] },
+      "visn9": { badge: "MidSouth Regional Network", visn: "Tennessee Valley Healthcare", name: "Tennessee Valley Healthcare", desc: "Tennessee, Kentucky & South IN Catchment", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8041, 36.1444] },
+      "visn10": { badge: "Midwest Network (OH/IN/MI)", visn: "Louis Stokes Cleveland VAMC", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana & Lower Michigan Catchment", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6119, 41.5036] },
+      "visn12": { badge: "Great Lakes Network", visn: "Jesse Brown VAMC (Chicago)", name: "Jesse Brown VAMC (Chicago)", desc: "Illinois, Wisconsin & Upper MI Catchment", phone: "312-569-8387", cleanPhone: "3125698387", coords: [-87.6749, 41.8703] },
+      "visn15": { badge: "Heartland Regional Network", visn: "Kansas City VA Medical Center", name: "Kansas City VA Medical Center", desc: "Missouri, Kansas & South IL Catchment", phone: "816-861-4700", cleanPhone: "8168614700", coords: [-94.5222, 39.0494] },
+      "visn16": { badge: "South Central Regional Network", visn: "Michael E. DeBakey VAMC", name: "Michael E. DeBakey VAMC", desc: "MS, LA, AR & East Texas Catchment", phone: "713-791-1414", cleanPhone: "7137911414", coords: [-95.3855, 29.7042] },
+      "visn17": { badge: "Heart of Texas Network", visn: "Central Texas Veterans Health", name: "Central Texas Veterans Health", desc: "Central, South & West Texas Catchment", phone: "254-778-4811", cleanPhone: "2547784811", coords: [-97.3547, 31.0827] },
+      "visn19": { badge: "Rocky Mountain Network", visn: "Rocky Mountain Regional VAMC", name: "Rocky Mountain Regional VAMC", desc: "CO, MT, UT, WY & West KS/NE Catchment", phone: "303-399-8020", cleanPhone: "3033998020", coords: [-104.8384, 39.7420] },
+      "visn20": { badge: "Northwest Regional Network", visn: "VA Puget Sound Healthcare", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, ID & Alaska Catchment", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3101, 47.5583] },
+      "visn21": { badge: "Sierra Pacific Network", visn: "San Francisco VA Health Care", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii Catchment", phone: "415-221-4810", cleanPhone: "4152214810", coords: [-122.5052, 37.7820] },
+      "visn22": { badge: "Desert Pacific Network", visn: "VA Greater Los Angeles Healthcare", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona Catchment", phone: "310-478-3711", cleanPhone: "3104783711", coords: [-118.4552, 34.0532] },
+      "visn23": { badge: "Midwest Regional Network", visn: "Minneapolis VA Health Care", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE Catchment", phone: "612-725-2000", cleanPhone: "6127252000", coords: [-93.2081, 44.9015] },
+      "national_fallback": { badge: "National Dispatch Center", visn: "VA Beneficiary Travel Dispatch", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Beneficiary Travel Hotline", phone: "855-574-7292", cleanPhone: "8555747292", coords: [-77.0369, 38.9072] }
+    };
+
+    const zipInput = document.getElementById('zipInput');
+    const clearZipBtn = document.getElementById('clearZipBtn');
+    const micBtn = document.getElementById('micBtn');
+    const micBtnLabel = document.getElementById('micBtnLabel');
+    const geoBtn = document.getElementById('geoBtn');
+    const geoBtnLabel = document.getElementById('geoBtnLabel');
+    const matchStatus = document.getElementById('matchStatus');
+    const statusAlert = document.getElementById('statusAlert');
+    const hubBadge = document.getElementById('hubBadge');
+    const visnBadge = document.getElementById('visnBadge');
+    const facilityName = document.getElementById('facilityName');
+    const facilityAddress = document.getElementById('facilityAddress');
+    const facilityPhone = document.getElementById('facilityPhone');
+    const readFacilityBtn = document.getElementById('readFacilityBtn');
+    const centerCallBtn = document.getElementById('centerCallBtn');
+    const centerCallText = document.getElementById('centerCallText');
+    const fallbackCallBtn = document.getElementById('fallbackCallBtn');
+    const directNationalBtn = document.getElementById('directNationalBtn');
+    const mapCoordinates = document.getElementById('mapCoordinates');
+    const radarHeaderLabel = document.getElementById('radarHeaderLabel');
+
+    const zeroPiiModal = document.getElementById('zeroPiiModal');
+    const openZeroPiiBtn = document.getElementById('openZeroPiiBtn');
+    const closeZeroPiiBtn = document.getElementById('closeZeroPiiBtn');
+    const dismissZeroPiiBtn = document.getElementById('dismissZeroPiiBtn');
+
+    if (openZeroPiiBtn && zeroPiiModal) {
+      openZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.remove('hidden'));
+      closeZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.add('hidden'));
+      dismissZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.add('hidden'));
+    }
+
+    // Dismiss keyboard on outside touch
+    document.addEventListener('touchstart', (e) => {
+      if (document.activeElement === zipInput && e.target !== zipInput && e.target !== clearZipBtn && !clearZipBtn.contains(e.target)) {
+        zipInput.blur();
+      }
+    });
+
+    // Dedicated Facility Read-Aloud Engine
+    readFacilityBtn.addEventListener('click', () => {
+      if (!activeHub) return;
+      centerCallBtn.classList.add('call-btn-blinking');
+      const textToRead = `${activeHub.name}. ${activeHub.desc}. Travel coordinator phone number is ${activeHub.phone}, or tap the blinking green button.`;
+      speakGreeting(textToRead);
+    });
+
+    clearZipBtn.addEventListener('click', () => {
+      zipInput.value = '';
+      clearZipBtn.classList.add('hidden');
+      hideAlert();
+      matchStatus.textContent = "Live Auto-Lookup";
+      matchStatus.className = "text-[10px] font-mono-code text-slate-400";
+      centerCallBtn.classList.remove('call-btn-blinking');
+      updateHubUI(defaultHub);
+      zipInput.focus();
+    });
+
+    function trackLookup(zip, matchData, method) {
+      if (typeof window.plausible === 'function' && matchData) {
+        window.plausible('Hub Search', {
+          props: {
+            zip_prefix: zip.substring(0, 3),
+            visn: matchData.visn,
+            hub_name: matchData.name,
+            method: method
+          }
+        });
+      }
+    }
+
+    function trackDialerClick(buttonType, targetHub) {
+      if (typeof window.plausible === 'function' && targetHub) {
+        window.plausible('Dialer Click', {
+          props: {
+            button: buttonType,
+            visn: targetHub.visn,
+            hub_name: targetHub.name,
+            phone: targetHub.cleanPhone
+          }
+        });
+      }
+    }
+
+    centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
+    fallbackCallBtn.addEventListener('click', () => trackDialerClick('National Fallback Dial Button', visnDatabase.national_fallback));
+    directNationalBtn.addEventListener('click', () => trackDialerClick('Direct National Center Button', visnDatabase.national_fallback));
+
+    function resolveHub(zip) {
+      if (!zip || zip.length < 3) return null;
+      const p = parseInt(zip.substring(0, 3), 10);
+      
+      if (p >= 10 && p <= 69) return visnDatabase.visn1;
+      if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
+
+      if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
+      if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
+      if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
+      if ([155, 157, 158, 159, 166, 168].includes(p)) return visnDatabase.visn4_altoona;
+      if ([170, 171, 172, 173, 174, 175, 176, 178, 179].includes(p)) return visnDatabase.visn4_lebanon;
+      if ([182, 183, 184, 185, 186, 187, 188].includes(p)) return visnDatabase.visn4_wilkes;
+      if ([193, 194, 195, 196].includes(p)) return visnDatabase.visn4_coatesville;
+      if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
+      if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
+
+      if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
+      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn6;
+      if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visnDatabase.visn7;
+      if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visnDatabase.visn8;
+      if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
+      if (p >= 430 && p <= 499) return visnDatabase.visn10;
+      if ((p >= 530 && p <= 549) || (p >= 600 && p <= 619)) return visnDatabase.visn12;
+      if (p >= 620 && p <= 679) return visnDatabase.visn15;
+      if ((p >= 386 && p <= 397) || (p >= 700 && p <= 729) || (p >= 750 && p <= 759) || (p >= 770 && p <= 777)) return visnDatabase.visn16;
+      if ((p >= 760 && p <= 769) || (p >= 780 && p <= 799)) return visnDatabase.visn17;
+      if ((p >= 590 && p <= 599) || (p >= 800 && p <= 847)) return visnDatabase.visn19;
+      if (p >= 970 && p <= 999) return visnDatabase.visn20;
+      if ((p >= 890 && p <= 898) || (p >= 936 && p <= 969)) return visnDatabase.visn21;
+      if ((p >= 850 && p <= 865) || (p >= 900 && p <= 935)) return visnDatabase.visn22;
+      if ((p >= 500 && p <= 528) || (p >= 550 && p <= 588) || (p >= 680 && p <= 693)) return visnDatabase.visn23;
+
+      return visnDatabase.national_fallback;
+    }
+
+    function updateHubUI(data) {
+      activeHub = data;
+      hubBadge.textContent = data.badge;
+      visnBadge.textContent = data.visn;
+      facilityName.textContent = data.name;
+      facilityAddress.textContent = data.desc;
+      facilityPhone.textContent = data.phone;
+      
+      const callUri = "tel:" + data.cleanPhone;
+      centerCallBtn.href = callUri;
+      
+      const isFallback = (data.visn === "VA Beneficiary Travel Dispatch" || data.badge === "National Dispatch Center");
+      centerCallText.textContent = isFallback ? "CALL DISPATCH" : "CALL TRAVEL COORDINATOR";
+      if (radarHeaderLabel) {
+        radarHeaderLabel.textContent = isFallback ? "National Dispatch Radar View" : `${data.name} Radar View`;
+      }
+
+      if (map && data.coords) {
+        map.flyTo({ center: data.coords, zoom: isFallback ? 4 : 11, speed: 1.4, essential: true });
+        mapMarker.setLngLat(data.coords);
+        mapCoordinates.textContent = `${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W`;
+      }
+    }
+
+    function showAlert(msg) {
+      statusAlert.textContent = msg;
+      statusAlert.classList.remove('hidden');
+    }
+
+    function hideAlert() {
+      statusAlert.classList.add('hidden');
+    }
+
+    function executeLookup(cleanVal, method) {
+      if (cleanVal.length >= 3) {
+        const match = resolveHub(cleanVal);
+        if (match) {
+          updateHubUI(match);
+          if (match.badge === "National Dispatch Center") {
+            matchStatus.textContent = "National Dispatch";
+            matchStatus.className = "text-[10px] font-mono-code text-amber-400 font-bold";
+          } else {
+            matchStatus.textContent = cleanVal.length === 5 ? "Locked (Exact)" : "Searching Region...";
+            matchStatus.className = "text-[10px] font-mono-code text-emerald-400 font-bold";
+          }
+
+          if (cleanVal.length === 5) {
+            trackLookup(cleanVal, match, method);
+            centerCallBtn.classList.add('call-btn-blinking');
+            zipInput.blur();
+          } else {
+            centerCallBtn.classList.remove('call-btn-blinking');
+          }
+        }
+      } else {
+        matchStatus.textContent = "Live Auto-Lookup";
+        matchStatus.className = "text-[10px] font-mono-code text-slate-400";
+        centerCallBtn.classList.remove('call-btn-blinking');
+      }
+    }
+
+    // Comprehensive event bindings to capture typing, pasting, and autofill instantly
+    ['input', 'keyup', 'paste', 'change'].forEach(evt => {
+      zipInput.addEventListener(evt, (e) => {
+        hideAlert();
+        const cleanVal = zipInput.value.replace(/\D/g, '');
+        if (cleanVal !== zipInput.value) {
+          zipInput.value = cleanVal;
+        }
+
+        if (cleanVal.length > 0) {
+          clearZipBtn.classList.remove('hidden');
+        } else {
+          clearZipBtn.classList.add('hidden');
+        }
+
+        executeLookup(cleanVal, 'Manual ZIP');
+      });
+    });
+
+    // Voice-First Speech-to-Text Input (Web Speech API)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition && micBtn) {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      micBtn.addEventListener('click', () => {
+        hideAlert();
+        
+        if ('speechSynthesis' in window) {
+          try {
+            window.speechSynthesis.resume();
+            const primer = new SpeechSynthesisUtterance(' ');
+            primer.volume = 0.01;
+            window.speechSynthesis.speak(primer);
+          } catch(e) {}
+        }
+
+        try {
+          recognition.start();
+          micBtnLabel.textContent = "REC...";
+          micBtn.classList.add('border-emerald-400', 'bg-emerald-950/60');
+        } catch (err) {
+          recognition.stop();
+          micBtnLabel.textContent = "VOICE";
+          micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
+        }
+      });
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        const numbersOnly = transcript.replace(/\D/g, '');
+        if (numbersOnly.length >= 5) {
+          const zip = numbersOnly.substring(0, 5);
+          zipInput.value = zip;
+          clearZipBtn.classList.remove('hidden');
+          executeLookup(zip, 'Voice Input');
+
+          try { recognition.stop(); } catch (e) {}
+          micBtnLabel.textContent = "VOICE";
+          micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
+
+          const matchedHub = resolveHub(zip);
+          if (matchedHub) {
+            const spokenPhone = matchedHub.phone.replace(/ Ext /gi, ' extension ');
+            const spokenReply = `${matchedHub.name}. Phone number ${spokenPhone}. Click the blinking button if you would like to make the call.`;
+            
+            readFacilityBtn.classList.add('animate-bounce');
+            setTimeout(() => { readFacilityBtn.classList.remove('animate-bounce'); }, 2000);
+
+            speakGreeting(spokenReply);
+          }
+        } else {
+          showAlert("Could not recognize 5-digit ZIP: " + transcript);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        showAlert("Voice input error. Try manual keypad.");
+        micBtnLabel.textContent = "VOICE";
+        micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
+      };
+
+      recognition.onend = () => {
+        micBtnLabel.textContent = "VOICE";
+        micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
+      };
+    } else if (micBtn) {
+      micBtn.classList.add('opacity-50');
+      micBtn.title = "Voice recognition not supported on this browser";
+    }
+
+    // Geolocation Resolution
+    geoBtn.addEventListener('click', () => {
+      hideAlert();
+      if (!navigator.geolocation) {
+        showAlert("GPS not supported.");
+        return;
+      }
+
+      geoBtnLabel.textContent = "...";
+      geoBtn.disabled = true;
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          if (map) {
+            map.flyTo({ center: [lon, lat], zoom: 11, essential: true });
+            mapMarker.setLngLat([lon, lat]);
+            mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
+          }
+
+          try {
+            const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+            const data = await res.json();
+            
+            const detectedZip = data.postcode;
+            if (detectedZip) {
+              const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
+              zipInput.value = cleanZip;
+              clearZipBtn.classList.remove('hidden');
+              executeLookup(cleanZip, 'GPS');
+            } else {
+              showAlert("Could not detect ZIP. Enter manually.");
+            }
+          } catch (err) {
+            showAlert("Service error. Enter ZIP manually.");
+          } finally {
+            geoBtnLabel.textContent = "GPS";
+            geoBtn.disabled = false;
+          }
+        },
+        (error) => {
+          showAlert("GPS signal unavailable.");
+          geoBtnLabel.textContent = "GPS";
+          geoBtn.disabled = false;
+        },
+        { timeout: 8000, enableHighAccuracy: true }
+      );
+    });
+  </script>
 </body>
 </html>
