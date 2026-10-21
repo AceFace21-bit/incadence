@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v4.5.0 (BUILD 4.5 // REV 66) - NO BLUE BAR EDITION        -->
+<!-- SEMVER VERSION: v4.6.0 (BUILD 4.6 // REV 67) - ROBUST LOOKUP EDITION       -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -114,7 +114,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v4.5.0</span>
+<span>v4.6.0</span>
 </div>
 <!-- Centered Platform Branding: BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -316,7 +316,8 @@ Acknowledged
 </div>
 <script>
 lucide.createIcons();
-// Voice Synthesis Prompt Audio Engine - strict cut-off after "or VA travel authorized."
+
+// Voice Synthesis Prompt Audio Engine
 const instructionsSpeechText = "Welcome to Beneficiary Travel and Attendance Optimization, brought to you by Terence Watkins. To qualify, you must be 30 percent or more service connected, or VA travel authorized.";
 let activeUtterance = null;
 function speakGreeting(customText) {
@@ -443,6 +444,7 @@ centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Cal
 
 // Split Mapbox token segments
 mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
+
 const defaultHub = {
 badge: "Pittsburgh, PA",
 visn: "Health Service Area (HSA) 1.3",
@@ -482,6 +484,7 @@ if (map) map.resize();
 }, 250);
 });
 
+// ROBUST ROUTING LOGIC: Checks 2-digit prefix against ["15", "16", "17", "18", "19"]
 function resolveHub(zip) {
 if (!zip || zip.length < 2) return null;
 const prefix2 = zip.substring(0, 2);
@@ -520,6 +523,7 @@ statusAlert.classList.remove('hidden');
 function hideAlert() {
 statusAlert.classList.add('hidden');
 }
+
 function executeLookup(cleanVal, method) {
 if (cleanVal.length >= 2) {
 const match = resolveHub(cleanVal);
@@ -542,8 +546,10 @@ centerCallBtn.classList.remove('call-btn-blinking');
 }
 }
 
-['input', 'keyup', 'paste', 'change'].forEach(evt => {
-zipInput.addEventListener(evt, (e) => {
+// ROBUST EVENT LISTENERS FOR MOBILE & DESKTOP TYPING
+const zipInput = document.getElementById('zipInput');
+['input', 'keyup', 'paste', 'compositionend'].forEach(evt => {
+zipInput.addEventListener(evt, () => {
 hideAlert();
 const cleanVal = zipInput.value.replace(/\D/g, '');
 if (cleanVal !== zipInput.value) {
@@ -558,6 +564,7 @@ executeLookup(cleanVal, 'Manual ZIP');
 });
 });
 
+// Voice-First Speech-to-Text Input (Web Speech API)
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition && micBtn) {
 const recognition = new SpeechRecognition();
@@ -621,6 +628,7 @@ micBtn.classList.add('opacity-50');
 micBtn.title = "Voice recognition not supported on this browser";
 }
 
+// Geolocation Resolution
 geoBtn.addEventListener('click', () => {
 hideAlert();
 if (!navigator.geolocation) {
