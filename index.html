@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.4 (REV 35) - MASTER PRODUCTION                      -->
+<!-- BUILD VERSION: BUILD 3.4 (REV 36) - MASTER PRODUCTION FIXED                 -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -123,7 +123,7 @@ Call 988 • 1
 <!-- Top Build Version Badge (Left) -->
 <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>BUILD 3.4 (REV 35)</span>
+<span>BUILD 3.4 (REV 36)</span>
 </div>
 <!-- Centered Platform Branding -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-2">
@@ -241,7 +241,6 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">37.0902° N, 95.7129° W</span>
 </div>
 <div class="relative w-full flex-1 bg-slate-950">
-<!-- Explicit CSS sizing for robust Mapbox initialization -->
 <div id="map" class="absolute inset-0 w-full h-full"></div>
 <!-- Center Radar Crosshair Reticle -->
 <div class="radar-crosshair w-24 h-24 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center z-10">
@@ -503,18 +502,16 @@ let activeHub = defaultHub;
 const map = new mapboxgl.Map({
 container: 'map',
 style: 'mapbox://styles/mapbox/dark-v11',
-center: continentalUSCenter, // Coast-to-coast continental US view
-zoom: 3.1,                   // National overview zoom level
+center: continentalUSCenter,
+zoom: 3.1,
 attributionControl: false
 });
 map.addControl(new mapboxgl.AttributionControl({ compact: true }));
 const mapMarker = new mapboxgl.Marker({ color: '#10b981' })
 .setLngLat(continentalUSCenter)
 .addTo(map);
-// Ensure map container renders properly upon load
 map.on('load', () => {
 map.resize();
-// Add 5-VISN regional colored boundaries matching the reference map
 map.addSource('visn-regions', {
 type: 'geojson',
 data: 'https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json'
@@ -527,11 +524,11 @@ paint: {
 'fill-color': [
 'match',
 ['get', 'name'],
-['Maine', 'New Hampshire', 'Vermont', 'Massachusetts', 'Rhode Island', 'Connecticut', 'New York', 'New Jersey', 'Pennsylvania', 'Delaware', 'Maryland', 'West Virginia'], '#991b1b', // VISN 1 (Red / Northeast)
-['Virginia', 'North Carolina', 'South Carolina', 'Georgia', 'Florida'], '#c2410c', // VISN 2 (Orange / Southeast)
-['Ohio', 'Indiana', 'Michigan', 'Wisconsin', 'Illinois', 'Minnesota', 'Iowa', 'North Dakota', 'South Dakota', 'Nebraska'], '#166534', // VISN 3 (Green / Midwest)
-['Texas', 'Oklahoma', 'Kansas', 'Missouri', 'Arkansas', 'Louisiana', 'Mississippi', 'Alabama', 'Kentucky', 'Tennessee'], '#6b21a8', // VISN 4 (Purple / Central & South)
-'#1e40af' // VISN 5 (Blue / West & Northwest)
+['Maine', 'New Hampshire', 'Vermont', 'Massachusetts', 'Rhode Island', 'Connecticut', 'New York', 'New Jersey', 'Pennsylvania', 'Delaware', 'Maryland', 'West Virginia'], '#991b1b',
+['Virginia', 'North Carolina', 'South Carolina', 'Georgia', 'Florida'], '#c2410c',
+['Ohio', 'Indiana', 'Michigan', 'Wisconsin', 'Illinois', 'Minnesota', 'Iowa', 'North Dakota', 'South Dakota', 'Nebraska'], '#166534',
+['Texas', 'Oklahoma', 'Kansas', 'Missouri', 'Arkansas', 'Louisiana', 'Mississippi', 'Alabama', 'Kentucky', 'Tennessee'], '#6b21a8',
+'#1e40af'
 ],
 'fill-opacity': 0.35
 }
@@ -547,9 +544,7 @@ paint: {
 }
 });
 });
-setTimeout(() => {
-map.resize();
-}, 300);
+setTimeout(() => { map.resize(); }, 300);
 // Complete Nationwide & Regional VISN Routing Database
 const visnDatabase = {
 "visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", coords: [-71.1097, 42.3149] },
@@ -584,7 +579,6 @@ const zipInput = document.getElementById('zipInput');
 const clearZipBtn = document.getElementById('clearZipBtn');
 const micBtn = document.getElementById('micBtn');
 const micBtnLabel = document.getElementById('micBtnLabel');
-const micIcon = document.getElementById('micIcon');
 const geoBtn = document.getElementById('geoBtn');
 const geoBtnLabel = document.getElementById('geoBtnLabel');
 const matchStatus = document.getElementById('matchStatus');
@@ -600,7 +594,6 @@ const centerCallText = document.getElementById('centerCallText');
 const fallbackCallBtn = document.getElementById('fallbackCallBtn');
 const mapCoordinates = document.getElementById('mapCoordinates');
 const radarHeaderLabel = document.getElementById('radarHeaderLabel');
-// Zero-PII Modal
 const zeroPiiModal = document.getElementById('zeroPiiModal');
 const openZeroPiiBtn = document.getElementById('openZeroPiiBtn');
 const closeZeroPiiBtn = document.getElementById('closeZeroPiiBtn');
@@ -610,13 +603,11 @@ openZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.remove('hi
 closeZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.add('hidden'));
 dismissZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.add('hidden'));
 }
-// Dismiss keyboard on outside touch
 document.addEventListener('touchstart', (e) => {
 if (document.activeElement === zipInput && e.target !== zipInput && e.target !== clearZipBtn && !clearZipBtn.contains(e.target)) {
 zipInput.blur();
 }
 });
-// Dedicated Facility Read-Aloud Engine
 readFacilityBtn.addEventListener('click', () => {
 if (!activeHub) return;
 centerCallBtn.classList.add('call-btn-blinking');
@@ -664,7 +655,6 @@ if (!zip || zip.length < 3) return null;
 const p = parseInt(zip.substring(0, 3), 10);
 if (p >= 10 && p <= 69) return visnDatabase.visn1;
 if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
-// VISN 4 Complete Resolution Table
 if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
 if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
 if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
@@ -718,7 +708,18 @@ statusAlert.classList.remove('hidden');
 function hideAlert() {
 statusAlert.classList.add('hidden');
 }
-function executeLookup(cleanVal, method) {
+function handleZipInput() {
+hideAlert();
+const rawVal = zipInput.value;
+const cleanVal = rawVal.replace(/\D/g, '').substring(0, 5);
+if (cleanVal !== rawVal) {
+zipInput.value = cleanVal;
+}
+if (cleanVal.length > 0) {
+clearZipBtn.classList.remove('hidden');
+} else {
+clearZipBtn.classList.add('hidden');
+}
 if (cleanVal.length >= 3) {
 const match = resolveHub(cleanVal);
 if (match) {
@@ -731,7 +732,7 @@ matchStatus.textContent = cleanVal.length === 5 ? "Locked (Exact)" : "Searching 
 matchStatus.className = "text-[10px] font-mono-code text-emerald-400 font-bold";
 }
 if (cleanVal.length === 5) {
-trackLookup(cleanVal, match, method);
+trackLookup(cleanVal, match, 'ZIP Input');
 centerCallBtn.classList.add('call-btn-blinking');
 zipInput.blur();
 } else {
@@ -744,18 +745,12 @@ matchStatus.className = "text-[10px] font-mono-code text-slate-400";
 centerCallBtn.classList.remove('call-btn-blinking');
 }
 }
-zipInput.addEventListener('input', (e) => {
-hideAlert();
-const cleanVal = e.target.value.replace(/\D/g, '');
-if (cleanVal !== e.target.value) {
-e.target.value = cleanVal;
-}
-if (cleanVal.length > 0) {
-clearZipBtn.classList.remove('hidden');
-} else {
-clearZipBtn.classList.add('hidden');
-}
-executeLookup(cleanVal, 'Manual ZIP');
+// Bulletproof Event Listeners for iOS Safari, Autofill, Paste, and Keypad Input
+zipInput.addEventListener('input', handleZipInput);
+zipInput.addEventListener('keyup', handleZipInput);
+zipInput.addEventListener('change', handleZipInput);
+zipInput.addEventListener('paste', () => {
+setTimeout(handleZipInput, 50);
 });
 // Voice-First Speech-to-Text Input (Web Speech API)
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -766,7 +761,6 @@ recognition.continuous = false;
 recognition.interimResults = false;
 micBtn.addEventListener('click', () => {
 hideAlert();
-// UNLOCK mobile audio channel during user gesture
 if ('speechSynthesis' in window) {
 try {
 window.speechSynthesis.resume();
@@ -792,7 +786,7 @@ if (numbersOnly.length >= 5) {
 const zip = numbersOnly.substring(0, 5);
 zipInput.value = zip;
 clearZipBtn.classList.remove('hidden');
-executeLookup(zip, 'Voice Input');
+handleZipInput();
 try { recognition.stop(); } catch (e) {}
 micBtnLabel.textContent = "VOICE";
 micBtn.classList.remove('border-emerald-400', 'bg-emerald-950/60');
@@ -847,7 +841,7 @@ if (detectedZip) {
 const cleanZip = detectedZip.replace(/\D/g, '').substring(0, 5);
 zipInput.value = cleanZip;
 clearZipBtn.classList.remove('hidden');
-executeLookup(cleanZip, 'GPS');
+handleZipInput();
 } else {
 showAlert("Could not detect ZIP. Enter manually.");
 }
