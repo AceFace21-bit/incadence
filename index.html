@@ -1,8 +1,8 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.8 (REV 57) - PRODUCTION MASTER                      -->
-<!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                         -->
-<!-- DATE: OCTOBER 20, 2026                                                     -->
+<!-- BUILD VERSION: BUILD 3.6 (REV 55) - PRODUCTION MASTER                      -->
+<!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
+<!-- DATE: OCTOBER 20, 2026                                                   -->
 <!-- ========================================================================== -->
 <!DOCTYPE html>
 <html lang="en">
@@ -181,7 +181,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.8 (REV 57)</span>
+        <span>BUILD 3.6 (REV 55)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -252,7 +252,14 @@
           <strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
         </button>
       </div>
-      
+      <button 
+        id="badgeRequirementBtn" 
+        type="button" 
+        class="text-[9px] font-mono-code text-emerald-400 hover:text-emerald-300 underline uppercase tracking-wider shrink-0 ml-1" 
+        title="View VHA travel authorization criteria"
+      >
+        VHA Details
+      </button>
     </div>
 
     <!-- Input Section: Keypad, Voice Recognition & GPS Geolocation -->
@@ -273,7 +280,7 @@
             pattern="[0-9]*" 
             inputmode="numeric" 
             maxlength="5" 
-            placeholder="e.g. 15120, 60601" 
+            placeholder="e.g. 15120, 606" 
             class="tactile-btn w-full bg-slate-950 border-2 border-slate-700 focus:border-emerald-400 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-100 placeholder-slate-500 font-mono-code font-bold transition outline-none"
           >
           <button 
@@ -323,7 +330,7 @@
         <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">39.8283° N, 98.5795° W</span>
       </div>
       
-      <div class="relative w-full flex-1 bg-slate-950" style="min-height: 150px;">
+      <div class="relative w-full flex-1 bg-slate-950" style="min-h-0;">
         <!-- Leaflet Map Container -->
         <div id="map" class="absolute inset-0 w-full h-full z-0" style="height: 100%; width: 100%;"></div>
 
@@ -384,33 +391,19 @@
       </div>
     </section>
 
-    <!-- Linear Secondary Actions -->
-    <div class="grid grid-cols-2 gap-2 shrink-0">
-      <!-- National Hotline Fallback Bypass -->
+    <!-- Linear Secondary Action (Full Width National Dispatcher Fallback) -->
+    <div class="w-full shrink-0">
       <a 
         id="fallbackCallBtn" 
         href="tel:8555747292" 
         class="plausible-event-name=Dialer+Click tactile-btn bg-slate-900 border-2 border-slate-800 hover:border-emerald-500/50 p-2.5 rounded-lg flex items-center justify-between transition"
       >
         <div class="truncate">
-          <div class="text-[10px] font-extrabold uppercase text-slate-200">National Dispatch</div>
+          <div class="text-[10px] font-extrabold uppercase text-slate-200">National Dispatch Center</div>
           <div class="text-[10px] font-mono-code text-emerald-400 font-bold">855-574-7292</div>
         </div>
         <i data-lucide="phone-forwarded" class="w-4 h-4 text-emerald-400 shrink-0 ml-1"></i>
       </a>
-
-      <!-- Step-by-Step Live Call Demo Script Trigger -->
-      <button 
-        id="openScriptBtn" 
-        type="button" 
-        class="plausible-event-name=Call+Script+Opened tactile-btn bg-slate-900 border-2 border-slate-800 hover:border-emerald-500/50 p-2.5 rounded-lg flex items-center justify-between transition text-left"
-      >
-        <div>
-          <div class="text-[10px] font-extrabold uppercase text-slate-200">Call Script Demo</div>
-          <div class="text-[10px] text-slate-400 font-mono-code">Step-By-Step Dialogue</div>
-        </div>
-        <i data-lucide="phone-call" class="w-4 h-4 text-emerald-400 shrink-0 ml-1"></i>
-      </button>
     </div>
 
   </main>
@@ -424,91 +417,6 @@
       Independent veteran access platform. Not an official VA agency portal. Beneficiary travel subject to 38 CFR Part 70.
     </div>
   </footer>
-
-  <!-- Step-by-Step Call Dialogue Modal (Highest z-index 99999 + Full Solid Backdrop) -->
-  <div id="scriptModal" class="hidden fixed inset-0 z-[99999] bg-slate-950/95 backdrop-blur-md p-3 flex items-center justify-center">
-    <div class="bg-slate-900 border-2 border-slate-800 rounded-xl max-w-sm w-full p-3.5 flex flex-col max-h-[90dvh] shadow-2xl relative z-10">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 shrink-0">
-        <div class="flex items-center space-x-2">
-          <i data-lucide="phone-outgoing" class="w-5 h-5 text-emerald-400"></i>
-          <div>
-            <div class="flex items-center space-x-1.5">
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-100 block leading-tight">Live Call &amp; Text Demo</span>
-              <span class="px-1.5 py-0.5 rounded text-[8px] font-mono-code bg-emerald-950 border border-emerald-500/40 text-emerald-300 font-bold uppercase">In Cadence Platform</span>
-            </div>
-            <span class="text-[9px] text-slate-400 font-mono-code block mt-0.5">Mom (Lisa / VA Travel) &amp; Terence (Veteran) // Standard Booking Script</span>
-          </div>
-        </div>
-        <button id="closeScriptBtn" class="text-slate-400 hover:text-slate-100 p-1.5" aria-label="Close Call Script">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <!-- Dialogue Body Matching Exactly to Executive Brief & Pilot Proposal -->
-      <div class="space-y-2 overflow-y-auto pr-1 my-2 text-[12px] modal-scroll">
-        
-        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
-          &ldquo;VA Travel, Lisa speaking, how may I help you?&rdquo;
-        </div>
-
-        <div class="p-2.5 rounded bg-blue-950/40 border-l-4 border-blue-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">TERENCE (VETERAN):</span>
-          &ldquo;Hi Lisa, I have an upcoming doctor appointment at the VA clinic next Tuesday at 9:00 AM, and I need to schedule a ride.&rdquo;
-        </div>
-
-        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
-          &ldquo;Sure, can I get your full name and your last four or your birth date?&rdquo;
-        </div>
-
-        <div class="p-2.5 rounded bg-blue-950/40 border-l-4 border-blue-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">TERENCE (VETERAN):</span>
-          &ldquo;Terence Watkins, my last four is 1-2-3-4 and my date of birth is 3rd December 1982.&rdquo;
-        </div>
-
-        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
-          &ldquo;Got you right here. Pickup is at your home of record address at 1234 VA Drive Lane, Anytown, Any State, 00000. Is that address correct?&rdquo;
-        </div>
-
-        <div class="p-2.5 rounded bg-blue-950/40 border-l-4 border-blue-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">TERENCE (VETERAN):</span>
-          &ldquo;Yes, that&rsquo;s correct.&rdquo;
-        </div>
-
-        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
-          &ldquo;Perfect. You called with plenty of time&mdash;just remember, you always need to call at least 48 hours before your appointment time, because rides cannot be booked the morning of. You are all set for a round trip.&rdquo;
-        </div>
-
-        <div class="p-2.5 rounded bg-blue-950/40 border-l-4 border-blue-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">TERENCE (VETERAN):</span>
-          &ldquo;Understood, 48 hours in advance. How does the pickup work on Tuesday?&rdquo;
-        </div>
-
-        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
-          &ldquo;You&rsquo;ll receive an automated text either the evening before or right after midnight. You don&rsquo;t have to type anything into the Uber app&mdash;just reply &lsquo;1&rsquo; whenever you are ready for pickup going to your appointment, and reply &lsquo;2&rsquo; when your visit is finished to head back home.&rdquo;
-        </div>
-
-        <div class="p-2.5 rounded bg-blue-950/40 border-l-4 border-blue-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-blue-400 block mb-0.5">TERENCE (VETERAN):</span>
-          &ldquo;That makes it completely painless. Thank you so much, Lisa!&rdquo;
-        </div>
-
-        <div class="p-2.5 rounded bg-pink-950/40 border-l-4 border-pink-500 text-slate-200">
-          <span class="text-[10px] font-mono-code font-bold uppercase tracking-wider text-pink-400 block mb-0.5">MOM (VA TRAVEL):</span>
-          &ldquo;You&rsquo;re all set! Have a wonderful day!&rdquo;
-        </div>
-
-      </div>
-
-      <button id="modalDismissBtn" class="tactile-btn w-full shrink-0 bg-slate-800 hover:bg-slate-700 text-slate-200 py-2 rounded-lg text-xs font-bold uppercase tracking-wider border border-slate-700">
-        Close Script
-      </button>
-    </div>
-  </div>
 
   <!-- Detailed VA Travel Qualification & Eligibility Modal (Highest z-index 99999) -->
   <div id="eligibilityDetailModal" class="hidden fixed inset-0 z-[99999] bg-slate-950/95 backdrop-blur-md p-3 flex items-center justify-center">
@@ -739,7 +647,7 @@
     const eligibilityDetailModal = document.getElementById('eligibilityDetailModal');
     const infoRequirementBtn = document.getElementById('infoRequirementBtn');
     const textRequirementBtn = document.getElementById('textRequirementBtn');
-    
+    const badgeRequirementBtn = document.getElementById('badgeRequirementBtn');
     const closeEligibilityDetailBtn = document.getElementById('closeEligibilityDetailBtn');
     const dismissEligibilityDetailBtn = document.getElementById('dismissEligibilityDetailBtn');
 
@@ -754,7 +662,7 @@
 
     if (infoRequirementBtn) infoRequirementBtn.addEventListener('click', openEligibilityModal);
     if (textRequirementBtn) textRequirementBtn.addEventListener('click', openEligibilityModal);
-    
+    if (badgeRequirementBtn) badgeRequirementBtn.addEventListener('click', openEligibilityModal);
 
     if (closeEligibilityDetailBtn && eligibilityDetailModal) {
       closeEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
@@ -843,36 +751,56 @@
       zIndex: 350
     });
 
-    // 3. 5-VISN COLOR-CODED REGIONS OVERLAY (VISN 1-5 Official VA 5-District Color Palette)
-    const visn5GeoColors = {
-      "VISN 1": "#ef4444",
-      "VISN 2": "#f97316",
-      "VISN 3": "#22c55e",
-      "VISN 4": "#a855f7",
-      "VISN 5": "#3b82f6"
-    };
-
-    const stateToVisn5Map = {
-      "CT": "VISN 1", "DC": "VISN 1", "DE": "VISN 1", "ME": "VISN 1", "MD": "VISN 1", "MA": "VISN 1", "NH": "VISN 1", "NJ": "VISN 1", "NY": "VISN 1", "PA": "VISN 1", "RI": "VISN 1", "VT": "VISN 1", "WV": "VISN 1",
-      "AL": "VISN 2", "FL": "VISN 2", "GA": "VISN 2", "NC": "VISN 2", "PR": "VISN 2", "SC": "VISN 2", "VI": "VISN 2", "VA": "VISN 2",
-      "IN": "VISN 3", "IL": "VISN 3", "IA": "VISN 3", "KY": "VISN 3", "MI": "VISN 3", "MN": "VISN 3", "ND": "VISN 3", "OH": "VISN 3", "SD": "VISN 3", "TN": "VISN 3", "WI": "VISN 3",
-      "AR": "VISN 4", "CO": "VISN 4", "KS": "VISN 4", "LA": "VISN 4", "MS": "VISN 4", "MO": "VISN 4", "NE": "VISN 4", "TX": "VISN 4", "OK": "VISN 4", "UT": "VISN 4", "WY": "VISN 4",
-      "AK": "VISN 5", "AS": "VISN 5", "AZ": "VISN 5", "CA": "VISN 5", "GU": "VISN 5", "HI": "VISN 5", "ID": "VISN 5", "MT": "VISN 5", "NV": "VISN 5", "NM": "VISN 5", "MP": "VISN 5", "OR": "VISN 5", "WA": "VISN 5"
-    };
-
-    let visn5GeoJsonLayer = null;
+    // 3. VECTOR STATE BOUNDARIES: Precision High-Resolution GeoJSON (Clean Tactical Red #ef4444)
+    let stateBordersLayer = null;
     const stateLabelsGroup = L.layerGroup().addTo(map);
 
     const stateLabels = [
-      { name: "WA", lat: 47.4, lng: -120.5 }, { name: "OR", lat: 43.8, lng: -120.6 }, { name: "CA", lat: 36.8, lng: -119.4 }, { name: "NV", lat: 38.8, lng: -116.4 }, { name: "ID", lat: 44.1, lng: -114.7 },
-      { name: "MT", lat: 46.9, lng: -110.5 }, { name: "WY", lat: 43.1, lng: -107.6 }, { name: "UT", lat: 39.3, lng: -111.1 }, { name: "AZ", lat: 34.0, lng: -111.1 }, { name: "CO", lat: 39.0, lng: -105.8 },
-      { name: "NM", lat: 34.5, lng: -105.9 }, { name: "ND", lat: 47.5, lng: -99.8 }, { name: "SD", lat: 44.3, lng: -99.9 }, { name: "NE", lat: 41.5, lng: -99.8 }, { name: "KS", lat: 38.5, lng: -98.3 },
-      { name: "OK", lat: 35.5, lng: -97.5 }, { name: "TX", lat: 31.0, lng: -99.0 }, { name: "MN", lat: 46.7, lng: -94.7 }, { name: "IA", lat: 42.0, lng: -93.2 }, { name: "MO", lat: 38.6, lng: -92.2 },
-      { name: "AR", lat: 34.9, lng: -92.4 }, { name: "LA", lat: 31.2, lng: -91.9 }, { name: "WI", lat: 43.8, lng: -89.8 }, { name: "IL", lat: 40.6, lng: -89.4 }, { name: "MI", lat: 44.3, lng: -85.6 },
-      { name: "IN", lat: 40.3, lng: -86.1 }, { name: "KY", lat: 37.8, lng: -84.3 }, { name: "TN", lat: 35.5, lng: -86.6 }, { name: "MS", lat: 32.3, lng: -89.4 }, { name: "AL", lat: 32.3, lng: -86.9 },
-      { name: "GA", lat: 32.2, lng: -83.4 }, { name: "FL", lat: 28.3, lng: -81.5 }, { name: "SC", lat: 34.0, lng: -81.0 }, { name: "NC", lat: 35.8, lng: -79.0 }, { name: "VA", lat: 37.4, lng: -78.7 },
-      { name: "WV", lat: 38.6, lng: -80.4 }, { name: "OH", lat: 40.4, lng: -82.9 }, { name: "PA", lat: 41.2, lng: -77.2 }, { name: "NY", lat: 43.3, lng: -74.2 }, { name: "ME", lat: 45.2, lng: -69.4 },
-      { name: "VT", lat: 44.6, lng: -72.6 }, { name: "NH", lat: 43.2, lng: -71.6 }, { name: "MA", lat: 42.4, lng: -71.4 }, { name: "CT", lat: 41.6, lng: -72.7 }, { name: "NJ", lat: 40.1, lng: -74.5 },
+      { name: "WA", lat: 47.4, lng: -120.5 },
+      { name: "OR", lat: 43.8, lng: -120.6 },
+      { name: "CA", lat: 36.8, lng: -119.4 },
+      { name: "NV", lat: 38.8, lng: -116.4 },
+      { name: "ID", lat: 44.1, lng: -114.7 },
+      { name: "MT", lat: 46.9, lng: -110.5 },
+      { name: "WY", lat: 43.1, lng: -107.6 },
+      { name: "UT", lat: 39.3, lng: -111.1 },
+      { name: "AZ", lat: 34.0, lng: -111.1 },
+      { name: "CO", lat: 39.0, lng: -105.8 },
+      { name: "NM", lat: 34.5, lng: -105.9 },
+      { name: "ND", lat: 47.5, lng: -99.8 },
+      { name: "SD", lat: 44.3, lng: -99.9 },
+      { name: "NE", lat: 41.5, lng: -99.8 },
+      { name: "KS", lat: 38.5, lng: -98.3 },
+      { name: "OK", lat: 35.5, lng: -97.5 },
+      { name: "TX", lat: 31.0, lng: -99.0 },
+      { name: "MN", lat: 46.7, lng: -94.7 },
+      { name: "IA", lat: 42.0, lng: -93.2 },
+      { name: "MO", lat: 38.6, lng: -92.2 },
+      { name: "AR", lat: 34.9, lng: -92.4 },
+      { name: "LA", lat: 31.2, lng: -91.9 },
+      { name: "WI", lat: 43.8, lng: -89.8 },
+      { name: "IL", lat: 40.6, lng: -89.4 },
+      { name: "MI", lat: 44.3, lng: -85.6 },
+      { name: "IN", lat: 40.3, lng: -86.1 },
+      { name: "KY", lat: 37.8, lng: -84.3 },
+      { name: "TN", lat: 35.5, lng: -86.6 },
+      { name: "MS", lat: 32.3, lng: -89.4 },
+      { name: "AL", lat: 32.3, lng: -86.9 },
+      { name: "GA", lat: 32.2, lng: -83.4 },
+      { name: "FL", lat: 28.3, lng: -81.5 },
+      { name: "SC", lat: 34.0, lng: -81.0 },
+      { name: "NC", lat: 35.8, lng: -79.0 },
+      { name: "VA", lat: 37.4, lng: -78.7 },
+      { name: "WV", lat: 38.6, lng: -80.4 },
+      { name: "OH", lat: 40.4, lng: -82.9 },
+      { name: "PA", lat: 41.2, lng: -77.2 },
+      { name: "NY", lat: 43.3, lng: -74.2 },
+      { name: "ME", lat: 45.2, lng: -69.4 },
+      { name: "VT", lat: 44.6, lng: -72.6 },
+      { name: "NH", lat: 43.2, lng: -71.6 },
+      { name: "MA", lat: 42.4, lng: -71.4 },
+      { name: "CT", lat: 41.6, lng: -72.7 },
+      { name: "NJ", lat: 40.1, lng: -74.5 },
       { name: "MD", lat: 39.0, lng: -76.6 }
     ];
 
@@ -886,40 +814,36 @@
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
 
+    // High-Resolution Precision US State Boundaries in Tactical Red (#ef4444)
     fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
       .then(res => res.json())
       .then(data => {
-        visn5GeoJsonLayer = L.geoJSON(data, {
-          style: (feature) => {
-            const props = feature.properties || {};
-            const stName = props.NAME || props.STUSPS || props.abbreviation || "";
-            const visnKey = stateToVisn5Map[stName] || "VISN 4";
-            const col = visn5GeoColors[visnKey] || "#a855f7";
-            return {
-              color: '#ffffff',
-              weight: 1.2,
-              opacity: 0.8,
-              fillColor: col,
-              fillOpacity: 0.55
-            };
+        stateBordersLayer = L.geoJSON(data, {
+          style: {
+            color: '#ef4444',
+            weight: 1.8,
+            opacity: 0.95,
+            fillOpacity: 0
           }
         }).addTo(map);
       })
       .catch(() => {});
 
+    // Dynamic zoom handler: switches seamlessly between Continental State Radar and Local Streets
     map.on('zoomend', () => {
       const z = map.getZoom();
       if (z >= 12) {
         if (!map.hasLayer(streetOverlay)) map.addLayer(streetOverlay);
-        if (visn5GeoJsonLayer && map.hasLayer(visn5GeoJsonLayer)) map.removeLayer(visn5GeoJsonLayer);
+        if (stateBordersLayer && map.hasLayer(stateBordersLayer)) map.removeLayer(stateBordersLayer);
         if (map.hasLayer(stateLabelsGroup)) map.removeLayer(stateLabelsGroup);
       } else {
         if (map.hasLayer(streetOverlay)) map.removeLayer(streetOverlay);
-        if (visn5GeoJsonLayer && !map.hasLayer(visn5GeoJsonLayer)) map.addLayer(visn5GeoJsonLayer);
+        if (stateBordersLayer && !map.hasLayer(stateBordersLayer)) map.addLayer(stateBordersLayer);
         if (!map.hasLayer(stateLabelsGroup)) map.addLayer(stateLabelsGroup);
       }
     });
 
+    // Custom Glowing Green Radar Marker Icon
     const radarIcon = L.divIcon({
       className: 'radar-marker-pin',
       html: '<div style="width: 14px; height: 14px; background: #10b981; border: 2px solid #ffffff; border-radius: 50%; box-shadow: 0 0 12px #10b981;"></div>',
@@ -929,6 +853,7 @@
 
     const marker = L.marker([US_CENTER_LAT, US_CENTER_LNG], { icon: radarIcon }).addTo(map);
 
+    // Dynamic Tactical VA Destination Label Callout (Binds to Marker)
     function updateMarkerCallout(hub) {
       if (!hub || !hub.name) return;
       const popupHtml = `
@@ -951,33 +876,20 @@
     setTimeout(() => { map.invalidateSize(); }, 600);
     window.addEventListener('resize', () => { map.invalidateSize(); });
 
+    // Complete Nationwide & Regional VISN Routing Database (5 VISNs)
     const visnDatabase = {
-      "visn1": { badge: "New England Region", visn: "VA Boston Healthcare System", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
-      "visn2": { badge: "NY / NJ Metro Region", visn: "James J. Peters VAMC (Bronx)", name: "James J. Peters VAMC (Bronx)", desc: "New York State & North NJ Regional Catchment", phone: "718-584-9000", cleanPhone: "7185849000", lat: 40.8677, lng: -73.9004 },
-      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
-      "visn4_butler": { badge: "Butler Regional Division", visn: "Butler VA Health Care System", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", lat: 40.8687, lng: -79.9554 },
-      "visn4_erie": { badge: "NW Pennsylvania Division", visn: "Erie VA Medical Center", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", lat: 42.1065, lng: -80.0526 },
-      "visn4_altoona": { badge: "Central PA Division", visn: "James E. Van Zandt VAMC", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", lat: 40.4996, lng: -78.3846 },
-      "visn4_lebanon": { badge: "South Central PA Division", visn: "Lebanon VA Medical Center", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", lat: 40.3106, lng: -76.4024 },
-      "visn4_coatesville": { badge: "Brandywine Division", visn: "Coatesville VA Medical Center", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", lat: 40.0039, lng: -75.8078 },
-      "visn4_wilkes": { badge: "Northeastern PA Division", visn: "Wilkes-Barre VA Medical Center", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", lat: 41.2523, lng: -75.8457 },
-      "visn4_wilmington": { badge: "Delaware Valley Division", visn: "Wilmington VA Medical Center", name: "Wilmington VA Medical Center", desc: "Delaware & Southern New Jersey Catchment", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", lat: 39.7423, lng: -75.6022 },
-      "visn4_philly": { badge: "SE Pennsylvania Division", visn: "Michael J. Crescenz VAMC", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", lat: 39.9482, lng: -75.1979 },
-      "visn5": { badge: "Capital Regional Network", visn: "Washington DC VA Medical Center", name: "Washington DC VA Medical Center", desc: "Washington D.C., MD & North VA Catchment", phone: "202-745-8000", cleanPhone: "2027458000", lat: 38.9298, lng: -77.0125 },
-      "visn6": { badge: "Mid-Atlantic Network", visn: "Fayetteville NC VA Medical Center", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & Central/South VA Catchment", phone: "910-488-2120", cleanPhone: "9104882120", lat: 35.0805, lng: -78.8872 },
-      "visn7": { badge: "Southeast Regional Network", visn: "Atlanta VA Medical Center", name: "Atlanta VA Medical Center", desc: "Georgia, Alabama & South Carolina Catchment", phone: "404-321-6111", cleanPhone: "4043216111", lat: 33.7938, lng: -84.3015 },
-      "visn8": { badge: "Sunshine Regional Network", visn: "James A. Haley Hospital (Tampa)", name: "James A. Haley Hospital (Tampa)", desc: "Florida & Puerto Rico Regional Catchment", phone: "813-972-2000", cleanPhone: "8139722000", lat: 28.0592, lng: -82.4278 },
-      "visn9": { badge: "MidSouth Regional Network", visn: "Tennessee Valley Healthcare", name: "Tennessee Valley Healthcare", desc: "Tennessee, Kentucky & South IN Catchment", phone: "615-327-4751", cleanPhone: "6153274751", lat: 36.1444, lng: -86.8041 },
-      "visn10": { badge: "Midwest Network (OH/IN/MI)", visn: "Louis Stokes Cleveland VAMC", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana & Lower Michigan Catchment", phone: "216-791-3800", cleanPhone: "2167913800", lat: 41.5036, lng: -81.6119 },
-      "visn12": { badge: "Great Lakes Network", visn: "Jesse Brown VAMC (Chicago)", name: "Jesse Brown VAMC (Chicago)", desc: "Illinois, Wisconsin & Upper MI Catchment", phone: "312-569-8387", cleanPhone: "3125698387", lat: 41.8703, lng: -87.6749 },
-      "visn15": { badge: "Heartland Regional Network", visn: "Kansas City VA Medical Center", name: "Kansas City VA Medical Center", desc: "Missouri, Kansas & South IL Catchment", phone: "816-861-4700", cleanPhone: "8168614700", lat: 39.0494, lng: -94.5222 },
-      "visn16": { badge: "South Central Regional Network", visn: "Michael E. DeBakey VAMC", name: "Michael E. DeBakey VAMC", desc: "MS, LA, AR & East Texas Catchment", phone: "713-791-1414", cleanPhone: "7137911414", lat: 29.7042, lng: -95.3855 },
-      "visn17": { badge: "Heart of Texas Network", visn: "Central Texas Veterans Health", name: "Central Texas Veterans Health", desc: "Central, South & West Texas Catchment", phone: "254-778-4811", cleanPhone: "2547784811", lat: 31.0827, lng: -97.3547 },
-      "visn19": { badge: "Rocky Mountain Network", visn: "Rocky Mountain Regional VAMC", name: "Rocky Mountain Regional VAMC", desc: "CO, MT, UT, WY & West KS/NE Catchment", phone: "303-399-8020", cleanPhone: "3033998020", lat: 39.7420, lng: -104.8384 },
-      "visn20": { badge: "Northwest Regional Network", visn: "VA Puget Sound Healthcare", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, ID & Alaska Catchment", phone: "206-762-1010", cleanPhone: "2067621010", lat: 47.5583, lng: -122.3101 },
-      "visn21": { badge: "Sierra Pacific Network", visn: "San Francisco VA Health Care", name: "San Francisco VA Health Care", desc: "Northern California, NV & Hawaii Catchment", phone: "415-221-4810", cleanPhone: "4152214810", lat: 37.7820, lng: -122.5052 },
-      "visn22": { badge: "Desert Pacific Network", visn: "VA Greater Los Angeles Healthcare", name: "VA Greater Los Angeles Healthcare", desc: "Southern California & Arizona Catchment", phone: "310-478-3711", cleanPhone: "3104783711", lat: 34.0532, lng: -118.4552 },
-      "visn23": { badge: "Midwest Regional Network", visn: "Minneapolis VA Health Care", name: "Minneapolis VA Health Care", desc: "MN, IA, ND, SD, NE Catchment", phone: "612-725-2000", cleanPhone: "6127252000", lat: 44.9015, lng: -93.2081 },
+      "visn1": { badge: "New England Region", visn: "VISN 1: New England", name: "VA Boston Healthcare System", desc: "MA, ME, NH, VT, RI, CT Regional Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
+      "visn2": { badge: "Mid-Atlantic Region", visn: "VISN 2: Mid-Atlantic", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & VA Regional Catchment", phone: "910-488-2120", cleanPhone: "9104882120", lat: 35.0805, lng: -78.8872 },
+      "visn3": { badge: "Midwest Region", visn: "VISN 3: Midwest", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana, Michigan & IL Catchment", phone: "216-791-3800", cleanPhone: "2167913800", lat: 41.5036, lng: -81.6119 },
+      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VISN 4: Continental / Allegheny", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
+      "visn4_butler": { badge: "Butler Regional Division", visn: "VISN 4: Continental / Allegheny", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", lat: 40.8687, lng: -79.9554 },
+      "visn4_erie": { badge: "NW Pennsylvania Division", visn: "VISN 4: Continental / Allegheny", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", lat: 42.1065, lng: -80.0526 },
+      "visn4_altoona": { badge: "Central PA Division", visn: "VISN 4: Continental / Allegheny", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", lat: 40.4996, lng: -78.3846 },
+      "visn4_lebanon": { badge: "South Central PA Division", visn: "VISN 4: Continental / Allegheny", name: "Lebanon VA Medical Center", desc: "Dauphin, Lancaster & York Catchment", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", lat: 40.3106, lng: -76.4024 },
+      "visn4_coatesville": { badge: "Brandywine Division", visn: "VISN 4: Continental / Allegheny", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", lat: 40.0039, lng: -75.8078 },
+      "visn4_wilkes": { badge: "Northeastern PA Division", visn: "VISN 4: Continental / Allegheny", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", lat: 41.2523, lng: -75.8457 },
+      "visn4_philly": { badge: "SE Pennsylvania Division", visn: "VISN 4: Continental / Allegheny", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", lat: 39.9482, lng: -75.1979 },
+      "visn5": { badge: "Pacific & West Region", visn: "VISN 5: Pacific & West", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, California & West Catchment", phone: "206-762-1010", cleanPhone: "2067621010", lat: 47.5583, lng: -122.3101 },
       "national_fallback": { badge: "National Dispatch Center", visn: "VA Beneficiary Travel Dispatch", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Beneficiary Travel Hotline", phone: "855-574-7292", cleanPhone: "8555747292", lat: 38.9072, lng: -77.0369 }
     };
 
@@ -1002,11 +914,7 @@
     const mapCoordinates = document.getElementById('mapCoordinates');
     const radarHeaderLabel = document.getElementById('radarHeaderLabel');
 
-    const scriptModal = document.getElementById('scriptModal');
-    const openScriptBtn = document.getElementById('openScriptBtn');
-    const closeScriptBtn = document.getElementById('closeScriptBtn');
-    const modalDismissBtn = document.getElementById('modalDismissBtn');
-
+    // Modals
     const zeroPiiModal = document.getElementById('zeroPiiModal');
     const openZeroPiiBtn = document.getElementById('openZeroPiiBtn');
     const closeZeroPiiBtn = document.getElementById('closeZeroPiiBtn');
@@ -1018,27 +926,14 @@
       dismissZeroPiiBtn.addEventListener('click', () => zeroPiiModal.classList.add('hidden'));
     }
 
-    openScriptBtn.addEventListener('click', () => {
-      scriptModal.classList.remove('hidden');
-      if (typeof window.plausible === 'function') {
-        window.plausible('Call Script Opened', {
-          props: {
-            current_hub: activeHub ? activeHub.name : 'VA Pittsburgh Healthcare System',
-            visn: activeHub ? activeHub.visn : 'VISN 4'
-          }
-        });
-      }
-    });
-
-    closeScriptBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
-    modalDismissBtn.addEventListener('click', () => scriptModal.classList.add('hidden'));
-
+    // Dismiss keyboard on outside touch
     document.addEventListener('touchstart', (e) => {
       if (document.activeElement === zipInput && e.target !== zipInput && e.target !== clearZipBtn && !clearZipBtn.contains(e.target)) {
         zipInput.blur();
       }
     });
 
+    // Dedicated Facility Read-Aloud Engine
     readFacilityBtn.addEventListener('click', () => {
       if (!activeHub) return;
       centerCallBtn.classList.add('call-btn-blinking');
@@ -1064,13 +959,49 @@
       zipInput.focus();
     });
 
+    function trackLookup(zip, matchData, method) {
+      if (typeof window.plausible === 'function' && matchData) {
+        window.plausible('Hub Search', {
+          props: {
+            zip_prefix: zip.substring(0, 3),
+            visn: matchData.visn,
+            hub_name: matchData.name,
+            method: method
+          }
+        });
+      }
+    }
+
+    function trackDialerClick(buttonType, targetHub) {
+      if (typeof window.plausible === 'function' && targetHub) {
+        window.plausible('Dialer Click', {
+          props: {
+            button: buttonType,
+            visn: targetHub.visn,
+            hub_name: targetHub.name,
+            phone: targetHub.cleanPhone
+          }
+        });
+      }
+    }
+
+    centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
+    fallbackCallBtn.addEventListener('click', () => trackDialerClick('National Fallback Dial Button', visnDatabase.national_fallback));
+
     function resolveHub(zip) {
       if (!zip || zip.length < 3) return null;
       const p = parseInt(zip.substring(0, 3), 10);
       
+      // VISN 1 (New England: 010-069)
       if (p >= 10 && p <= 69) return visnDatabase.visn1;
-      if ((p >= 70 && p <= 89) || (p >= 100 && p <= 149)) return visnDatabase.visn2;
+      
+      // VISN 2 (Mid-Atlantic: NC, VA, etc.)
+      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visnDatabase.visn2;
+      
+      // VISN 3 (Midwest: OH, IN, MI, IL)
+      if ((p >= 430 && p <= 499) || (p >= 600 && p <= 619) || (p >= 530 && p <= 549)) return visnDatabase.visn3;
 
+      // VISN 4 Complete Resolution Table (PA & Surrounding)
       if ([150, 151, 152, 153, 154, 156].includes(p)) return visnDatabase.visn4_pgh;
       if ([160, 161, 162, 163].includes(p)) return visnDatabase.visn4_butler;
       if ([164, 165].includes(p)) return visnDatabase.visn4_erie;
@@ -1081,21 +1012,8 @@
       if ([189, 190, 191, 192].includes(p)) return visnDatabase.visn4_philly;
       if ([197, 198, 199, 80, 81, 82, 83, 84].includes(p)) return visnDatabase.visn4_wilmington;
 
-      if ((p >= 200 && p <= 219) || p === 254 || p === 267) return visnDatabase.visn5;
-      if ((p >= 220 && p <= 249) || (p >= 270 && p <= 289)) return visn6;
-      if ((p >= 290 && p <= 319) || (p >= 350 && p <= 369)) return visn7;
-      if ((p >= 6 && p <= 9) || (p >= 320 && p <= 349)) return visn8;
-      if ((p >= 370 && p <= 385) || (p >= 400 && p <= 427)) return visnDatabase.visn9;
-      if (p >= 430 && p <= 499) return visnDatabase.visn10;
-      if ((p >= 530 && p <= 549) || (p >= 600 && p <= 619)) return visnDatabase.visn12;
-      if (p >= 620 && p <= 679) return visnDatabase.visn15;
-      if ((p >= 386 && p <= 397) || (p >= 700 && p <= 729) || (p >= 750 && p <= 759) || (p >= 770 && p <= 777)) return visnDatabase.visn16;
-      if ((p >= 760 && p <= 769) || (p >= 780 && p <= 799)) return visnDatabase.visn17;
-      if ((p >= 590 && p <= 599) || (p >= 800 && p <= 847)) return visnDatabase.visn19;
-      if (p >= 970 && p <= 999) return visnDatabase.visn20;
-      if ((p >= 890 && p <= 898) || (p >= 936 && p <= 969)) return visnDatabase.visn21;
-      if ((p >= 850 && p <= 865) || (p >= 900 && p <= 935)) return visnDatabase.visn22;
-      if ((p >= 500 && p <= 528) || (p >= 550 && p <= 588) || (p >= 680 && p <= 693)) return visnDatabase.visn23;
+      // VISN 5 (Pacific & West: AK, CA, WA, OR, NV, AZ, HI, ID, MT, UT, WY)
+      if (p >= 850 && p <= 999) return visnDatabase.visn5;
 
       return visnDatabase.national_fallback;
     }
@@ -1143,12 +1061,12 @@
             matchStatus.textContent = "National Dispatch";
             matchStatus.className = "text-[10px] font-mono-code text-amber-400 font-bold";
           } else {
-            // Replaced "Locked (Exact)" with "Region Verified" per user specification
-            matchStatus.textContent = cleanVal.length === 5 ? "Region Verified" : "Searching Region...";
+            matchStatus.textContent = cleanVal.length === 5 ? "Locked (Exact)" : "Searching Region...";
             matchStatus.className = "text-[10px] font-mono-code text-emerald-400 font-bold";
           }
 
           if (cleanVal.length === 5) {
+            trackLookup(cleanVal, match, method);
             centerCallBtn.classList.add('call-btn-blinking');
             zipInput.blur();
           } else {
@@ -1178,6 +1096,7 @@
       executeLookup(cleanVal, 'Manual ZIP');
     });
 
+    // Voice-First Speech-to-Text Input (Web Speech API)
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition && micBtn) {
       const recognition = new SpeechRecognition();
@@ -1187,6 +1106,7 @@
 
       micBtn.addEventListener('click', () => {
         hideAlert();
+        
         if ('speechSynthesis' in window) {
           try {
             window.speechSynthesis.resume();
@@ -1250,6 +1170,7 @@
       micBtn.title = "Voice recognition not supported on this browser";
     }
 
+    // Geolocation Resolution
     geoBtn.addEventListener('click', () => {
       hideAlert();
       if (!navigator.geolocation) {
