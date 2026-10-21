@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.9 (REV 78) - FULL COMPLETE PRODUCTION MASTER        -->
+<!-- BUILD VERSION: BUILD 3.9 (REV 79) - FULL COMPLETE PRODUCTION MASTER        -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 21, 2026                                                   -->
 <!-- ========================================================================== -->
@@ -199,7 +199,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-100 border border-slate-200 text-[10px] font-mono-code text-emerald-700 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-        <span>BUILD 3.9 (REV 78)</span>
+        <span>BUILD 3.9 (REV 79)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -818,10 +818,12 @@
     window.addEventListener('resize', () => { map.invalidateSize(); });
 
     const visnDatabase = {
-      "visn1": { badge: "New England & Northeast Region", visn: "VISN 1: Northeast / New England", name: "VA Boston Healthcare System", desc: "CT, DC, DE, ME, MD, MA, NH, NJ, NY, PA, RI, VT, WV Catchment", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
-      "visn2": { badge: "Mid-Atlantic Region", visn: "VISN 2: Mid-Atlantic", name: "Fayetteville NC VA Medical Center", desc: "North Carolina & VA Regional Catchment", phone: "910-488-2120", cleanPhone: "9104882120", lat: 35.0805, lng: -78.8872 },
-      "visn3": { badge: "Midwest Region", visn: "VISN 3: Midwest", name: "Louis Stokes Cleveland VAMC", desc: "Ohio, Indiana, Michigan & IL Catchment", phone: "216-791-3800", cleanPhone: "2167913800", lat: 41.5036, lng: -81.6119 },
-      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VISN 4: Continental / Allegheny", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
+      "ct_va": { badge: "VA Connecticut Healthcare System", visn: "VISN 1: VA Connecticut", name: "VA Connecticut Healthcare System", desc: "West Haven & Newington Campuses", phone: "203-932-5711", cleanPhone: "2039325711", lat: 41.2627, lng: -72.9444 },
+      "ny_harbor": { badge: "New York Harbor Healthcare", visn: "VISN 2: NY / NJ", name: "VA New York Harbor Healthcare System", desc: "Manhattan & Brooklyn Campuses", phone: "212-686-7500", cleanPhone: "2126867500", lat: 40.7383, lng: -73.9782 },
+      "boston_va": { badge: "VA Boston Healthcare System", visn: "VISN 1: New England", name: "VA Boston Healthcare System", desc: "Jamaica Plain, Brockton & West Roxbury Campuses", phone: "857-364-4000", cleanPhone: "8573644000", lat: 42.3149, lng: -71.1097 },
+      "fayetteville_nc": { badge: "Fayetteville VA Medical Center", visn: "VISN 6: Mid-Atlantic", name: "Fayetteville NC VA Medical Center", desc: "Main Medical Center & Regional Outpatient Clinics", phone: "910-488-2120", cleanPhone: "9104882120", lat: 35.0805, lng: -78.8872 },
+      "cleveland_vamc": { badge: "Louis Stokes Cleveland VAMC", visn: "VISN 10: Buckeye", name: "Louis Stokes Cleveland VAMC", desc: "Wade Park Campus & Northeast Ohio Outpatient Clinics", phone: "216-791-3800", cleanPhone: "2167913800", lat: 41.5036, lng: -81.6119 },
+      "visn4_pgh": { badge: "University Drive & Heinz Divisions", visn: "VA Pittsburgh Healthcare System", name: "VA Pittsburgh Healthcare System", desc: "University Drive & H.J. Heinz Campus Catchment", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", lat: 40.4444, lng: -79.9600 },
       "visn4_butler": { badge: "Butler Regional Division", visn: "VISN 4: Continental / Allegheny", name: "Butler VA Health Care System", desc: "Butler County & Surrounding Catchment", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", lat: 40.8687, lng: -79.9554 },
       "visn4_erie": { badge: "NW Pennsylvania Division", visn: "VISN 4: Continental / Allegheny", name: "Erie VA Medical Center", desc: "Northwestern PA Lake Catchment", phone: "814-860-2973", cleanPhone: "8148602973", lat: 42.1065, lng: -80.0526 },
       "visn4_altoona": { badge: "Central PA Division", visn: "VISN 4: Continental / Allegheny", name: "James E. Van Zandt VAMC", desc: "Blair, Cambria & Centre Catchment", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", lat: 40.4996, lng: -78.3846 },
@@ -829,7 +831,7 @@
       "visn4_coatesville": { badge: "Brandywine Division", visn: "VISN 4: Continental / Allegheny", name: "Coatesville VA Medical Center", desc: "Chester & Delaware County Catchment", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", lat: 40.0039, lng: -75.8078 },
       "visn4_wilkes": { badge: "Northeastern PA Division", visn: "VISN 4: Continental / Allegheny", name: "Wilkes-Barre VA Medical Center", desc: "Luzerne, Lackawanna & Poconos Catchment", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", lat: 41.2523, lng: -75.8457 },
       "visn4_philly": { badge: "SE Pennsylvania Division", visn: "VISN 4: Continental / Allegheny", name: "Michael J. Crescenz VAMC", desc: "Philadelphia Metro Regional Center", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", lat: 39.9482, lng: -75.1979 },
-      "visn5": { badge: "Pacific & West Region", visn: "VISN 5: Pacific & West", name: "VA Puget Sound Healthcare", desc: "Washington, Oregon, California & West Catchment", phone: "206-762-1010", cleanPhone: "2067621010", lat: 47.5583, lng: -122.3101 },
+      "puget_sound": { badge: "VA Puget Sound Healthcare", visn: "VISN 20: Northwest", name: "VA Puget Sound Healthcare System", desc: "Seattle & American Lake Campuses", phone: "206-762-1010", cleanPhone: "2067621010", lat: 47.5583, lng: -122.3101 },
       "national_fallback": { badge: "National Dispatch Center", visn: "VA Beneficiary Travel Dispatch", name: "VA Beneficiary Travel Dispatch", desc: "Centralized National Beneficiary Travel Hotline", phone: "855-574-7292", cleanPhone: "8555747292", lat: 38.9072, lng: -77.0369 }
     };
 
