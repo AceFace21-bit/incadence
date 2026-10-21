@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // PITTSBURGH VAPHS                                 -->
-<!-- SEMVER VERSION: v3.18.0 (BUILD 3.5 // REV 55) - SEMANTIC VERSIONING        -->
+<!-- SEMVER VERSION: v3.18.1 (BUILD 3.5 // REV 56) - SEMANTIC VERSIONING        -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -114,7 +114,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v3.18.0</span>
+<span>v3.18.1</span>
 </div>
 <!-- Centered Platform Branding: FORWARD MARCH TRANSIT PITTSBURGH VAPHS (All Green & Centered) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -606,13 +606,17 @@ const nationwideHospitalDatabase = [
 { min: 80, max: 84, region: "VISN 4 (Delaware Valley)", name: "Wilmington VA Medical Center", location: "Wilmington, DE", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] },
 // Nationwide Regional VA Hub Coverage (VISN 1 - VISN 23 & Territories)
 { min: 1, max: 27, region: "VISN 1 (New England)", name: "VA Boston Healthcare System", location: "Boston, MA", phone: "800-838-6331", cleanPhone: "8008386331", coords: [-71.1061, 42.3370] },
+{ min: 28, max: 49, region: "VISN 1 / 2 (New England / NY)", name: "VA Connecticut Healthcare System", location: "West Haven, CT", phone: "203-932-5711", cleanPhone: "2039325711", coords: [-72.9520, 41.2650] },
 { min: 50, max: 89, region: "VISN 2 / 3 (NY / NJ)", name: "VA New York Harbor Healthcare System", location: "New York, NY", phone: "800-522-0071", cleanPhone: "8005220071", coords: [-73.9772, 40.7383] },
+{ min: 90, max: 149, region: "VISN 2 (Upstate NY)", name: "Albany VA Medical Center", location: "Albany, NY", phone: "518-626-5000", cleanPhone: "5186265000", coords: [-73.8190, 42.6526] },
 { min: 200, max: 239, region: "VISN 5 (DC / MD / WV)", name: "VA Washington DC Medical Center", location: "Washington, DC", phone: "202-745-8000", cleanPhone: "2027458000", coords: [-77.0135, 38.9254] },
 { min: 240, max: 269, region: "VISN 6 (Mid-Atlantic)", name: "Durham VA Medical Center", location: "Durham, NC", phone: "919-286-0411", cleanPhone: "9192860411", coords: [-78.9382, 36.0014] },
+{ min: 270, max: 299, region: "VISN 6 (Mid-Atlantic)", name: "W.G. (Bill) Hefner VA Medical Center", location: "Salisbury, NC", phone: "704-638-9000", cleanPhone: "7046389000", coords: [-80.4578, 35.6687] },
 { min: 300, max: 319, region: "VISN 7 (Southeast)", name: "Atlanta VA Medical Center", location: "Decatur, GA", phone: "404-321-6111", cleanPhone: "4043216111", coords: [-84.2963, 33.7915] },
 { min: 320, max: 349, region: "VISN 8 (Sunshine)", name: "James A. Haley Veterans' Hospital", location: "Tampa, FL", phone: "813-972-2000", cleanPhone: "8139722000", coords: [-82.4184, 28.0587] },
 { min: 350, max: 369, region: "VISN 9 (MidSouth)", name: "Tennessee Valley Healthcare System", location: "Nashville, TN", phone: "615-327-4751", cleanPhone: "6153274751", coords: [-86.8045, 36.1447] },
 { min: 370, max: 385, region: "VISN 9 (MidSouth)", name: "Memphis VA Medical Center", location: "Memphis, TN", phone: "901-523-8990", cleanPhone: "9015238990", coords: [-90.0113, 35.1378] },
+{ min: 386, max: 399, region: "VISN 8 (Sunshine)", name: "North Florida / South Georgia Veterans Health System", location: "Gainesville, FL", phone: "352-376-1611", cleanPhone: "3523761611", coords: [-82.3431, 29.6436] },
 { min: 400, max: 427, region: "VISN 10 (Great Lakes)", name: "Louis Stokes Cleveland VA Medical Center", location: "Cleveland, OH", phone: "216-791-3800", cleanPhone: "2167913800", coords: [-81.6097, 41.5125] },
 { min: 430, max: 458, region: "VISN 10 (Great Lakes)", name: "VA Central Ohio Healthcare System", location: "Columbus, OH", phone: "614-257-5200", cleanPhone: "6142575200", coords: [-82.9550, 39.9860] },
 { min: 460, max: 479, region: "VISN 10 (Great Lakes)", name: "Richard L. Roudebush VA Medical Center", location: "Indianapolis, IN", phone: "317-554-0000", cleanPhone: "3175540000", coords: [-86.1834, 39.7844] },
@@ -644,6 +648,7 @@ const nationwideHospitalDatabase = [
 { min: 980, max: 994, region: "VISN 20 (Northwest Network)", name: "VA Puget Sound Health Care System", location: "Seattle, WA", phone: "206-762-1010", cleanPhone: "2067621010", coords: [-122.3150, 47.5680] },
 { min: 995, max: 999, region: "VISN 20 (Northwest Network)", name: "Alaska VA Healthcare System", location: "Anchorage, AK", phone: "907-257-4700", cleanPhone: "9072574700", coords: [-149.8584, 61.2181] }
 ];
+
 const nationalFallback = {
 badge: "National Dispatch Center",
 visn: "VA Beneficiary Travel Dispatch",
