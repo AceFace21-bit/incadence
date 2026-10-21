@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // PITTSBURGH                                       -->
-<!-- BUILD VERSION: BUILD 3.14 (REV 44) - STATIONARY FLASHING RWB               -->
+<!-- BUILD VERSION: BUILD 3.15 (REV 45) - ZERO SCROLL SINGLE SCREEN FIT        -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -35,9 +35,9 @@
       font-family: 'JetBrains Mono', monospace;
     }
     .mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right {
-      transform: scale(0.7);
+      transform: scale(0.65);
       transform-origin: bottom left;
-      left: 6px !important;
+      left: 4px !important;
       bottom: 2px !important;
       right: auto !important;
     }
@@ -51,7 +51,7 @@
 
     /* Tactile Big Button Styles */
     .tactile-btn {
-      min-height: 48px;
+      min-height: 44px;
       touch-action: manipulation;
       transition: transform 0.08s ease, background-color 0.15s ease, border-color 0.15s ease;
     }
@@ -79,10 +79,10 @@
 
     /* Stationary Flashing Red, White, and Blue US Flag Animation */
     @keyframes usFlagFlash {
-      0% { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.6); }   /* Red */
-      33% { color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); } /* White */
-      66% { color: #3b82f6; text-shadow: 0 0 10px rgba(59, 130, 246, 0.6); }  /* Blue */
-      100% { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.6); } /* Red */
+      0% { color: #ef4444; text-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }   /* Red */
+      33% { color: #ffffff; text-shadow: 0 0 8px rgba(255, 255, 255, 0.8); } /* White */
+      66% { color: #3b82f6; text-shadow: 0 0 8px rgba(59, 130, 246, 0.6); }  /* Blue */
+      100% { color: #ef4444; text-shadow: 0 0 8px rgba(239, 68, 68, 0.6); } /* Red */
     }
 
     .us-flag-flash-text {
@@ -93,24 +93,24 @@
 
     /* Modal Scrollbars */
     .modal-scroll::-webkit-scrollbar {
-      width: 5px;
+      width: 4px;
     }
     .modal-scroll::-webkit-scrollbar-track {
       background: rgba(15, 23, 42, 0.8);
     }
     .modal-scroll::-webkit-scrollbar-thumb {
       background: #334155;
-      border-radius: 3px;
+      border-radius: 2px;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen w-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950 select-none">
+<body class="bg-slate-950 text-slate-100 h-[100dvh] w-screen overflow-hidden flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-slate-950 select-none">
 
   <!-- Veterans Crisis Line Mandatory Header -->
-  <aside class="bg-red-950/90 border-b border-red-800/80 px-3 py-1.5 text-center shrink-0 z-50">
-    <div class="max-w-md mx-auto flex items-center justify-between text-[11px] font-mono-code text-red-200">
-      <div class="flex items-center space-x-2 truncate">
-        <span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span>
+  <aside class="bg-red-950/90 border-b border-red-800/80 px-3 py-1 text-center shrink-0 z-50">
+    <div class="max-w-md mx-auto flex items-center justify-between text-[10.5px] font-mono-code text-red-200">
+      <div class="flex items-center space-x-1.5 truncate">
+        <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping"></span>
         <span class="font-bold tracking-wider uppercase text-red-100">Crisis Hotline:</span>
         <span class="truncate">Dial 988, Press 1</span>
       </div>
@@ -121,17 +121,17 @@
   </aside>
 
   <!-- Header with Auto-Incremented Build Badge & Centered All-Green Platform Branding -->
-  <header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-3 shrink-0 z-50">
+  <header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-1.5 shrink-0 z-50">
     <div class="max-w-md mx-auto relative flex items-center justify-between">
       <!-- Top Build Version Badge (Left) -->
-      <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
+      <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.14</span>
+        <span>BUILD 3.15</span>
       </div>
 
       <!-- Centered Platform Branding: Forward March Transit Pittsburgh (All Green & Centered) -->
       <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
-        <h1 class="text-xs font-extrabold tracking-wider uppercase text-emerald-400 leading-tight m-0">
+        <h1 class="text-[11px] font-extrabold tracking-wider uppercase text-emerald-400 leading-tight m-0">
           Forward March Transit Pittsburgh
         </h1>
       </div>
@@ -142,7 +142,7 @@
         type="button" 
         title="View Security & Zero-PII Compliance Architecture" 
         aria-label="View Zero PII security disclosure" 
-        class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 text-[10px] font-medium text-slate-300 transition shrink-0 shadow-sm"
+        class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 text-[9.5px] font-medium text-slate-300 transition shrink-0 shadow-sm"
       >
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
         <span class="font-mono-code font-bold text-[9px]">Zero-PII</span>
@@ -151,13 +151,13 @@
   </header>
 
   <!-- Live Audio Announcement Toast Banner -->
-  <div id="voiceToast" class="hidden bg-emerald-950/95 border-b border-emerald-500/60 px-3 py-1.5 text-center text-xs font-mono-code font-bold text-emerald-300 z-50 flex items-center justify-center space-x-2 shadow-lg">
+  <div id="voiceToast" class="hidden bg-emerald-950/95 border-b border-emerald-500/60 px-3 py-1 text-center text-[11px] font-mono-code font-bold text-emerald-300 z-50 flex items-center justify-center space-x-2 shadow-lg">
     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
     <span id="voiceToastText">Announcing VA Healthcare Hub...</span>
   </div>
 
-  <!-- Main Viewport Dashboard -->
-  <main class="flex-1 max-w-md mx-auto w-full px-3 py-3 flex flex-col gap-2.5 mb-6">
+  <!-- Main Viewport Dashboard (Optimized for Zero-Scroll Single Screen Fit) -->
+  <main class="flex-1 max-w-md mx-auto w-full px-3 py-1.5 flex flex-col justify-between gap-1.5 min-h-0">
 
     <!-- Primary Instruction Companion Action Button -->
     <div class="w-full shrink-0">
@@ -165,44 +165,44 @@
         id="audioGreetingBtn" 
         type="button" 
         title="Need help? Click for instructions and audio guidance" 
-        class="tactile-btn w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 active:bg-blue-700 border-2 border-blue-400 text-white font-bold text-xs uppercase tracking-wider text-center transition shadow-lg"
+        class="tactile-btn w-full flex items-center justify-center space-x-1.5 py-1.5 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 active:bg-blue-700 border border-blue-400 text-white font-bold text-[11px] uppercase tracking-wider text-center transition shadow-md"
       >
-        <i data-lucide="help-circle" class="w-5 h-5 text-blue-200 shrink-0"></i>
-        <span id="audioGreetingLabel" class="font-extrabold text-xs">Need help? Click for instructions</span>
+        <i data-lucide="help-circle" class="w-4 h-4 text-blue-200 shrink-0"></i>
+        <span id="audioGreetingLabel" class="font-extrabold text-[11px]">Need help? Click for instructions</span>
       </button>
     </div>
 
-    <!-- VA Travel Statutory Eligibility Banner (Only lowercase 'i' opens VHA modal) -->
-    <div class="px-3 py-2 rounded-lg bg-emerald-950/50 border border-emerald-500/40 flex items-center justify-between text-[11px] shrink-0 shadow-sm">
-      <div class="flex items-center space-x-2 truncate">
+    <!-- VA Travel Statutory Eligibility Banner -->
+    <div class="px-2.5 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between text-[10px] shrink-0 shadow-sm">
+      <div class="flex items-center space-x-1.5 truncate">
         <button 
           id="infoRequirementBtn" 
           type="button" 
           title="Click to view full VHA eligibility details" 
           aria-label="Click to see exact VA ride qualification details" 
-          class="p-1 rounded-md bg-emerald-500/35 hover:bg-emerald-500/50 active:scale-95 border border-emerald-500/70 text-emerald-300 transition flex items-center justify-center shrink-0 cursor-pointer"
+          class="p-0.5 rounded-md bg-emerald-500/35 hover:bg-emerald-500/50 active:scale-95 border border-emerald-500/70 text-emerald-300 transition flex items-center justify-center shrink-0 cursor-pointer"
         >
-          <i data-lucide="info" class="w-4 h-4 text-emerald-400"></i>
+          <i data-lucide="info" class="w-3.5 h-3.5 text-emerald-400"></i>
         </button>
         <div class="text-slate-200 font-medium truncate">
           <strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
         </div>
       </div>
-      <span class="text-[10px] font-mono-code text-emerald-400 uppercase tracking-wider shrink-0 ml-1">
+      <span class="text-[9.5px] font-mono-code text-emerald-400 uppercase tracking-wider shrink-0 ml-1">
         38 CFR Part 70
       </span>
     </div>
 
     <!-- Input Section: Keypad, Voice Recognition & GPS Geolocation with Stationary Flashing RWB Text -->
-    <section class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md">
-      <div class="flex items-center justify-between mb-1.5">
-        <label for="zipInput" class="block text-[11px] font-bold uppercase tracking-wider us-flag-flash-text">
+    <section class="bg-slate-900 border border-slate-800 rounded-lg p-2 shrink-0 shadow-sm">
+      <div class="flex items-center justify-between mb-1">
+        <label for="zipInput" class="block text-[10.5px] font-bold uppercase tracking-wider us-flag-flash-text">
           &#9733; ENTER 5-DIGIT ZIP CODE &#9733;
         </label>
-        <span id="matchStatus" class="text-[10px] font-mono-code text-slate-400">Live Auto-Lookup</span>
+        <span id="matchStatus" class="text-[9.5px] font-mono-code text-slate-400">Live Auto-Lookup</span>
       </div>
 
-      <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-1.5">
         <!-- Text / Number Pad Input Box -->
         <div class="relative flex-1">
           <input 
@@ -212,15 +212,15 @@
             inputmode="numeric" 
             maxlength="5" 
             placeholder="e.g. 15120, 19104" 
-            class="tactile-btn w-full bg-slate-950 border-2 border-slate-700 focus:border-emerald-400 rounded-lg pl-3 pr-8 py-2 text-sm text-slate-100 placeholder-slate-500 font-mono-code font-bold transition outline-none"
+            class="tactile-btn w-full bg-slate-950 border-2 border-slate-700 focus:border-emerald-400 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-100 placeholder-slate-500 font-mono-code font-bold transition outline-none"
           >
           <button 
             type="button" 
             id="clearZipBtn" 
             aria-label="Clear ZIP code input" 
-            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
+            class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
           >
-            <i data-lucide="x" class="w-4 h-4"></i>
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
           </button>
         </div>
 
@@ -230,10 +230,10 @@
           type="button" 
           title="Speak ZIP Code Aloud" 
           aria-label="Speak ZIP code aloud" 
-          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
+          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border border-emerald-500/40 font-bold px-2.5 py-1.5 rounded-lg text-[11px] uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
         >
-          <i data-lucide="mic" id="micIcon" class="w-4 h-4 text-emerald-400"></i>
-          <span id="micBtnLabel" class="font-mono-code font-bold text-[11px]">VOICE</span>
+          <i data-lucide="mic" id="micIcon" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span id="micBtnLabel" class="font-mono-code font-bold text-[10.5px]">VOICE</span>
         </button>
 
         <!-- Current Location GPS Button -->
@@ -241,33 +241,33 @@
           id="geoBtn" 
           type="button" 
           title="Detect Current Location" 
-          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border-2 border-emerald-500/40 font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
+          class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emerald-400 border border-emerald-500/40 font-bold px-2.5 py-1.5 rounded-lg text-[11px] uppercase tracking-wider flex items-center justify-center space-x-1 shrink-0"
         >
-          <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
-          <span id="geoBtnLabel" class="font-mono-code font-bold text-[11px]">GPS</span>
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span id="geoBtnLabel" class="font-mono-code font-bold text-[10.5px]">GPS</span>
         </button>
       </div>
 
-      <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
+      <div id="statusAlert" class="hidden text-[10px] py-1 px-2 mt-1 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
     </section>
 
-    <!-- Pittsburgh VA Centered Radar Map Section -->
-    <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative shrink-0 shadow-md flex flex-col">
-      <div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/85 shrink-0 z-10">
-        <div class="flex items-center space-x-1.5">
-          <i data-lucide="radar" class="w-4 h-4 text-emerald-400"></i>
-          <span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-200">VA Pittsburgh Healthcare Radar View</span>
+    <!-- Pittsburgh VA Centered Radar Map Section (Compact 145px height for zero-scroll fit) -->
+    <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative shrink-0 shadow-sm flex flex-col">
+      <div class="px-2 py-1 border-b border-slate-800 flex items-center justify-between bg-slate-950/85 shrink-0 z-10">
+        <div class="flex items-center space-x-1">
+          <i data-lucide="radar" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span id="radarHeaderLabel" class="text-[9.5px] font-bold uppercase tracking-wider text-slate-200">VA Pittsburgh Healthcare Radar View</span>
         </div>
         <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">40.4444° N, 79.9600° W</span>
       </div>
       
-      <!-- Explicit Height container so Mapbox GL JS renders reliably without collapsing -->
-      <div class="relative w-full h-[180px] bg-slate-950">
+      <!-- Compact height container -->
+      <div class="relative w-full h-[145px] bg-slate-950">
         <div id="map" class="w-full h-full"></div>
 
         <!-- Center Radar Crosshair Reticle -->
-        <div class="radar-crosshair w-24 h-24 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center z-10">
-          <div class="w-14 h-14 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
+        <div class="radar-crosshair w-20 h-20 rounded-full border border-emerald-500/20 pointer-events-none flex items-center justify-center z-10">
+          <div class="w-12 h-12 rounded-full border border-emerald-500/30 border-dashed animate-[spin_10s_linear_infinite]"></div>
         </div>
 
         <!-- Big Primary Dial Action Button Anchored on Radar -->
@@ -275,29 +275,29 @@
           <a 
             id="centerCallBtn" 
             href="tel:4123603620,1" 
-            class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-xl shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3.5 py-2 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border-2 border-emerald-200"
+            class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border border-emerald-200"
           >
-            <i data-lucide="phone-call" class="w-4 h-4 fill-slate-950"></i>
-            <span id="centerCallText" class="text-xs font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
+            <i data-lucide="phone-call" class="w-3.5 h-3.5 fill-slate-950"></i>
+            <span id="centerCallText" class="text-[11px] font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
           </a>
         </div>
       </div>
     </section>
 
     <!-- Facility Match Micro-Card -->
-    <section id="resultCard" class="bg-slate-900 border-2 border-slate-800 rounded-lg p-2.5 shrink-0 shadow-md flex items-center justify-between gap-2">
+    <section id="resultCard" class="bg-slate-900 border-2 border-slate-800 rounded-lg p-2 shrink-0 shadow-sm flex items-center justify-between gap-2">
       <div class="min-w-0 flex-1">
-        <div class="flex items-center space-x-1.5 mb-0.5 truncate">
-          <span id="visnBadge" class="text-[10px] font-mono-code text-emerald-400 shrink-0 font-bold uppercase tracking-wider truncate">VISN 4 (Western PA)</span>
-          <span class="text-slate-600 text-[10px]">•</span>
-          <span id="hubBadge" class="text-[10px] font-mono-code text-slate-400 font-medium truncate">
+        <div class="flex items-center space-x-1 mb-0.5 truncate">
+          <span id="visnBadge" class="text-[9.5px] font-mono-code text-emerald-400 shrink-0 font-bold uppercase tracking-wider truncate">VISN 4 (Western PA)</span>
+          <span class="text-slate-600 text-[9px]">•</span>
+          <span id="hubBadge" class="text-[9.5px] font-mono-code text-slate-400 font-medium truncate">
             Pittsburgh, PA
           </span>
         </div>
-        <h2 id="facilityName" class="text-xs font-extrabold text-slate-100 leading-snug truncate">
+        <h2 id="facilityName" class="text-[11.5px] font-extrabold text-slate-100 leading-snug truncate">
           VA Pittsburgh Healthcare System (University Drive & Heinz)
         </h2>
-        <p id="facilityAddress" class="text-[10px] text-slate-400 truncate">
+        <p id="facilityAddress" class="text-[9.5px] text-slate-400 truncate">
           Pittsburgh, PA
         </p>
       </div>
@@ -308,15 +308,15 @@
         type="button" 
         title="Read facility details aloud" 
         aria-label="Read facility name and phone number aloud" 
-        class="tactile-btn p-2 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-slate-700 text-emerald-400 shrink-0 flex items-center justify-center"
+        class="tactile-btn p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-800 border border-slate-700 text-emerald-400 shrink-0 flex items-center justify-center"
       >
-        <i data-lucide="volume-2" class="w-5 h-5"></i>
+        <i data-lucide="volume-2" class="w-4 h-4"></i>
       </button>
 
       <!-- Right Contact Extension Block -->
-      <div class="text-right shrink-0 pl-2 border-l border-slate-800">
-        <div class="text-[9px] uppercase font-mono-code tracking-wider text-slate-400 font-bold">Travel Desk</div>
-        <div id="facilityPhone" class="text-xs font-bold text-emerald-400 font-mono-code whitespace-nowrap">
+      <div class="text-right shrink-0 pl-1.5 border-l border-slate-800">
+        <div class="text-[8.5px] uppercase font-mono-code tracking-wider text-slate-400 font-bold">Travel Desk</div>
+        <div id="facilityPhone" class="text-[11px] font-bold text-emerald-400 font-mono-code whitespace-nowrap">
           412-360-3620 (Press 1)
         </div>
       </div>
@@ -324,12 +324,12 @@
 
   </main>
 
-  <!-- Footer & Federal Disclaimers -->
-  <footer class="border-t border-slate-800/95 py-4 text-center text-slate-400 text-[9px] font-mono-code px-3 shrink-0 space-y-1 bg-slate-900/95 mt-8 shadow-2xl z-40">
-    <div class="text-slate-300 font-bold tracking-wider">
+  <!-- Footer & Federal Disclaimers (Compact for zero-scroll fit) -->
+  <footer class="border-t border-slate-800/90 py-1.5 text-center text-slate-500 text-[8px] font-mono-code px-2 shrink-0 space-y-0.5 bg-slate-900/90">
+    <div class="text-slate-400 font-bold tracking-wide truncate">
       DESIGNED &amp; DEVELOPED BY TERENCE WATKINS, VETERAN, VA PITTSBURGH
     </div>
-    <div class="text-slate-400 text-[8px] leading-relaxed max-w-sm mx-auto">
+    <div class="text-slate-500 text-[7.5px] leading-tight max-w-sm mx-auto">
       Independent veteran access platform. Not an official VA agency portal. Beneficiary travel subject to 38 CFR Part 70.
     </div>
   </footer>
