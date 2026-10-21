@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // PITTSBURGH VAPHS                                 -->
-<!-- SEMVER VERSION: v3.18.4 (BUILD 3.5 // REV 59) - SEMANTIC VERSIONING        -->
+<!-- SEMVER VERSION: v3.18.5 (BUILD 3.5 // REV 60) - SEMANTIC VERSIONING        -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -114,7 +114,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v3.18.4</span>
+<span>v3.18.5</span>
 </div>
 <!-- Centered Platform Branding: FORWARD MARCH TRANSIT PITTSBURGH VAPHS (All Green & Centered) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -567,12 +567,12 @@ cleanPhone: "4123603620,1",
 coords: [-79.9600, 40.4444]
 };
 let activeHub = defaultHub;
-// Map Centered directly on Pittsburgh VA Hospital (University Drive & Heinz, Zoom 11.5) with strict resize handling
+// Map Centered directly on Pittsburgh VA Hospital (University Drive & Heinz, Zoom 12) with strict resize handling
 const map = new mapboxgl.Map({
 container: 'map',
 style: 'mapbox://styles/mapbox/dark-v11',
 center: [-79.9600, 40.4444],
-zoom: 11.5,
+zoom: 12,
 attributionControl: false
 });
 map.addControl(new mapboxgl.AttributionControl({ compact: true }));
@@ -749,7 +749,8 @@ if (radarHeaderLabel) {
 radarHeaderLabel.textContent = `${data.name} Radar View`;
 }
 if (map && data.coords) {
-map.flyTo({ center: data.coords, zoom: 12.5, speed: 1.4, essential: true });
+// Fly to exact facility coordinates and instantly reposition marker
+map.flyTo({ center: data.coords, zoom: 13.5, speed: 1.5, essential: true });
 mapMarker.setLngLat(data.coords);
 mapCoordinates.textContent = `${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W`;
 }
@@ -875,7 +876,7 @@ async (position) => {
 const lat = position.coords.latitude;
 const lon = position.coords.longitude;
 if (map) {
-map.flyTo({ center: [lon, lat], zoom: 12.5, essential: true });
+map.flyTo({ center: [lon, lat], zoom: 13.5, essential: true });
 mapMarker.setLngLat([lon, lat]);
 mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
 }
