@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.9 (REV 62) - PRODUCTION MASTER (LIGHT THEME)        -->
+<!-- BUILD VERSION: BUILD 3.9 (REV 63) - PRODUCTION MASTER (5-VISN COLOR-CODED) -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 21, 2026                                                   -->
 <!-- ========================================================================== -->
@@ -199,7 +199,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-100 border border-slate-200 text-[10px] font-mono-code text-emerald-700 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-        <span>BUILD 3.9 (REV 62)</span>
+        <span>BUILD 3.9 (REV 63)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -758,18 +758,18 @@
       zIndex: 350
     });
 
-    // 3. COLOR-CODED VISN TERRITORIES & STATE BOUNDARIES
+    // 3. COLOR-CODED VISN TERRITORIES & STATE BOUNDARIES (Strictly matching reference image)
     let visnGeoJsonLayer = null;
     const stateLabelsGroup = L.layerGroup().addTo(map);
     const visnLabelsGroup = L.layerGroup().addTo(map);
 
-    // VISN Region Center Labels positioned cleanly
+    // VISN Region Center Labels positioned cleanly matching reference image
     const visnRegionLabels = [
-      { name: "VISN 1", lat: 42.8, lng: -75.0, color: '#991b1b' },
-      { name: "VISN 2", lat: 33.2, lng: -82.0, color: '#c2410c' },
-      { name: "VISN 3", lat: 45.5, lng: -87.5, color: '#15803d' },
-      { name: "VISN 4", lat: 33.5, lng: -97.5, color: '#7e22ce' },
-      { name: "VISN 5", lat: 44.5, lng: -118.5, color: '#1d4ed8' }
+      { name: "VISN 1", lat: 42.8, lng: -74.5, color: '#dc2626' },
+      { name: "VISN 2", lat: 33.2, lng: -82.0, color: '#ea580c' },
+      { name: "VISN 3", lat: 45.0, lng: -87.5, color: '#16a34a' },
+      { name: "VISN 4", lat: 35.0, lng: -97.5, color: '#9333ea' },
+      { name: "VISN 5", lat: 44.5, lng: -118.5, color: '#2563eb' }
     ];
 
     visnRegionLabels.forEach(v => {
@@ -841,15 +841,21 @@
       L.marker([s.lat, s.lng], { icon: lblIcon, interactive: false }).addTo(stateLabelsGroup);
     });
 
-    // Exact VISN 1 Red States
-    const visn1StatesList = [
-      'Connecticut', 'District of Columbia', 'Delaware', 'Maine', 'Maryland', 
-      'Massachusetts', 'New Hampshire', 'New Jersey', 'New York', 
-      'Pennsylvania', 'Rhode Island', 'Vermont', 'West Virginia',
-      'CT', 'DC', 'DE', 'ME', 'MD', 'MA', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT', 'WV'
-    ];
+    // Exact VISN mapping matching reference image:
+    // VISN 1 (Red): ME, VT, NH, MA, RI, CT, NY, NJ, PA, DE, MD, WV, DC
+    const visn1States = ['Maine', 'Vermont', 'New Hampshire', 'Massachusetts', 'Rhode Island', 'Connecticut', 'New York', 'New Jersey', 'Pennsylvania', 'Delaware', 'Maryland', 'West Virginia', 'District of Columbia', 'ME', 'VT', 'NH', 'MA', 'RI', 'CT', 'NY', 'NJ', 'PA', 'DE', 'MD', 'WV', 'DC'];
+    
+    // VISN 2 (Orange): NC, SC, GA, FL, AL, MS, TN, KY
+    const visn2States = ['North Carolina', 'South Carolina', 'Georgia', 'Florida', 'Alabama', 'Mississippi', 'Tennessee', 'Kentucky', 'NC', 'SC', 'GA', 'FL', 'AL', 'MS', 'TN', 'KY'];
+    
+    // VISN 3 (Green): ND, SD, MN, WI, MI, IA, IL, IN, OH
+    const visn3States = ['North Dakota', 'South Dakota', 'Minnesota', 'Wisconsin', 'Michigan', 'Iowa', 'Illinois', 'Indiana', 'Ohio', 'ND', 'SD', 'MN', 'WI', 'MI', 'IA', 'IL', 'IN', 'OH'];
+    
+    // VISN 5 (Blue): WA, OR, CA, NV, ID, MT, AZ, AK, HI
+    const visn5States = ['Washington', 'Oregon', 'California', 'Nevada', 'Idaho', 'Montana', 'Arizona', 'Alaska', 'Hawaii', 'WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'];
+    
+    // VISN 4 (Purple): All remaining states (WY, UT, CO, NM, TX, OK, KS, NE, MO, AR, LA, etc.)
 
-    // Fetch US State Boundaries and color-code cleanly for light theme
     fetch('https://raw.githubusercontent.com/PublicMapping/district-builder/master/server/fixtures/states.geojson')
       .then(res => res.json())
       .then(data => {
@@ -858,20 +864,19 @@
             const name = feature.properties.NAME || feature.properties.name || '';
             const abbr = feature.properties.STATE || feature.properties.STUSPS || '';
             
-            let fillColor = '#9333ea'; // Default Purple (VISN 4)
-            let fillOp = 0.55;
+            let fillColor = '#9333ea'; // Default VISN 4 (Purple)
+            let fillOp = 0.60;
 
-            if (visn1StatesList.includes(name) || visn1StatesList.includes(abbr)) {
+            if (visn1States.includes(name) || visn1States.includes(abbr)) {
               fillColor = '#dc2626'; // Red (VISN 1)
-            }
-            else if (['North Carolina', 'South Carolina', 'Georgia', 'Florida', 'Alabama', 'Mississippi', 'Tennessee', 'Kentucky', 'NC', 'SC', 'GA', 'FL', 'AL', 'MS', 'TN', 'KY'].includes(name) || ['NC', 'SC', 'GA', 'FL', 'AL', 'MS', 'TN', 'KY'].includes(abbr)) {
+            } else if (visn2States.includes(name) || visn2States.includes(abbr)) {
               fillColor = '#ea580c'; // Orange (VISN 2)
-            }
-            else if (['North Dakota', 'South Dakota', 'Minnesota', 'Wisconsin', 'Michigan', 'Iowa', 'Illinois', 'Indiana', 'Ohio', 'ND', 'SD', 'MN', 'WI', 'MI', 'IA', 'IL', 'IN', 'OH'].includes(name) || ['ND', 'SD', 'MN', 'WI', 'MI', 'IA', 'IL', 'IN', 'OH'].includes(abbr)) {
+            } else if (visn3States.includes(name) || visn3States.includes(abbr)) {
               fillColor = '#16a34a'; // Green (VISN 3)
-            }
-            else if (['Washington', 'Oregon', 'California', 'Nevada', 'Idaho', 'Montana', 'Arizona', 'Alaska', 'Hawaii', 'WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'].includes(name) || ['WA', 'OR', 'CA', 'NV', 'ID', 'MT', 'AZ', 'AK', 'HI'].includes(abbr)) {
+            } else if (visn5States.includes(name) || visn5States.includes(abbr)) {
               fillColor = '#2563eb'; // Blue (VISN 5)
+            } else {
+              fillColor = '#9333ea'; // Purple (VISN 4)
             }
 
             return {
