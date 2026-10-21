@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                       -->
-<!-- BUILD VERSION: BUILD 3.7 (REV 37) - VISN 4 DEDICATED MASTER                -->
+<!-- BUILD VERSION: BUILD 3.8 (REV 38) - PITTSBURGH VA CENTERED MASTER          -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -135,7 +135,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.7 (VISN 4)</span>
+        <span>BUILD 3.8 (REV 38)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -146,7 +146,7 @@
           </div>
           <span class="font-extrabold tracking-wider text-xs uppercase text-slate-100 leading-none">Forward March Transit</span>
         </div>
-        <span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-1 leading-none">IN CADENCE // VISN 4 DEDICATED</span>
+        <span class="text-[9px] text-emerald-400 font-mono-code tracking-wide block mt-1 leading-none">IN CADENCE // PITTSBURGH CENTERED</span>
       </div>
 
       <!-- Zero-PII Security Architecture Trigger (Right) -->
@@ -258,14 +258,14 @@
       <div id="statusAlert" class="hidden text-[11px] py-1.5 px-2 mt-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-200 font-medium"></div>
     </section>
 
-    <!-- VISN 4 Dedicated Radar Map Section -->
+    <!-- Pittsburgh VA Centered Radar Map Section -->
     <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden relative shrink-0 shadow-md flex flex-col">
       <div class="px-2.5 py-1.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/85 shrink-0 z-10">
         <div class="flex items-center space-x-1.5">
           <i data-lucide="radar" class="w-4 h-4 text-emerald-400"></i>
-          <span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-200">VISN 4 Regional Healthcare Map</span>
+          <span id="radarHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-200">VA Pittsburgh Healthcare Radar View</span>
         </div>
-        <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">40.8000° N, 78.0000° W</span>
+        <span id="mapCoordinates" class="text-[9px] font-mono-code text-slate-400">40.4444° N, 79.9600° W</span>
       </div>
       
       <!-- Explicit Height container so Mapbox GL JS renders reliably without collapsing -->
@@ -573,12 +573,12 @@
 
     let activeHub = defaultHub;
 
-    // VISN 4 Dedicated Regional Map Initialization (Centered on PA/DE/Tri-State region, Zoom 7.2)
+    // Map Centered directly on Pittsburgh VA Hospital (University Drive & Heinz, Zoom 11.5)
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/dark-v11',
-      center: [-78.0, 40.8],
-      zoom: 7.2,
+      center: [-79.9600, 40.4444],
+      zoom: 11.5,
       attributionControl: false
     });
     map.addControl(new mapboxgl.AttributionControl({ compact: true }));
@@ -742,7 +742,7 @@
       }
 
       if (map && data.coords) {
-        map.flyTo({ center: data.coords, zoom: isFallback ? 7 : 12, speed: 1.4, essential: true });
+        map.flyTo({ center: data.coords, zoom: isFallback ? 7 : 12.5, speed: 1.4, essential: true });
         mapMarker.setLngLat(data.coords);
         mapCoordinates.textContent = `${data.coords[1].toFixed(4)}° N, ${Math.abs(data.coords[0]).toFixed(4)}° W`;
       }
@@ -895,7 +895,7 @@
           const lon = position.coords.longitude;
 
           if (map) {
-            map.flyTo({ center: [lon, lat], zoom: 12, essential: true });
+            map.flyTo({ center: [lon, lat], zoom: 12.5, essential: true });
             mapMarker.setLngLat([lon, lat]);
             mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
           }
