@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // PITTSBURGH                                       -->
-<!-- BUILD VERSION: BUILD 3.10 (REV 40) - ALL GREEN CENTERED BRANDING            -->
+<!-- BUILD VERSION: BUILD 3.11 (REV 41) - REFINED UI CLEANUP                   -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -107,22 +107,19 @@
   </aside>
 
   <!-- Header with Auto-Incremented Build Badge & Centered All-Green Platform Branding -->
-  <header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-2.5 shrink-0 z-50">
+  <header class="border-b border-slate-800/90 bg-slate-900/95 backdrop-blur px-3 py-3 shrink-0 z-50">
     <div class="max-w-md mx-auto relative flex items-center justify-between">
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.10</span>
+        <span>BUILD 3.11</span>
       </div>
 
-      <!-- Centered Platform Branding: Forward March Transit Pittsburgh (All Green & Centered) -->
+      <!-- Centered Platform Branding: Forward March Transit Pittsburgh (All Green & Centered, Subtitle Removed) -->
       <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
         <h1 class="text-xs font-extrabold tracking-wider uppercase text-emerald-400 leading-tight m-0">
           Forward March Transit Pittsburgh
         </h1>
-        <span class="text-[9px] text-emerald-400/90 font-mono-code font-bold tracking-widest block mt-0.5 leading-tight uppercase">
-          IN CADENCE // VA PITTSBURGH HUB
-        </span>
       </div>
 
       <!-- Zero-PII Security Architecture Trigger (Right) -->
@@ -161,18 +158,24 @@
       </button>
     </div>
 
-    <!-- VA Travel Statutory Eligibility Banner (Clickable to open VHA Details modal) -->
-    <div id="eligibilityBanner" class="px-3 py-2 rounded-lg bg-emerald-950/50 border-2 border-emerald-500/50 flex items-center justify-between text-[11px] shrink-0 cursor-pointer hover:border-emerald-400 hover:bg-emerald-950/70 transition shadow-sm" title="Click to view full VHA eligibility details">
-      <div class="flex items-center space-x-2 truncate pointer-events-none">
-        <div class="p-1 rounded-md bg-emerald-500/30 border border-emerald-500/60 text-emerald-300 flex items-center justify-center shrink-0">
+    <!-- VA Travel Statutory Eligibility Banner (Only the lowercase 'i' icon opens the VHA Details modal) -->
+    <div class="px-3 py-2 rounded-lg bg-emerald-950/50 border border-emerald-500/40 flex items-center justify-between text-[11px] shrink-0 shadow-sm">
+      <div class="flex items-center space-x-2 truncate">
+        <button 
+          id="infoRequirementBtn" 
+          type="button" 
+          title="Click to view full VHA eligibility details" 
+          aria-label="Click to see exact VA ride qualification details" 
+          class="p-1 rounded-md bg-emerald-500/35 hover:bg-emerald-500/50 active:scale-95 border border-emerald-500/70 text-emerald-300 transition flex items-center justify-center shrink-0 cursor-pointer"
+        >
           <i data-lucide="info" class="w-4 h-4 text-emerald-400"></i>
-        </div>
-        <div class="text-slate-100 font-medium truncate">
+        </button>
+        <div class="text-slate-200 font-medium truncate">
           <strong class="text-emerald-400 font-bold uppercase tracking-wider">Requirement:</strong> 30%+ Service-Connected or Authorized
         </div>
       </div>
-      <span class="text-[10px] font-mono-code text-emerald-400 uppercase tracking-wider font-bold shrink-0 ml-1 underline pointer-events-none">
-        VHA Details &rarr;
+      <span class="text-[10px] font-mono-code text-emerald-400 uppercase tracking-wider shrink-0 ml-1">
+        38 CFR Part 70
       </span>
     </div>
 
@@ -304,35 +307,6 @@
         </div>
       </div>
     </section>
-
-    <!-- Linear Secondary Actions -->
-    <div class="grid grid-cols-2 gap-2 shrink-0">
-      <!-- National Hotline Fallback Bypass -->
-      <a 
-        id="fallbackCallBtn" 
-        href="tel:8555747292" 
-        class="plausible-event-name=Dialer+Click tactile-btn bg-slate-900 border-2 border-slate-800 hover:border-emerald-500/50 p-2.5 rounded-lg flex items-center justify-between transition"
-      >
-        <div class="truncate">
-          <div class="text-[10px] font-extrabold uppercase text-slate-200">National Dispatch</div>
-          <div class="text-[10px] font-mono-code text-emerald-400 font-bold">855-574-7292</div>
-        </div>
-        <i data-lucide="phone-forwarded" class="w-4 h-4 text-emerald-400 shrink-0 ml-1"></i>
-      </a>
-
-      <!-- Direct National Dispatch Call Action -->
-      <a 
-        id="directNationalBtn" 
-        href="tel:8555747292" 
-        class="plausible-event-name=Dialer+Click tactile-btn bg-slate-900 border-2 border-slate-800 hover:border-emerald-500/50 p-2.5 rounded-lg flex items-center justify-between transition text-left"
-      >
-        <div class="truncate">
-          <div class="text-[10px] font-extrabold uppercase text-slate-200">National Center</div>
-          <div class="text-[10px] text-slate-400 font-mono-code">Call National</div>
-        </div>
-        <i data-lucide="phone-call" class="w-4 h-4 text-emerald-400 shrink-0 ml-1"></i>
-      </a>
-    </div>
 
   </main>
 
@@ -571,9 +545,9 @@
       if (t) t.classList.add('hidden');
     }
 
-    // Detailed Eligibility Modal Handlers
+    // Detailed Eligibility Modal Handlers (Triggered ONLY by the 'i' icon)
     const eligibilityDetailModal = document.getElementById('eligibilityDetailModal');
-    const eligibilityBanner = document.getElementById('eligibilityBanner');
+    const infoRequirementBtn = document.getElementById('infoRequirementBtn');
     const closeEligibilityDetailBtn = document.getElementById('closeEligibilityDetailBtn');
     const dismissEligibilityDetailBtn = document.getElementById('dismissEligibilityDetailBtn');
 
@@ -587,7 +561,7 @@
       }
     }
 
-    if (eligibilityBanner) eligibilityBanner.addEventListener('click', openEligibilityModal);
+    if (infoRequirementBtn) infoRequirementBtn.addEventListener('click', openEligibilityModal);
     if (closeEligibilityDetailBtn && eligibilityDetailModal) {
       closeEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
     }
@@ -709,8 +683,6 @@
     const readFacilityBtn = document.getElementById('readFacilityBtn');
     const centerCallBtn = document.getElementById('centerCallBtn');
     const centerCallText = document.getElementById('centerCallText');
-    const fallbackCallBtn = document.getElementById('fallbackCallBtn');
-    const directNationalBtn = document.getElementById('directNationalBtn');
     const mapCoordinates = document.getElementById('mapCoordinates');
     const radarHeaderLabel = document.getElementById('radarHeaderLabel');
 
@@ -778,8 +750,6 @@
     }
 
     centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
-    fallbackCallBtn.addEventListener('click', () => trackDialerClick('National Fallback Dial Button', nationalFallback));
-    directNationalBtn.addEventListener('click', () => trackDialerClick('Direct National Center Button', nationalFallback));
 
     function resolveHub(zip) {
       if (!zip || zip.length < 3) return null;
