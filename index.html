@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v5.3.0 (BUILD 5.3 // REV 74) - RESPONSIVE TYPOGRAPHY FIX  -->
+<!-- SEMVER VERSION: v5.4.0 (BUILD 5.4 // REV 75) - FULL PHONE NUMBER DISPLAY  -->
 <!-- DEVELOPER: TERRANCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -112,7 +112,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v5.3.0</span>
+<span>v5.4.0</span>
 </div>
 <!-- Centered Platform Branding: BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -241,10 +241,10 @@ class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-
 </div>
 </div>
 </section>
-<!-- Facility Match Micro-Card (Optimized with responsive text scaling for HSA label) -->
+<!-- Facility Match Micro-Card (Optimized for full phone & extension visibility) -->
 <section id="resultCard" class="bg-slate-900 border-2 border-slate-800 rounded-lg p-2 shrink-0 shadow-sm flex items-center justify-between gap-1.5">
-<!-- Left Facility Info Block: Expanded Width (flex-[1_1_72%]) -->
-<div class="min-w-0 flex-[1_1_72%]">
+<!-- Left Facility Info Block: Balanced Width (flex-[1_1_55%]) -->
+<div class="min-w-0 flex-[1_1_55%]">
 <div class="flex items-center space-x-1 mb-0.5 truncate">
 <span id="visnBadge" class="text-[7.5px] sm:text-[9.5px] font-mono-code text-emerald-400 shrink-0 font-bold uppercase tracking-wider truncate">Health Service Area (HSA) 1.3</span>
 <span class="text-slate-600 text-[8px]">•</span>
@@ -267,10 +267,10 @@ class="tactile-btn p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-sl
 >
 <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
 </button>
-<!-- Right Contact Extension Block: Slimmer Width (max-w-[28%]) -->
-<div class="text-right shrink-0 pl-1 border-l border-slate-800 max-w-[28%]">
-<div class="text-[7.5px] uppercase font-mono-code tracking-wider text-slate-400 font-bold truncate">Travel Desk</div>
-<div id="facilityPhone" class="text-[9.5px] sm:text-[10px] font-bold text-emerald-400 font-mono-code whitespace-nowrap truncate">
+<!-- Right Contact Extension Block: Expanded Width & Two-Line Layout for Full Number & Press/Ext (#) Visibility -->
+<div class="text-right shrink-0 pl-1 border-l border-slate-800 flex-[1_1_40%] flex flex-col justify-center min-w-0">
+<div class="text-[7.5px] uppercase font-mono-code tracking-wider text-slate-400 font-bold truncate">TRAVEL DESK</div>
+<div id="facilityPhone" class="text-[9.5px] sm:text-[10.5px] font-bold text-emerald-400 font-mono-code whitespace-nowrap truncate tracking-tight">
 412-360-3620 (Press 1)
 </div>
 </div>
@@ -447,18 +447,18 @@ coords: [-79.9600, 40.4444]
 
 const paHospitalDatabase = [
 { min: 15000, max: 15499, region: "Health Service Area (HSA) 1.3", name: "VA Pittsburgh Healthcare System (University Drive & Heinz)", location: "Pittsburgh, PA", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
-{ min: 15500, max: 15599, region: "Health Service Area (HSA) 1.3", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+{ min: 15500, max: 15599, region: "Health Service Area (HSA) 1.3", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 (Ext 17383)", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
 { min: 15600, max: 15699, region: "Health Service Area (HSA) 1.3", name: "VA Pittsburgh Healthcare System (University Drive & Heinz)", location: "Pittsburgh, PA", phone: "412-360-3620 (Press 1)", cleanPhone: "4123603620,1", coords: [-79.9600, 40.4444] },
-{ min: 15700, max: 15999, region: "Health Service Area (HSA) 1.3", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
-{ min: 16000, max: 16399, region: "Health Service Area (HSA) 1.3", name: "Butler VA Health Care System", location: "Butler, PA", phone: "800-362-8262 Ext 2475", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
-{ min: 16400, max: 16599, region: "Health Service Area (HSA) 1.3", name: "Erie VA Medical Center", location: "Erie, PA", phone: "814-860-2973", cleanPhone: "8148602973", coords: [-80.0526, 42.1065] },
-{ min: 16600, max: 16899, region: "Health Service Area (HSA) 1.3", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 Ext 17383", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+{ min: 15700, max: 15999, region: "Health Service Area (HSA) 1.3", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 (Ext 17383)", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
+{ min: 16000, max: 16399, region: "Health Service Area (HSA) 1.3", name: "Butler VA Health Care System", location: "Butler, PA", phone: "800-362-8262 (Ext 2475)", cleanPhone: "8003628262,2475", coords: [-79.9554, 40.8687] },
+{ min: 16400, max: 16599, region: "Health Service Area (HSA) 1.3", name: "Erie VA Medical Center", location: "Erie, PA", phone: "814-860-2973 (Press 1)", cleanPhone: "8148602973,1", coords: [-80.0526, 42.1065] },
+{ min: 16600, max: 16899, region: "Health Service Area (HSA) 1.3", name: "James E. Van Zandt VAMC", location: "Altoona, PA", phone: "814-943-8164 (Ext 17383)", cleanPhone: "8149438164,17383", coords: [-78.3846, 40.4996] },
 { min: 16900, max: 16999, region: "Health Service Area (HSA) 1.2", name: "Wellsboro VA Clinic (Finger Lakes Healthcare System)", location: "Wellsboro, PA (Tioga County)", phone: "607-664-4680 (Press 1)", cleanPhone: "6076644680,1", coords: [-77.3045, 41.7454] },
-{ min: 17000, max: 17999, region: "Health Service Area (HSA) 1.3", name: "Lebanon VA Medical Center", location: "Lebanon, PA", phone: "717-272-6621 Ext 5767", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
-{ min: 18000, max: 18899, region: "Health Service Area (HSA) 1.3", name: "Wilkes-Barre VA Medical Center", location: "Wilkes-Barre, PA", phone: "570-824-3521 Ext 27135", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
-{ min: 18900, max: 19299, region: "Health Service Area (HSA) 1.3", name: "Michael J. Crescenz VAMC", location: "Philadelphia, PA", phone: "215-823-5800 Ext 204441", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
-{ min: 19300, max: 19699, region: "Health Service Area (HSA) 1.3", name: "Coatesville VA Medical Center", location: "Coatesville, PA", phone: "610-384-7711 Ext 5008", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
-{ min: 19700, max: 19999, region: "Health Service Area (HSA) 1.3", name: "Wilmington VA Medical Center", location: "Wilmington, DE", phone: "302-994-2511 Ext 34797", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] }
+{ min: 17000, max: 17999, region: "Health Service Area (HSA) 1.3", name: "Lebanon VA Medical Center", location: "Lebanon, PA", phone: "717-272-6621 (Ext 5767)", cleanPhone: "7172726621,5767", coords: [-76.4024, 40.3106] },
+{ min: 18000, max: 18899, region: "Health Service Area (HSA) 1.3", name: "Wilkes-Barre VA Medical Center", location: "Wilkes-Barre, PA", phone: "570-824-3521 (Ext 27135)", cleanPhone: "5708243521,27135", coords: [-75.8457, 41.2523] },
+{ min: 18900, max: 19299, region: "Health Service Area (HSA) 1.3", name: "Michael J. Crescenz VAMC", location: "Philadelphia, PA", phone: "215-823-5800 (Ext 204441)", cleanPhone: "2158235800,204441", coords: [-75.1979, 39.9482] },
+{ min: 19300, max: 19699, region: "Health Service Area (HSA) 1.3", name: "Coatesville VA Medical Center", location: "Coatesville, PA", phone: "610-384-7711 (Ext 5008)", cleanPhone: "6103847711,5008", coords: [-75.8078, 40.0039] },
+{ min: 19700, max: 19999, region: "Health Service Area (HSA) 1.3", name: "Wilmington VA Medical Center", location: "Wilmington, DE", phone: "302-994-2511 (Ext 34797)", cleanPhone: "3029942511,34797", coords: [-75.6022, 39.7423] }
 ];
 
 const walterReedHub = {
