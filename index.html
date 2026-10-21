@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- FORWARD MARCH TRANSIT // IN CADENCE                                      -->
-<!-- BUILD VERSION: BUILD 3.9 (REV 60) - PRODUCTION MASTER                      -->
+<!-- BUILD VERSION: BUILD 3.9 (REV 61) - PRODUCTION MASTER                      -->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 21, 2026                                                   -->
 <!-- ========================================================================== -->
@@ -115,7 +115,7 @@
       box-shadow: none;
       color: #ffffff !important;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px;
+      font-size: 8px;
       font-weight: 800;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -124,21 +124,22 @@
       white-space: nowrap;
     }
 
-    /* VISN Region Badge Label overlay on map */
+    /* VISN Region Badge Label overlay on map (Clean, well-spaced) */
     .visn-region-label {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1.5px solid rgba(255, 255, 255, 0.4);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.9);
       border-radius: 6px;
       color: #ffffff !important;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: 800;
-      padding: 2px 6px;
+      padding: 3px 8px;
       text-transform: uppercase;
       text-align: center;
       pointer-events: none;
       white-space: nowrap;
+      z-index: 500;
     }
 
     /* Tactile Glowing VA Destination Callout Banner */
@@ -198,7 +199,7 @@
       <!-- Top Build Version Badge (Left) -->
       <div class="flex items-center space-x-1.5 px-2 py-1 rounded-md bg-slate-800/90 border border-slate-700/80 text-[10px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Active Release Build">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>BUILD 3.9 (REV 60)</span>
+        <span>BUILD 3.9 (REV 61)</span>
       </div>
 
       <!-- Centered Platform Branding -->
@@ -761,21 +762,21 @@
     const stateLabelsGroup = L.layerGroup().addTo(map);
     const visnLabelsGroup = L.layerGroup().addTo(map);
 
-    // VISN Region Center Labels matching reference image
+    // VISN Region Center Labels positioned cleanly without overlapping state codes
     const visnRegionLabels = [
-      { name: "VISN 1", lat: 41.5, lng: -74.5, color: '#991b1b' },
-      { name: "VISN 2", lat: 33.8, lng: -80.5, color: '#c2410c' },
-      { name: "VISN 3", lat: 43.8, lng: -85.0, color: '#15803d' },
-      { name: "VISN 4", lat: 34.8, lng: -99.5, color: '#7e22ce' },
-      { name: "VISN 5", lat: 44.0, lng: -120.5, color: '#1d4ed8' }
+      { name: "VISN 1", lat: 42.8, lng: -75.0, color: '#991b1b' },
+      { name: "VISN 2", lat: 33.2, lng: -82.0, color: '#c2410c' },
+      { name: "VISN 3", lat: 45.5, lng: -87.5, color: '#15803d' },
+      { name: "VISN 4", lat: 33.5, lng: -97.5, color: '#7e22ce' },
+      { name: "VISN 5", lat: 44.5, lng: -118.5, color: '#1d4ed8' }
     ];
 
     visnRegionLabels.forEach(v => {
       const vIcon = L.divIcon({
         className: 'visn-region-label',
         html: `<span style="color: #ffffff; text-shadow: 0 1px 3px #000;">${v.name}</span>`,
-        iconSize: [60, 24],
-        iconAnchor: [30, 12]
+        iconSize: [64, 26],
+        iconAnchor: [32, 13]
       });
       L.marker([v.lat, v.lng], { icon: vIcon, interactive: false }).addTo(visnLabelsGroup);
     });
