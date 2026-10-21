@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v4.3.0 (BUILD 4.3 // REV 64) - CLEAN SPEECH AUDIO EDITION -->
+<!-- SEMVER VERSION: v4.4.0 (BUILD 4.4 // REV 65) - INFO SPEECH TRIGGER EDITION-->
 <!-- DEVELOPER: TERENCE WATKINS, VETERAN, VA PITTSBURGH                        -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -114,7 +114,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v4.3.0</span>
+<span>v4.4.0</span>
 </div>
 <!-- Centered Platform Branding: BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -147,21 +147,21 @@ class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800 hover:b
 <button 
 id="audioGreetingBtn" 
 type="button" 
-title="Need help? Click for instructions and audio guidance" 
+title="Need help? Click for instructions and standard operating procedures" 
 class="tactile-btn w-full flex items-center justify-center space-x-1.5 py-1.5 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 active:bg-blue-700 border border-blue-400 text-white font-bold text-[11px] uppercase tracking-wider text-center transition shadow-md"
 >
 <i data-lucide="help-circle" class="w-4 h-4 text-blue-200 shrink-0"></i>
-<span id="audioGreetingLabel" class="font-extrabold text-[11px]">Need help? Click for instructions</span>
+<span class="font-extrabold text-[11px]">Need help? Click for instructions</span>
 </button>
 </div>
-<!-- VA Travel Statutory Eligibility Banner -->
+<!-- VA Travel Statutory Eligibility Banner with Lowercase 'i' Triggering Audio -->
 <div class="px-2.5 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between text-[10px] shrink-0 shadow-sm">
 <div class="flex items-center space-x-1.5 truncate">
 <button 
 id="infoRequirementBtn" 
 type="button" 
-title="Click to view full VHA eligibility details" 
-aria-label="Click to see exact VA ride qualification details" 
+title="Click for audio brief & VHA eligibility details" 
+aria-label="Click to trigger audio brief and VA ride qualifications" 
 class="p-0.5 rounded-md bg-emerald-500/35 hover:bg-emerald-500/50 active:scale-95 border border-emerald-500/70 text-emerald-300 transition flex items-center justify-center shrink-0 cursor-pointer"
 >
 <i data-lucide="info" class="w-3.5 h-3.5 text-emerald-400"></i>
@@ -499,28 +499,28 @@ function hideVoiceToast() {
 const t = document.getElementById('voiceToast');
 if (t) t.classList.add('hidden');
 }
-// Detailed Eligibility Modal Handlers
-const eligibilityDetailModal = document.getElementById('eligibilityDetailModal');
+
+// Wire speech briefing to the lowercase 'i' button next to the requirement banner
 const infoRequirementBtn = document.getElementById('infoRequirementBtn');
+if (infoRequirementBtn) {
+infoRequirementBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+speakGreeting();
+});
+}
+
+// Detailed Eligibility Modal Handlers (optional backup)
+const eligibilityDetailModal = document.getElementById('eligibilityDetailModal');
 const closeEligibilityDetailBtn = document.getElementById('closeEligibilityDetailBtn');
 const dismissEligibilityDetailBtn = document.getElementById('dismissEligibilityDetailBtn');
-function openEligibilityModal(e) {
-if (e) e.stopPropagation();
-if (eligibilityDetailModal) {
-eligibilityDetailModal.classList.remove('hidden');
-if (typeof window.plausible === 'function') {
-window.plausible('Eligibility Info Clicked');
-}
-}
-}
-if (infoRequirementBtn) infoRequirementBtn.addEventListener('click', openEligibilityModal);
 if (closeEligibilityDetailBtn && eligibilityDetailModal) {
 closeEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
 }
 if (dismissEligibilityDetailBtn && eligibilityDetailModal) {
 dismissEligibilityDetailBtn.addEventListener('click', () => eligibilityDetailModal.classList.add('hidden'));
 }
-// Instructions & Modal Handlers
+
+// Instructions & Modal Handlers for the blue button
 const instructionsModal = document.getElementById('instructionsModal');
 const audioGreetingBtn = document.getElementById('audioGreetingBtn');
 const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
@@ -530,19 +530,16 @@ if (audioGreetingBtn) {
 audioGreetingBtn.addEventListener('click', (e) => {
 e.stopPropagation();
 if (instructionsModal) instructionsModal.classList.remove('hidden');
-speakGreeting();
 });
 }
 if (closeInstructionsBtn && instructionsModal) {
 closeInstructionsBtn.addEventListener('click', () => {
 instructionsModal.classList.add('hidden');
-if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 });
 }
 if (dismissInstructionsBtn && instructionsModal) {
 dismissInstructionsBtn.addEventListener('click', () => {
 instructionsModal.classList.add('hidden');
-if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 });
 }
 if (replayInstructionsVoiceBtn) {
@@ -555,6 +552,7 @@ window.speechSynthesis.onvoiceschanged = () => {
 window.speechSynthesis.getVoices();
 };
 }
+
 // Split Mapbox token segments
 mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 const defaultHub = {
