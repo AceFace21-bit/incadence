@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v5.4.0 (BUILD 5.4 // REV 75) - FULL PHONE NUMBER DISPLAY  -->
+<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 76) - NO VOICE TOAST EDITION     -->
 <!-- DEVELOPER: TERRANCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 21, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -133,11 +133,6 @@ class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800 hover:b
 </button>
 </div>
 </header>
-<!-- Live Audio Announcement Toast Banner -->
-<div id="voiceToast" class="hidden bg-emerald-950/95 border-b border-emerald-500/60 px-3 py-1 text-center text-[10.5px] font-mono-code font-bold text-emerald-300 z-50 flex items-center justify-center space-x-2 shadow-lg">
-<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-<span id="voiceToastText">Announcing VA Healthcare Hub...</span>
-</div>
 <!-- Main Viewport Dashboard - Compact Non-Scrolling Fit -->
 <main class="flex-1 max-w-md mx-auto w-full px-2.5 py-1.5 flex flex-col justify-around gap-1.5 my-auto overflow-hidden">
 <!-- VA Travel Statutory Eligibility Banner with Lowercase 'i' Triggering Audio -->
@@ -241,7 +236,7 @@ class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-
 </div>
 </div>
 </section>
-<!-- Facility Match Micro-Card (Optimized for full phone & extension visibility) -->
+<!-- Facility Match Micro-Card -->
 <section id="resultCard" class="bg-slate-900 border-2 border-slate-800 rounded-lg p-2 shrink-0 shadow-sm flex items-center justify-between gap-1.5">
 <!-- Left Facility Info Block: Balanced Width (flex-[1_1_55%]) -->
 <div class="min-w-0 flex-[1_1_55%]">
@@ -334,32 +329,19 @@ const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.incl
 if (naturalVoice) activeUtterance.voice = naturalVoice;
 }
 activeUtterance.onstart = () => {
-showVoiceToast("🔊 " + (activeHub ? activeHub.name : textToSpeak.substring(0, 35)));
+// Toast disabled per Terrance's preference
 };
 activeUtterance.onend = () => {
-hideVoiceToast();
 activeUtterance = null;
 };
 activeUtterance.onerror = (e) => {
 console.warn("Speech synthesis notice:", e);
-hideVoiceToast();
 activeUtterance = null;
 };
 window.speechSynthesis.speak(activeUtterance);
 } catch (err) {
 console.error("Speech playback error:", err);
 }
-}
-function showVoiceToast(msg) {
-const t = document.getElementById('voiceToast');
-if (t) {
-t.textContent = msg;
-t.classList.remove('hidden');
-}
-}
-function hideVoiceToast() {
-const t = document.getElementById('voiceToast');
-if (t) t.classList.add('hidden');
 }
 
 const infoRequirementBtn = document.getElementById('infoRequirementBtn');
@@ -629,7 +611,7 @@ const numbersOnly = transcript.replace(/\D/g, '');
 if (numbersOnly.length >= 5) {
 const zip = numbersOnly.substring(0, 5);
 zipInput.value = zip;
-clearZipBtn.classList.remove('hidden');
+clearZipBtn.classList.add('hidden');
 executeLookup(zip, 'Voice Input');
 try { recognition.stop(); } catch (e) {}
 micBtnLabel.textContent = "VOICE";
@@ -679,7 +661,7 @@ mapMarker.setLngLat([lon, lat]);
 mapCoordinates.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
 }
 try {
-const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en` );
 const data = await res.json();
 const detectedZip = data.postcode;
 if (detectedZip) {
