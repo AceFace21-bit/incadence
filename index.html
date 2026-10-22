@@ -10,11 +10,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>BTAO | Beneficiary Travel & Attendance Optimization</title>
-<!-- Privacy-friendly analytics by Plausible with Tagged Events Extension -->
-<script defer data-domain="aceface21-bit.github.io" src="https://plausible.io/js/script.tagged-events.js"></script>
-<script>
-window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};
-</script>
 <!-- Tailwind CSS & Lucide Icons -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -112,7 +107,7 @@ Call 988 • 1
 <!-- SemVer Version Badge (Left) -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v5.4.0</span>
+<span>v5.5.0</span>
 </div>
 <!-- Centered Platform Branding: BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -228,7 +223,7 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 <a 
 id="centerCallBtn" 
 href="tel:4123603620,1" 
-class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border border-emerald-200"
+class="pointer-events-auto tactile-btn shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border border-emerald-200"
 >
 <i data-lucide="phone-call" class="w-3.5 h-3.5 fill-slate-950"></i>
 <span id="centerCallText" class="text-[11px] font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
@@ -328,9 +323,7 @@ if (voices.length > 0) {
 const naturalVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Samantha") || v.name.includes("Google") || v.name.includes("Female") || v.lang === "en-US" || v.lang.startsWith("en")));
 if (naturalVoice) activeUtterance.voice = naturalVoice;
 }
-activeUtterance.onstart = () => {
-// Toast disabled per Terrance's preference
-};
+activeUtterance.onstart = () => {};
 activeUtterance.onend = () => {
 activeUtterance = null;
 };
@@ -388,32 +381,7 @@ updateHubUI(defaultHub);
 zipInput.focus();
 });
 
-function trackLookup(zip, matchData, method) {
-if (typeof window.plausible === 'function' && matchData) {
-window.plausible('Hub Search', {
-props: {
-zip_prefix: zip.substring(0, 3),
-visn: matchData.visn,
-hub_name: matchData.name,
-method: method
-}
-});
-}
-}
-function trackDialerClick(buttonType, targetHub) {
-if (typeof window.plausible === 'function' && targetHub) {
-window.plausible('Dialer Click', {
-props: {
-button: buttonType,
-visn: targetHub.visn,
-hub_name: targetHub.name,
-phone: targetHub.cleanPhone
-}
-});
-}
-}
 const centerCallBtn = document.getElementById('centerCallBtn');
-centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
 
 mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 
@@ -547,7 +515,6 @@ if (match) {
 updateHubUI(match);
 matchStatus.textContent = "Locked (Exact 5-Digit)";
 matchStatus.className = "text-[10px] font-mono-code text-emerald-400 font-bold";
-trackLookup(cleanVal, match, method);
 centerCallBtn.classList.add('call-btn-blinking');
 zipInput.blur();
 }
