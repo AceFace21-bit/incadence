@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 78) - PLAUSIBLE EDITION          -->
+<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 79) - FULL PLAUSIBLE TRACKING    -->
 <!-- DEVELOPER: TERRANCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 22, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -101,7 +101,7 @@ letter-spacing: 0.05em;
 <span class="font-bold tracking-wider uppercase text-red-100">Crisis Hotline:</span>
 <span class="truncate">Dial 988, Press 1</span>
 </div>
-<a href="tel:988,1" class="text-white bg-red-800/80 hover:bg-red-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider shrink-0 ml-2 border border-red-600" aria-label="Call Veterans Crisis Line 988 Press 1">
+<a href="tel:988,1" class="plausible-event-name=Crisis+Call text-white bg-red-800/80 hover:bg-red-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider shrink-0 ml-2 border border-red-600" aria-label="Call Veterans Crisis Line 988 Press 1">
 Call 988 • 1
 </a>
 </div>
@@ -386,10 +386,12 @@ updateHubUI(defaultHub);
 zipInput.focus();
 });
 
+// Plausible Custom Event Tracking Functions
 function trackLookup(zip, matchData, method) {
 if (typeof window.plausible === 'function' && matchData) {
 window.plausible('Hub Search', {
 props: {
+entered_zip: zip,
 zip_prefix: zip.substring(0, 3),
 visn: matchData.visn,
 hub_name: matchData.name,
@@ -398,6 +400,7 @@ method: method
 });
 }
 }
+
 function trackDialerClick(buttonType, targetHub) {
 if (typeof window.plausible === 'function' && targetHub) {
 window.plausible('Dialer Click', {
@@ -410,8 +413,24 @@ phone: targetHub.cleanPhone
 });
 }
 }
+
+function trackVoiceClick() {
+if (typeof window.plausible === 'function') {
+window.plausible('Voice Click');
+}
+}
+
+function trackGpsClick() {
+if (typeof window.plausible === 'function') {
+window.plausible('GPS Click');
+}
+}
+
 const centerCallBtn = document.getElementById('centerCallBtn');
 centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
+
+const micBtn = document.getElementById('micBtn');
+const geoBtn = document.getElementById('geoBtn');
 
 mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 
@@ -585,6 +604,7 @@ recognition.continuous = false;
 recognition.interimResults = false;
 micBtn.addEventListener('click', () => {
 hideAlert();
+trackVoiceClick();
 if ('speechSynthesis' in window) {
 try {
 window.speechSynthesis.resume();
@@ -642,6 +662,7 @@ micBtn.title = "Voice recognition not supported on this browser";
 
 geoBtn.addEventListener('click', () => {
 hideAlert();
+trackGpsClick();
 if (!navigator.geolocation) {
 showAlert("GPS not supported.");
 return;
