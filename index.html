@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 87) - FULL SCRIPT TAG RESTORED   -->
+<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 88) - FULL PLAUSIBLE CALLBACKS   -->
 <!-- DEVELOPER: TERRANCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 22, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -106,7 +106,7 @@ letter-spacing: 0.05em;
 <span class="font-bold tracking-wider uppercase text-red-100">Crisis Hotline:</span>
 <span class="truncate">Dial 988, Press 1</span>
 </div>
-<a href="tel:988,1" id="crisisCallBtn" class="plausible-event-name=Crisis+Call text-white bg-red-800/80 hover:bg-red-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider shrink-0 ml-2 border border-red-600" aria-label="Call Veterans Crisis Line 988 Press 1">
+<a href="tel:988,1" id="crisisCallBtn" class="text-white bg-red-800/80 hover:bg-red-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider shrink-0 ml-2 border border-red-600" aria-label="Call Veterans Crisis Line 988 Press 1">
 Call 988 • 1
 </a>
 </div>
@@ -117,7 +117,7 @@ Call 988 • 1
 <!-- SemVer Version & Build Badge (Left) - Clearly Visible on Main Page -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version & Build Revision">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v5.5.0 // REV 87</span>
+<span>v5.5.0 // REV 88</span>
 </div>
 <!-- Centered Platform Branding: BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -233,7 +233,7 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 <a 
 id="centerCallBtn" 
 href="tel:4123603620,1" 
-class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border border-emerald-200"
+class="pointer-events-auto tactile-btn shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border border-emerald-200"
 >
 <i data-lucide="phone-call" class="w-3.5 h-3.5 fill-slate-950"></i>
 <span id="centerCallText" class="text-[11px] font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
@@ -348,7 +348,7 @@ console.error("Speech playback error:", err);
 }
 
 // -------------------------------------------------------------
-// INDEX CARD TRACKING IMPLEMENTATION (REV 87)
+// INDEX CARD TRACKING IMPLEMENTATION (REV 88)
 // -------------------------------------------------------------
 
 function getCurrentZip() {
@@ -356,17 +356,24 @@ const zipInput = document.getElementById('zipInput');
 return zipInput ? (zipInput.value || "None") : "None";
 }
 
-// 1. Crisis Call Tracking (988 • 1)
+// 1. Crisis Call Tracking (988 • 1) with robust callback
 const crisisCallBtn = document.getElementById('crisisCallBtn');
 if (crisisCallBtn) {
-crisisCallBtn.addEventListener('click', () => {
+crisisCallBtn.addEventListener('click', (e) => {
+e.preventDefault();
+const targetUrl = crisisCallBtn.getAttribute('href');
 if (typeof window.plausible === 'function') {
 window.plausible('Crisis Call 988-1', {
 props: {
 entered_zip: getCurrentZip(),
 timestamp: new Date().toISOString()
+},
+callback: function() {
+window.location.href = targetUrl;
 }
 });
+} else {
+window.location.href = targetUrl;
 }
 });
 }
@@ -404,8 +411,10 @@ timestamp: new Date().toISOString()
 }
 }
 
-// 4. Call Travel Clicks
-function trackCallTravelClick(buttonLabel, targetHub) {
+// 4. Call Travel Clicks with robust callback
+function trackCallTravelClick(buttonLabel, targetHub, e) {
+if (e) e.preventDefault();
+const targetUrl = centerCallBtn ? centerCallBtn.getAttribute('href') : ('tel:' + (targetHub ? targetHub.cleanPhone : '4123603620,1'));
 if (typeof window.plausible === 'function') {
 window.plausible('Call Travel Click', {
 props: {
@@ -415,15 +424,20 @@ visn: targetHub ? targetHub.visn : 'Unknown',
 hub_name: targetHub ? targetHub.name : 'Unknown',
 phone: targetHub ? targetHub.cleanPhone : 'Unknown',
 timestamp: new Date().toISOString()
+},
+callback: function() {
+window.location.href = targetUrl;
 }
 });
+} else {
+window.location.href = targetUrl;
 }
 }
 
 const centerCallBtn = document.getElementById('centerCallBtn');
 if (centerCallBtn) {
-centerCallBtn.addEventListener('click', () => {
-trackCallTravelClick('Center Radar Call Button', activeHub);
+centerCallBtn.addEventListener('click', (e) => {
+trackCallTravelClick('Center Radar Call Button', activeHub, e);
 });
 }
 
