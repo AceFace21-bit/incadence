@@ -667,7 +667,7 @@ if (!navigator.geolocation) {
 showAlert("GPS not supported.");
 return;
 }
-geoBtnLabel.textContent = "...";
+geoBtnLabel.textContent = "_..._";
 geoBtn.disabled = true;
 navigator.geolocation.getCurrentPosition(
 async (position) => {
