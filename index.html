@@ -1,22 +1,20 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 76) - GTM EDITION                -->
+<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 78) - PLAUSIBLE EDITION          -->
 <!-- DEVELOPER: TERRANCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 22, 2026                                                    -->
 <!-- ========================================================================== -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-TQJ59JLG');</script>
-<!-- End Google Tag Manager -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>BTAO | Beneficiary Travel & Attendance Optimization</title>
+<!-- Privacy-friendly analytics by Plausible with Tagged Events Extension -->
+<script defer data-domain="aceface21-bit.github.io" src="https://plausible.io/js/script.tagged-events.js"></script>
+<script>
+window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};
+</script>
 <!-- Tailwind CSS & Lucide Icons -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -95,10 +93,6 @@ letter-spacing: 0.05em;
 </style>
 </head>
 <body class="flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-slate-950 select-none">
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TQJ59JLG"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 <!-- Veterans Crisis Line Mandatory Header -->
 <aside class="bg-red-950/90 border-b border-red-800/80 px-2.5 py-1 text-center shrink-0 z-50">
 <div class="max-w-md mx-auto flex items-center justify-between text-[10px] font-mono-code text-red-200">
@@ -234,7 +228,7 @@ class="tactile-btn bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-emer
 <a 
 id="centerCallBtn" 
 href="tel:4123603620,1" 
-class="pointer-events-auto tactile-btn shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border border-emerald-200"
+class="plausible-event-name=Dialer+Click pointer-events-auto tactile-btn shadow-lg shadow-emerald-500/40 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 px-3 py-1.5 rounded-lg font-extrabold uppercase tracking-wider flex items-center space-x-1.5 border border-emerald-200"
 >
 <i data-lucide="phone-call" class="w-3.5 h-3.5 fill-slate-950"></i>
 <span id="centerCallText" class="text-[11px] font-mono-code tracking-wide">CALL TRAVEL COORDINATOR</span>
@@ -392,7 +386,32 @@ updateHubUI(defaultHub);
 zipInput.focus();
 });
 
+function trackLookup(zip, matchData, method) {
+if (typeof window.plausible === 'function' && matchData) {
+window.plausible('Hub Search', {
+props: {
+zip_prefix: zip.substring(0, 3),
+visn: matchData.visn,
+hub_name: matchData.name,
+method: method
+}
+});
+}
+}
+function trackDialerClick(buttonType, targetHub) {
+if (typeof window.plausible === 'function' && targetHub) {
+window.plausible('Dialer Click', {
+props: {
+button: buttonType,
+visn: targetHub.visn,
+hub_name: targetHub.name,
+phone: targetHub.cleanPhone
+}
+});
+}
+}
 const centerCallBtn = document.getElementById('centerCallBtn');
+centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
 
 mapboxgl.accessToken = ['pk', 'eyJ1IjoiYWNlZmFjZTIxIiwiYSI6ImNtdW9iZ3RsejAyYmgyeHB5dXJwc2t1YjMifQ', '8_GhfgfD2RNm3LmLLf4f0Q'].join('.');
 
@@ -528,6 +547,7 @@ matchStatus.textContent = "Locked (Exact 5-Digit)";
 matchStatus.className = "text-[10px] font-mono-code text-emerald-400 font-bold";
 centerCallBtn.classList.add('call-btn-blinking');
 zipInput.blur();
+trackLookup(cleanVal, match, method);
 }
 } else if (cleanVal.length >= 3) {
 matchStatus.textContent = "Type 5 Digits...";
