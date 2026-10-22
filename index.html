@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 84) - VISIBLE REV BADGE          -->
+<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 85) - COMPLETE INDEX CARD TRACKING -->
 <!-- DEVELOPER: TERRANCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 22, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -106,7 +106,7 @@ letter-spacing: 0.05em;
 <span class="font-bold tracking-wider uppercase text-red-100">Crisis Hotline:</span>
 <span class="truncate">Dial 988, Press 1</span>
 </div>
-<a href="tel:988,1" class="plausible-event-name=Crisis+Call text-white bg-red-800/80 hover:bg-red-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider shrink-0 ml-2 border border-red-600" aria-label="Call Veterans Crisis Line 988 Press 1">
+<a href="tel:988,1" id="crisisCallBtn" class="plausible-event-name=Crisis+Call text-white bg-red-800/80 hover:bg-red-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider shrink-0 ml-2 border border-red-600" aria-label="Call Veterans Crisis Line 988 Press 1">
 Call 988 • 1
 </a>
 </div>
@@ -117,7 +117,7 @@ Call 988 • 1
 <!-- SemVer Version & Build Badge (Left) - Clearly Visible on Main Page -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version & Build Revision">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v5.5.0 // REV 84</span>
+<span>v5.5.0 // REV 85</span>
 </div>
 <!-- Centered Platform Branding: BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -347,11 +347,105 @@ console.error("Speech playback error:", err);
 }
 }
 
+// -------------------------------------------------------------
+// INDEX CARD TRACKING IMPLEMENTATION (REV 85)
+// -------------------------------------------------------------
+
+// Helper to get current ZIP state safely
+function getCurrentZip() {
+const zipInput = document.getElementById('zipInput');
+return zipInput ? (zipInput.value || "None") : "None";
+}
+
+// 1. Crisis Call Tracking (988 • 1) with timestamp & ZIP context
+const crisisCallBtn = document.getElementById('crisisCallBtn');
+if (crisisCallBtn) {
+crisisCallBtn.addEventListener('click', () => {
+if (typeof window.plausible === 'function') {
+window.plausible('Crisis Call 988-1', {
+props: {
+entered_zip: getCurrentZip(),
+timestamp: new Date().toISOString()
+}
+});
+}
+});
+}
+
+// 2. Requirements Info Click (Clicking requirements button next to 30% rule)
 const infoRequirementBtn = document.getElementById('infoRequirementBtn');
 if (infoRequirementBtn) {
 infoRequirementBtn.addEventListener('click', (e) => {
 e.stopPropagation();
+if (typeof window.plausible === 'function') {
+window.plausible('Requirements Click', {
+props: {
+entered_zip: getCurrentZip(),
+timestamp: new Date().toISOString()
+}
+});
+}
 speakGreeting();
+});
+}
+
+// 3. ZIP Code Entered, Voice, & GPS Tracking Function
+function trackZipActivity(zip, method, matchData) {
+if (typeof window.plausible === 'function') {
+window.plausible('Zip Code Activity', {
+props: {
+entered_zip: zip,
+zip_prefix: zip.substring(0, 3),
+input_method: method, // 'Manual ZIP', 'Voice Input', 'GPS'
+visn: matchData ? matchData.visn : 'Unknown',
+hub_name: matchData ? matchData.name : 'Unknown',
+timestamp: new Date().toISOString()
+}
+});
+}
+}
+
+// 4. "Call Travel" Coordinator Dialer Clicks (Center Radar Button & Facility Phone Clicks)
+function trackCallTravelClick(buttonLabel, targetHub) {
+if (typeof window.plausible === 'function') {
+window.plausible('Call Travel Click', {
+props: {
+button_label: buttonLabel,
+entered_zip: getCurrentZip(),
+visn: targetHub ? targetHub.visn : 'Unknown',
+hub_name: targetHub ? targetHub.name : 'Unknown',
+phone: targetHub ? targetHub.cleanPhone : 'Unknown',
+timestamp: new Date().toISOString()
+}
+});
+}
+}
+
+const centerCallBtn = document.getElementById('centerCallBtn');
+if (centerCallBtn) {
+centerCallBtn.addEventListener('click', () => {
+trackCallTravelClick('Center Radar Call Button', activeHub);
+});
+}
+
+// 5. Speaker Button Click Tracking (How many people clicked the speaker button next to VA hospital)
+const readFacilityBtn = document.getElementById('readFacilityBtn');
+if (readFacilityBtn) {
+readFacilityBtn.addEventListener('click', () => {
+if (!activeHub) return;
+if (typeof window.plausible === 'function') {
+window.plausible('Speaker Button Click', {
+props: {
+entered_zip: getCurrentZip(),
+hub_name: activeHub.name,
+visn: activeHub.visn,
+timestamp: new Date().toISOString()
+}
+});
+}
+centerCallBtn.classList.add('call-btn-blinking');
+const textToRead = `${activeHub.name}. ${activeHub.desc}. Travel coordinator phone number is ${activeHub.phone}, or tap the blinking green button.`;
+speakGreeting(textToRead);
 });
 }
 
@@ -371,14 +465,6 @@ zipInput.blur();
 }
 });
 
-const readFacilityBtn = document.getElementById('readFacilityBtn');
-readFacilityBtn.addEventListener('click', () => {
-if (!activeHub) return;
-centerCallBtn.classList.add('call-btn-blinking');
-const textToRead = `${activeHub.name}. ${activeHub.desc}. Travel coordinator phone number is ${activeHub.phone}, or tap the blinking green button.`;
-speakGreeting(textToRead);
-});
-
 const clearZipBtn = document.getElementById('clearZipBtn');
 clearZipBtn.addEventListener('click', () => {
 zipInput.value = '';
@@ -390,49 +476,6 @@ centerCallBtn.classList.remove('call-btn-blinking');
 updateHubUI(defaultHub);
 zipInput.focus();
 });
-
-// Plausible Custom Event Tracking Functions
-function trackLookup(zip, matchData, method) {
-if (typeof window.plausible === 'function' && matchData) {
-window.plausible('Hub Search', {
-props: {
-entered_zip: zip,
-zip_prefix: zip.substring(0, 3),
-visn: matchData.visn,
-hub_name: matchData.name,
-method: method
-}
-});
-}
-}
-
-function trackDialerClick(buttonType, targetHub) {
-if (typeof window.plausible === 'function' && targetHub) {
-window.plausible('Dialer Click', {
-props: {
-button: buttonType,
-visn: targetHub.visn,
-hub_name: targetHub.name,
-phone: targetHub.cleanPhone
-}
-});
-}
-}
-
-function trackVoiceClick() {
-if (typeof window.plausible === 'function') {
-window.plausible('Voice Click');
-}
-}
-
-function trackGpsClick() {
-if (typeof window.plausible === 'function') {
-window.plausible('GPS Click');
-}
-}
-
-const centerCallBtn = document.getElementById('centerCallBtn');
-centerCallBtn.addEventListener('click', () => trackDialerClick('Center Radar Call Button', activeHub));
 
 const micBtn = document.getElementById('micBtn');
 const geoBtn = document.getElementById('geoBtn');
@@ -590,7 +633,7 @@ matchStatus.textContent = "Locked (Exact 5-Digit)";
 matchStatus.className = "text-[10px] font-mono-code text-emerald-400 font-bold";
 centerCallBtn.classList.add('call-btn-blinking');
 zipInput.blur();
-trackLookup(cleanVal, match, method);
+trackZipActivity(cleanVal, method, match);
 }
 } else if (cleanVal.length >= 3) {
 matchStatus.textContent = "Type 5 Digits...";
@@ -628,7 +671,6 @@ recognition.continuous = false;
 recognition.interimResults = false;
 micBtn.addEventListener('click', () => {
 hideAlert();
-trackVoiceClick();
 if ('speechSynthesis' in window) {
 try {
 window.speechSynthesis.resume();
@@ -686,7 +728,6 @@ micBtn.title = "Voice recognition not supported on this browser";
 
 geoBtn.addEventListener('click', () => {
 hideAlert();
-trackGpsClick();
 if (!navigator.geolocation) {
 showAlert("GPS not supported.");
 return;
