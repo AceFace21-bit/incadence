@@ -1,6 +1,6 @@
 <!-- ========================================================================== -->
 <!-- BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO)                       -->
-<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 88) - FULL PLAUSIBLE CALLBACKS   -->
+<!-- SEMVER VERSION: v5.5.0 (BUILD 5.5 // REV 89) - CLEAN PLAUSIBLE SCRIPT     -->
 <!-- DEVELOPER: TERRANCE WATKINS, VETERAN, VA PITTSBURGH                       -->
 <!-- DATE: OCTOBER 22, 2026                                                    -->
 <!-- ========================================================================== -->
@@ -10,16 +10,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>BTAO | Beneficiary Travel & Attendance Optimization</title>
-<!-- Privacy-friendly analytics by Plausible -->
-<script async src="https://plausible.io/js/pa-yPvaRBCAdbA_NfCq7UIXY.js"></script>
-<script>
-  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
-  plausible.init()
-</script>
-<!-- Privacy-friendly analytics by Plausible with Tagged Events Extension -->
+<!-- Clean Unified Plausible Analytics with Tagged Events Extension -->
 <script defer data-domain="aceface21-bit.github.io" src="https://plausible.io/js/script.tagged-events.js"></script>
 <script>
-window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)};
+  window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };
 </script>
 <!-- Tailwind CSS & Lucide Icons -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -117,7 +111,7 @@ Call 988 • 1
 <!-- SemVer Version & Build Badge (Left) - Clearly Visible on Main Page -->
 <div class="flex items-center space-x-1 px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/80 text-[9.5px] font-mono-code text-emerald-400 font-bold shrink-0 shadow-sm" title="Semantic Version & Build Revision">
 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-<span>v5.5.0 // REV 88</span>
+<span>v5.5.0 // REV 89</span>
 </div>
 <!-- Centered Platform Branding: BENEFICIARY TRAVEL & ATTENDANCE OPTIMIZATION (BTAO) -->
 <div class="flex flex-col items-center justify-center text-center flex-1 px-1">
@@ -348,7 +342,7 @@ console.error("Speech playback error:", err);
 }
 
 // -------------------------------------------------------------
-// INDEX CARD TRACKING IMPLEMENTATION (REV 88)
+// INDEX CARD TRACKING IMPLEMENTATION (REV 89)
 // -------------------------------------------------------------
 
 function getCurrentZip() {
@@ -378,7 +372,7 @@ window.location.href = targetUrl;
 });
 }
 
-// 2. Requirements Click
+// 2. Requirements Click with robust callback
 const infoRequirementBtn = document.getElementById('infoRequirementBtn');
 if (infoRequirementBtn) {
 infoRequirementBtn.addEventListener('click', (e) => {
